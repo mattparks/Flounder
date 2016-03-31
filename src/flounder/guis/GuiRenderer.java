@@ -8,12 +8,12 @@ import org.lwjgl.opengl.*;
 public class GuiRenderer extends IRenderer {
 	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
 
-	private GuiShader shader;
-	private int vao;
+	private GuiShader m_shader;
+	private int m_vao;
 
 	public GuiRenderer() {
-		vao = Loader.createInterleavedVAO(POSITIONS, 2);
-		shader = new GuiShader();
+		m_vao = Loader.createInterleavedVAO(POSITIONS, 2);
+		m_shader = new GuiShader();
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class GuiRenderer extends IRenderer {
 		OpenglUtils.cullBackFaces(true);
 		OpenglUtils.enableAlphaBlending();
 		OpenglUtils.disableDepthTesting();
-		shader.start();
+		m_shader.start();
 	}
 
 	private void renderGui(GuiTexture gui) {
@@ -38,21 +38,21 @@ public class GuiRenderer extends IRenderer {
 			return;
 		}
 
-		OpenglUtils.bindVAO(vao, 0);
+		OpenglUtils.bindVAO(m_vao, 0);
 		OpenglUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
-		shader.transform.loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
-		shader.alpha.loadFloat(gui.getAlpha());
-		shader.flipTexture.loadBoolean(gui.isFlipTexture());
+		m_shader.transform.loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
+		m_shader.alpha.loadFloat(gui.getAlpha());
+		m_shader.flipTexture.loadBoolean(gui.isFlipTexture());
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
 		OpenglUtils.unbindVAO(0);
 	}
 
 	private void endRendering() {
-		shader.stop();
+		m_shader.stop();
 	}
 
 	@Override
 	public void dispose() {
-		shader.dispose();
+		m_shader.dispose();
 	}
 }

@@ -57,19 +57,34 @@ public class FlounderEngine {
 
 	public static void run() {
 		while (ManagerDevices.getDisplay().isOpen()) {
-			update();
-			render();
+			boolean render = false;
 
-			// Updates static delta and times.
-			m_currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;
-			m_delta = m_currentFrameTime - m_lastFrameTime;
-			m_lastFrameTime = m_currentFrameTime;
+			{
+				render = true;
+				update();
 
-			if (System.currentTimeMillis() - m_timerStart > 1000) {
-				System.out.println(m_updates + "ups, " + m_frames + "fps.");
-				m_timerStart += 1000;
-				m_updates = 0;
-				m_frames = 0;
+				// Updates static delta and times.
+				m_currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;
+				m_delta = m_currentFrameTime - m_lastFrameTime;
+				m_lastFrameTime = m_currentFrameTime;
+
+				// Prints out current engine update and frame stats.
+				if (System.currentTimeMillis() - m_timerStart > 1000) {
+					System.out.println(m_updates + "ups, " + m_frames + "fps.");
+					m_timerStart += 1000;
+					m_updates = 0;
+					m_frames = 0;
+				}
+			}
+
+			if (render) {
+				render();
+			} else {
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
