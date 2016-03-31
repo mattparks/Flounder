@@ -90,7 +90,7 @@ public class StreamManager extends Thread {
 			streamers.add(new Streamer(sound, source, controller));
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Couldn't open stream for sound " + sound.getSoundFile());
+			System.err.println("Couldn't open stream for sound " + sound.getSoundFile().getPath());
 		}
 	}
 }

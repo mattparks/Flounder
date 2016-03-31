@@ -29,8 +29,8 @@ public class Streamer {
 	 *
 	 * @throws Exception When something goes wrong :(
 	 */
-	protected Streamer(Sound sound, SoundSource source, AudioController controller) throws Exception {
-		System.out.println("Streaming " + sound.getSoundFile());
+	protected Streamer(final Sound sound, final SoundSource source, final AudioController controller) throws Exception {
+		System.out.println("Streaming " + sound.getSoundFile().getPath());
 		this.source = source;
 		this.controller = controller;
 		stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
@@ -103,7 +103,7 @@ public class Streamer {
 	 *
 	 * @param buffer The buffer into which the data should be loaded.
 	 */
-	private void loadNextDataIntoBuffer(int buffer) {
+	private void loadNextDataIntoBuffer(final int buffer) {
 		ByteBuffer data = stream.loadNextData();
 		SoundLoader.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
 	}
@@ -113,7 +113,7 @@ public class Streamer {
 	 *
 	 * @param buffer The buffer to be queued.
 	 */
-	private void queueBuffer(int buffer) {
+	private void queueBuffer(final int buffer) {
 		if (source.isPlaying()) {
 			source.queue(buffer);
 			bufferQueue.add(buffer);
@@ -136,13 +136,7 @@ public class Streamer {
 	 */
 	protected void delete() {
 		stream.close();
-
-		for (Integer buffer : bufferQueue) {
-			SoundLoader.deleteBuffer(buffer);
-		}
-
-		for (Integer buffer : unusedBuffers) {
-			SoundLoader.deleteBuffer(buffer);
-		}
+		bufferQueue.forEach(SoundLoader::deleteBuffer);
+		unusedBuffers.forEach(SoundLoader::deleteBuffer);
 	}
 }
