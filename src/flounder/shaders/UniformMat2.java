@@ -11,9 +11,9 @@ import static org.lwjgl.opengl.GL20.*;
  * Represents a Matrix2F uniform type that can be loaded to the shader.
  */
 public class UniformMat2 extends Uniform {
-	private Matrix2f currentValue;
+	private final Matrix2f currentValue;
 
-	public UniformMat2(String name) {
+	public UniformMat2(final String name) {
 		super(name);
 		currentValue = new Matrix2f();
 	}
@@ -23,7 +23,7 @@ public class UniformMat2 extends Uniform {
 	 *
 	 * @param value The new value.
 	 */
-	public void loadMat2(Matrix2f value) {
+	public void loadMat2(final Matrix2f value) {
 		if (value != null && !currentValue.equals(value)) {
 			FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 			value.store(matrixBuffer);

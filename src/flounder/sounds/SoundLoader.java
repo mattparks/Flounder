@@ -19,7 +19,7 @@ public class SoundLoader {
 	 */
 	protected static void doInitialSoundLoad(final Sound sound) {
 		try {
-			System.out.println("Loading " + sound.getSoundFile());
+			System.out.println("Loading sound " + sound.getSoundFile());
 			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			ByteBuffer byteBuffer = stream.loadNextData();

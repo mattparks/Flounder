@@ -13,11 +13,11 @@ import static org.lwjgl.opengl.GL30.*;
  * Runs basic OpenGL rendering functions.
  */
 public class OpenglUtils {
-	private static boolean m_cullingBackFace = false;
-	private static boolean m_inWireframe = false;
-	private static boolean m_isAlphaBlending = false;
-	private static boolean m_additiveBlending = false;
-	private static boolean m_antialiasing = false;
+	private static boolean cullingBackFace = false;
+	private static boolean inWireframe = false;
+	private static boolean isAlphaBlending = false;
+	private static boolean additiveBlending = false;
+	private static boolean antialiasing = false;
 
 	public static void prepareNewRenderParse(final Colour colour) {
 		prepareNewRenderParse(colour.getR(), colour.getG(), colour.getB());
@@ -32,21 +32,21 @@ public class OpenglUtils {
 	}
 
 	public static void disableBlending() {
-		if (m_isAlphaBlending || m_additiveBlending) {
+		if (isAlphaBlending || additiveBlending) {
 			glDisable(GL_BLEND);
-			m_isAlphaBlending = false;
-			m_additiveBlending = false;
+			isAlphaBlending = false;
+			additiveBlending = false;
 		}
 	}
 
 	public static void cullBackFaces(final boolean cull) {
-		if (cull && !m_cullingBackFace) {
+		if (cull && !cullingBackFace) {
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
-			m_cullingBackFace = true;
-		} else if (!cull && m_cullingBackFace) {
+			cullingBackFace = true;
+		} else if (!cull && cullingBackFace) {
 			glDisable(GL_CULL_FACE);
-			m_cullingBackFace = false;
+			cullingBackFace = false;
 		}
 	}
 
@@ -55,34 +55,34 @@ public class OpenglUtils {
 	}
 
 	public static boolean isInWireframe() {
-		return m_inWireframe;
+		return inWireframe;
 	}
 
 	public static void goWireframe(final boolean goWireframe) {
-		if (goWireframe && !m_inWireframe) {
+		if (goWireframe && !inWireframe) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			m_inWireframe = true;
-		} else if (!goWireframe && m_inWireframe) {
+			inWireframe = true;
+		} else if (!goWireframe && inWireframe) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			m_inWireframe = false;
+			inWireframe = false;
 		}
 	}
 
 	public static void enableAlphaBlending() {
-		if (!m_isAlphaBlending) {
+		if (!isAlphaBlending) {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			m_isAlphaBlending = true;
-			m_additiveBlending = false;
+			isAlphaBlending = true;
+			additiveBlending = false;
 		}
 	}
 
 	public static void enableAdditiveBlending() {
-		if (!m_additiveBlending) {
+		if (!additiveBlending) {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			m_additiveBlending = true;
-			m_isAlphaBlending = false;
+			additiveBlending = true;
+			isAlphaBlending = false;
 		}
 	}
 
@@ -91,12 +91,12 @@ public class OpenglUtils {
 			return;
 		}
 
-		if (enable && !m_antialiasing) {
+		if (enable && !antialiasing) {
 			glEnable(GL_MULTISAMPLE);
-			m_antialiasing = true;
-		} else if (!enable && m_antialiasing) {
+			antialiasing = true;
+		} else if (!enable && antialiasing) {
 			glDisable(GL_MULTISAMPLE);
-			m_antialiasing = false;
+			antialiasing = false;
 		}
 	}
 

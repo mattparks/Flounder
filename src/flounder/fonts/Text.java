@@ -6,57 +6,57 @@ import flounder.maths.vectors.*;
 import flounder.visual.*;
 
 public class Text {
-	private final float m_fontSize;
-	private final FontType m_fontType;
-	private final boolean m_centerText;
-	private String m_textString;
-	private int m_textMesh;
-	private int m_vertexCount;
-	private float m_lineMaxSize;
-	private int m_numberOfLines;
-	private float m_originalWidth;
+	private final float fontSize;
+	private final FontType fontType;
+	private final boolean centerText;
+	private String textString;
+	private int textMesh;
+	private int vertexCount;
+	private float lineMaxSize;
+	private int numberOfLines;
+	private float originalWidth;
 
-	private ValueDriver m_positionXDriver;
-	private ValueDriver m_positionYDriver;
-	private ValueDriver m_alphaDriver;
-	private ValueDriver m_scaleDriver;
-	private ValueDriver m_glowDriver;
-	private ValueDriver m_borderDriver;
-	private Colour m_colour;
-	private Colour m_borderColour;
+	private ValueDriver positionXDriver;
+	private ValueDriver positionYDriver;
+	private ValueDriver alphaDriver;
+	private ValueDriver scaleDriver;
+	private ValueDriver glowDriver;
+	private ValueDriver borderDriver;
+	private Colour colour;
+	private Colour borderColour;
 
-	private boolean m_solidBorder;
-	private boolean m_glowBorder;
+	private boolean solidBorder;
+	private boolean glowBorder;
 
-	private float m_currentScale;
-	private float m_currentX;
-	private float m_currentY;
-	private float m_currentAlpha;
-	private float m_glowSize;
-	private float m_borderSize;
+	private float currentScale;
+	private float currentX;
+	private float currentY;
+	private float currentAlpha;
+	private float glowSize;
+	private float borderSize;
 
-	private boolean m_loaded;
+	private boolean loaded;
 
 	protected Text(final String text, final FontType font, final float fontSize, final boolean centered) {
-		m_textString = text;
-		m_fontSize = fontSize;
-		m_fontType = font;
-		m_centerText = centered;
+		textString = text;
+		this.fontSize = fontSize;
+		fontType = font;
+		centerText = centered;
 
-		m_alphaDriver = new ConstantDriver(1);
-		m_scaleDriver = new ConstantDriver(1);
-		m_glowDriver = new ConstantDriver(0);
-		m_borderDriver = new ConstantDriver(0);
-		m_colour = new Colour(0f, 0f, 0f);
-		m_borderColour = new Colour(1f, 1f, 1f);
+		alphaDriver = new ConstantDriver(1);
+		scaleDriver = new ConstantDriver(1);
+		glowDriver = new ConstantDriver(0);
+		borderDriver = new ConstantDriver(0);
+		colour = new Colour(0f, 0f, 0f);
+		borderColour = new Colour(1f, 1f, 1f);
 
-		m_solidBorder = false;
-		m_glowBorder = false;
+		solidBorder = false;
+		glowBorder = false;
 
-		m_glowSize = 0;
-		m_borderSize = 0;
+		glowSize = 0;
+		borderSize = 0;
 
-		m_loaded = false;
+		loaded = false;
 	}
 
 	public static TextBuilder newText(final String text) {
@@ -64,40 +64,40 @@ public class Text {
 	}
 
 	public void initialise(final float absX, final float absY, final float maxXLength) {
-		m_positionXDriver = new ConstantDriver(absX);
-		m_positionYDriver = new ConstantDriver(absY);
-		m_lineMaxSize = maxXLength;
+		positionXDriver = new ConstantDriver(absX);
+		positionYDriver = new ConstantDriver(absY);
+		lineMaxSize = maxXLength;
 
-		if (!m_loaded) {
-			m_fontType.loadText(this);
-			m_loaded = true;
+		if (!loaded) {
+			fontType.loadText(this);
+			loaded = true;
 		}
 	}
 
 	public void update(final float delta) {
-		m_currentScale = m_scaleDriver.update(delta);
-		m_currentX = m_positionXDriver.update(delta);
-		m_currentY = m_positionYDriver.update(delta);
-		m_currentAlpha = m_alphaDriver.update(delta);
-		m_glowSize = m_glowDriver.update(delta);
-		m_borderSize = m_borderDriver.update(delta);
+		currentScale = scaleDriver.update(delta);
+		currentX = positionXDriver.update(delta);
+		currentY = positionYDriver.update(delta);
+		currentAlpha = alphaDriver.update(delta);
+		glowSize = glowDriver.update(delta);
+		borderSize = borderDriver.update(delta);
 	}
 
 	protected Vector2f getPosition() {
-		float scaleFactor = (m_currentScale - 1f) / 2f;
-		float xChange = scaleFactor * m_originalWidth;
-		float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * m_fontSize * m_numberOfLines * 1f;
-		return new Vector2f(m_currentX - xChange, m_currentY - yChange);
+		float scaleFactor = (currentScale - 1f) / 2f;
+		float xChange = scaleFactor * originalWidth;
+		float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1f;
+		return new Vector2f(currentX - xChange, currentY - yChange);
 	}
 
 	protected float getTotalBorderSize() {
-		if (m_solidBorder) {
-			if (m_borderSize == 0) {
+		if (solidBorder) {
+			if (borderSize == 0) {
 				return 0;
 			} else {
-				return calculateEdgeStart() + m_borderSize;
+				return calculateEdgeStart() + borderSize;
 			}
-		} else if (m_glowBorder) {
+		} else if (glowBorder) {
 			return calculateEdgeStart();
 		} else {
 			return 0;
@@ -105,135 +105,135 @@ public class Text {
 	}
 
 	protected float calculateEdgeStart() {
-		float size = m_fontSize * m_currentScale;
+		float size = fontSize * currentScale;
 		return 1f / 300f * size + 137f / 300f;
 	}
 
 	public String getTextString() {
-		return m_textString;
+		return textString;
 	}
 
 	public void setText(String newText) {
 		deleteFromMemory();
-		m_textString = newText;
-		m_fontType.loadText(this);
+		textString = newText;
+		fontType.loadText(this);
 	}
 
 	public void deleteFromMemory() {
-		Loader.deleteVAOFromCache(m_textMesh);
+		Loader.deleteVAOFromCache(textMesh);
 	}
 
 	public float getFontSize() {
-		return m_fontSize;
+		return fontSize;
 	}
 
 	public FontType getFontType() {
-		return m_fontType;
+		return fontType;
 	}
 
 	public boolean isCentered() {
-		return m_centerText;
+		return centerText;
 	}
 
 	protected int getMesh() {
-		return m_textMesh;
+		return textMesh;
 	}
 
 	protected void setMeshInfo(final int vao, final int verticesCount) {
-		m_textMesh = vao;
-		m_vertexCount = verticesCount;
+		textMesh = vao;
+		vertexCount = verticesCount;
 	}
 
 	protected int getVertexCount() {
-		return m_vertexCount;
+		return vertexCount;
 	}
 
 	protected float getMaxLineSize() {
-		return m_lineMaxSize;
+		return lineMaxSize;
 	}
 
 	protected void setOriginalWidth(final float width) {
-		m_originalWidth = width;
+		originalWidth = width;
 	}
 
 	public Colour getColour() {
-		return m_colour;
+		return colour;
 	}
 
 	public void setColour(Colour colour) {
-		m_colour = colour;
+		this.colour = colour;
 	}
 
 	protected Colour getBorderColour() {
-		return m_borderColour;
+		return borderColour;
 	}
 
 	public void setBorderColour(final float r, final float g, final float b) {
-		m_borderColour.set(r, g, b);
+		borderColour.set(r, g, b);
 	}
 
 	public void setScaleDriver(final ValueDriver scaleDriver) {
-		m_scaleDriver = scaleDriver;
+		this.scaleDriver = scaleDriver;
 	}
 
 	public void setBorder(final ValueDriver driver) {
-		m_borderDriver = driver;
-		m_solidBorder = true;
-		m_glowBorder = false;
+		borderDriver = driver;
+		solidBorder = true;
+		glowBorder = false;
 	}
 
 	public void removeBorder() {
-		m_solidBorder = false;
-		m_glowBorder = false;
+		solidBorder = false;
+		glowBorder = false;
 	}
 
 	public void setGlowing(final ValueDriver driver) {
-		m_solidBorder = false;
-		m_glowBorder = true;
-		m_glowDriver = driver;
+		solidBorder = false;
+		glowBorder = true;
+		glowDriver = driver;
 	}
 
 	public void setAlphaDriver(final ValueDriver driver) {
-		m_alphaDriver = driver;
+		alphaDriver = driver;
 	}
 
 	public float getScale() {
-		return m_currentScale;
+		return currentScale;
 	}
 
 	public int getNumberOfLines() {
-		return m_numberOfLines;
+		return numberOfLines;
 	}
 
 	public void setNumberOfLines(final int number) {
-		m_numberOfLines = number;
+		numberOfLines = number;
 	}
 
 	public float getBorderSize() {
-		return m_borderSize;
+		return borderSize;
 	}
 
 	protected float getGlowSize() {
-		if (m_solidBorder) {
+		if (solidBorder) {
 			return calculateAntialiasSize();
-		} else if (m_glowBorder) {
-			return m_glowSize;
+		} else if (glowBorder) {
+			return glowSize;
 		} else {
 			return 0;
 		}
 	}
 
 	protected float calculateAntialiasSize() {
-		float size = m_fontSize * m_currentScale;
+		float size = fontSize * currentScale;
 		size = (size - 1) / (1f + size / 4f) + 1f;
 		return 0.1f / size;
 	}
 
 	protected float getCurrentWidth() {
-		return m_originalWidth * m_currentScale;
+		return originalWidth * currentScale;
 	}
 
 	protected float getTransparency() {
-		return m_currentAlpha;
+		return currentAlpha;
 	}
 }

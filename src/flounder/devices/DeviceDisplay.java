@@ -11,22 +11,22 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Manages the creation, updating and destruction of the display, as well as timing and frame times.
  */
 public class DeviceDisplay {
-	private final GLFWWindowCloseCallback m_callbackWindowClose;
-	private final GLFWWindowFocusCallback m_callbackWindowFocus;
-	private final GLFWWindowPosCallback m_callbackWindowPos;
-	private final GLFWWindowSizeCallback m_callbackWindowSize;
-	private final GLFWFramebufferSizeCallback m_callbackFramebufferSize;
+	private final GLFWWindowCloseCallback callbackWindowClose;
+	private final GLFWWindowFocusCallback callbackWindowFocus;
+	private final GLFWWindowPosCallback callbackWindowPos;
+	private final GLFWWindowSizeCallback callbackWindowSize;
+	private final GLFWFramebufferSizeCallback callbackFramebufferSize;
 
-	private long m_window;
-	private int m_displayWidth;
-	private int m_displayHeight;
-	private String m_displayTitle;
-	private boolean m_displayVSync;
-	private boolean m_antialiasing;
-	private boolean m_displayFullscreen;
-	private int m_xpos, m_ypos;
-	private boolean m_focused;
-	private boolean m_closeRequested;
+	private long window;
+	private int displayWidth;
+	private int displayHeight;
+	private String displayTitle;
+	private boolean displayVSync;
+	private boolean antialiasing;
+	private boolean displayFullscreen;
+	private int displayPositionX, displayPositionY;
+	private boolean displayFocused;
+	private boolean closeRequested;
 
 	/**
 	 * Creates a new GLFW window.
@@ -39,14 +39,14 @@ public class DeviceDisplay {
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
 	protected DeviceDisplay(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final boolean displayFullscreen) {
-		m_displayWidth = displayWidth;
-		m_displayHeight = displayHeight;
-		m_displayTitle = displayTitle;
-		m_displayVSync = displayVSync;
-		m_antialiasing = antialiasing;
-		m_displayFullscreen = displayFullscreen;
-		m_focused = true;
-		m_closeRequested = false;
+		this.displayWidth = displayWidth;
+		this.displayHeight = displayHeight;
+		this.displayTitle = displayTitle;
+		this.displayVSync = displayVSync;
+		this.antialiasing = antialiasing;
+		this.displayFullscreen = displayFullscreen;
+		displayFocused = true;
+		closeRequested = false;
 
 		// Initialize the library.
 		if (glfwInit() != GLFW_TRUE) {
@@ -68,20 +68,20 @@ public class DeviceDisplay {
 		final GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 		// Create a windowed mode window and its OpenGL context.
-		m_window = glfwCreateWindow(displayWidth, displayHeight, displayTitle, NULL, NULL);
+		window = glfwCreateWindow(displayWidth, displayHeight, displayTitle, NULL, NULL);
 
 		// Sets the display to fullscreen or windowed.
 		setDisplayFullscreen(displayFullscreen);
 
 		// Gets any window errors.
-		if (m_window == NULL) {
+		if (window == NULL) {
 			System.out.println("Could not create the window!");
 			glfwTerminate();
 			System.exit(-1);
 		}
 
 		// Creates the OpenGL context.
-		glfwMakeContextCurrent(m_window);
+		glfwMakeContextCurrent(window);
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
 		GL.createCapabilities();
@@ -91,7 +91,7 @@ public class DeviceDisplay {
 
 		if (glError != GL_NO_ERROR) {
 			System.out.println("OpenGL Error: " + glError);
-			glfwDestroyWindow(m_window);
+			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -100,43 +100,43 @@ public class DeviceDisplay {
 		setDisplayVSync(displayVSync);
 
 		// Centers the window position.
-		glfwSetWindowPos(m_window, (m_xpos = (vidmode.width() - displayWidth) / 2), (m_ypos = (vidmode.height() - displayHeight) / 2));
+		glfwSetWindowPos(window, (displayPositionX = (vidmode.width() - displayWidth) / 2), (displayPositionY = (vidmode.height() - displayHeight) / 2));
 
 		// Shows the OpenGl window.
-		glfwShowWindow(m_window);
+		glfwShowWindow(window);
 
 		// Sets the displays callbacks.
-		glfwSetWindowCloseCallback(m_window, m_callbackWindowClose = new GLFWWindowCloseCallback() {
+		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
 			@Override
 			public void invoke(long window) {
-				m_closeRequested = true;
+				closeRequested = true;
 			}
 		});
 
-		glfwSetWindowFocusCallback(m_window, m_callbackWindowFocus = new GLFWWindowFocusCallback() {
+		glfwSetWindowFocusCallback(window, callbackWindowFocus = new GLFWWindowFocusCallback() {
 			@Override
 			public void invoke(long window, int focused) {
-				m_focused = focused == GL_TRUE;
+				displayFocused = focused == GL_TRUE;
 			}
 		});
 
-		glfwSetWindowPosCallback(m_window, m_callbackWindowPos = new GLFWWindowPosCallback() {
+		glfwSetWindowPosCallback(window, callbackWindowPos = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long window, int xpos, int ypos) {
-				m_xpos = xpos;
-				m_ypos = ypos;
+				displayPositionX = xpos;
+				displayPositionY = ypos;
 			}
 		});
 
-		glfwSetWindowSizeCallback(m_window, m_callbackWindowSize = new GLFWWindowSizeCallback() {
+		glfwSetWindowSizeCallback(window, callbackWindowSize = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				m_displayWidth = width;
-				m_displayHeight = height;
+				DeviceDisplay.this.displayWidth = width;
+				DeviceDisplay.this.displayHeight = height;
 			}
 		});
 
-		glfwSetFramebufferSizeCallback(m_window, m_callbackFramebufferSize = new GLFWFramebufferSizeCallback() {
+		glfwSetFramebufferSizeCallback(window, callbackFramebufferSize = new GLFWFramebufferSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
 				glViewport(0, 0, width, height);
@@ -155,49 +155,49 @@ public class DeviceDisplay {
 	 * Updates the display image by swaping the colour buffers.
 	 */
 	protected void swapBuffers() {
-		glfwSwapBuffers(m_window);
+		glfwSwapBuffers(window);
 	}
 
 	/**
 	 * @return The current GLFW window.
 	 */
 	public long getWindow() {
-		return m_window;
+		return window;
 	}
 
 	/**
 	 * @return The width of the display in pixels.
 	 */
 	public int getDisplayWidth() {
-		return m_displayWidth;
+		return displayWidth;
 	}
 
 	/**
 	 * @return The height of the display in pixels.
 	 */
 	public int getDisplayHeight() {
-		return m_displayHeight;
+		return displayHeight;
 	}
 
 	/**
 	 * @return The aspect ratio between the displays width and height.
 	 */
 	public float getDisplayAspectRatio() {
-		return ((float) m_displayWidth) / ((float) m_displayHeight);
+		return ((float) displayWidth) / ((float) displayHeight);
 	}
 
 	/**
 	 * @return The window's title.
 	 */
 	public String getDisplayTitle() {
-		return m_displayTitle;
+		return displayTitle;
 	}
 
 	/**
 	 * @return If the display is using vSync.
 	 */
 	public boolean isDisplayVSync() {
-		return m_displayVSync;
+		return displayVSync;
 	}
 
 	/**
@@ -206,15 +206,15 @@ public class DeviceDisplay {
 	 * @param displayVSync Weather or not to use vSync.
 	 */
 	public void setDisplayVSync(final boolean displayVSync) {
-		m_displayVSync = displayVSync;
-		glfwSwapInterval(m_displayVSync ? 1 : 0);
+		this.displayVSync = displayVSync;
+		glfwSwapInterval(this.displayVSync ? 1 : 0);
 	}
 
 	/**
 	 * @return If the display requests antialiased images.
 	 */
 	public boolean isAntialiasing() {
-		return m_antialiasing;
+		return antialiasing;
 	}
 
 	/**
@@ -223,14 +223,14 @@ public class DeviceDisplay {
 	 * @param antialiasing If the display should antialias.
 	 */
 	public void setAntialiasing(final boolean antialiasing) {
-		m_antialiasing = antialiasing;
+		this.antialiasing = antialiasing;
 	}
 
 	/**
 	 * @return Weather the display is fullscreen or not.
 	 */
 	public boolean isDisplayFullscreen() {
-		return m_displayFullscreen;
+		return displayFullscreen;
 	}
 
 	/**
@@ -239,44 +239,44 @@ public class DeviceDisplay {
 	 * @param displayFullscreen Weather or not to be fullscreen.
 	 */
 	public void setDisplayFullscreen(final boolean displayFullscreen) {
-		m_displayFullscreen = displayFullscreen;
+		this.displayFullscreen = displayFullscreen;
 		// TODO: Put display in fullscreen!
-		glfwWindowHint(GLFW_RESIZABLE, m_displayFullscreen ? GL_FALSE : GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, this.displayFullscreen ? GL_FALSE : GL_TRUE);
 	}
 
 	/**
 	 * @return The x pos of the display in pixels.
 	 */
 	public int getXPos() {
-		return m_xpos;
+		return displayPositionX;
 	}
 
 	/**
 	 * @return The y pos of the display in pixels.
 	 */
 	public int getYPos() {
-		return m_ypos;
+		return displayPositionY;
 	}
 
 	/**
 	 * @return If the GLFW display is selected.
 	 */
 	public boolean isFocused() {
-		return m_focused;
+		return displayFocused;
 	}
 
 	/**
 	 * @return If the GLFW display is open or if close has not been requested.
 	 */
 	public boolean isOpen() {
-		return !m_closeRequested && glfwWindowShouldClose(m_window) != GL_TRUE;
+		return !closeRequested && glfwWindowShouldClose(window) != GL_TRUE;
 	}
 
 	/**
 	 * Indicates that the game has been requested to close. At the end of the current frame the main game loop will exit.
 	 */
 	public void requestClose() {
-		m_closeRequested = true;
+		closeRequested = true;
 	}
 
 	/**
@@ -290,12 +290,12 @@ public class DeviceDisplay {
 	 * Closes the GLFW display, do not renderObjects after calling this.
 	 */
 	protected void dispose() {
-		m_callbackWindowClose.release();
-		m_callbackWindowFocus.release();
-		m_callbackWindowPos.release();
-		m_callbackWindowSize.release();
-		m_callbackFramebufferSize.release();
-		glfwDestroyWindow(m_window);
+		callbackWindowClose.release();
+		callbackWindowFocus.release();
+		callbackWindowPos.release();
+		callbackWindowSize.release();
+		callbackFramebufferSize.release();
+		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
 }

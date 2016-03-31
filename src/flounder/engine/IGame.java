@@ -6,35 +6,35 @@ import flounder.maths.vectors.*;
  * Represents a game entry point for the engine to run from.
  */
 public abstract class IGame {
-	public Vector3f m_focusPosition;
-	public Vector3f m_focusRotation;
-	public boolean m_gamePaused;
-	public float m_screenBlur;
+	public Vector3f focusPosition;
+	public Vector3f focusRotation;
+	public boolean gamePaused;
+	public float screenBlur;
 
 	/**
 	 *
 	 */
 	public IGame() {
-		m_focusPosition = new Vector3f(0.0f, 0.0f, 0.0f);
-		m_focusRotation = new Vector3f(0.0f, 0.0f, 0.0f);
-		m_gamePaused = false;
-		m_screenBlur = 0.0f;
+		focusPosition = new Vector3f(0.0f, 0.0f, 0.0f);
+		focusRotation = new Vector3f(0.0f, 0.0f, 0.0f);
+		gamePaused = false;
+		screenBlur = 0.0f;
 	}
 
 	public Vector3f getFocusPosition() {
-		return m_focusPosition;
+		return focusPosition;
 	}
 
 	public Vector3f getFocusRotation() {
-		return m_focusRotation;
+		return focusRotation;
 	}
 
 	public boolean isGamePaused() {
-		return m_gamePaused;
+		return gamePaused;
 	}
 
 	public float getScreenBlur() {
-		return m_screenBlur;
+		return screenBlur;
 	}
 
 	/**
@@ -46,10 +46,10 @@ public abstract class IGame {
 	 * @param screenBlur The factor (-1 to 1) by where the screen will be blurred from on the paused screen.
 	 */
 	public void updateGame(final Vector3f focusPosition, final Vector3f focusRotation, final boolean gamePaused, final float screenBlur) {
-		m_focusPosition.set(focusPosition);
-		m_focusRotation.set(focusRotation);
-		m_gamePaused = gamePaused;
-		m_screenBlur = screenBlur;
+		this.focusPosition.set(focusPosition);
+		this.focusRotation.set(focusRotation);
+		this.gamePaused = gamePaused;
+		this.screenBlur = screenBlur;
 	}
 
 	/**

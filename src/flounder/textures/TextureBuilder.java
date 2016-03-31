@@ -11,50 +11,50 @@ import java.util.*;
 public class TextureBuilder {
 	private static Map<String, SoftReference<Texture>> loaded = new HashMap<>();
 
-	private boolean m_clampEdges;
-	private boolean m_clampToBorder;
-	private boolean m_mipmap;
-	private boolean m_anisotropic;
-	private boolean m_nearest;
-	private Colour m_borderColour;
-	private MyFile m_file;
+	private boolean clampEdges;
+	private boolean clampToBorder;
+	private boolean mipmap;
+	private boolean anisotropic;
+	private boolean nearest;
+	private Colour borderColour;
+	private MyFile file;
 
 	protected TextureBuilder(final MyFile textureFile) {
-		m_clampEdges = false;
-		m_clampToBorder = false;
-		m_mipmap = true;
-		m_anisotropic = true;
-		m_nearest = false;
-		m_borderColour = new Colour(0, 0, 0, 0);
-		m_file = textureFile;
+		clampEdges = false;
+		clampToBorder = false;
+		mipmap = true;
+		anisotropic = true;
+		nearest = false;
+		borderColour = new Colour(0, 0, 0, 0);
+		file = textureFile;
 	}
 
 	public TextureBuilder clampEdges() {
-		m_clampEdges = true;
-		m_clampToBorder = false;
+		clampEdges = true;
+		clampToBorder = false;
 		return this;
 	}
 
 	public TextureBuilder clampToBorder(final Colour colour) {
-		m_clampEdges = false;
-		m_clampToBorder = true;
-		m_borderColour = colour;
+		clampEdges = false;
+		clampToBorder = true;
+		borderColour = colour;
 		return this;
 	}
 
 	public TextureBuilder nearestFiltering() {
-		m_nearest = true;
+		nearest = true;
 		return noMipmap();
 	}
 
 	public TextureBuilder noMipmap() {
-		m_mipmap = true;
-		m_anisotropic = false;
+		mipmap = true;
+		anisotropic = false;
 		return this;
 	}
 
 	public TextureBuilder noFiltering() {
-		m_anisotropic = false;
+		anisotropic = false;
 		return this;
 	}
 
@@ -64,17 +64,17 @@ public class TextureBuilder {
 	 * @return The texture that has been created.
 	 */
 	public Texture create() {
-		SoftReference<Texture> ref = loaded.get(m_file.getPath());
+		SoftReference<Texture> ref = loaded.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			System.out.println(m_file.getPath() + " is being loaded into builder memory!");
-			loaded.remove(m_file.getPath());
+			System.out.println(file.getPath() + " is being loaded into builder memory!");
+			loaded.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
 			request.doResourceRequest();
 			request.executeGlRequest();
-			loaded.put(m_file.getPath(), new SoftReference<>(data));
+			loaded.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;
@@ -86,14 +86,14 @@ public class TextureBuilder {
 	 * @return The texture.
 	 */
 	public Texture createInBackground() {
-		SoftReference<Texture> ref = loaded.get(m_file.getPath());
+		SoftReference<Texture> ref = loaded.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			loaded.remove(m_file.getPath());
+			loaded.remove(file.getPath());
 			data = new Texture();
 			RequestProcessor.sendRequest(new TextureLoadRequest(data, this));
-			loaded.put(m_file.getPath(), new SoftReference<>(data));
+			loaded.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;
@@ -105,46 +105,46 @@ public class TextureBuilder {
 	 * @return The texture.
 	 */
 	public Texture createInSecondThread() {
-		SoftReference<Texture> ref = loaded.get(m_file.getPath());
+		SoftReference<Texture> ref = loaded.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			loaded.remove(m_file.getPath());
+			loaded.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
 			request.doResourceRequest();
 			GlRequestProcessor.sendRequest(request);
-			loaded.put(m_file.getPath(), new SoftReference<>(data));
+			loaded.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;
 	}
 
 	public boolean isClampEdges() {
-		return m_clampEdges;
+		return clampEdges;
 	}
 
 	public boolean isClampToBorder() {
-		return m_clampToBorder;
+		return clampToBorder;
 	}
 
 	public boolean isMipmap() {
-		return m_mipmap;
+		return mipmap;
 	}
 
 	public boolean isAnisotropic() {
-		return m_anisotropic;
+		return anisotropic;
 	}
 
 	public boolean isNearest() {
-		return m_nearest;
+		return nearest;
 	}
 
 	public Colour getBorderColour() {
-		return m_borderColour;
+		return borderColour;
 	}
 
 	public MyFile getFile() {
-		return m_file;
+		return file;
 	}
 }

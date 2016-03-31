@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class UniformSampler extends Uniform {
 	private int currentValue;
 
-	public UniformSampler(String name) {
+	public UniformSampler(final String name) {
 		super(name);
 	}
 

@@ -4,16 +4,16 @@ package flounder.fonts;
  * Simple data structure class holding information about a certain glyph in the font texture atlas. All sizes are for a font-size of 1.
  */
 public class Character {
-	private final int m_id;
-	private final double m_xTextureCoord;
-	private final double m_yTextureCoord;
-	private final double m_xMaxTextureCoord;
-	private final double m_yMaxTextureCoord;
-	private final double m_xOffset;
-	private final double m_yOffset;
-	private final double m_sizeX;
-	private final double m_sizeY;
-	private final double m_xAdvance;
+	private final int id;
+	private final double xTextureCoord;
+	private final double yTextureCoord;
+	private final double xMaxTextureCoord;
+	private final double yMaxTextureCoord;
+	private final double xOffset;
+	private final double yOffset;
+	private final double sizeX;
+	private final double sizeY;
+	private final double xAdvance;
 
 	/**
 	 * @param id The ASCII value of the character.
@@ -28,55 +28,55 @@ public class Character {
 	 * @param xAdvance How much the cursor will move forward after this character.
 	 */
 	protected Character(final int id, final double xTextureCoord, final double yTextureCoord, final double xTexSize, final double yTexSize, final double xOffset, final double yOffset, final double sizeX, final double sizeY, final double xAdvance) {
-		m_id = id;
-		m_xTextureCoord = xTextureCoord;
-		m_yTextureCoord = yTextureCoord;
-		m_xOffset = xOffset;
-		m_yOffset = yOffset;
-		m_sizeX = sizeX;
-		m_sizeY = sizeY;
-		m_xMaxTextureCoord = xTexSize + xTextureCoord;
-		m_yMaxTextureCoord = yTexSize + yTextureCoord;
-		m_xAdvance = xAdvance;
+		this.id = id;
+		this.xTextureCoord = xTextureCoord;
+		this.yTextureCoord = yTextureCoord;
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		xMaxTextureCoord = xTexSize + xTextureCoord;
+		yMaxTextureCoord = yTexSize + yTextureCoord;
+		this.xAdvance = xAdvance;
 	}
 
 	protected int getId() {
-		return m_id;
+		return id;
 	}
 
 	protected double getXTextureCoord() {
-		return m_xTextureCoord;
+		return xTextureCoord;
 	}
 
 	protected double getYTextureCoord() {
-		return m_yTextureCoord;
+		return yTextureCoord;
 	}
 
 	protected double getXMaxTextureCoord() {
-		return m_xMaxTextureCoord;
+		return xMaxTextureCoord;
 	}
 
 	protected double getYMaxTextureCoord() {
-		return m_yMaxTextureCoord;
+		return yMaxTextureCoord;
 	}
 
 	protected double getXOffset() {
-		return m_xOffset;
+		return xOffset;
 	}
 
 	protected double getYOffset() {
-		return m_yOffset;
+		return yOffset;
 	}
 
 	protected double getSizeX() {
-		return m_sizeX;
+		return sizeX;
 	}
 
 	protected double getSizeY() {
-		return m_sizeY;
+		return sizeY;
 	}
 
 	protected double getXAdvance() {
-		return m_xAdvance;
+		return xAdvance;
 	}
 }

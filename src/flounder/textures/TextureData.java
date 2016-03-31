@@ -3,25 +3,25 @@ package flounder.textures;
 import java.nio.*;
 
 public class TextureData {
-	private final ByteBuffer m_buffer;
-	private final int m_width;
-	private final int m_height;
+	private final ByteBuffer buffer;
+	private final int width;
+	private final int height;
 
 	protected TextureData(final ByteBuffer buffer, final int width, final int height) {
-		m_buffer = buffer;
-		m_width = width;
-		m_height = height;
+		this.buffer = buffer;
+		this.width = width;
+		this.height = height;
 	}
 
 	protected ByteBuffer getBuffer() {
-		return m_buffer;
+		return buffer;
 	}
 
 	protected int getWidth() {
-		return m_width;
+		return width;
 	}
 
 	protected int getHeight() {
-		return m_height;
+		return height;
 	}
 }

@@ -7,16 +7,16 @@ import flounder.resources.*;
  * Class that represents a loaded texture.
  */
 public class Texture {
-	private int m_textureID;
-	private boolean m_hasTransparency;
-	private int m_numberOfRows;
-	private MyFile m_file;
-	private boolean m_loaded;
+	private int textureID;
+	private boolean hasTransparency;
+	private int numberOfRows;
+	private MyFile file;
+	private boolean loaded;
 
 	protected Texture() {
-		m_hasTransparency = false;
-		m_numberOfRows = 1;
-		m_loaded = false;
+		hasTransparency = false;
+		numberOfRows = 1;
+		loaded = false;
 	}
 
 	/**
@@ -40,47 +40,47 @@ public class Texture {
 	}
 
 	public int getTextureID() {
-		return m_textureID;
+		return textureID;
 	}
 
 	public void setTextureID(final int id) {
-		m_textureID = id;
-		m_loaded = true;
+		textureID = id;
+		loaded = true;
 	}
 
 	public boolean hasTransparency() {
-		return m_hasTransparency;
+		return hasTransparency;
 	}
 
 	public void setHasTransparency(final boolean hasTransparency) {
-		m_hasTransparency = hasTransparency;
+		this.hasTransparency = hasTransparency;
 	}
 
 	public int getNumberOfRows() {
-		return m_numberOfRows;
+		return numberOfRows;
 	}
 
 	public void setNumberOfRows(final int numberOfRows) {
-		m_numberOfRows = numberOfRows;
+		this.numberOfRows = numberOfRows;
 	}
 
 	public MyFile getFile() {
-		return m_file;
+		return file;
 	}
 
 	public void setFile(final MyFile file) {
-		m_file = file;
+		this.file = file;
 	}
 
 	public boolean isLoaded() {
-		return m_loaded;
+		return loaded;
 	}
 
 	/**
 	 * Sends a request to delete the texture.
 	 */
 	public void delete() {
-		m_loaded = false;
-		GlRequestProcessor.sendRequest(new TextureDeleteRequest(m_textureID));
+		loaded = false;
+		GlRequestProcessor.sendRequest(new TextureDeleteRequest(textureID));
 	}
 }

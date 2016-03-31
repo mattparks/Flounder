@@ -6,11 +6,11 @@ import java.util.*;
  * Represents a line of text during the loading of a text.
  */
 public class Line {
-	private final double m_maxLength;
-	private final double m_spaceSize;
+	private final double maxLength;
+	private final double spaceSize;
 
-	private final List<Word> m_words;
-	private double m_currentLineLength;
+	private final List<Word> words;
+	private double currentLineLength;
 
 	/**
 	 * Creates an empty line.
@@ -20,10 +20,10 @@ public class Line {
 	 * @param maxLength The screen-space maximum length of a line.
 	 */
 	protected Line(final double spaceWidth, final double fontSize, final double maxLength) {
-		m_maxLength = maxLength;
-		m_spaceSize = spaceWidth * fontSize;
-		m_words = new ArrayList<>();
-		m_currentLineLength = 0;
+		this.maxLength = maxLength;
+		spaceSize = spaceWidth * fontSize;
+		words = new ArrayList<>();
+		currentLineLength = 0;
 	}
 
 	/**
@@ -35,11 +35,11 @@ public class Line {
 	 */
 	protected boolean attemptToAddWord(final Word word) {
 		double additionalLength = word.getWordWidth();
-		additionalLength += !m_words.isEmpty() ? m_spaceSize : 0;
+		additionalLength += !words.isEmpty() ? spaceSize : 0;
 
-		if (m_currentLineLength + additionalLength <= m_maxLength) {
-			m_words.add(word);
-			m_currentLineLength += additionalLength;
+		if (currentLineLength + additionalLength <= maxLength) {
+			words.add(word);
+			currentLineLength += additionalLength;
 			return true;
 		} else {
 			return false;
@@ -50,20 +50,20 @@ public class Line {
 	 * @return The max length of the line.
 	 */
 	protected double getMaxLength() {
-		return m_maxLength;
+		return maxLength;
 	}
 
 	/**
 	 * @return The list of words in the line.
 	 */
 	protected List<Word> getWords() {
-		return m_words;
+		return words;
 	}
 
 	/**
 	 * @return The current screen-space length of the line.
 	 */
 	protected double getLineLength() {
-		return m_currentLineLength;
+		return currentLineLength;
 	}
 }

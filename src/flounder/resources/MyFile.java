@@ -9,18 +9,18 @@ public class MyFile {
 	public static final String FILE_SEPARATOR = "/";
 	public static final MyFile RES_FOLDER = new MyFile("res");
 
-	private final String m_path;
-	private final String m_name;
+	private final String path;
+	private final String name;
 
 	/**
 	 * Constructor for MyFile.
 	 *
-	 * @param path The m_path for this file to represent.
+	 * @param path The path for this file to represent.
 	 */
 	public MyFile(final String path) {
-		this.m_path = FILE_SEPARATOR + path;
+		this.path = FILE_SEPARATOR + path;
 		String[] dirs = path.split(FILE_SEPARATOR);
-		m_name = dirs[dirs.length - 1];
+		name = dirs[dirs.length - 1];
 	}
 
 	/**
@@ -35,20 +35,20 @@ public class MyFile {
 			path += FILE_SEPARATOR + part;
 		}
 
-		m_path = path;
-		String[] dirs = m_path.split(FILE_SEPARATOR);
-		m_name = dirs[dirs.length - 1];
+		this.path = path;
+		String[] dirs = this.path.split(FILE_SEPARATOR);
+		name = dirs[dirs.length - 1];
 	}
 
 	/**
 	 * Constructor for MyFile.
 	 *
 	 * @param file The file for this file to represent.
-	 * @param subFile The m_name of the represented sub file.
+	 * @param subFile The name of the represented sub file.
 	 */
 	public MyFile(final MyFile file, final String subFile) {
-		m_path = file.m_path + FILE_SEPARATOR + subFile;
-		m_name = subFile;
+		path = file.path + FILE_SEPARATOR + subFile;
+		name = subFile;
 	}
 
 	/**
@@ -58,15 +58,15 @@ public class MyFile {
 	 * @param subFiles Names of the represented sub file.
 	 */
 	public MyFile(final MyFile file, final String... subFiles) {
-		String path = file.m_path;
+		String path = file.path;
 
 		for (String part : subFiles) {
 			path += FILE_SEPARATOR + part;
 		}
 
-		m_path = path;
-		String[] dirs = m_path.split(FILE_SEPARATOR);
-		m_name = dirs[dirs.length - 1];
+		this.path = path;
+		String[] dirs = this.path.split(FILE_SEPARATOR);
+		name = dirs[dirs.length - 1];
 	}
 
 	/**
@@ -79,34 +79,34 @@ public class MyFile {
 			final InputStreamReader isr = new InputStreamReader(getInputStream());
 			return new BufferedReader(isr);
 		} catch (Exception e) {
-			System.err.println("Couldn't get reader for " + m_path);
+			System.err.println("Couldn't get reader for " + path);
 			throw e;
 		}
 	}
 
 	/**
-	 * @return Returns a input steam to the file m_path.
+	 * @return Returns a input steam to the file path.
 	 */
 	public InputStream getInputStream() {
-		return Class.class.getResourceAsStream(m_path);
+		return Class.class.getResourceAsStream(path);
 	}
 
 	/**
-	 * @return The m_name / subfile of this file.
+	 * @return The name / subfile of this file.
 	 */
 	public String getName() {
-		return m_name;
+		return name;
 	}
 
 	/**
-	 * @return The m_path to the represented file(s).
+	 * @return The path to the represented file(s).
 	 */
 	public String getPath() {
-		return m_path;
+		return path;
 	}
 
 	@Override
 	public String toString() {
-		return getPath();
+		return "MyFile{" + "path=" + getPath() + "}";
 	}
 }

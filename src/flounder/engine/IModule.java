@@ -1,9 +1,9 @@
 package flounder.engine;
 
 public class IModule {
-	private static IGame m_game;
-	private static ICamera m_camera;
-	private static IRendererMaster m_masterRenderer;
+	private static IGame game;
+	private static ICamera camera;
+	private static IRendererMaster masterRenderer;
 
 	/**
 	 * @param game The game to be run with the engine.
@@ -11,39 +11,39 @@ public class IModule {
 	 * @param masterRenderer The master renderer to render with.
 	 */
 	public IModule(final IGame game, final ICamera camera, final IRendererMaster masterRenderer) {
-		m_game = game;
-		m_camera = camera;
-		m_masterRenderer = masterRenderer;
+		IModule.game = game;
+		IModule.camera = camera;
+		IModule.masterRenderer = masterRenderer;
 	}
 
 	protected void init() {
-		m_masterRenderer.init();
-		m_game.init();
+		masterRenderer.init();
+		game.init();
 	}
 
 	protected void update() {
-		m_game.update();
-		m_camera.moveCamera(m_game.getFocusPosition(), m_game.getFocusRotation(), m_game.isGamePaused());
+		game.update();
+		camera.moveCamera(game.getFocusPosition(), game.getFocusRotation(), game.isGamePaused());
 	}
 
 	protected void render() {
-		m_masterRenderer.render();
+		masterRenderer.render();
 	}
 
 	protected IGame getGame() {
-		return m_game;
+		return game;
 	}
 
 	protected ICamera getCamera() {
-		return m_camera;
+		return camera;
 	}
 
 	protected IRendererMaster getRendererMaster() {
-		return m_masterRenderer;
+		return masterRenderer;
 	}
 
 	protected void dispose() {
-		m_game.dispose();
-		m_masterRenderer.dispose();
+		game.dispose();
+		masterRenderer.dispose();
 	}
 }

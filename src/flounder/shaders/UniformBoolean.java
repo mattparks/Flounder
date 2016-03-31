@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class UniformBoolean extends Uniform {
 	private boolean currentValue;
 
-	public UniformBoolean(String name) {
+	public UniformBoolean(final String name) {
 		super(name);
 	}
 

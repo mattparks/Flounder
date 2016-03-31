@@ -10,20 +10,23 @@ public class MousePicker {
 	private static final float RAY_RANGE = 120.0f;
 	private static final float RAY_SECTION = 2.0f;
 
-	private Vector3f currentRay = new Vector3f();
+	private Vector3f currentRay;
 	private Matrix4f viewMatrix;
 	private IPointSearch pointSearch;
 	private ICamera camera;
 	private Vector3f currentTerrainPoint;
 	private boolean pickCenterScreen;
-	private boolean rayUpToDate = false;
-	private boolean terrainPointUpToDate = false;
+	private boolean rayUpToDate;
+	private boolean terrainPointUpToDate;
 
 	public MousePicker(final ICamera camera, final IPointSearch pointSearch, final boolean pickCenter) {
+		currentRay = new Vector3f();
 		this.camera = camera;
 		this.pointSearch = pointSearch;
 		viewMatrix = camera.getViewMatrix();
 		pickCenterScreen = pickCenter;
+		rayUpToDate = false;
+		terrainPointUpToDate = false;
 	}
 
 	public Vector3f getCurrentTerrainPoint() {

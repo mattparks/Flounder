@@ -6,9 +6,9 @@ import java.util.*;
  * During the loading of a text this represents one word in the text.
  */
 public class Word {
-	private final List<Character> m_characters;
-	private double m_width;
-	private final double m_fontSize;
+	private final List<Character> characters;
+	private final double fontSize;
+	private double width;
 
 	/**
 	 * Create a new empty word.
@@ -16,9 +16,9 @@ public class Word {
 	 * @param fontSize The font size of the text which this word is in.
 	 */
 	protected Word(final double fontSize) {
-		m_characters = new ArrayList<>();
-		m_width = 0;
-		m_fontSize = fontSize;
+		characters = new ArrayList<>();
+		width = 0;
+		this.fontSize = fontSize;
 	}
 
 	/**
@@ -27,21 +27,21 @@ public class Word {
 	 * @param character The character to be added.
 	 */
 	protected void addCharacter(final Character character) {
-		m_characters.add(character);
-		m_width += character.getXAdvance() * m_fontSize;
+		characters.add(character);
+		width += character.getXAdvance() * fontSize;
 	}
 
 	/**
 	 * @return The list of characters in the word.
 	 */
 	protected List<Character> getCharacters() {
-		return m_characters;
+		return characters;
 	}
 
 	/**
 	 * @return The width of the word in terms of screen size.
 	 */
 	protected double getWordWidth() {
-		return m_width;
+		return width;
 	}
 }

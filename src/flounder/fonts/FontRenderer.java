@@ -10,10 +10,10 @@ import org.lwjgl.opengl.*;
 import java.util.*;
 
 public class FontRenderer extends IRenderer {
-	private FontShader m_fontShader;
+	private FontShader fontShader;
 
 	public FontRenderer() {
-		m_fontShader = new FontShader();
+		fontShader = new FontShader();
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class FontRenderer extends IRenderer {
 		OpenglUtils.cullBackFaces(true);
 		OpenglUtils.enableAlphaBlending();
 		OpenglUtils.disableDepthTesting();
-		m_fontShader.start();
+		fontShader.start();
 	}
 
 	private void renderText(final Text text) {
@@ -41,22 +41,22 @@ public class FontRenderer extends IRenderer {
 		OpenglUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
-		m_fontShader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
-		m_fontShader.aspectRatio.loadFloat(ManagerDevices.getDisplay().getDisplayAspectRatio());
-		m_fontShader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
-		m_fontShader.borderColour.loadVec3(text.getBorderColour());
-		m_fontShader.borderSizes.loadVec2(new Vector2f(text.getTotalBorderSize(), text.getGlowSize()));
-		m_fontShader.edgeData.loadVec2(new Vector2f(text.calculateEdgeStart(), text.calculateAntialiasSize()));
+		fontShader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
+		fontShader.aspectRatio.loadFloat(ManagerDevices.getDisplay().getDisplayAspectRatio());
+		fontShader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
+		fontShader.borderColour.loadVec3(text.getBorderColour());
+		fontShader.borderSizes.loadVec2(new Vector2f(text.getTotalBorderSize(), text.getGlowSize()));
+		fontShader.edgeData.loadVec2(new Vector2f(text.calculateEdgeStart(), text.calculateAntialiasSize()));
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		OpenglUtils.unbindVAO(0, 1);
 	}
 
 	private void endRendering() {
-		m_fontShader.stop();
+		fontShader.stop();
 	}
 
 	@Override
 	public void dispose() {
-		m_fontShader.dispose();
+		fontShader.dispose();
 	}
 }

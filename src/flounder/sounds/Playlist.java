@@ -8,13 +8,13 @@ import java.util.*;
  * A playlist of music tracks that can be played on the {@link MusicPlayer}.
  */
 public class Playlist {
-	private List<Sound> m_musics;
+	private List<Sound> musics;
 
 	/**
 	 * Creates a new playlist of music tracks.
 	 */
 	public Playlist() {
-		m_musics = new ArrayList<>();
+		musics = new ArrayList<>();
 	}
 
 	/**
@@ -23,21 +23,21 @@ public class Playlist {
 	 * @param music The track to be added.
 	 */
 	public void addMusic(Sound music) {
-		m_musics.add(music);
+		musics.add(music);
 	}
 
 	/**
 	 * Clear all tracks from the playlist.
 	 */
 	public void clear() {
-		m_musics.clear();
+		musics.clear();
 	}
 
 	/**
 	 * @return The list of playlist trakcs in their current order.
 	 */
 	public List<Sound> getOrderedTracks() {
-		return m_musics;
+		return musics;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class Playlist {
 	 */
 	public List<Sound> getShuffledMusicList(Sound previouslyPlayed) {
 		List<Sound> tempList = new ArrayList<Sound>();
-		tempList.addAll(m_musics);
+		tempList.addAll(musics);
 		List<Sound> shuffledList = new ArrayList<Sound>();
 
 		while (!tempList.isEmpty()) {

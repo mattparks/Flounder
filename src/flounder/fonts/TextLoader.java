@@ -10,12 +10,12 @@ public class TextLoader {
 	protected static final double LINE_HEIGHT = 0.04f;
 	protected static final int SPACE_ASCII = 32;
 
-	private final Texture m_fontTexture;
-	private final MetaFile m_metaData;
+	private final Texture fontTexture;
+	private final MetaFile metaData;
 
-	public TextLoader(MyFile fontSheet, MyFile metaFile) {
-		m_fontTexture = Texture.newTexture(fontSheet).noFiltering().create();
-		m_metaData = new MetaFile(metaFile);
+	public TextLoader(final MyFile fontSheet, final MyFile metaFile) {
+		fontTexture = Texture.newTexture(fontSheet).noFiltering().create();
+		metaData = new MetaFile(metaFile);
 	}
 
 	private static void addTextCoords(final List<Float> texCoords, final double x, final double y, final double maxX, final double maxY) {
@@ -49,7 +49,7 @@ public class TextLoader {
 	}
 
 	public int getFontTextureAtlas() {
-		return m_fontTexture.getTextureID();
+		return fontTexture.getTextureID();
 	}
 
 	public void loadTextIntoMemory(final Text text) {
@@ -61,7 +61,7 @@ public class TextLoader {
 	private List<Line> createStructure(final Text text) {
 		char[] chars = text.getTextString().toCharArray();
 		List<Line> lines = new ArrayList<>();
-		Line currentLine = new Line(m_metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
 		Word currentWord = new Word(text.getFontSize());
 
 		for (char c : chars) {
@@ -70,7 +70,7 @@ public class TextLoader {
 
 				if (!added) {
 					lines.add(currentLine);
-					currentLine = new Line(m_metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+					currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
 					currentLine.attemptToAddWord(currentWord);
 				}
 
@@ -78,7 +78,7 @@ public class TextLoader {
 				continue;
 			}
 
-			Character character = m_metaData.getCharacter(c);
+			Character character = metaData.getCharacter(c);
 			currentWord.addCharacter(character);
 		}
 
@@ -105,7 +105,7 @@ public class TextLoader {
 					cursorX += letter.getXAdvance() * text.getFontSize();
 				}
 
-				cursorX += m_metaData.getSpaceWidth() * text.getFontSize();
+				cursorX += metaData.getSpaceWidth() * text.getFontSize();
 			}
 
 			cursorX = 0;
@@ -123,7 +123,7 @@ public class TextLoader {
 
 		if (!added) {
 			lines.add(currentLine);
-			currentLine = new Line(m_metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+			currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
 			currentLine.attemptToAddWord(currentWord);
 		}
 

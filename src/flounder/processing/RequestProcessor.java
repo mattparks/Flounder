@@ -6,15 +6,15 @@ package flounder.processing;
 public class RequestProcessor extends Thread {
 	private static RequestProcessor PROCESSOR = new RequestProcessor();
 
-	private final RequestQueue m_requestQueue;
-	private boolean m_running;
+	private final RequestQueue requestQueue;
+	private boolean running;
 
 	/**
 	 * Creates a new class for flounder.processing resource requests in a separate thread.
 	 */
 	private RequestProcessor() {
-		m_requestQueue = new RequestQueue();
-		m_running = true;
+		requestQueue = new RequestQueue();
+		running = true;
 		this.start();
 	}
 
@@ -28,13 +28,20 @@ public class RequestProcessor extends Thread {
 	}
 
 	/**
+	 * Cleans up the request processor and destroys the thread.
+	 */
+	public static void dispose() {
+		PROCESSOR.kill();
+	}
+
+	/**
 	 * Adds a new request to the queue.
 	 *
 	 * @param request The resource request to add.
 	 */
 	private void addRequestToQueue(ResourceRequest request) {
-		boolean isPaused = !m_requestQueue.hasRequests();
-		m_requestQueue.addRequest(request);
+		boolean isPaused = !requestQueue.hasRequests();
+		requestQueue.addRequest(request);
 
 		if (isPaused) {
 			indicateNewRequests();
@@ -45,9 +52,9 @@ public class RequestProcessor extends Thread {
 	 * Runs the request queue.
 	 */
 	public synchronized void run() {
-		while (m_running || m_requestQueue.hasRequests()) {
-			if (m_requestQueue.hasRequests()) {
-				m_requestQueue.acceptNextRequest().doResourceRequest();
+		while (running || requestQueue.hasRequests()) {
+			if (requestQueue.hasRequests()) {
+				requestQueue.acceptNextRequest().doResourceRequest();
 			} else {
 				try {
 					wait();
@@ -62,7 +69,7 @@ public class RequestProcessor extends Thread {
 	 * Stops the request processor from running.
 	 */
 	private void kill() {
-		m_running = false;
+		running = false;
 		indicateNewRequests();
 	}
 
@@ -71,12 +78,5 @@ public class RequestProcessor extends Thread {
 	 */
 	private synchronized void indicateNewRequests() {
 		notify();
-	}
-
-	/**
-	 * Cleans up the request processor and destroys the thread.
-	 */
-	public static void dispose() {
-		PROCESSOR.kill();
 	}
 }

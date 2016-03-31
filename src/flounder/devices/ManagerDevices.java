@@ -11,12 +11,12 @@ import static org.lwjgl.opengl.GL11.*;
  * Manages the GLFW devices.
  */
 public class ManagerDevices {
-	private static boolean m_initialized;
-	private static DeviceDisplay m_display;
-	private static DeviceKeyboard m_keyboard;
-	private static DeviceMouse m_mouse;
-	private static DeviceJoysticks m_joysticks;
-	private static DeviceSound m_sound;
+	private static boolean initialized;
+	private static DeviceDisplay display;
+	private static DeviceKeyboard keyboard;
+	private static DeviceMouse mouse;
+	private static DeviceJoysticks joysticks;
+	private static DeviceSound sound;
 
 	/**
 	 * Creates GLFW devices.
@@ -29,27 +29,27 @@ public class ManagerDevices {
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
 	public static void init(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final boolean displayFullscreen) {
-		if (!m_initialized) {
+		if (!initialized) {
 			glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
-			m_display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, antialiasing, displayFullscreen);
-			m_keyboard = new DeviceKeyboard();
-			m_mouse = new DeviceMouse();
-			m_joysticks = new DeviceJoysticks();
-			m_sound = new DeviceSound();
+			display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, antialiasing, displayFullscreen);
+			keyboard = new DeviceKeyboard();
+			mouse = new DeviceMouse();
+			joysticks = new DeviceJoysticks();
+			sound = new DeviceSound();
 
 			// Logs OpenGL version info.
 			System.out.println("Number of Cores: " + Runtime.getRuntime().availableProcessors());
 			System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
 			renderLogo();
-			m_initialized = true;
+			initialized = true;
 		}
 	}
 
 	private static void renderLogo() {
-//		m_display.pollEvents();
+//		display.pollEvents();
 //		OpenglUtils.prepareNewRenderParse(1, 0, 0);
 		// TODO: Insert image shader render ->
-//		m_display.swapBuffers();
+//		display.swapBuffers();
 //
 //		try {
 //			Thread.sleep(2500);
@@ -64,18 +64,18 @@ public class ManagerDevices {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	public static void preRender(final float delta) {
-		m_display.pollEvents();
-		m_joysticks.update(delta);
-		m_keyboard.update(delta);
-		m_mouse.update(delta);
-		m_sound.update(delta);
+		display.pollEvents();
+		joysticks.update(delta);
+		keyboard.update(delta);
+		mouse.update(delta);
+		sound.update(delta);
 	}
 
 	/**
 	 * Updates the after frame device systems.
 	 */
 	public static void postRender() {
-		m_display.swapBuffers();
+		display.swapBuffers();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ManagerDevices {
 	 * @return The current display device manager.
 	 */
 	public static DeviceDisplay getDisplay() {
-		return m_display;
+		return display;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class ManagerDevices {
 	 * @return The current keyboard device manager.
 	 */
 	public static DeviceKeyboard getKeyboard() {
-		return m_keyboard;
+		return keyboard;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class ManagerDevices {
 	 * @return The current mouse device.
 	 */
 	public static DeviceMouse getMouse() {
-		return m_mouse;
+		return mouse;
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class ManagerDevices {
 	 * @return The current joystick device manager.
 	 */
 	public static DeviceJoysticks getJoysticks() {
-		return m_joysticks;
+		return joysticks;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class ManagerDevices {
 	 * @return The current sound device.
 	 */
 	public static DeviceSound getSound() {
-		return m_sound;
+		return sound;
 	}
 
 	/**
@@ -146,13 +146,13 @@ public class ManagerDevices {
 	 * Closes the GLFW devices, do not use device objects after calling this.
 	 */
 	public static void dispose() {
-		if (m_initialized) {
-			m_joysticks.dispose();
-			m_keyboard.dispose();
-			m_mouse.dispose();
-			m_sound.dispose();
-			m_display.dispose();
-			m_initialized = false;
+		if (initialized) {
+			joysticks.dispose();
+			keyboard.dispose();
+			mouse.dispose();
+			sound.dispose();
+			display.dispose();
+			initialized = false;
 		}
 	}
 }

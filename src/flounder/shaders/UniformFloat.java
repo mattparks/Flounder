@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class UniformFloat extends Uniform {
 	private float currentValue;
 
-	public UniformFloat(String name) {
+	public UniformFloat(final String name) {
 		super(name);
 	}
 

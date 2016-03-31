@@ -10,13 +10,13 @@ import static org.lwjgl.opengl.GL11.*;
  * Manages the creation, updating and destruction of joysticks.
  */
 public class DeviceJoysticks {
-	private final Joystick m_joysticks[];
+	private final Joystick joysticks[];
 
 	/**
-	 * Creates a new GLFW m_joystick manager.
+	 * Creates a new GLFW joystick manager.
 	 */
 	protected DeviceJoysticks() {
-		m_joysticks = new Joystick[GLFW_JOYSTICK_LAST];
+		joysticks = new Joystick[GLFW_JOYSTICK_LAST];
 		update(0.0f);
 	}
 
@@ -29,18 +29,18 @@ public class DeviceJoysticks {
 		// Gets connected Joysticks.
 		for (int j = GLFW_JOYSTICK_1; j < GLFW_JOYSTICK_LAST; j++) {
 			if (glfwJoystickPresent(j) == GL_FALSE) {
-				if (m_joysticks[j] != null) {
+				if (joysticks[j] != null) {
 					System.out.println("Disconnecting Joystick: " + j);
-					m_joysticks[j] = null;
+					joysticks[j] = null;
 				}
-			} else if (m_joysticks[j] == null) {
+			} else if (joysticks[j] == null) {
 				System.out.println("Connecting Joystick: " + j);
-				m_joysticks[j] = new Joystick(j);
+				joysticks[j] = new Joystick(j);
 			}
 		}
 
 		// Updates all connected Joysticks.
-		for (Joystick k : m_joysticks) {
+		for (Joystick k : joysticks) {
 			if (k != null) {
 				k.update();
 			}
@@ -48,25 +48,25 @@ public class DeviceJoysticks {
 	}
 
 	/**
-	 * Dobermans if the GLFW m_joystick is connected
+	 * Dobermans if the GLFW joystick is connected
 	 *
 	 * @param joystick The joystick to check connection with.
 	 *
 	 * @return If the joystick is connected.
 	 */
 	public boolean isConnected(final int joystick) {
-		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && m_joysticks[joystick] != null;
+		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && joysticks[joystick] != null;
 	}
 
 	/**
-	 * Gets the joystick from a GLFW m_joystick id.
+	 * Gets the joystick from a GLFW joystick id.
 	 *
 	 * @param joystick The GLFW id to use in the search.
 	 *
 	 * @return The GLFW joystick object.
 	 */
 	public Joystick getJoystick(final int joystick) {
-		return m_joysticks[joystick];
+		return joysticks[joystick];
 	}
 
 	/**
@@ -79,19 +79,19 @@ public class DeviceJoysticks {
 	 * Represents a connected GLFW joystick.
 	 */
 	public class Joystick {
-		private final int m_joystick;
-		private final String m_name;
-		private float m_axes[];
-		private byte m_buttons[];
+		private final int joystickID;
+		private final String name;
+		private float axes[];
+		private byte buttons[];
 
 		/**
 		 * Creates a new GLFW joystick object.
 		 *
-		 * @param joystick the GLFW joystick number.
+		 * @param joystickID the GLFW joystick ID.
 		 */
-		public Joystick(final int joystick) {
-			m_joystick = joystick;
-			m_name = glfwGetJoystickName(joystick);
+		public Joystick(final int joystickID) {
+			this.joystickID = joystickID;
+			name = glfwGetJoystickName(joystickID);
 			update();
 		}
 
@@ -100,28 +100,28 @@ public class DeviceJoysticks {
 		 */
 		protected void update() {
 			// TODO: Fix all of the objects being created by GLFW!
-			FloatBuffer fbaxes = glfwGetJoystickAxes(m_joystick);
-			ByteBuffer bbbuttons = glfwGetJoystickButtons(m_joystick);
+			FloatBuffer fbaxes = glfwGetJoystickAxes(joystickID);
+			ByteBuffer bbbuttons = glfwGetJoystickButtons(joystickID);
 
 			if (fbaxes != null) {
-				if (m_axes == null || m_axes.length != fbaxes.capacity()) {
-					m_axes = new float[fbaxes.capacity()];
+				if (axes == null || axes.length != fbaxes.capacity()) {
+					axes = new float[fbaxes.capacity()];
 				}
 
 				for (int i = 0; i < fbaxes.capacity(); i++) {
-					m_axes[i] = fbaxes.get(i);
+					axes[i] = fbaxes.get(i);
 				}
 
 				fbaxes.clear();
 			}
 
 			if (bbbuttons != null) {
-				if (m_buttons == null || m_buttons.length != bbbuttons.capacity()) {
-					m_buttons = new byte[bbbuttons.capacity()];
+				if (buttons == null || buttons.length != bbbuttons.capacity()) {
+					buttons = new byte[bbbuttons.capacity()];
 				}
 
 				for (int i = 0; i < bbbuttons.capacity(); i++) {
-					m_buttons[i] = bbbuttons.get(i);
+					buttons[i] = bbbuttons.get(i);
 				}
 
 				bbbuttons.clear();
@@ -135,15 +135,15 @@ public class DeviceJoysticks {
 		 */
 		public void writeData() {
 			try {
-				PrintStream ps = new PrintStream("m_joystick" + m_joystick + ".txt");
-				ps.println("[" + m_joystick + "]: " + m_name);
+				PrintStream ps = new PrintStream("joystick" + joystickID + ".txt");
+				ps.println("[" + joystickID + "]: " + name);
 				ps.println("\nAXES");
-				for (int i = 0; i < m_axes.length; i++) {
-					ps.println("[" + i + "]: " + m_axes[i]);
+				for (int i = 0; i < axes.length; i++) {
+					ps.println("[" + i + "]: " + axes[i]);
 				}
 				ps.println("\nBUTTONS");
-				for (int i = 0; i < m_buttons.length; i++) {
-					ps.println("[" + i + "]: " + m_buttons[i]);
+				for (int i = 0; i < buttons.length; i++) {
+					ps.println("[" + i + "]: " + buttons[i]);
 				}
 				ps.close();
 			} catch (FileNotFoundException e) {
@@ -152,21 +152,21 @@ public class DeviceJoysticks {
 		}
 
 		/**
-		 * Gets the GLFW joystick number.
+		 * Gets the GLFW joystick ID.
 		 *
-		 * @return The GLFW joystick number.
+		 * @return The GLFW joystick ID.
 		 */
-		public int getJoystick() {
-			return m_joystick;
+		public int getJoystickID() {
+			return joystickID;
 		}
 
 		/**
-		 * Gets the m_name of the joystick.
+		 * Gets the name of the joystick.
 		 *
 		 * @return The joysticks name.
 		 */
 		public String getName() {
-			return m_name;
+			return name;
 		}
 
 		/**
@@ -177,7 +177,7 @@ public class DeviceJoysticks {
 		 * @return The value of the joystick's axis.
 		 */
 		public float getAxis(final int axis) {
-			return m_axes[axis];
+			return axes[axis];
 		}
 
 		/**
@@ -188,7 +188,7 @@ public class DeviceJoysticks {
 		 * @return Whether a button on a joystick is pressed.
 		 */
 		public boolean getButton(final int button) {
-			return m_buttons[button] != 0;
+			return buttons[button] != 0;
 		}
 
 		/**
@@ -197,7 +197,7 @@ public class DeviceJoysticks {
 		 * @return The number of axes the joystick offers.
 		 */
 		public int getCountAxes() {
-			return m_axes.length;
+			return axes.length;
 		}
 
 		/**
@@ -206,7 +206,7 @@ public class DeviceJoysticks {
 		 * @return The number of buttons the joystick offers.
 		 */
 		public int getCountButtons() {
-			return m_buttons.length;
+			return buttons.length;
 		}
 	}
 }

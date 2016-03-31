@@ -7,15 +7,15 @@ import flounder.maths.vectors.*;
  * Represents a sub renderer in the engine.
  */
 public abstract class IRenderer {
-	private final ProfileTimer m_profileTimer;
-	private float m_renderTimeMs;
+	private final ProfileTimer profileTimer;
+	private float renderTimeMs;
 
 	/**
 	 * Creates a new sub renderer in the engine.
 	 */
 	public IRenderer() {
-		m_profileTimer = new ProfileTimer();
-		m_renderTimeMs = 0.0f;
+		profileTimer = new ProfileTimer();
+		renderTimeMs = 0.0f;
 	}
 
 	/**
@@ -25,17 +25,17 @@ public abstract class IRenderer {
 	 * @param camera The camera to be used when rendering.
 	 */
 	public void render(final Vector4f clipPlane, final ICamera camera) {
-		m_profileTimer.startInvocation();
+		profileTimer.startInvocation();
 		renderObjects(clipPlane, camera);
-		m_profileTimer.stopInvocation();
-		m_renderTimeMs = m_profileTimer.reset();
+		profileTimer.stopInvocation();
+		renderTimeMs = profileTimer.reset();
 	}
 
 	/**
 	 * @return The last render time (in Ms).
 	 */
 	public float getRenderTimeMs() {
-		return m_renderTimeMs;
+		return renderTimeMs;
 	}
 
 	/**

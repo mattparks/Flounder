@@ -9,26 +9,25 @@ import java.util.*;
 public class StreamManager extends Thread {
 	public static final int SOUND_CHUNK_MAX_SIZE = 100000;
 	public static final long SLEEP_TIME = 100;
-
 	public static final StreamManager STREAMER = new StreamManager();
 
-	private final List<Streamer> m_streamers;
-	private final List<Streamer> m_toRemove;
-	private boolean m_alive;
+	private final List<Streamer> streamers;
+	private final List<Streamer> toRemove;
+	private boolean alive;
 
 	/**
 	 * Creates a new object that updates audio streams in a separate thread.
 	 */
 	public StreamManager() {
-		m_streamers = new ArrayList<>();
-		m_toRemove = new ArrayList<>();
-		m_alive = true;
+		streamers = new ArrayList<>();
+		toRemove = new ArrayList<>();
+		alive = true;
 	}
 
 	@Override
 	public void run() {
-		while (m_alive) {
-			List<Streamer> safeCopy = new ArrayList<>(m_streamers);
+		while (alive) {
+			List<Streamer> safeCopy = new ArrayList<>(streamers);
 			safeCopy.forEach(streamer -> updateStreamer(streamer));
 			removeFinishedStreamers();
 			pause();
@@ -39,7 +38,7 @@ public class StreamManager extends Thread {
 	 * Stops the thread from running.
 	 */
 	public void kill() {
-		m_alive = false;
+		alive = false;
 	}
 
 	/**
@@ -51,7 +50,7 @@ public class StreamManager extends Thread {
 		boolean stillAlive = streamer.update();
 
 		if (!stillAlive) {
-			m_toRemove.add(streamer);
+			toRemove.add(streamer);
 		}
 	}
 
@@ -59,12 +58,12 @@ public class StreamManager extends Thread {
 	 * Removes any finished {@link Streamer}s from the list of current streamers, and deletes them (deletes their buffers).
 	 */
 	private synchronized void removeFinishedStreamers() {
-		for (Streamer streamer : m_toRemove) {
-			m_streamers.remove(streamer);
+		for (Streamer streamer : toRemove) {
+			streamers.remove(streamer);
 			streamer.delete();
 		}
 
-		m_toRemove.clear();
+		toRemove.clear();
 	}
 
 	/**
@@ -88,7 +87,7 @@ public class StreamManager extends Thread {
 	 */
 	protected synchronized void stream(Sound sound, SoundSource source, AudioController controller) {
 		try {
-			m_streamers.add(new Streamer(sound, source, controller));
+			streamers.add(new Streamer(sound, source, controller));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Couldn't open stream for sound " + sound.getSoundFile());

@@ -15,18 +15,17 @@ import static org.lwjgl.opengl.GL11.*;
 public class DeviceSound {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 
-	private Vector3f m_cameraPosition;
-
-	private SourcePoolManager m_sourcePool;
-	private MusicPlayer m_musicPlayer;
-	private ALContext m_context;
+	private final Vector3f cameraPosition;
+	private final SourcePoolManager sourcePool;
+	private final MusicPlayer musicPlayer;
+	private final ALContext context;
 
 	/**
 	 * Initializes all the sound related things. Should be called when the game loads.
 	 */
 	protected DeviceSound() {
-		m_cameraPosition = new Vector3f(0.0f, 0.0f, 0.0f);
-		m_context = ALContext.create();
+		cameraPosition = new Vector3f(0.0f, 0.0f, 0.0f);
+		context = ALContext.create();
 		int alError = AL10.alGetError();
 
 		if (alError != GL_NO_ERROR) {
@@ -35,9 +34,9 @@ public class DeviceSound {
 
 		AL10.alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
 		StreamManager.STREAMER.start();
-		m_sourcePool = new SourcePoolManager();
-		m_musicPlayer = new MusicPlayer();
-		m_musicPlayer.setVolume(OptionsAudio.SOUND_VOLUME);
+		sourcePool = new SourcePoolManager();
+		musicPlayer = new MusicPlayer();
+		musicPlayer.setVolume(OptionsAudio.SOUND_VOLUME);
 	}
 
 	/**
@@ -46,17 +45,17 @@ public class DeviceSound {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	public void update(final float delta) {
-		m_cameraPosition.set(FlounderEngine.getCamera().getPosition());
-		AL10.alListener3f(AL10.AL_POSITION, m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-		m_musicPlayer.update(delta);
-		m_sourcePool.update();
+		cameraPosition.set(FlounderEngine.getCamera().getPosition());
+		AL10.alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+		musicPlayer.update(delta);
+		sourcePool.update();
 	}
 
 	/**
 	 * @return The cameras position.
 	 */
 	public Vector3f getCameraPosition() {
-		return m_cameraPosition;
+		return cameraPosition;
 	}
 
 	/**
@@ -71,7 +70,7 @@ public class DeviceSound {
 			return null;
 		}
 
-		return m_sourcePool.play(playRequest);
+		return sourcePool.play(playRequest);
 	}
 
 	/**
@@ -86,14 +85,14 @@ public class DeviceSound {
 			return null;
 		}
 
-		return m_sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
+		return sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
 	}
 
 	/**
 	 * @return The background music player.
 	 */
 	public MusicPlayer getMusicPlayer() {
-		return m_musicPlayer;
+		return musicPlayer;
 	}
 
 	/**
@@ -101,9 +100,9 @@ public class DeviceSound {
 	 */
 	protected void dispose() {
 		StreamManager.STREAMER.kill();
-		m_sourcePool.cleanUp();
-		m_musicPlayer.cleanUp();
+		sourcePool.cleanUp();
+		musicPlayer.cleanUp();
 		SoundLoader.cleanUp();
-		m_context.destroy();
+		context.destroy();
 	}
 }

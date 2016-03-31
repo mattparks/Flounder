@@ -1,74 +1,74 @@
 package flounder.textures.fbos;
 
 public class FBOBuilder {
-	public enum DepthBufferType {
-		RENDER_BUFFER, TEXTURE, NONE
-	}
-
-	private DepthBufferType m_depthBufferType;
-	private boolean m_useColourBuffer;
-	private boolean m_linearFiltering;
-	private boolean m_clampEdge;
-	private boolean m_alphaChannel;
-	private boolean m_antialiased;
-	private int m_samples;
-	private int m_width;
-	private int m_height;
-	private boolean m_fitToScreen;
+	private DepthBufferType depthBufferType;
+	private boolean useColourBuffer;
+	private boolean linearFiltering;
+	private boolean clampEdge;
+	private boolean alphaChannel;
+	private boolean antialiased;
+	private int samples;
+	private int width;
+	private int height;
+	private boolean fitToScreen;
 
 	protected FBOBuilder(final int width, final int height) {
-		m_depthBufferType = DepthBufferType.NONE;
-		m_useColourBuffer = true;
-		m_linearFiltering = true;
-		m_clampEdge = true;
-		m_alphaChannel = false;
-		m_antialiased = false;
-		m_samples = 1;
-		m_width = width;
-		m_height = height;
-		m_fitToScreen = false;
+		depthBufferType = DepthBufferType.NONE;
+		useColourBuffer = true;
+		linearFiltering = true;
+		clampEdge = true;
+		alphaChannel = false;
+		antialiased = false;
+		samples = 1;
+		this.width = width;
+		this.height = height;
+		fitToScreen = false;
 	}
 
 	/**
 	 * @return Returns a newly created FBO off of the builders parameters.
 	 */
 	public FBO create() {
-		return new FBO(m_width, m_height, m_fitToScreen, m_depthBufferType, m_useColourBuffer, m_linearFiltering, m_clampEdge, m_alphaChannel, m_antialiased, m_samples);
+		return new FBO(width, height, fitToScreen, depthBufferType, useColourBuffer, linearFiltering, clampEdge, alphaChannel, antialiased, samples);
 	}
 
 	public FBOBuilder depthBuffer(final DepthBufferType type) {
-		m_depthBufferType = type;
+		depthBufferType = type;
 		return this;
 	}
 
 	public FBOBuilder noColourBuffer() {
-		m_useColourBuffer = false;
+		useColourBuffer = false;
 		return this;
 	}
 
 	public FBOBuilder nearestFiltering() {
-		m_linearFiltering = false;
+		linearFiltering = false;
 		return this;
 	}
 
 	public FBOBuilder repeatTexture() {
-		m_clampEdge = false;
+		clampEdge = false;
 		return this;
 	}
 
 	public FBOBuilder withAlphaChannel(final boolean alpha) {
-		m_alphaChannel = alpha;
+		alphaChannel = alpha;
 		return this;
 	}
 
 	public FBOBuilder antialias(final int samples) {
-		m_antialiased = true;
-		m_samples = samples;
+		antialiased = true;
+		this.samples = samples;
 		return this;
 	}
 
 	public FBOBuilder fitToScreen() {
-		m_fitToScreen = true;
+		fitToScreen = true;
 		return this;
+	}
+
+	public enum DepthBufferType {
+		RENDER_BUFFER, TEXTURE, NONE
 	}
 }

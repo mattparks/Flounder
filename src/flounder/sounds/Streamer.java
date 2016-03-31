@@ -10,14 +10,14 @@ import java.util.*;
 public class Streamer {
 	private static final int NUM_BUFFERS = 2;
 
-	private SoundSource m_source;
-	private AudioController m_controller;
-	private WavDataStream m_stream;
+	private SoundSource source;
+	private AudioController controller;
+	private WavDataStream stream;
 
-	private boolean m_initialBufferPlaying;
+	private boolean initialBufferPlaying;
 
-	private List<Integer> m_unusedBuffers;
-	private List<Integer> m_bufferQueue;
+	private List<Integer> unusedBuffers;
+	private List<Integer> bufferQueue;
 
 	/**
 	 * Create a new stream to play a certain sound using a certain sound source.
@@ -31,16 +31,16 @@ public class Streamer {
 	 */
 	protected Streamer(Sound sound, SoundSource source, AudioController controller) throws Exception {
 		System.out.println("Streaming " + sound.getSoundFile());
-		m_source = source;
-		m_controller = controller;
-		m_stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
-		m_stream.setStartPoint(sound.getBytesRead());
-		m_initialBufferPlaying = true;
-		m_unusedBuffers = new ArrayList<>();
-		m_bufferQueue = new ArrayList<>();
+		this.source = source;
+		this.controller = controller;
+		stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
+		stream.setStartPoint(sound.getBytesRead());
+		initialBufferPlaying = true;
+		unusedBuffers = new ArrayList<>();
+		bufferQueue = new ArrayList<>();
 
 		for (int i = 0; i < NUM_BUFFERS; i++) {
-			m_unusedBuffers.add(SoundLoader.generateBuffer());
+			unusedBuffers.add(SoundLoader.generateBuffer());
 		}
 	}
 
@@ -50,26 +50,26 @@ public class Streamer {
 	 * @return {@code false} when the source has finished playing the sound and has already removed any buffers from its queue.
 	 */
 	protected boolean update() {
-		if (!m_controller.isActive()) {
+		if (!controller.isActive()) {
 			return false;
 		}
 
-		if (!m_stream.hasEnded() && m_source.isPlaying()) {
-			if (!m_unusedBuffers.isEmpty()) {
+		if (!stream.hasEnded() && source.isPlaying()) {
+			if (!unusedBuffers.isEmpty()) {
 				queueUnusedBuffer();
 			} else if (isTopBufferFinished()) {
 				refillTopBuffer();
 			}
 		}
 
-		return m_controller.isActive();
+		return controller.isActive();
 	}
 
 	/**
 	 * Fills the first unused buffer with data and queues it to be played.
 	 */
 	private void queueUnusedBuffer() {
-		int buffer = m_unusedBuffers.remove(0);
+		int buffer = unusedBuffers.remove(0);
 		loadNextDataIntoBuffer(buffer);
 		queueBuffer(buffer);
 	}
@@ -78,12 +78,12 @@ public class Streamer {
 	 * @return {@code true} if there is a buffer which the source has already finished playing. This doesn't include the initial sound buffer from the {@link Sound} object, whose data is never changed.
 	 */
 	private boolean isTopBufferFinished() {
-		int finishedBufferCount = m_source.getFinishedBuffersCount();
+		int finishedBufferCount = source.getFinishedBuffersCount();
 
-		if (finishedBufferCount > 0 && m_initialBufferPlaying) {
+		if (finishedBufferCount > 0 && initialBufferPlaying) {
 			finishedBufferCount--;
-			m_source.unqueue();
-			m_initialBufferPlaying = false;
+			source.unqueue();
+			initialBufferPlaying = false;
 		}
 
 		return finishedBufferCount > 0;
@@ -104,8 +104,8 @@ public class Streamer {
 	 * @param buffer The buffer into which the data should be loaded.
 	 */
 	private void loadNextDataIntoBuffer(int buffer) {
-		ByteBuffer data = m_stream.loadNextData();
-		SoundLoader.loadSoundDataIntoBuffer(buffer, data, m_stream.getAlFormat(), m_stream.getSampleRate());
+		ByteBuffer data = stream.loadNextData();
+		SoundLoader.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
 	}
 
 	/**
@@ -114,9 +114,9 @@ public class Streamer {
 	 * @param buffer The buffer to be queued.
 	 */
 	private void queueBuffer(int buffer) {
-		if (m_source.isPlaying()) {
-			m_source.queue(buffer);
-			m_bufferQueue.add(buffer);
+		if (source.isPlaying()) {
+			source.queue(buffer);
+			bufferQueue.add(buffer);
 		}
 	}
 
@@ -126,8 +126,8 @@ public class Streamer {
 	 * @return The ID of the top buffer.
 	 */
 	private int unqueueTopBuffer() {
-		int topBuffer = m_bufferQueue.remove(0);
-		m_source.unqueue();
+		int topBuffer = bufferQueue.remove(0);
+		source.unqueue();
 		return topBuffer;
 	}
 
@@ -135,13 +135,13 @@ public class Streamer {
 	 * When the streaming of the sound has finished the buffers can be deleted.
 	 */
 	protected void delete() {
-		m_stream.close();
+		stream.close();
 
-		for (Integer buffer : m_bufferQueue) {
+		for (Integer buffer : bufferQueue) {
 			SoundLoader.deleteBuffer(buffer);
 		}
 
-		for (Integer buffer : m_unusedBuffers) {
+		for (Integer buffer : unusedBuffers) {
 			SoundLoader.deleteBuffer(buffer);
 		}
 	}

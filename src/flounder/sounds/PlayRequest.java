@@ -8,15 +8,15 @@ import flounder.maths.vectors.*;
  * A request that can be sent to the {@link DeviceSound} specifying what sound should be played and what settings the source playing it should use.
  */
 public class PlayRequest {
-	private Vector3f m_position;
-	private float m_innerRange;
-	private float m_outerRange;
+	private Vector3f position;
+	private float innerRange;
+	private float outerRange;
 
-	private boolean m_systemSound;
-	private boolean m_loop;
-	private float m_volume;
+	private boolean systemSound;
+	private boolean loop;
 
-	private Sound m_sound;
+	private float volume;
+	private Sound sound;
 
 	/**
 	 * Creates a new sound play request.
@@ -25,13 +25,13 @@ public class PlayRequest {
 	 * @param volume The volume that the sound should be played at.
 	 */
 	private PlayRequest(final Sound sound, final float volume) {
-		m_position = new Vector3f(0.0f, 0.0f, 0.0f);
-		m_innerRange = 1.0f;
-		m_outerRange = 1.0f;
-		m_systemSound = true;
-		m_loop = false;
-		m_volume = volume * OptionsAudio.SOUND_VOLUME;
-		m_sound = sound;
+		position = new Vector3f(0.0f, 0.0f, 0.0f);
+		innerRange = 1.0f;
+		outerRange = 1.0f;
+		systemSound = true;
+		loop = false;
+		this.volume = volume * OptionsAudio.SOUND_VOLUME;
+		this.sound = sound;
 	}
 
 	/**
@@ -58,10 +58,10 @@ public class PlayRequest {
 	 */
 	public static PlayRequest new3dSoundPlayRequest(final Sound sound, final float volume, final Vector3f position, final float innerRange, final float outerRange) {
 		PlayRequest request = new PlayRequest(sound, volume);
-		request.m_systemSound = false;
-		request.m_innerRange = innerRange < 1 ? 1 : innerRange;
-		request.m_outerRange = outerRange;
-		request.m_position = position;
+		request.systemSound = false;
+		request.innerRange = innerRange < 1 ? 1 : innerRange;
+		request.outerRange = outerRange;
+		request.position = position;
 		return request;
 	}
 
@@ -69,49 +69,35 @@ public class PlayRequest {
 	 * @return The position in the 3D world where the sound should be emitted from.
 	 */
 	public final Vector3f getPosition() {
-		return m_position;
+		return position;
 	}
 
 	/**
 	 * @return The inner range of the sound. Inside this range the sound is heard at full volume.
 	 */
 	public final float getInnerRange() {
-		return m_innerRange;
+		return innerRange;
 	}
 
 	/**
 	 * @return The total range of the sound. Outside this range the sound cannot be heard.
 	 */
 	public final float getOuterRange() {
-		return m_outerRange;
+		return outerRange;
 	}
 
 	/**
 	 * @return {@code true} if the sound is a "system sound", meaning that it should be played at full volume regardless of where the {@link IAudioListener} is.
 	 */
 	public final boolean isSystemSound() {
-		return m_systemSound;
+		return systemSound;
 	}
 
 	/**
 	 * @return {@code true} if the sound should be played on loop.
 	 */
 	public final boolean isLooping() {
-		return m_loop;
-	}
-
-	/**
-	 * @return The volume at which this sound should be played.
-	 */
-	public final float getVolume() {
-		return m_volume;
-	}
-
-	/**
-	 * @return The sound that is being requested to be played.
-	 */
-	public final Sound getSound() {
-		return m_sound;
+		return loop;
 	}
 
 	/**
@@ -120,6 +106,20 @@ public class PlayRequest {
 	 * @param loop Whether the sound should be played on loop or not.
 	 */
 	public void setLooping(final boolean loop) {
-		m_loop = loop;
+		this.loop = loop;
+	}
+
+	/**
+	 * @return The volume at which this sound should be played.
+	 */
+	public final float getVolume() {
+		return volume;
+	}
+
+	/**
+	 * @return The sound that is being requested to be played.
+	 */
+	public final Sound getSound() {
+		return sound;
 	}
 }

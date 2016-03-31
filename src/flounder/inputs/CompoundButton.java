@@ -4,8 +4,8 @@ package flounder.inputs;
  * Handles multiple buttons at once.
  */
 public class CompoundButton implements IButton {
-	private final IButton[] m_buttons;
-	private boolean m_wasDown;
+	private final IButton[] buttons;
+	private boolean wasDown;
 
 	/**
 	 * Creates a new CompoundButton.
@@ -13,13 +13,13 @@ public class CompoundButton implements IButton {
 	 * @param buttons The list of buttons being checked.
 	 */
 	public CompoundButton(final IButton... buttons) {
-		m_buttons = buttons;
-		m_wasDown = false;
+		this.buttons = buttons;
+		wasDown = false;
 	}
 
 	@Override
 	public boolean isDown() {
-		for (IButton button : m_buttons) {
+		for (IButton button : buttons) {
 			if (button.isDown()) {
 				return true;
 			}
@@ -30,8 +30,8 @@ public class CompoundButton implements IButton {
 
 	@Override
 	public boolean wasDown() {
-		boolean stillDown = m_wasDown && isDown();
-		m_wasDown = isDown();
-		return m_wasDown == !stillDown;
+		boolean stillDown = wasDown && isDown();
+		wasDown = isDown();
+		return wasDown == !stillDown;
 	}
 }

@@ -8,22 +8,22 @@ import static org.lwjgl.opengl.GL20.*;
 public abstract class Uniform {
 	private static final int NOT_FOUND = -1;
 
-	private final String m_name;
-	private int m_location;
+	private final String name;
+	private int location;
 
 	protected Uniform(final String name) {
-		m_name = name;
+		this.name = name;
 	}
 
 	protected void storeUniformLocation(final int programID) {
-		m_location = glGetUniformLocation(programID, m_name);
+		location = glGetUniformLocation(programID, name);
 
-		if (m_location == NOT_FOUND) {
-			System.err.println("No uniform variable called " + m_name + " found!");
+		if (location == NOT_FOUND) {
+			System.err.println("No uniform variable called " + name + " found!");
 		}
 	}
 
-	protected final int getLocation() {
-		return m_location;
+	protected int getLocation() {
+		return location;
 	}
 }

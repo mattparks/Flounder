@@ -4,9 +4,9 @@ package flounder.inputs;
  * Base class for typical buttons.
  */
 public abstract class BaseButton implements IButton {
-	private final Command m_command;
-	private final int[] m_codes;
-	private boolean m_wasDown;
+	private final Command command;
+	private final int[] codes;
+	private boolean wasDown;
 
 	/**
 	 * Creates a new BaseButton.
@@ -15,19 +15,19 @@ public abstract class BaseButton implements IButton {
 	 * @param codes The list of codes this button is checking.
 	 */
 	public BaseButton(final Command command, final int... codes) {
-		m_command = command;
-		m_codes = codes;
-		m_wasDown = false;
+		this.command = command;
+		this.codes = codes;
+		wasDown = false;
 	}
 
 	@Override
 	public boolean isDown() {
-		if (m_codes == null) {
+		if (codes == null) {
 			return false;
 		}
 
-		for (int code : m_codes) {
-			if (m_command.isDown(code)) {
+		for (int code : codes) {
+			if (command.isDown(code)) {
 				return true;
 			}
 		}
@@ -37,9 +37,9 @@ public abstract class BaseButton implements IButton {
 
 	@Override
 	public boolean wasDown() {
-		boolean stillDown = m_wasDown && isDown();
-		m_wasDown = isDown();
-		return m_wasDown == !stillDown;
+		final boolean stillDown = wasDown && isDown();
+		wasDown = isDown();
+		return wasDown == !stillDown;
 	}
 
 	/**

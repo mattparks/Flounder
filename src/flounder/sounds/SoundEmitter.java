@@ -12,15 +12,15 @@ import java.util.Map.*;
 public class SoundEmitter {
 	private static final float RANGE_THRESHOLD = 1.2f;
 
-	private Vector3f m_position;
-	private float m_volume;
+	private Vector3f position;
+	private float volume;
 
-	private Map<SoundEffect, AudioController> m_playingSounds;
+	private Map<SoundEffect, AudioController> playingSounds;
 
 	public SoundEmitter(final Vector3f position) {
-		m_position = position;
-		m_volume = 1;
-		m_playingSounds = new HashMap<>();
+		this.position = position;
+		volume = 1;
+		playingSounds = new HashMap<>();
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class SoundEmitter {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	public void update(final float delta) {
-		Iterator<Entry<SoundEffect, AudioController>> iterator = m_playingSounds.entrySet().iterator();
+		Iterator<Entry<SoundEffect, AudioController>> iterator = playingSounds.entrySet().iterator();
 
 		while (iterator.hasNext()) {
 			boolean stillPlaying = updateAudioController(iterator.next(), delta);
@@ -66,7 +66,7 @@ public class SoundEmitter {
 	 * @return {@code true} if the sound effect would be heard by the listener when played from this emitter.
 	 */
 	private boolean isInRange(final SoundEffect soundEffect) {
-		float disSquared = Vector3f.subtract(ManagerDevices.getSound().getCameraPosition(), m_position, null).lengthSquared();
+		float disSquared = Vector3f.subtract(ManagerDevices.getSound().getCameraPosition(), position, null).lengthSquared();
 		float range = soundEffect.getRange() * RANGE_THRESHOLD;
 		float rangeSquared = range * range;
 		return disSquared < rangeSquared;
@@ -76,7 +76,7 @@ public class SoundEmitter {
 	 * @return The position of the emitter in the 3D world.
 	 */
 	public final Vector3f getPosition() {
-		return m_position;
+		return position;
 	}
 
 	/**
@@ -87,10 +87,10 @@ public class SoundEmitter {
 	 * @param z The z position.
 	 */
 	public void setPosition(final float x, final float y, final float z) {
-		m_position.set(x, y, z);
+		position.set(x, y, z);
 
-		for (AudioController controller : m_playingSounds.values()) {
-			controller.setPosition(m_position);
+		for (AudioController controller : playingSounds.values()) {
+			controller.setPosition(position);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class SoundEmitter {
 	 * @return The volume of the sound emitter.
 	 */
 	public final float getVolume() {
-		return m_volume;
+		return volume;
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class SoundEmitter {
 	 * @param volume The new volume.
 	 */
 	public void setVolume(final float volume) {
-		m_volume = volume;
+		this.volume = volume;
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class SoundEmitter {
 	 * @return {@code true} if any sounds are currently being played by this emitter.
 	 */
 	public final boolean isInUse() {
-		return !m_playingSounds.isEmpty();
+		return !playingSounds.isEmpty();
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class SoundEmitter {
 	 * @return {@code true} if the sound effect in question is being played by this emitter.
 	 */
 	public final boolean isPlayingSound(final SoundEffect sound) {
-		return m_playingSounds.containsKey(sound);
+		return playingSounds.containsKey(sound);
 	}
 
 	/**
@@ -140,11 +140,11 @@ public class SoundEmitter {
 			return;
 		}
 
-		PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), m_volume, m_position, 0, soundEffect.getRange());
+		PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
 		AudioController controller = ManagerDevices.getSound().play3DSound(request);
 
 		if (controller != null) {
-			m_playingSounds.put(soundEffect, controller);
+			playingSounds.put(soundEffect, controller);
 		}
 	}
 
@@ -152,10 +152,10 @@ public class SoundEmitter {
 	 * Stops any sound effects that are currently being played from this emitter.
 	 */
 	public void silence() {
-		for (AudioController controller : m_playingSounds.values()) {
+		for (AudioController controller : playingSounds.values()) {
 			controller.stop();
 		}
 
-		m_playingSounds.clear();
+		playingSounds.clear();
 	}
 }

@@ -8,13 +8,13 @@ import flounder.resources.*;
  * Represents a single sound effect. Holds a reference to the sound's file, and a reference to any buffers containing loaded data of the sound.
  */
 public class Sound {
-	private int m_bufferID;
-	private MyFile m_file;
-	private float m_volume;
-	private boolean m_loaded;
+	private int bufferID;
+	private MyFile file;
+	private float volume;
+	private boolean loaded;
 
-	private int m_totalBytes;
-	private int m_bytesRead;
+	private int totalBytes;
+	private int bytesRead;
 
 	/**
 	 * Creates a new sound. Note the sound hasn't been loaded at this stage.
@@ -23,10 +23,10 @@ public class Sound {
 	 * @param volume Used to change the base volume of a sound effect.
 	 */
 	private Sound(final MyFile soundFile, final float volume) {
-		m_file = soundFile;
-		m_volume = 1.0f;
-		m_loaded = false;
-		m_volume = volume;
+		file = soundFile;
+		this.volume = 1.0f;
+		loaded = false;
+		this.volume = volume;
 	}
 
 	/**
@@ -61,9 +61,9 @@ public class Sound {
 	 * Sends a request for the sound to be deleted.
 	 */
 	public void delete() {
-		if (m_loaded) {
-			GlRequestProcessor.sendRequest(() -> SoundLoader.deleteBuffer(m_bufferID));
-			m_loaded = false;
+		if (loaded) {
+			GlRequestProcessor.sendRequest(() -> SoundLoader.deleteBuffer(bufferID));
+			loaded = false;
 		}
 	}
 
@@ -71,7 +71,7 @@ public class Sound {
 	 * @return The ID of the sound's buffer.
 	 */
 	public final int getBufferID() {
-		return m_bufferID;
+		return bufferID;
 	}
 
 	/**
@@ -81,30 +81,30 @@ public class Sound {
 	 * @param bytesRead The number of bytes of the sound's audio which have been loaded into the buffer.
 	 */
 	public void setBuffer(final int buffer, final int bytesRead) {
-		m_bufferID = buffer;
-		m_bytesRead = bytesRead;
-		m_loaded = true;
+		bufferID = buffer;
+		this.bytesRead = bytesRead;
+		loaded = true;
 	}
 
 	/**
 	 * @return The sound file.
 	 */
 	public final MyFile getSoundFile() {
-		return m_file;
+		return file;
 	}
 
 	/**
 	 * @return The base volume of the sound.
 	 */
 	public final float getVolume() {
-		return m_volume;
+		return volume;
 	}
 
 	/**
 	 * @return Whether the sound is loaded or not.
 	 */
 	public final boolean isLoaded() {
-		return m_loaded;
+		return loaded;
 	}
 
 	/**
@@ -114,14 +114,14 @@ public class Sound {
 	 * @return {@code true} if the sound file needs streaming when it's played.
 	 */
 	public final boolean needsStreaming() {
-		return m_bytesRead < m_totalBytes;
+		return bytesRead < totalBytes;
 	}
 
 	/**
 	 * @return The number of bytes from the sound's file that have already been loaded.
 	 */
 	public final int getBytesRead() {
-		return m_bytesRead;
+		return bytesRead;
 	}
 
 	/**
@@ -130,6 +130,6 @@ public class Sound {
 	 * @param totalBytes The total number of bytes of data.
 	 */
 	public void setTotalBytes(final int totalBytes) {
-		m_totalBytes = totalBytes;
+		this.totalBytes = totalBytes;
 	}
 }

@@ -9,62 +9,62 @@ import flounder.visual.*;
  * A textured quad, making up part of a GUI component.
  */
 public class GuiTexture {
-	private Texture m_texture;
+	private Texture texture;
 
-	private Vector2f m_position;
-	private Vector2f m_scale;
+	private Vector2f position;
+	private Vector2f scale;
 
-	private ValueDriver m_alphaDriver;
+	private ValueDriver alphaDriver;
 
-	private float m_alpha;
-	private boolean m_flipTexture;
+	private float alpha;
+	private boolean flipTexture;
 
-	public GuiTexture(Texture texture) {
+	public GuiTexture(final Texture texture) {
 		this(texture, false);
 	}
 
-	public GuiTexture(Texture texture, boolean flip) {
-		m_texture = texture;
-		m_position = new Vector2f();
-		m_scale = new Vector2f();
-		m_alphaDriver = new ConstantDriver(1);
-		m_flipTexture = flip;
+	public GuiTexture(final Texture texture, final boolean flip) {
+		this.texture = texture;
+		position = new Vector2f();
+		scale = new Vector2f();
+		alphaDriver = new ConstantDriver(1);
+		flipTexture = flip;
 	}
 
 	public void update() {
-		m_alpha = m_alphaDriver.update(FlounderEngine.getDelta());
+		alpha = alphaDriver.update(FlounderEngine.getDelta());
 	}
 
 	public Texture getTexture() {
-		return m_texture;
+		return texture;
 	}
 
-	public void setTexture(Texture texture) {
-		m_texture = texture;
+	public void setTexture(final Texture texture) {
+		this.texture = texture;
 	}
 
 	public Vector2f getPosition() {
-		return m_position;
+		return position;
 	}
 
-	public void setPosition(float x, float y, float width, float height) {
-		m_position.set(x, y);
-		m_scale.set(width, height);
+	public void setPosition(final float x, final float y, final float width, final float height) {
+		position.set(x, y);
+		scale.set(width, height);
 	}
 
 	public Vector2f getScale() {
-		return m_scale;
+		return scale;
 	}
 
-	public void setAlphaDriver(ValueDriver driver) {
-		m_alphaDriver = driver;
+	public void setAlphaDriver(final ValueDriver driver) {
+		alphaDriver = driver;
 	}
 
 	public float getAlpha() {
-		return m_alpha;
+		return alpha;
 	}
 
 	public boolean isFlipTexture() {
-		return m_flipTexture;
+		return flipTexture;
 	}
 }

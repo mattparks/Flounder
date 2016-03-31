@@ -11,30 +11,43 @@ import java.util.*;
  * An component of a GUI. Implementations of this range from a whole GUI frame to a single button. All components can have subtract-components, and the parent component has the responsibility of keeping the subtract-components updated.
  */
 public abstract class GuiComponent {
-	private Vector2f m_position = new Vector2f();
-	private Vector2f m_scale = new Vector2f();
+	private Vector2f position;
+	private Vector2f scale;
 
-	private Vector2f m_relativePosition = new Vector2f();
-	private Vector2f m_relativeScale = new Vector2f();
-	private GuiComponent m_parent;
+	private Vector2f relativePosition;
+	private Vector2f relativeScale;
+	private GuiComponent parent;
 
-	private boolean m_visible = true;
+	private boolean visible;
 
-	private List<GuiComponent> m_childComponents = new ArrayList<>();
-	private Map<Text, Vector3f> m_componentTexts = new HashMap<>();
+	private List<GuiComponent> childComponents;
+	private Map<Text, Vector3f> componentTexts;
 
-	private List<GuiComponent> m_componentsToRemove = new ArrayList<>();
-	private List<GuiComponent> m_componentsToAdd = new ArrayList<>();
+	private List<GuiComponent> componentsToRemove;
+	private List<GuiComponent> componentsToAdd;
 
-	private boolean m_initialized = false;
+	private boolean initialized;
+
+	public GuiComponent() {
+		position = new Vector2f();
+		scale = new Vector2f();
+		relativePosition = new Vector2f();
+		relativeScale = new Vector2f();
+		visible = true;
+		childComponents = new ArrayList<>();
+		componentTexts = new HashMap<>();
+		componentsToRemove = new ArrayList<>();
+		componentsToAdd = new ArrayList<>();
+		initialized = false;
+	}
 
 	/**
 	 * Determines whether the component (and all subtract-components) should be visible or not. Non-visible components are not updated.
 	 *
 	 * @param visible Whether the component should be visible or not.
 	 */
-	public void show(boolean visible) {
-		m_visible = visible;
+	public void show(final boolean visible) {
+		this.visible = visible;
 	}
 
 	/**
@@ -46,11 +59,11 @@ public abstract class GuiComponent {
 	 * @param relScaleX The x scale of the child component, in relation to the x scale of this component.
 	 * @param relScaleY The y scale of the child component, in relation to the y scale of this component.
 	 */
-	public void addComponent(GuiComponent component, float relX, float relY, float relScaleX, float relScaleY) {
-		component.m_relativePosition.set(relX, relY);
-		component.m_relativeScale.set(relScaleX, relScaleY);
-		component.m_parent = this;
-		m_componentsToAdd.add(component);
+	public void addComponent(final GuiComponent component, final float relX, final float relY, final float relScaleX, final float relScaleY) {
+		component.relativePosition.set(relX, relY);
+		component.relativeScale.set(relScaleX, relScaleY);
+		component.parent = this;
+		componentsToAdd.add(component);
 	}
 
 	/**
@@ -58,8 +71,8 @@ public abstract class GuiComponent {
 	 *
 	 * @param component - the child component to be removed.
 	 */
-	public void removeComponent(GuiComponent component) {
-		m_componentsToRemove.add(component);
+	public void removeComponent(final GuiComponent component) {
+		componentsToRemove.add(component);
 	}
 
 	/**
@@ -70,11 +83,11 @@ public abstract class GuiComponent {
 	 * @param relY The y position of the top edge of the text, relative to this component's size and position (0 = top edge, 1 = bottom edge).
 	 * @param relLineWidth The width of the line of text, relative to the width of the component.
 	 */
-	public void addText(Text text, float relX, float relY, float relLineWidth) {
+	public void addText(final Text text, final float relX, final float relY, final float relLineWidth) {
 		Vector3f relativePosition = new Vector3f(relX, relY, relLineWidth);
-		m_componentTexts.put(text, relativePosition);
+		componentTexts.put(text, relativePosition);
 
-		if (m_initialized) {
+		if (initialized) {
 			setTextScreenSpacePosition(text, relativePosition);
 		}
 	}
@@ -85,10 +98,10 @@ public abstract class GuiComponent {
 	 * @param text The text whose screen-space position needs to be set.
 	 * @param relativePosition The position of the text relative to this component's top-left corner. The z component is the line width, specified relative to the width of this component.
 	 */
-	private void setTextScreenSpacePosition(Text text, Vector3f relativePosition) {
-		float x = m_position.x + m_scale.x * relativePosition.x;
-		float y = m_position.y + m_scale.y * relativePosition.y;
-		float lineWidth = relativePosition.z * m_scale.x;
+	private void setTextScreenSpacePosition(final Text text, final Vector3f relativePosition) {
+		float x = position.x + scale.x * relativePosition.x;
+		float y = position.y + scale.y * relativePosition.y;
+		float lineWidth = relativePosition.z * scale.x;
 		text.initialise(x, y, lineWidth);
 	}
 
@@ -96,7 +109,7 @@ public abstract class GuiComponent {
 	 * @return {@code true} if this component isn't currently hidden.
 	 */
 	public boolean isShown() {
-		return m_visible;
+		return visible;
 	}
 
 	/**
@@ -104,8 +117,8 @@ public abstract class GuiComponent {
 	 *
 	 * @param text The text currently in the component that needs to be removed.
 	 */
-	public void deleteText(Text text) {
-		m_componentTexts.remove(text);
+	public void deleteText(final Text text) {
+		componentTexts.remove(text);
 		text.deleteFromMemory();
 	}
 
@@ -113,17 +126,17 @@ public abstract class GuiComponent {
 	 * @return The x position of the top-left corner of the component, relative to the parent component.
 	 */
 	public float getRelativeX() {
-		return m_relativePosition.x;
+		return relativePosition.x;
 	}
 
-	public void setRelativeX(float x) {
-		m_relativePosition.x = x;
+	public void setRelativeX(final float x) {
+		relativePosition.x = x;
 		updateScreenSpacePosition();
 	}
 
-	public void increaseRelativePosition(float dX, float dY) {
-		m_relativePosition.x += dX;
-		m_relativePosition.y += dY;
+	public void increaseRelativePosition(final float dX, final float dY) {
+		relativePosition.x += dX;
+		relativePosition.y += dY;
 		updateScreenSpacePosition();
 	}
 
@@ -131,14 +144,14 @@ public abstract class GuiComponent {
 	 * @return The screen-space position of the top-left corner of the component.
 	 */
 	protected Vector2f getPosition() {
-		return m_position;
+		return position;
 	}
 
 	/**
 	 * @return The screen-space x and y scales of the component.
 	 */
 	protected Vector2f getScale() {
-		return m_scale;
+		return scale;
 	}
 
 	/**
@@ -146,8 +159,8 @@ public abstract class GuiComponent {
 	 */
 	protected boolean isMouseOver() {
 		if (ManagerDevices.getMouse().isDisplaySelected()) {
-			if (ManagerDevices.getMouse().getPositionX() >= m_position.x && ManagerDevices.getMouse().getPositionX() <= m_position.x + m_scale.x) {
-				if (ManagerDevices.getMouse().getPositionY() >= m_position.y && ManagerDevices.getMouse().getPositionY() <= m_position.y + m_scale.y) {
+			if (ManagerDevices.getMouse().getPositionX() >= position.x && ManagerDevices.getMouse().getPositionX() <= position.x + scale.x) {
+				if (ManagerDevices.getMouse().getPositionY() >= position.y && ManagerDevices.getMouse().getPositionY() <= position.y + scale.y) {
 					return true;
 				}
 			}
@@ -162,8 +175,8 @@ public abstract class GuiComponent {
 	 * @param guiTextures The list of {@link GuiTexture}s to be rendered.
 	 * @param texts The map of texts to be rendered this frame.
 	 */
-	public final void update(List<GuiTexture> guiTextures, Map<FontType, List<Text>> texts) {
-		if (!m_visible) {
+	public final void update(final List<GuiTexture> guiTextures, final Map<FontType, List<Text>> texts) {
+		if (!visible) {
 			return;
 		}
 
@@ -172,7 +185,7 @@ public abstract class GuiComponent {
 		getGuiTextures(guiTextures);
 		addTextsToRenderBatch(texts);
 		removeOldComponents();
-		m_childComponents.forEach(childComponent -> childComponent.update(guiTextures, texts));
+		childComponents.forEach(childComponent -> childComponent.update(guiTextures, texts));
 		updateAndAddNewChildren(guiTextures, texts);
 	}
 
@@ -180,14 +193,14 @@ public abstract class GuiComponent {
 	 * Calculates the screen space position of the component based on their relative position and the screen-space position of their parent.
 	 */
 	protected void updateScreenSpacePosition() {
-		float x = m_parent.m_position.x + m_parent.m_scale.x * m_relativePosition.x;
-		float y = m_parent.m_position.y + m_parent.m_scale.y * m_relativePosition.y;
-		float width = m_relativeScale.x * m_parent.m_scale.x;
-		float height = m_relativeScale.y * m_parent.m_scale.y;
+		float x = parent.position.x + parent.scale.x * relativePosition.x;
+		float y = parent.position.y + parent.scale.y * relativePosition.y;
+		float width = relativeScale.x * parent.scale.x;
+		float height = relativeScale.y * parent.scale.y;
 		setScreenSpacePosition(x, y, width, height);
 
-		m_childComponents.forEach(GuiComponent::updateScreenSpacePosition);
-		m_componentTexts.keySet().forEach(text -> setTextScreenSpacePosition(text, m_componentTexts.get(text)));
+		childComponents.forEach(GuiComponent::updateScreenSpacePosition);
+		componentTexts.keySet().forEach(text -> setTextScreenSpacePosition(text, componentTexts.get(text)));
 	}
 
 	/**
@@ -198,10 +211,10 @@ public abstract class GuiComponent {
 	 * @param width The width of the component in screen-space.
 	 * @param height The height of the component in screen-space.
 	 */
-	protected void setScreenSpacePosition(float x, float y, float width, float height) {
-		m_position.set(x, y);
-		m_scale.set(width, height);
-		m_initialized = true;
+	protected void setScreenSpacePosition(final float x, final float y, final float width, final float height) {
+		position.set(x, y);
+		scale.set(width, height);
+		initialized = true;
 	}
 
 	/**
@@ -214,15 +227,15 @@ public abstract class GuiComponent {
 	 *
 	 * @param guiTextures The list of GUI textures that are going to be rendered. This method adds any necessary {@link GuiTexture}s from this component to that list.
 	 */
-	protected abstract void getGuiTextures(List<GuiTexture> guiTextures);
+	protected abstract void getGuiTextures(final List<GuiTexture> guiTextures);
 
 	/**
 	 * Adds the texts from this component into the map of texts for rendering this frame. There is a list of texts for each font being used.
 	 *
 	 * @param texts All the lists of texts, each associated with the font that all the texts in that list use.
 	 */
-	private void addTextsToRenderBatch(Map<FontType, List<Text>> texts) {
-		for (Text text : m_componentTexts.keySet()) {
+	private void addTextsToRenderBatch(final Map<FontType, List<Text>> texts) {
+		for (Text text : componentTexts.keySet()) {
 			FontType font = text.getFontType();
 			List<Text> textBatch = texts.get(font);
 
@@ -239,35 +252,35 @@ public abstract class GuiComponent {
 	 * Update the component's texts.
 	 */
 	private void updateTexts() {
-		m_componentTexts.keySet().forEach(text -> text.update(FlounderEngine.getDelta()));
+		componentTexts.keySet().forEach(text -> text.update(FlounderEngine.getDelta()));
 	}
 
 	/**
 	 * Deletes the component and all subtract-components. Mainly just deletes the texts VAOs from memory.
 	 */
 	private void delete() {
-		m_componentTexts.keySet().forEach(Text::deleteFromMemory);
-		m_componentsToRemove.forEach(GuiComponent::delete);
-		m_componentsToAdd.forEach(GuiComponent::delete);
-		m_childComponents.forEach(GuiComponent::delete);
+		componentTexts.keySet().forEach(Text::deleteFromMemory);
+		componentsToRemove.forEach(GuiComponent::delete);
+		componentsToAdd.forEach(GuiComponent::delete);
+		childComponents.forEach(GuiComponent::delete);
 	}
 
 	private void removeOldComponents() {
-		for (GuiComponent component : m_componentsToRemove) {
-			m_childComponents.remove(component);
+		for (GuiComponent component : componentsToRemove) {
+			childComponents.remove(component);
 			component.delete();
 		}
 
-		m_componentsToRemove.clear();
+		componentsToRemove.clear();
 	}
 
-	private void updateAndAddNewChildren(List<GuiTexture> guiTextures, Map<FontType, List<Text>> texts) {
-		for (GuiComponent component : m_componentsToAdd) {
-			m_childComponents.add(component);
+	private void updateAndAddNewChildren(final List<GuiTexture> guiTextures, Map<FontType, List<Text>> texts) {
+		for (GuiComponent component : componentsToAdd) {
+			childComponents.add(component);
 			component.updateScreenSpacePosition();
 			component.update(guiTextures, texts);
 		}
 
-		m_componentsToAdd.clear();
+		componentsToAdd.clear();
 	}
 }

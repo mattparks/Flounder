@@ -5,18 +5,18 @@ import org.lwjgl.glfw.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * Manages the creation, updating and destruction of the keyboard keys.
+ * Manages the creation, updating and destruction of the keyboard keyboardKeys.
  */
 public class DeviceKeyboard {
 	private final GLFWKeyCallback callbackKey;
 
-	private int m_keys[];
+	private final int keyboardKeys[];
 
 	/**
 	 * Creates a new GLFW keyboard.
 	 */
 	protected DeviceKeyboard() {
-		m_keys = new int[GLFW_KEY_LAST + 1];
+		keyboardKeys = new int[GLFW_KEY_LAST + 1];
 
 		// Sets the keyboards callbacks.
 		glfwSetKeyCallback(ManagerDevices.getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
@@ -26,7 +26,7 @@ public class DeviceKeyboard {
 					System.err.println("Invalid action attempted with key: " + key);
 				} else {
 					// Actions: GLFW_PRESS   GLFW_RELEASE   GLFW_REPEAT
-					m_keys[key] = action;
+					keyboardKeys[key] = action;
 				}
 			}
 		});
@@ -48,7 +48,7 @@ public class DeviceKeyboard {
 	 * @return If the key is currently pressed.
 	 */
 	public boolean getKey(final int key) {
-		return m_keys[key] != GLFW_RELEASE;
+		return keyboardKeys[key] != GLFW_RELEASE;
 	}
 
 	/**

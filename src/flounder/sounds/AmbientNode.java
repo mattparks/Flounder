@@ -15,17 +15,17 @@ public class AmbientNode {
 	private static final float RADIUS_CHANGE_AGIL = 0.5f;
 	private static final float RANGE_THRESHOLD = 1.2f;
 
-	private Vector3f m_position;
-	private SmoothFloat m_innerRadius;
-	private SmoothFloat m_fadeOutRadius;
+	private Vector3f position;
+	private SmoothFloat innerRadius;
+	private SmoothFloat fadeOutRadius;
 
-	private List<Sound> m_sounds;
-	private float m_volume;
+	private List<Sound> sounds;
+	private float volume;
 
-	private boolean m_active;
-	private AudioController m_controller;
+	private boolean active;
+	private AudioController controller;
 
-	private Sound m_lastPlayed;
+	private Sound lastPlayed;
 
 	/**
 	 * Creates a new ambient node at a given position in the world.
@@ -36,14 +36,14 @@ public class AmbientNode {
 	 * @param sounds The various sounds that the node can play.
 	 */
 	public AmbientNode(final Vector3f position, final float innerRange, final float fadeOutRange, final List<Sound> sounds) {
-		m_position = position;
-		m_innerRadius = new SmoothFloat(innerRange, RADIUS_CHANGE_AGIL);
-		m_fadeOutRadius = new SmoothFloat(fadeOutRange, RADIUS_CHANGE_AGIL);
-		m_sounds = sounds;
-		m_volume = 1.0f;
-		m_active = false;
-		m_controller = null;
-		m_lastPlayed = null;
+		this.position = position;
+		innerRadius = new SmoothFloat(innerRange, RADIUS_CHANGE_AGIL);
+		fadeOutRadius = new SmoothFloat(fadeOutRange, RADIUS_CHANGE_AGIL);
+		this.sounds = sounds;
+		volume = 1.0f;
+		active = false;
+		controller = null;
+		lastPlayed = null;
 	}
 
 	/**
@@ -55,9 +55,9 @@ public class AmbientNode {
 		updateValues(delta);
 		float distance = getDistanceFromListener();
 
-		if (!m_active && distance <= getRange()) {
+		if (!active && distance <= getRange()) {
 			playNewSound();
-		} else if (m_active) {
+		} else if (active) {
 			updateActiveNode(delta, distance);
 		}
 	}
@@ -68,10 +68,10 @@ public class AmbientNode {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	private void updateValues(final float delta) {
-		m_innerRadius.update(delta);
-		m_fadeOutRadius.update(delta);
+		innerRadius.update(delta);
+		fadeOutRadius.update(delta);
 
-		if (m_controller != null) {
+		if (controller != null) {
 			// FIXME: Update ranges.
 		}
 	}
@@ -80,7 +80,7 @@ public class AmbientNode {
 	 * @return the distance between the {@link IAudioListener} and the node's center.
 	 */
 	private float getDistanceFromListener() {
-		return Vector3f.subtract(ManagerDevices.getSound().getCameraPosition(), m_position, null).length();
+		return Vector3f.subtract(ManagerDevices.getSound().getCameraPosition(), position, null).length();
 	}
 
 	/**
@@ -88,9 +88,9 @@ public class AmbientNode {
 	 */
 	private void playNewSound() {
 		Sound sound = chooseNextSound();
-		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, m_volume, m_position, m_innerRadius.get(), getRange());
-		m_controller = ManagerDevices.getSound().play3DSound(request);
-		m_active = m_controller != null;
+		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, position, innerRadius.get(), getRange());
+		controller = ManagerDevices.getSound().play3DSound(request);
+		active = controller != null;
 	}
 
 	/**
@@ -100,14 +100,14 @@ public class AmbientNode {
 	 */
 	private Sound chooseNextSound() {
 		Sound sound = null;
-		int index = Maths.RANDOM.nextInt(m_sounds.size());
+		int index = Maths.RANDOM.nextInt(sounds.size());
 
-		if (m_sounds.size() > 1 && sound == m_lastPlayed) {
-			index = (index + 1) % m_sounds.size();
+		if (sounds.size() > 1 && sound == lastPlayed) {
+			index = (index + 1) % sounds.size();
 		}
 
-		sound = m_sounds.get(index);
-		m_lastPlayed = sound;
+		sound = sounds.get(index);
+		lastPlayed = sound;
 		return sound;
 	}
 
@@ -120,10 +120,10 @@ public class AmbientNode {
 	 */
 	private void updateActiveNode(final float delta, final float distance) {
 		if (distance >= getRange() * RANGE_THRESHOLD) {
-			m_controller.stop();
-			m_active = false;
+			controller.stop();
+			active = false;
 		} else {
-			boolean stillPlaying = m_controller.update(delta);
+			boolean stillPlaying = controller.update(delta);
 
 			if (!stillPlaying) {
 				playNewSound();
@@ -135,7 +135,7 @@ public class AmbientNode {
 	 * @return The distance from the center of the node to the outer radius.
 	 */
 	public float getRange() {
-		return m_innerRadius.get() + m_fadeOutRadius.get();
+		return innerRadius.get() + fadeOutRadius.get();
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class AmbientNode {
 	 * @param fadeOutRange The distance between the inner and outer radius's.
 	 */
 	public void setRanges(final float innerRange, final float fadeOutRange) {
-		m_innerRadius.set(innerRange);
-		m_fadeOutRadius.set(fadeOutRange);
+		innerRadius.set(innerRange);
+		fadeOutRadius.set(fadeOutRange);
 	}
 
 	/**
@@ -155,10 +155,10 @@ public class AmbientNode {
 	 * @param sounds The list of sounds.
 	 */
 	public void setSounds(final List<Sound> sounds) {
-		m_sounds = sounds;
+		this.sounds = sounds;
 
-		if (m_controller != null) {
-			m_controller.fadeOut();
+		if (controller != null) {
+			controller.fadeOut();
 		}
 	}
 
@@ -168,11 +168,11 @@ public class AmbientNode {
 	 * @param sound The sound to be played on repeat.
 	 */
 	public void setSound(final Sound sound) {
-		m_sounds.clear();
-		m_sounds.add(sound);
+		sounds.clear();
+		sounds.add(sound);
 
-		if (m_controller != null) {
-			m_controller.fadeOut();
+		if (controller != null) {
+			controller.fadeOut();
 		}
 	}
 
@@ -182,7 +182,7 @@ public class AmbientNode {
 	 * @param sound The new sound to be added to the list.
 	 */
 	public void addSound(final Sound sound) {
-		m_sounds.add(sound);
+		sounds.add(sound);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class AmbientNode {
 	 * @param sound The sound to remove.
 	 */
 	public void removeSound(final Sound sound) {
-		m_sounds.remove(sound);
+		sounds.remove(sound);
 	}
 
 	/**
@@ -200,6 +200,6 @@ public class AmbientNode {
 	 * @param targetVolume The desired volume.
 	 */
 	public void setVolume(final float targetVolume) {
-		m_volume = targetVolume;
+		volume = targetVolume;
 	}
 }

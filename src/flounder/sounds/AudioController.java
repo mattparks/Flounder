@@ -9,12 +9,12 @@ import flounder.maths.vectors.*;
 public class AudioController {
 	private static final float FADE_TIME = 2;
 
-	private SoundSource m_source;
-	private boolean m_active;
-	private boolean m_fading;
+	private SoundSource source;
+	private boolean active;
+	private boolean fading;
 
-	private float m_finalVolume;
-	private float m_fadeFactor;
+	private float finalVolume;
+	private float fadeFactor;
 
 	/**
 	 * Creates a new controller for the given sound source.
@@ -22,11 +22,11 @@ public class AudioController {
 	 * @param source The sound source that this controller can control.
 	 */
 	protected AudioController(SoundSource source) {
-		m_source = source;
-		m_active = true;
-		m_fading = false;
-		m_finalVolume = 0.0f;
-		m_fadeFactor = 1.0f;
+		this.source = source;
+		active = true;
+		fading = false;
+		finalVolume = 0.0f;
+		fadeFactor = 1.0f;
 	}
 
 	/**
@@ -38,11 +38,11 @@ public class AudioController {
 	 * then the controller is no longer active and will return {@code false}.
 	 */
 	protected boolean update(final float delta) {
-		if (m_active) {
+		if (active) {
 			updateActiveController(delta);
 		}
 
-		return m_active;
+		return active;
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class AudioController {
 	 * @param delta Time in seconds since the last frame.
 	 */
 	private void updateActiveController(float delta) {
-		if (m_fading) {
+		if (fading) {
 			updateFadingOut(delta);
 		}
 	}
@@ -62,11 +62,11 @@ public class AudioController {
 	 * @param delta Time in seconds since the last frame.
 	 */
 	private void updateFadingOut(float delta) {
-		m_fadeFactor -= delta / FADE_TIME;
-		m_source.setVolume(m_finalVolume * m_fadeFactor);
+		fadeFactor -= delta / FADE_TIME;
+		source.setVolume(finalVolume * fadeFactor);
 
-		if (m_fadeFactor <= 0) {
-			m_source.stop();
+		if (fadeFactor <= 0) {
+			source.stop();
 		}
 	}
 
@@ -74,8 +74,8 @@ public class AudioController {
 	 * Stops the source playing the sound.
 	 */
 	protected void stop() {
-		if (m_active) {
-			m_source.stop();
+		if (active) {
+			source.stop();
 		}
 	}
 
@@ -83,22 +83,22 @@ public class AudioController {
 	 * @return {@code true} if the source that the controller is assigned to is still playing the sound.
 	 */
 	protected boolean isActive() {
-		return m_active;
+		return active;
 	}
 
 	/**
 	 * Indicates that the source is no longer playing the sound that this controller was created for, rendering the controller inactive.
 	 */
 	protected void setInactive() {
-		m_active = false;
+		active = false;
 	}
 
 	/**
 	 * Indicates that the sound needs to be faded out.
 	 */
 	protected void fadeOut() {
-		m_fading = true;
-		m_finalVolume = m_source.getVolume();
+		fading = true;
+		finalVolume = source.getVolume();
 	}
 
 	/**
@@ -107,8 +107,8 @@ public class AudioController {
 	 * @param position The new position of the source.
 	 */
 	protected void setPosition(Vector3f position) {
-		if (m_active) {
-			m_source.setPosition(position);
+		if (active) {
+			source.setPosition(position);
 		}
 	}
 
@@ -116,6 +116,6 @@ public class AudioController {
 	 * @return The volume that the sound is currently being played at.
 	 */
 	protected float getVolume() {
-		return m_source.getVolume();
+		return source.getVolume();
 	}
 }
