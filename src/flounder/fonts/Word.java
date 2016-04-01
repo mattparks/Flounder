@@ -17,8 +17,8 @@ public class Word {
 	 */
 	protected Word(final double fontSize) {
 		characters = new ArrayList<>();
-		width = 0;
 		this.fontSize = fontSize;
+		width = 0.0;
 	}
 
 	/**

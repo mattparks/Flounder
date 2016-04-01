@@ -42,8 +42,7 @@ public class MetaFile {
 		openFile(file);
 		loadPaddingData();
 		loadLineSizes();
-		final int imageWidth = getValueOfVariable("scaleW");
-		loadCharacterData(imageWidth);
+		loadCharacterData(getValueOfVariable("scaleW"));
 		close();
 	}
 
@@ -67,7 +66,7 @@ public class MetaFile {
 		processNextLine();
 		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
 		verticalPerPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
-		horizontalPerPixelSize = verticalPerPixelSize / ManagerDevices.getDisplay().getDisplayAspectRatio(); // TODO: Move aspect ratio out.
+		horizontalPerPixelSize = verticalPerPixelSize / ManagerDevices.getDisplay().getAspectRatio(); // TODO: Move aspect ratio out.
 	}
 
 	private void loadCharacterData(final int imageWidth) {

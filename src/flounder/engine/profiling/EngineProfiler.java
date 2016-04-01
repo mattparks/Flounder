@@ -13,7 +13,7 @@ public class EngineProfiler {
 	private static boolean open;
 
 	public static void init() {
-		frame = new JFrame(ManagerDevices.getDisplay().getDisplayTitle() + " Profiler");
+		frame = new JFrame(ManagerDevices.getDisplay().getTitle() + " Profiler");
 		frame.setSize(420, 720);
 		frame.setResizable(false);
 		frame.setLayout(new FlowLayout());

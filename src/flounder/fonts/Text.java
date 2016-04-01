@@ -43,18 +43,18 @@ public class Text {
 		fontType = font;
 		centerText = centered;
 
-		alphaDriver = new ConstantDriver(1);
-		scaleDriver = new ConstantDriver(1);
-		glowDriver = new ConstantDriver(0);
-		borderDriver = new ConstantDriver(0);
-		colour = new Colour(0f, 0f, 0f);
-		borderColour = new Colour(1f, 1f, 1f);
+		alphaDriver = new ConstantDriver(1.0f);
+		scaleDriver = new ConstantDriver(1.0f);
+		glowDriver = new ConstantDriver(0.0f);
+		borderDriver = new ConstantDriver(0.0f);
+		colour = new Colour(0.0f, 0.0f, 0.0f);
+		borderColour = new Colour(1.0f, 1.0f, 1.0f);
 
 		solidBorder = false;
 		glowBorder = false;
 
-		glowSize = 0;
-		borderSize = 0;
+		glowSize = 0.0f;
+		borderSize = 0.0f;
 
 		loaded = false;
 	}
@@ -63,7 +63,7 @@ public class Text {
 		return new TextBuilder(text);
 	}
 
-	public void initialise(final float absX, final float absY, final float maxXLength) {
+	public void initialize(final float absX, final float absY, final float maxXLength) {
 		positionXDriver = new ConstantDriver(absX);
 		positionYDriver = new ConstantDriver(absY);
 		lineMaxSize = maxXLength;
@@ -84,29 +84,29 @@ public class Text {
 	}
 
 	protected Vector2f getPosition() {
-		float scaleFactor = (currentScale - 1f) / 2f;
+		float scaleFactor = (currentScale - 1.0f) / 2.0f;
 		float xChange = scaleFactor * originalWidth;
-		float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1f;
+		float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1.0f;
 		return new Vector2f(currentX - xChange, currentY - yChange);
 	}
 
 	protected float getTotalBorderSize() {
 		if (solidBorder) {
-			if (borderSize == 0) {
-				return 0;
+			if (borderSize == 0.0f) {
+				return 0.0f;
 			} else {
 				return calculateEdgeStart() + borderSize;
 			}
 		} else if (glowBorder) {
 			return calculateEdgeStart();
 		} else {
-			return 0;
+			return 0.0f;
 		}
 	}
 
 	protected float calculateEdgeStart() {
 		float size = fontSize * currentScale;
-		return 1f / 300f * size + 137f / 300f;
+		return 1.0f / 300.0f * size + 137.0f / 300.0f;
 	}
 
 	public String getTextString() {
@@ -225,7 +225,7 @@ public class Text {
 
 	protected float calculateAntialiasSize() {
 		float size = fontSize * currentScale;
-		size = (size - 1) / (1f + size / 4f) + 1f;
+		size = (size - 1.0f) / (1.0f + size / 4.0f) + 1.0f;
 		return 0.1f / size;
 	}
 

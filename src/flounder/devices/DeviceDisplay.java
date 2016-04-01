@@ -18,14 +18,14 @@ public class DeviceDisplay {
 	private final GLFWFramebufferSizeCallback callbackFramebufferSize;
 
 	private long window;
-	private int displayWidth;
-	private int displayHeight;
-	private String displayTitle;
-	private boolean displayVSync;
+	private int width;
+	private int height;
+	private String title;
+	private boolean enableVSync;
 	private boolean antialiasing;
-	private boolean displayFullscreen;
-	private int displayPositionX, displayPositionY;
-	private boolean displayFocused;
+	private boolean fullscreen;
+	private int positionX, positionY;
+	private boolean inFocus;
 	private boolean closeRequested;
 
 	/**
@@ -39,13 +39,13 @@ public class DeviceDisplay {
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
 	protected DeviceDisplay(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final boolean displayFullscreen) {
-		this.displayWidth = displayWidth;
-		this.displayHeight = displayHeight;
-		this.displayTitle = displayTitle;
-		this.displayVSync = displayVSync;
+		this.width = displayWidth;
+		this.height = displayHeight;
+		this.title = displayTitle;
+		this.enableVSync = displayVSync;
 		this.antialiasing = antialiasing;
-		this.displayFullscreen = displayFullscreen;
-		displayFocused = true;
+		this.fullscreen = displayFullscreen;
+		inFocus = true;
 		closeRequested = false;
 
 		// Initialize the library.
@@ -71,7 +71,7 @@ public class DeviceDisplay {
 		window = glfwCreateWindow(displayWidth, displayHeight, displayTitle, NULL, NULL);
 
 		// Sets the display to fullscreen or windowed.
-		setDisplayFullscreen(displayFullscreen);
+		setFullscreen(displayFullscreen);
 
 		// Gets any window errors.
 		if (window == NULL) {
@@ -97,10 +97,10 @@ public class DeviceDisplay {
 		}
 
 		// Enables VSync if requested.
-		setDisplayVSync(displayVSync);
+		setEnableVSync(displayVSync);
 
 		// Centers the window position.
-		glfwSetWindowPos(window, (displayPositionX = (vidmode.width() - displayWidth) / 2), (displayPositionY = (vidmode.height() - displayHeight) / 2));
+		glfwSetWindowPos(window, (positionX = (vidmode.width() - displayWidth) / 2), (positionY = (vidmode.height() - displayHeight) / 2));
 
 		// Shows the OpenGl window.
 		glfwShowWindow(window);
@@ -116,23 +116,23 @@ public class DeviceDisplay {
 		glfwSetWindowFocusCallback(window, callbackWindowFocus = new GLFWWindowFocusCallback() {
 			@Override
 			public void invoke(long window, int focused) {
-				displayFocused = focused == GL_TRUE;
+				inFocus = focused == GL_TRUE;
 			}
 		});
 
 		glfwSetWindowPosCallback(window, callbackWindowPos = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long window, int xpos, int ypos) {
-				displayPositionX = xpos;
-				displayPositionY = ypos;
+				positionX = xpos;
+				positionY = ypos;
 			}
 		});
 
 		glfwSetWindowSizeCallback(window, callbackWindowSize = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				DeviceDisplay.this.displayWidth = width;
-				DeviceDisplay.this.displayHeight = height;
+				DeviceDisplay.this.width = width;
+				DeviceDisplay.this.height = height;
 			}
 		});
 
@@ -168,46 +168,46 @@ public class DeviceDisplay {
 	/**
 	 * @return The width of the display in pixels.
 	 */
-	public int getDisplayWidth() {
-		return displayWidth;
+	public int getWidth() {
+		return width;
 	}
 
 	/**
 	 * @return The height of the display in pixels.
 	 */
-	public int getDisplayHeight() {
-		return displayHeight;
+	public int getHeight() {
+		return height;
 	}
 
 	/**
 	 * @return The aspect ratio between the displays width and height.
 	 */
-	public float getDisplayAspectRatio() {
-		return ((float) displayWidth) / ((float) displayHeight);
+	public float getAspectRatio() {
+		return ((float) width) / ((float) height);
 	}
 
 	/**
 	 * @return The window's title.
 	 */
-	public String getDisplayTitle() {
-		return displayTitle;
+	public String getTitle() {
+		return title;
 	}
 
 	/**
 	 * @return If the display is using vSync.
 	 */
-	public boolean isDisplayVSync() {
-		return displayVSync;
+	public boolean isEnableVSync() {
+		return enableVSync;
 	}
 
 	/**
 	 * Set the display to use VSync or not.
 	 *
-	 * @param displayVSync Weather or not to use vSync.
+	 * @param enableVSync Weather or not to use vSync.
 	 */
-	public void setDisplayVSync(final boolean displayVSync) {
-		this.displayVSync = displayVSync;
-		glfwSwapInterval(this.displayVSync ? 1 : 0);
+	public void setEnableVSync(final boolean enableVSync) {
+		this.enableVSync = enableVSync;
+		glfwSwapInterval(this.enableVSync ? 1 : 0);
 	}
 
 	/**
@@ -229,40 +229,40 @@ public class DeviceDisplay {
 	/**
 	 * @return Weather the display is fullscreen or not.
 	 */
-	public boolean isDisplayFullscreen() {
-		return displayFullscreen;
+	public boolean isFullscreen() {
+		return fullscreen;
 	}
 
 	/**
 	 * Set the display to fullscreen or windowed.
 	 *
-	 * @param displayFullscreen Weather or not to be fullscreen.
+	 * @param fullscreen Weather or not to be fullscreen.
 	 */
-	public void setDisplayFullscreen(final boolean displayFullscreen) {
-		this.displayFullscreen = displayFullscreen;
+	public void setFullscreen(final boolean fullscreen) {
+		this.fullscreen = fullscreen;
 		// TODO: Put display in fullscreen!
-		glfwWindowHint(GLFW_RESIZABLE, this.displayFullscreen ? GL_FALSE : GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE);
 	}
 
 	/**
 	 * @return The x pos of the display in pixels.
 	 */
 	public int getXPos() {
-		return displayPositionX;
+		return positionX;
 	}
 
 	/**
 	 * @return The y pos of the display in pixels.
 	 */
 	public int getYPos() {
-		return displayPositionY;
+		return positionY;
 	}
 
 	/**
 	 * @return If the GLFW display is selected.
 	 */
 	public boolean isFocused() {
-		return displayFocused;
+		return inFocus;
 	}
 
 	/**

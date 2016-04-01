@@ -2,9 +2,9 @@
 
 #include "flounder/shaders/maths.glsl"
 
-out vec4 out_colour;
-
 varying vec2 pass_textureCoords;
+
+out vec4 out_colour;
 
 layout(binding = 0) uniform sampler2D fontTexture;
 

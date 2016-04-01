@@ -57,8 +57,8 @@ public class DeviceMouse {
 		glfwSetCursorPosCallback(ManagerDevices.getDisplay().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				mousePositionX = (float) (xpos / ManagerDevices.getDisplay().getDisplayWidth());
-				mousePositionY = (float) (ypos / ManagerDevices.getDisplay().getDisplayHeight());
+				mousePositionX = (float) (xpos / ManagerDevices.getDisplay().getWidth());
+				mousePositionY = (float) (ypos / ManagerDevices.getDisplay().getHeight());
 			}
 		});
 

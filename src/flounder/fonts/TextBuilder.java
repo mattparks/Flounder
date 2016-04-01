@@ -9,7 +9,7 @@ public class TextBuilder {
 	protected TextBuilder(final String text) {
 		this.text = text;
 		centered = false;
-		textSize = 1;
+		textSize = 1.0f;
 		font = FontType.SEGOE_UI;
 	}
 
