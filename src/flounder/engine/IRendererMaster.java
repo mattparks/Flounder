@@ -17,12 +17,12 @@ public abstract class IRendererMaster {
 	public abstract void render();
 
 	/**
-	 * Cleans up all of the render objects processes. Should be called when the game closes.
-	 */
-	public abstract void dispose();
-
-	/**
 	 * @return The projection matrix used in the current scene renderObjects.
 	 */
 	public abstract Matrix4f getProjectionMatrix();
+
+	/**
+	 * Cleans up all of the render objects processes. Should be called when the game closes.
+	 */
+	public abstract void dispose();
 }

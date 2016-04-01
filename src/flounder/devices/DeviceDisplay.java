@@ -23,6 +23,7 @@ public class DeviceDisplay {
 	private String title;
 	private boolean enableVSync;
 	private boolean antialiasing;
+	private int samples;
 	private boolean fullscreen;
 	private int positionX, positionY;
 	private boolean inFocus;
@@ -36,15 +37,17 @@ public class DeviceDisplay {
 	 * @param displayTitle The window title.
 	 * @param displayVSync If the window will use vSync..
 	 * @param antialiasing If OpenGL will use altialiasing.
+	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	protected DeviceDisplay(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final boolean displayFullscreen) {
+	protected DeviceDisplay(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final int samples, final boolean displayFullscreen) {
 		this.width = displayWidth;
 		this.height = displayHeight;
 		this.title = displayTitle;
 		this.enableVSync = displayVSync;
 		this.antialiasing = antialiasing;
 		this.fullscreen = displayFullscreen;
+		this.samples = samples;
 		inFocus = true;
 		closeRequested = false;
 
@@ -61,8 +64,8 @@ public class DeviceDisplay {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
 		glfwWindowHint(GLFW_RESIZABLE, displayFullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
-		// glfwWindowHint(GLFW_SAMPLES, 8);
-		// glfwWindowHint(GLFW_REFRESH_RATE, 60);
+		glfwWindowHint(GLFW_SAMPLES, samples);
+		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE); // Only enabled in fullscreen.
 
 		// Gets the resolution of the primary monitor.
 		final GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -224,6 +227,23 @@ public class DeviceDisplay {
 	 */
 	public void setAntialiasing(final boolean antialiasing) {
 		this.antialiasing = antialiasing;
+	}
+
+	/**
+	 * @return How many MFAA samples should be done before swapping buffers.
+	 */
+	public int getSamples() {
+		return samples;
+	}
+
+	/**
+	 * How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
+	 *
+	 * @param samples The amount of MFSS samples to be used in the window.
+	 */
+	public void setSamples(final int samples) {
+		this.samples = samples;
+		glfwWindowHint(GLFW_SAMPLES, samples);
 	}
 
 	/**

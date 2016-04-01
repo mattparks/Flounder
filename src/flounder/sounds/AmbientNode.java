@@ -3,7 +3,7 @@ package flounder.sounds;
 import flounder.devices.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
-import flounder.visual.*;
+import flounder.visual.interpolation.*;
 
 import java.util.*;
 

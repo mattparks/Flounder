@@ -25,13 +25,14 @@ public class ManagerDevices {
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
 	 * @param displayVSync If the window will use vSync..
-	 * @param antialiasing If OpenGL will use altialiasing.
+	 * @param displayAntialiasing If OpenGL will use altialiasing.
+	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public static void init(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final boolean displayFullscreen) {
+	public static void init(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
 		if (!initialized) {
 			glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
-			display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, antialiasing, displayFullscreen);
+			display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 			keyboard = new DeviceKeyboard();
 			mouse = new DeviceMouse();
 			joysticks = new DeviceJoysticks();
@@ -40,22 +41,8 @@ public class ManagerDevices {
 			// Logs OpenGL version info.
 			System.out.println("Number of Cores: " + Runtime.getRuntime().availableProcessors());
 			System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
-			renderLogo();
 			initialized = true;
 		}
-	}
-
-	private static void renderLogo() {
-//		display.pollEvents();
-//		OpenglUtils.prepareNewRenderParse(1, 0, 0);
-		// TODO: Insert image shader render ->
-//		display.swapBuffers();
-//
-//		try {
-//			Thread.sleep(2500);
-//		} catch(InterruptedException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	/**

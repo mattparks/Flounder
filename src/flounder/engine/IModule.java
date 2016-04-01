@@ -42,6 +42,9 @@ public class IModule {
 		return masterRenderer;
 	}
 
+	/**
+	 * Deals with closing down the module.
+	 */
 	protected void dispose() {
 		game.dispose();
 		masterRenderer.dispose();

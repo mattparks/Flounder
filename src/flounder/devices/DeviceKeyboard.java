@@ -30,6 +30,8 @@ public class DeviceKeyboard {
 				}
 			}
 		});
+
+		update(0.0f);
 	}
 
 	/**

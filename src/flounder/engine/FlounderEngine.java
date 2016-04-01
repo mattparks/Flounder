@@ -33,10 +33,11 @@ public class FlounderEngine {
 	 * @param displayTitle The window title.
 	 * @param targetFPS The engines target frames per second.
 	 * @param displayVSync If the window will use vSync..
-	 * @param antialiasing If OpenGL will use altialiasing.
+	 * @param displayAntialiasing If OpenGL will use altialiasing.
+	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public static void init(final IModule module, final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean antialiasing, final boolean displayFullscreen) {
+	public static void init(final IModule module, final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
 		if (!initialized) {
 			FlounderEngine.targetFPS = targetFPS;
 			currentFrameTime = 0.0f;
@@ -47,7 +48,7 @@ public class FlounderEngine {
 			delta = 0.0f;
 			time = 0.0f;
 
-			ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, antialiasing, displayFullscreen);
+			ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 			(FlounderEngine.module = module).init();
 			EngineProfiler.init();
 			initialized = true;

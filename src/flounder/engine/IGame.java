@@ -12,7 +12,7 @@ public abstract class IGame {
 	public float screenBlur;
 
 	/**
-	 *
+	 * Creates a new game entry point.
 	 */
 	public IGame() {
 		focusPosition = new Vector3f(0.0f, 0.0f, 0.0f);

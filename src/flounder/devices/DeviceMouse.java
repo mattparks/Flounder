@@ -68,6 +68,8 @@ public class DeviceMouse {
 				displaySelected = entered == GL_TRUE;
 			}
 		});
+
+		update(0.0f);
 	}
 
 	/**

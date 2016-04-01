@@ -23,7 +23,7 @@ public class Line {
 		this.maxLength = maxLength;
 		spaceSize = spaceWidth * fontSize;
 		words = new ArrayList<>();
-		currentLineLength = 0;
+		currentLineLength = 0.0;
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class Line {
 	 */
 	protected boolean attemptToAddWord(final Word word) {
 		double additionalLength = word.getWordWidth();
-		additionalLength += !words.isEmpty() ? spaceSize : 0;
+		additionalLength += !words.isEmpty() ? spaceSize : 0.0;
 
 		if (currentLineLength + additionalLength <= maxLength) {
 			words.add(word);
