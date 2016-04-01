@@ -27,6 +27,10 @@ public class EngineProfiler {
 		});
 	}
 
+	public static void toggle(final boolean open) {
+		frame.setVisible(EngineProfiler.open = open);
+	}
+
 	public static void update(final Map<String, IRenderer> renderers) {
 		// TODO: Put renderer data in display.
 		int yLocation = 320;
@@ -39,10 +43,6 @@ public class EngineProfiler {
 		}
 
 		frame.pack();
-	}
-
-	public static void toggle(final boolean open) {
-		frame.setVisible(EngineProfiler.open = open);
 	}
 
 	public static boolean isOpen() {

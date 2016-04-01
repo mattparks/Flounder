@@ -28,6 +28,15 @@ public class FontRenderer extends IRenderer {
 		fontShader.start();
 	}
 
+	private void endRendering() {
+		fontShader.stop();
+	}
+
+	@Override
+	public void dispose() {
+		fontShader.dispose();
+	}
+
 	private void renderText(final Text text) {
 		OpenglUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenglUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
@@ -41,14 +50,5 @@ public class FontRenderer extends IRenderer {
 		fontShader.borderSizes.loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		OpenglUtils.unbindVAO(0, 1);
-	}
-
-	private void endRendering() {
-		fontShader.stop();
-	}
-
-	@Override
-	public void dispose() {
-		fontShader.dispose();
 	}
 }

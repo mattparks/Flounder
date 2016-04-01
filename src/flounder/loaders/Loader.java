@@ -28,6 +28,13 @@ public class Loader {
 		return bufferObjectID;
 	}
 
+	private static FloatBuffer storeDataInBuffer(final float[] data) {
+		final FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+		buffer.put(data);
+		buffer.flip();
+		return buffer;
+	}
+
 	/**
 	 * Loads interleaved vertex data into a VBO which is stored in a newly created VAO (without index buffer).
 	 *
@@ -52,35 +59,6 @@ public class Loader {
 		GL30.glBindVertexArray(vertexArrayID);
 		vaoCache.put(vertexArrayID, new ArrayList<>());
 		return vertexArrayID;
-	}
-
-	public static int createEmptyVBO(final int floatCount) {
-		final int bufferObjectID = GL15.glGenBuffers();
-		// vaoCache.get(0).add(bufferObjectID); // TODO
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferObjectID);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatCount * 4, GL15.GL_STREAM_DRAW);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		return bufferObjectID;
-	}
-
-	public static void addInstancedAttribute(final int vao, final int vbo, final int attribute, final int dataSize, final int instancedDataLength, final int offset) {
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-		GL30.glBindVertexArray(vao);
-		GL20.glVertexAttribPointer(attribute, dataSize, GL11.GL_FLOAT, false, instancedDataLength * 4, offset * 4);
-		GL33.glVertexAttribDivisor(attribute, 1);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		GL30.glBindVertexArray(0);
-	}
-
-	public static void updateVBO(final int vbo, final float[] data, final FloatBuffer buffer) { // refillVBOWithData
-		buffer.clear();
-		buffer.put(data);
-		buffer.flip();
-
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 
 	/**
@@ -115,11 +93,33 @@ public class Loader {
 		GL30.glBindVertexArray(0);
 	}
 
-	private static FloatBuffer storeDataInBuffer(final float[] data) {
-		final FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+	public static int createEmptyVBO(final int floatCount) {
+		final int bufferObjectID = GL15.glGenBuffers();
+		// vaoCache.get(0).add(bufferObjectID); // TODO
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferObjectID);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatCount * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		return bufferObjectID;
+	}
+
+	public static void addInstancedAttribute(final int vao, final int vbo, final int attribute, final int dataSize, final int instancedDataLength, final int offset) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL30.glBindVertexArray(vao);
+		GL20.glVertexAttribPointer(attribute, dataSize, GL11.GL_FLOAT, false, instancedDataLength * 4, offset * 4);
+		GL33.glVertexAttribDivisor(attribute, 1);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
+	}
+
+	public static void updateVBO(final int vbo, final float[] data, final FloatBuffer buffer) { // refillVBOWithData
+		buffer.clear();
 		buffer.put(data);
 		buffer.flip();
-		return buffer;
+
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 
 	/**

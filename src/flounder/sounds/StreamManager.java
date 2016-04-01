@@ -35,13 +35,6 @@ public class StreamManager extends Thread {
 	}
 
 	/**
-	 * Stops the thread from running.
-	 */
-	public void kill() {
-		alive = false;
-	}
-
-	/**
 	 * Updates a streamer and checks whether it has finished streaming. If so it indicates that it should be removed from the list of current streamers.
 	 *
 	 * @param streamer The streamer to be updated.
@@ -75,6 +68,13 @@ public class StreamManager extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Stops the thread from running.
+	 */
+	public void kill() {
+		alive = false;
 	}
 
 	/**

@@ -114,6 +114,16 @@ public class MusicPlayer {
 	}
 
 	/**
+	 * Indicates that the current track should be faded out.
+	 */
+	private void fadeOutCurrentTrack() {
+		if (currentlyPlaying != null) {
+			fadeOut = true;
+			finalVolume = source.getVolume();
+		}
+	}
+
+	/**
 	 * Plays a one-off music track. Whatever track is currently playing is faded out (if desired) and this one-off track is put straight to the front of
 	 * the queue so that it gets played as soon as the current track has faded out. This would be used to play music for in-game events, such as an
 	 * achievement being reached. Once the track has finished playing the usual background music continues.
@@ -128,16 +138,6 @@ public class MusicPlayer {
 			fadeOutCurrentTrack();
 		} else {
 			source.stop();
-		}
-	}
-
-	/**
-	 * Indicates that the current track should be faded out.
-	 */
-	private void fadeOutCurrentTrack() {
-		if (currentlyPlaying != null) {
-			fadeOut = true;
-			finalVolume = source.getVolume();
 		}
 	}
 

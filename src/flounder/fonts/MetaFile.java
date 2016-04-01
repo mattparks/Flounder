@@ -62,48 +62,6 @@ public class MetaFile {
 		paddingHeight = padding[PAD_TOP] + padding[PAD_BOTTOM];
 	}
 
-	private void loadLineSizes() {
-		processNextLine();
-		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
-		verticalPerPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
-		horizontalPerPixelSize = verticalPerPixelSize / ManagerDevices.getDisplay().getAspectRatio(); // TODO: Move aspect ratio out.
-	}
-
-	private void loadCharacterData(final int imageWidth) {
-		processNextLine();
-		processNextLine();
-
-		while (processNextLine()) {
-			Character c = loadCharacter(imageWidth);
-
-			if (c != null) {
-				metaData.put(c.getId(), c);
-			}
-		}
-	}
-
-	/**
-	 * Gets the {@code int} value of the variable with a certain name on the current line.
-	 *
-	 * @param variable The name of the variable.
-	 *
-	 * @return The value of the variable.
-	 */
-	private int getValueOfVariable(final String variable) {
-		return Integer.parseInt(values.get(variable));
-	}
-
-	/**
-	 * Closes the font file after finishing reading.
-	 */
-	private void close() {
-		try {
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Read in the next line and store the variable values.
 	 *
@@ -153,6 +111,37 @@ public class MetaFile {
 		return actualValues;
 	}
 
+	private void loadLineSizes() {
+		processNextLine();
+		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
+		verticalPerPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
+		horizontalPerPixelSize = verticalPerPixelSize / ManagerDevices.getDisplay().getAspectRatio(); // TODO: Move aspect ratio out.
+	}
+
+	/**
+	 * Gets the {@code int} value of the variable with a certain name on the current line.
+	 *
+	 * @param variable The name of the variable.
+	 *
+	 * @return The value of the variable.
+	 */
+	private int getValueOfVariable(final String variable) {
+		return Integer.parseInt(values.get(variable));
+	}
+
+	private void loadCharacterData(final int imageWidth) {
+		processNextLine();
+		processNextLine();
+
+		while (processNextLine()) {
+			Character c = loadCharacter(imageWidth);
+
+			if (c != null) {
+				metaData.put(c.getId(), c);
+			}
+		}
+	}
+
 	private Character loadCharacter(final int imageSize) {
 		int id = getValueOfVariable("id");
 
@@ -173,6 +162,17 @@ public class MetaFile {
 		double yOff = (getValueOfVariable("yoffset") + padding[PAD_TOP] - DESIRED_PADDING) * verticalPerPixelSize;
 		double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
 		return new Character(id, xTex, yTex, xTexSize, yTexSize, xOff, yOff, quadWidth, quadHeight, xAdvance);
+	}
+
+	/**
+	 * Closes the font file after finishing reading.
+	 */
+	private void close() {
+		try {
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected Character getCharacter(final int ascii) {

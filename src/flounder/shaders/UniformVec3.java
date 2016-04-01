@@ -27,15 +27,6 @@ public class UniformVec3 extends Uniform {
 	}
 
 	/**
-	 * Loads a Colour to the uniform if the value already on the GPU is not the same as the new value.
-	 *
-	 * @param colour The new colour.
-	 */
-	public void loadVec3(final Colour colour) {
-		loadVec3(colour.r, colour.g, colour.b);
-	}
-
-	/**
 	 * Loads a x, y and z value to the uniform if the value already on the GPU is not the same as the new value.
 	 *
 	 * @param x The new x value.
@@ -49,5 +40,14 @@ public class UniformVec3 extends Uniform {
 			currentZ = z;
 			glUniform3f(super.getLocation(), x, y, z);
 		}
+	}
+
+	/**
+	 * Loads a Colour to the uniform if the value already on the GPU is not the same as the new value.
+	 *
+	 * @param colour The new colour.
+	 */
+	public void loadVec3(final Colour colour) {
+		loadVec3(colour.r, colour.g, colour.b);
 	}
 }

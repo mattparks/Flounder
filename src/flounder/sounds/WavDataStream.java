@@ -45,6 +45,22 @@ public class WavDataStream {
 	}
 
 	/**
+	 * Determines the OpenAL ID of the sound data format.
+	 *
+	 * @param channels Number of channels in the audio data.
+	 * @param bitsPerSample Number of bits per sample (either 8 or 16).
+	 *
+	 * @return The OpenAL format ID of the sound data.
+	 */
+	private static final int getOpenAlFormat(final int channels, final int bitsPerSample) {
+		if (channels == 1) {
+			return bitsPerSample == 8 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_MONO16;
+		} else {
+			return bitsPerSample == 8 ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_STEREO16;
+		}
+	}
+
+	/**
 	 * Creates a new open wave data stream which can be used to stream audio data from the chosen .wav file.
 	 *
 	 * @param wavFile The file to be streamed.
@@ -59,22 +75,6 @@ public class WavDataStream {
 		AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedInput);
 		WavDataStream wavStream = new WavDataStream(audioStream, chunkSize);
 		return wavStream;
-	}
-
-	/**
-	 * Determines the OpenAL ID of the sound data format.
-	 *
-	 * @param channels Number of channels in the audio data.
-	 * @param bitsPerSample Number of bits per sample (either 8 or 16).
-	 *
-	 * @return The OpenAL format ID of the sound data.
-	 */
-	private static final int getOpenAlFormat(final int channels, final int bitsPerSample) {
-		if (channels == 1) {
-			return bitsPerSample == 8 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_MONO16;
-		} else {
-			return bitsPerSample == 8 ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_STEREO16;
-		}
 	}
 
 	/**

@@ -75,6 +75,28 @@ public class Streamer {
 	}
 
 	/**
+	 * Loads the next chunk of audio data into a buffer.
+	 *
+	 * @param buffer The buffer into which the data should be loaded.
+	 */
+	private void loadNextDataIntoBuffer(final int buffer) {
+		ByteBuffer data = stream.loadNextData();
+		SoundLoader.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
+	}
+
+	/**
+	 * Adds a buffer to the end of the queue to be played by the source.
+	 *
+	 * @param buffer The buffer to be queued.
+	 */
+	private void queueBuffer(final int buffer) {
+		if (source.isPlaying()) {
+			source.queue(buffer);
+			bufferQueue.add(buffer);
+		}
+	}
+
+	/**
 	 * @return {@code true} if there is a buffer which the source has already finished playing. This doesn't include the initial sound buffer from the {@link Sound} object, whose data is never changed.
 	 */
 	private boolean isTopBufferFinished() {
@@ -96,28 +118,6 @@ public class Streamer {
 		int topBuffer = unqueueTopBuffer();
 		loadNextDataIntoBuffer(topBuffer);
 		queueBuffer(topBuffer);
-	}
-
-	/**
-	 * Loads the next chunk of audio data into a buffer.
-	 *
-	 * @param buffer The buffer into which the data should be loaded.
-	 */
-	private void loadNextDataIntoBuffer(final int buffer) {
-		ByteBuffer data = stream.loadNextData();
-		SoundLoader.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
-	}
-
-	/**
-	 * Adds a buffer to the end of the queue to be played by the source.
-	 *
-	 * @param buffer The buffer to be queued.
-	 */
-	private void queueBuffer(final int buffer) {
-		if (source.isPlaying()) {
-			source.queue(buffer);
-			bufferQueue.add(buffer);
-		}
 	}
 
 	/**

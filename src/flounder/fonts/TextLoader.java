@@ -18,36 +18,6 @@ public class TextLoader {
 		metaData = new MetaFile(metaFile);
 	}
 
-	private static void addTextCoords(final List<Float> texCoords, final double x, final double y, final double maxX, final double maxY) {
-		texCoords.add((float) x);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) y);
-	}
-
-	private static void addVertices(final List<Float> vertices, final double x, final double y, final double maxX, final double maxY) {
-		vertices.add((float) x);
-		vertices.add((float) y);
-		vertices.add((float) x);
-		vertices.add((float) maxY);
-		vertices.add((float) maxX);
-		vertices.add((float) maxY);
-		vertices.add((float) maxX);
-		vertices.add((float) maxY);
-		vertices.add((float) maxX);
-		vertices.add((float) y);
-		vertices.add((float) x);
-		vertices.add((float) y);
-	}
-
 	public int getFontTextureAtlas() {
 		return fontTexture.getTextureID();
 	}
@@ -86,6 +56,18 @@ public class TextLoader {
 		return lines;
 	}
 
+	private void completeStructure(final List<Line> lines, Line currentLine, final Word currentWord, final Text text) {
+		boolean added = currentLine.attemptToAddWord(currentWord);
+
+		if (!added) {
+			lines.add(currentLine);
+			currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+			currentLine.attemptToAddWord(currentWord);
+		}
+
+		lines.add(currentLine);
+	}
+
 	private void loadStructureToOpenGL(final Text text, final List<Line> lines) {
 		setTextSettings(text, lines);
 		double cursorX = 0f;
@@ -118,16 +100,19 @@ public class TextLoader {
 		text.setMeshInfo(vao, vertices.size() / 2);
 	}
 
-	private void completeStructure(final List<Line> lines, Line currentLine, final Word currentWord, final Text text) {
-		boolean added = currentLine.attemptToAddWord(currentWord);
-
-		if (!added) {
-			lines.add(currentLine);
-			currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
-			currentLine.attemptToAddWord(currentWord);
-		}
-
-		lines.add(currentLine);
+	private static void addTextCoords(final List<Float> texCoords, final double x, final double y, final double maxX, final double maxY) {
+		texCoords.add((float) x);
+		texCoords.add((float) y);
+		texCoords.add((float) x);
+		texCoords.add((float) maxY);
+		texCoords.add((float) maxX);
+		texCoords.add((float) maxY);
+		texCoords.add((float) maxX);
+		texCoords.add((float) maxY);
+		texCoords.add((float) maxX);
+		texCoords.add((float) y);
+		texCoords.add((float) x);
+		texCoords.add((float) y);
 	}
 
 	private void setTextSettings(final Text text, final List<Line> lines) {
@@ -146,6 +131,21 @@ public class TextLoader {
 		double maxX = x + character.getSizeX() * fontSize;
 		double maxY = y + character.getSizeY() * fontSize;
 		addVertices(vertices, x, y, maxX, maxY);
+	}
+
+	private static void addVertices(final List<Float> vertices, final double x, final double y, final double maxX, final double maxY) {
+		vertices.add((float) x);
+		vertices.add((float) y);
+		vertices.add((float) x);
+		vertices.add((float) maxY);
+		vertices.add((float) maxX);
+		vertices.add((float) maxY);
+		vertices.add((float) maxX);
+		vertices.add((float) maxY);
+		vertices.add((float) maxX);
+		vertices.add((float) y);
+		vertices.add((float) x);
+		vertices.add((float) y);
 	}
 
 	private float[] listToArray(final List<Float> list) {

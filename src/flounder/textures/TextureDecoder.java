@@ -379,6 +379,92 @@ public class TextureDecoder {
 		}
 	}
 
+	private void refillInflater(final Inflater inflater) throws IOException {
+		while (chunkRemaining == 0) {
+			closeChunk();
+			openChunk(IDAT);
+		}
+
+		int read = readChunk(buffer, 0, buffer.length);
+		inflater.setInput(buffer, 0, read);
+	}
+
+	private void closeChunk() throws IOException {
+		if (chunkRemaining > 0) {
+			// Just skip the rest and the CRC.
+			skip(chunkRemaining + 4);
+		} else {
+			readFully(buffer, 0, 4);
+			int expectedCrc = readInt(buffer, 0);
+			int computedCrc = (int) crc.getValue();
+
+			if (computedCrc != expectedCrc) {
+				throw new IOException("Invalid CRC");
+			}
+		}
+
+		chunkRemaining = 0;
+		chunkLength = 0;
+		chunkType = 0;
+	}
+
+	private void skip(long amount) throws IOException {
+		while (amount > 0) {
+			long skipped = input.skip(amount);
+
+			if (skipped < 0) {
+				throw new EOFException();
+			}
+
+			amount -= skipped;
+		}
+	}
+
+	private void readFully(final byte[] buffer, int offset, int length) throws IOException {
+		do {
+			int read = input.read(buffer, offset, length);
+
+			if (read < 0) {
+				throw new EOFException();
+			}
+
+			offset += read;
+			length -= read;
+		} while (length > 0);
+	}
+
+	private int readInt(final byte[] buffer, final int offset) {
+		return buffer[offset] << 24 | (buffer[offset + 1] & 255) << 16 | (buffer[offset + 2] & 255) << 8 | buffer[offset + 3] & 255;
+	}
+
+	private void openChunk(final int expected) throws IOException {
+		openChunk();
+
+		if (chunkType != expected) {
+			throw new IOException("Expected chunk: " + Integer.toHexString(expected));
+		}
+	}
+
+	private void openChunk() throws IOException {
+		readFully(buffer, 0, 8);
+		chunkLength = readInt(buffer, 0);
+		chunkType = readInt(buffer, 4);
+		chunkRemaining = chunkLength;
+		crc.reset();
+		crc.update(buffer, 4, 4); // Only chunkType.
+	}
+
+	private int readChunk(final byte[] buffer, final int offset, int length) throws IOException {
+		if (length > chunkRemaining) {
+			length = chunkRemaining;
+		}
+
+		readFully(buffer, offset, length);
+		crc.update(buffer, offset, length);
+		chunkRemaining -= length;
+		return length;
+	}
+
 	private void unfilter(final byte[] curLine, final byte[] prevLine) throws IOException {
 		switch (curLine[0]) {
 			case 0: // none
@@ -397,6 +483,74 @@ public class TextureDecoder {
 				break;
 			default:
 				throw new IOException("Invalide filter type in scanline: " + curLine[0]);
+		}
+	}
+
+	private void unfilterSub(byte[] curLine) {
+		final int bpp = bytesPerPixel;
+
+		for (int i = bpp + 1, n = curLine.length; i < n; ++i) {
+			curLine[i] += curLine[i - bpp];
+		}
+	}
+
+	private void unfilterUp(byte[] curLine, final byte[] prevLine) {
+		for (int i = 1, n = curLine.length; i < n; ++i) {
+			curLine[i] += prevLine[i];
+		}
+	}
+
+	private void unfilterAverage(byte[] curLine, final byte[] prevLine) {
+		final int bpp = bytesPerPixel;
+		int i;
+
+		for (i = 1; i <= bpp; ++i) {
+			curLine[i] += (byte) ((prevLine[i] & 0xFF) >>> 1);
+		}
+
+		for (int n = curLine.length; i < n; ++i) {
+			curLine[i] += (byte) ((prevLine[i] & 0xFF) + (curLine[i - bpp] & 0xFF) >>> 1);
+		}
+	}
+
+	private void unfilterPaeth(byte[] curLine, final byte[] prevLine) {
+		final int bpp = bytesPerPixel;
+		int i;
+
+		for (i = 1; i <= bpp; ++i) {
+			curLine[i] += prevLine[i];
+		}
+
+		for (int n = curLine.length; i < n; ++i) {
+			int a = curLine[i - bpp] & 255;
+			int b = prevLine[i] & 255;
+			int c = prevLine[i - bpp] & 255;
+			int p = a + b - c;
+			int pa = p - a;
+
+			if (pa < 0) {
+				pa = -pa;
+			}
+
+			int pb = p - b;
+
+			if (pb < 0) {
+				pb = -pb;
+			}
+
+			int pc = p - c;
+
+			if (pc < 0) {
+				pc = -pc;
+			}
+
+			if (pa <= pb && pa <= pc) {
+				c = a;
+			} else if (pb <= pc) {
+				c = b;
+			}
+
+			curLine[i] += (byte) c;
 		}
 	}
 
@@ -616,160 +770,6 @@ public class TextureDecoder {
 				buffer.put(b).put(g).put(r).put(a);
 			}
 		}
-	}
-
-	private void refillInflater(final Inflater inflater) throws IOException {
-		while (chunkRemaining == 0) {
-			closeChunk();
-			openChunk(IDAT);
-		}
-
-		int read = readChunk(buffer, 0, buffer.length);
-		inflater.setInput(buffer, 0, read);
-	}
-
-	private void unfilterSub(byte[] curLine) {
-		final int bpp = bytesPerPixel;
-
-		for (int i = bpp + 1, n = curLine.length; i < n; ++i) {
-			curLine[i] += curLine[i - bpp];
-		}
-	}
-
-	private void unfilterUp(byte[] curLine, final byte[] prevLine) {
-		for (int i = 1, n = curLine.length; i < n; ++i) {
-			curLine[i] += prevLine[i];
-		}
-	}
-
-	private void unfilterAverage(byte[] curLine, final byte[] prevLine) {
-		final int bpp = bytesPerPixel;
-		int i;
-
-		for (i = 1; i <= bpp; ++i) {
-			curLine[i] += (byte) ((prevLine[i] & 0xFF) >>> 1);
-		}
-
-		for (int n = curLine.length; i < n; ++i) {
-			curLine[i] += (byte) ((prevLine[i] & 0xFF) + (curLine[i - bpp] & 0xFF) >>> 1);
-		}
-	}
-
-	private void unfilterPaeth(byte[] curLine, final byte[] prevLine) {
-		final int bpp = bytesPerPixel;
-		int i;
-
-		for (i = 1; i <= bpp; ++i) {
-			curLine[i] += prevLine[i];
-		}
-
-		for (int n = curLine.length; i < n; ++i) {
-			int a = curLine[i - bpp] & 255;
-			int b = prevLine[i] & 255;
-			int c = prevLine[i - bpp] & 255;
-			int p = a + b - c;
-			int pa = p - a;
-
-			if (pa < 0) {
-				pa = -pa;
-			}
-
-			int pb = p - b;
-
-			if (pb < 0) {
-				pb = -pb;
-			}
-
-			int pc = p - c;
-
-			if (pc < 0) {
-				pc = -pc;
-			}
-
-			if (pa <= pb && pa <= pc) {
-				c = a;
-			} else if (pb <= pc) {
-				c = b;
-			}
-
-			curLine[i] += (byte) c;
-		}
-	}
-
-	private void closeChunk() throws IOException {
-		if (chunkRemaining > 0) {
-			// Just skip the rest and the CRC.
-			skip(chunkRemaining + 4);
-		} else {
-			readFully(buffer, 0, 4);
-			int expectedCrc = readInt(buffer, 0);
-			int computedCrc = (int) crc.getValue();
-
-			if (computedCrc != expectedCrc) {
-				throw new IOException("Invalid CRC");
-			}
-		}
-
-		chunkRemaining = 0;
-		chunkLength = 0;
-		chunkType = 0;
-	}
-
-	private void openChunk(final int expected) throws IOException {
-		openChunk();
-
-		if (chunkType != expected) {
-			throw new IOException("Expected chunk: " + Integer.toHexString(expected));
-		}
-	}
-
-	private int readChunk(final byte[] buffer, final int offset, int length) throws IOException {
-		if (length > chunkRemaining) {
-			length = chunkRemaining;
-		}
-
-		readFully(buffer, offset, length);
-		crc.update(buffer, offset, length);
-		chunkRemaining -= length;
-		return length;
-	}
-
-	private void skip(long amount) throws IOException {
-		while (amount > 0) {
-			long skipped = input.skip(amount);
-
-			if (skipped < 0) {
-				throw new EOFException();
-			}
-
-			amount -= skipped;
-		}
-	}
-
-	private void readFully(final byte[] buffer, int offset, int length) throws IOException {
-		do {
-			int read = input.read(buffer, offset, length);
-
-			if (read < 0) {
-				throw new EOFException();
-			}
-
-			offset += read;
-			length -= read;
-		} while (length > 0);
-	}
-
-	private int readInt(final byte[] buffer, final int offset) {
-		return buffer[offset] << 24 | (buffer[offset + 1] & 255) << 16 | (buffer[offset + 2] & 255) << 8 | buffer[offset + 3] & 255;
-	}
-
-	private void openChunk() throws IOException {
-		readFully(buffer, 0, 8);
-		chunkLength = readInt(buffer, 0);
-		chunkType = readInt(buffer, 4);
-		chunkRemaining = chunkLength;
-		crc.reset();
-		crc.update(buffer, 4, 4); // Only chunkType.
 	}
 
 	private void readIHDR() throws IOException {

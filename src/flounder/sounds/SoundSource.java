@@ -160,17 +160,24 @@ public class SoundSource {
 	}
 
 	/**
+	 * Removes the top buffer that has already been played from the queue (for use when streaming).
+	 */
+	protected void unqueue() {
+		AL10.alSourceUnqueueBuffers(sourceID);
+	}
+
+	/**
+	 * @return The number of buffers in the queue that have already been played (for use when streaming).
+	 */
+	protected final int getFinishedBuffersCount() {
+		return AL10.alGetSourcei(sourceID, AL10.AL_BUFFERS_PROCESSED);
+	}
+
+	/**
 	 * @return {@code true} if the source is currently playing a sound.
 	 */
 	protected final boolean isPlaying() {
 		return AL10.alGetSourcei(sourceID, AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING;
-	}
-
-	/**
-	 * Deletes the source.
-	 */
-	protected void delete() {
-		AL10.alDeleteSources(sourceID);
 	}
 
 	/**
@@ -183,16 +190,9 @@ public class SoundSource {
 	}
 
 	/**
-	 * Removes the top buffer that has already been played from the queue (for use when streaming).
+	 * Deletes the source.
 	 */
-	protected void unqueue() {
-		AL10.alSourceUnqueueBuffers(sourceID);
-	}
-
-	/**
-	 * @return The number of buffers in the queue that have already been played (for use when streaming).
-	 */
-	protected final int getFinishedBuffersCount() {
-		return AL10.alGetSourcei(sourceID, AL10.AL_BUFFERS_PROCESSED);
+	protected void delete() {
+		AL10.alDeleteSources(sourceID);
 	}
 }

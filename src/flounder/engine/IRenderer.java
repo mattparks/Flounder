@@ -32,19 +32,19 @@ public abstract class IRenderer {
 	}
 
 	/**
-	 * @return The last render time (in Ms).
-	 */
-	public float getRenderTimeMs() {
-		return renderTimeMs;
-	}
-
-	/**
 	 * An internal render method for Renderers.
 	 *
 	 * @param clipPlane The current clip plane.
 	 * @param camera The camera to be used when rendering.
 	 */
 	public abstract void renderObjects(final Vector4f clipPlane, final ICamera camera);
+
+	/**
+	 * @return The last render time (in Ms).
+	 */
+	public float getRenderTimeMs() {
+		return renderTimeMs;
+	}
 
 	/**
 	 * Cleans up all of the renderers processes.

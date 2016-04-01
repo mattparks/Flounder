@@ -120,17 +120,6 @@ public class SoundEmitter {
 	}
 
 	/**
-	 * Checks if a certain sound effect is being played by this emitter.
-	 *
-	 * @param sound The sound effect in question.
-	 *
-	 * @return {@code true} if the sound effect in question is being played by this emitter.
-	 */
-	public final boolean isPlayingSound(final SoundEffect sound) {
-		return playingSounds.containsKey(sound);
-	}
-
-	/**
 	 * Plays a sound effect from the position of this emitter in the world. It does this by sending a {@link PlayRequest} to the {@link DeviceSound}.
 	 *
 	 * @param soundEffect The sound effect to be played from this emitter.
@@ -146,6 +135,17 @@ public class SoundEmitter {
 		if (controller != null) {
 			playingSounds.put(soundEffect, controller);
 		}
+	}
+
+	/**
+	 * Checks if a certain sound effect is being played by this emitter.
+	 *
+	 * @param sound The sound effect in question.
+	 *
+	 * @return {@code true} if the sound effect in question is being played by this emitter.
+	 */
+	public final boolean isPlayingSound(final SoundEffect sound) {
+		return playingSounds.containsKey(sound);
 	}
 
 	/**
