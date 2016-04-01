@@ -15,7 +15,7 @@ public class FontShader extends ShaderProgram {
 	protected UniformVec2 edgeData = new UniformVec2("edgeData");
 
 	protected FontShader() {
-		super(VERTEX_SHADER, FRAGMENT_SHADER);
+		super("font", VERTEX_SHADER, FRAGMENT_SHADER);
 		super.storeAllUniformLocations(transform, aspectRatio, colour, borderColour, borderSizes, edgeData);
 	}
 }
