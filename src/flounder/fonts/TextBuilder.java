@@ -10,7 +10,7 @@ public class TextBuilder {
 		this.text = text;
 		centered = false;
 		textSize = 1.0f;
-		font = FontType.SEGOE_UI;
+		font = FontManager.SEGOE_UI;
 	}
 
 	public Text create() {

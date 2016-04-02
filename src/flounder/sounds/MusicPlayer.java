@@ -1,5 +1,8 @@
 package flounder.sounds;
 
+import flounder.engine.*;
+import flounder.maths.*;
+
 import java.util.*;
 
 /**
@@ -14,12 +17,16 @@ public class MusicPlayer {
 	private Playlist currentPlaylist;
 	private List<Sound> musicQueue;
 	private Sound currentlyPlaying;
+	private float selectedTimeout;
+	private float timoutStart;
 
 	private boolean fadeOut;
 	private float fadeFactor;
 	private float finalVolume;
 
-	private boolean shuffle; // TODO: Add options for pause after music finishes, min and max length, randomly select time in-between.
+	private boolean shuffle;
+	private float minPlayTimeout;
+	private float maxPlayTimeout;
 
 	/**
 	 * Sets up the sound source that the music player will be using to play sounds, and sets the relevant settings.
@@ -31,10 +38,14 @@ public class MusicPlayer {
 		source.setUndiminishing();
 		musicQueue = new ArrayList<>();
 		currentlyPlaying = null;
+		selectedTimeout = 0.0f;
+		timoutStart = 0.0f;
 		fadeOut = false;
 		fadeFactor = 1.0f;
 		finalVolume = 0.0f;
 		shuffle = false;
+		minPlayTimeout = 2.0f;
+		maxPlayTimeout = 7.0f;
 	}
 
 	/**
@@ -49,7 +60,17 @@ public class MusicPlayer {
 
 		if (!source.isPlaying() && !musicQueue.isEmpty()) {
 			source.setInactive();
-			playNextTrack();
+
+			if (timoutStart == 0.0f) {
+				timoutStart = FlounderEngine.getTime();
+				selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
+			}
+
+			if (FlounderEngine.getTime() - timoutStart > selectedTimeout) {
+				timoutStart = 0.0f;
+				selectedTimeout = 0.0f;
+				playNextTrack();
+			}
 		}
 	}
 
@@ -104,9 +125,13 @@ public class MusicPlayer {
 	 *
 	 * @param playlist The playlist of music to be played in the background.
 	 * @param shuffle Whether the playlist should be played in a random order or not.
+	 * @param minPlayTimeout The minimum time (in seconds) to pause between shuffling music.
+	 * @param maxPlayTimeout The maximum time (in seconds) to pause between shuffling music.
 	 */
-	public void playMusicPlaylist(final Playlist playlist, final boolean shuffle) {
+	public void playMusicPlaylist(final Playlist playlist, final boolean shuffle, final float minPlayTimeout, final float maxPlayTimeout) {
 		this.shuffle = shuffle;
+		this.minPlayTimeout = minPlayTimeout;
+		this.maxPlayTimeout = maxPlayTimeout;
 		currentPlaylist = playlist;
 		fadeOutCurrentTrack();
 		musicQueue.clear();

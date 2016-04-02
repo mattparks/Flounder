@@ -47,8 +47,8 @@ public class Text {
 		scaleDriver = new ConstantDriver(1.0f);
 		glowDriver = new ConstantDriver(0.0f);
 		borderDriver = new ConstantDriver(0.0f);
-		colour = new Colour(0.0f, 0.0f, 0.0f);
-		borderColour = new Colour(1.0f, 1.0f, 1.0f);
+		colour = new Colour(0.0f, 0.0f, 0.0f, 1.0f);
+		borderColour = new Colour(1.0f, 1.0f, 1.0f, 1.0f);
 
 		solidBorder = false;
 		glowBorder = false;

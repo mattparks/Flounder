@@ -2,6 +2,7 @@ package flounder.engine;
 
 import flounder.devices.*;
 import flounder.engine.profiling.*;
+import flounder.fonts.*;
 import flounder.loaders.*;
 import flounder.maths.matrices.*;
 import flounder.processing.*;
@@ -49,6 +50,8 @@ public class FlounderEngine {
 			time = 0.0f;
 
 			ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+			FontManager.init();
+			// GuiManager.init();
 			(FlounderEngine.module = module).init();
 			EngineProfiler.init();
 			initialized = true;
@@ -67,6 +70,7 @@ public class FlounderEngine {
 				currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;
 				delta = currentFrameTime - lastFrameTime;
 				lastFrameTime = currentFrameTime;
+				time += delta;
 
 				// Prints out current engine update and frame stats.
 				if (System.currentTimeMillis() - timerStart > 1000) {
@@ -95,7 +99,7 @@ public class FlounderEngine {
 	public static void update() {
 		ManagerDevices.preRender(delta);
 		module.update();
-		//	GuiManager.updateGuis();
+		// GuiManager.updateGuis();
 		updates++;
 	}
 
