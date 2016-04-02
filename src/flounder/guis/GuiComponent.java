@@ -134,6 +134,34 @@ public abstract class GuiComponent {
 		updateScreenSpacePosition();
 	}
 
+	/**
+	 * Calculates the screen space position of the component based on their relative position and the screen-space position of their parent.
+	 */
+	protected void updateScreenSpacePosition() {
+		float x = parent.position.x + parent.scale.x * relativePosition.x;
+		float y = parent.position.y + parent.scale.y * relativePosition.y;
+		float width = relativeScale.x * parent.scale.x;
+		float height = relativeScale.y * parent.scale.y;
+		setScreenSpacePosition(x, y, width, height);
+
+		childComponents.forEach(GuiComponent::updateScreenSpacePosition);
+		componentTexts.keySet().forEach(text -> setTextScreenSpacePosition(text, componentTexts.get(text)));
+	}
+
+	/**
+	 * Sets the screen-space position and dimensions of this component. (0, 0) is the top left of the screen and (1, 1) is the bottom right.
+	 *
+	 * @param x The x position of the top-left of the component in screen-space.
+	 * @param y The y position of the top-left of the component in screen-space.
+	 * @param width The width of the component in screen-space.
+	 * @param height The height of the component in screen-space.
+	 */
+	protected void setScreenSpacePosition(final float x, final float y, final float width, final float height) {
+		position.set(x, y);
+		scale.set(width, height);
+		initialized = true;
+	}
+
 	public void increaseRelativePosition(final float dX, final float dY) {
 		relativePosition.x += dX;
 		relativePosition.y += dY;
@@ -187,34 +215,6 @@ public abstract class GuiComponent {
 		removeOldComponents();
 		childComponents.forEach(childComponent -> childComponent.update(guiTextures, texts));
 		updateAndAddNewChildren(guiTextures, texts);
-	}
-
-	/**
-	 * Calculates the screen space position of the component based on their relative position and the screen-space position of their parent.
-	 */
-	protected void updateScreenSpacePosition() {
-		float x = parent.position.x + parent.scale.x * relativePosition.x;
-		float y = parent.position.y + parent.scale.y * relativePosition.y;
-		float width = relativeScale.x * parent.scale.x;
-		float height = relativeScale.y * parent.scale.y;
-		setScreenSpacePosition(x, y, width, height);
-
-		childComponents.forEach(GuiComponent::updateScreenSpacePosition);
-		componentTexts.keySet().forEach(text -> setTextScreenSpacePosition(text, componentTexts.get(text)));
-	}
-
-	/**
-	 * Sets the screen-space position and dimensions of this component. (0, 0) is the top left of the screen and (1, 1) is the bottom right.
-	 *
-	 * @param x The x position of the top-left of the component in screen-space.
-	 * @param y The y position of the top-left of the component in screen-space.
-	 * @param width The width of the component in screen-space.
-	 * @param height The height of the component in screen-space.
-	 */
-	protected void setScreenSpacePosition(final float x, final float y, final float width, final float height) {
-		position.set(x, y);
-		scale.set(width, height);
-		initialized = true;
 	}
 
 	/**

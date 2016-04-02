@@ -5,7 +5,6 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
 import javax.imageio.*;
-
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
@@ -216,14 +215,13 @@ public class DeviceDisplay {
 			}
 		}
 
-		return image;
-	}
+		// Creates the transformation direction (horizontal).
+		AffineTransform at = AffineTransform.getScaleInstance(1, -1);
+		at.translate(0, -image.getHeight(null));
 
-	/**
-	 * @return The current GLFW window.
-	 */
-	public long getWindow() {
-		return window;
+		// Applies transformation.
+		AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		return opRotated.filter(image, null);
 	}
 
 	/**
@@ -238,6 +236,13 @@ public class DeviceDisplay {
 	 */
 	public int getHeight() {
 		return height;
+	}
+
+	/**
+	 * @return The current GLFW window.
+	 */
+	public long getWindow() {
+		return window;
 	}
 
 	/**

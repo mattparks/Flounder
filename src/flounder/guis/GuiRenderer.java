@@ -33,6 +33,15 @@ public class GuiRenderer extends IRenderer {
 		shader.start();
 	}
 
+	private void endRendering() {
+		shader.stop();
+	}
+
+	@Override
+	public void dispose() {
+		shader.dispose();
+	}
+
 	private void renderGui(final GuiTexture gui) {
 		if (!gui.getTexture().isLoaded()) {
 			return;
@@ -45,14 +54,5 @@ public class GuiRenderer extends IRenderer {
 		shader.flipTexture.loadBoolean(gui.isFlipTexture());
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
 		OpenglUtils.unbindVAO(0);
-	}
-
-	private void endRendering() {
-		shader.stop();
-	}
-
-	@Override
-	public void dispose() {
-		shader.dispose();
 	}
 }
