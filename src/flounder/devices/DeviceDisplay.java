@@ -1,7 +1,16 @@
 package flounder.devices;
 
+import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+
+import javax.imageio.*;
+
+import java.awt.geom.*;
+import java.awt.image.*;
+import java.io.*;
+import java.nio.*;
+import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -159,6 +168,55 @@ public class DeviceDisplay {
 	 */
 	protected void swapBuffers() {
 		glfwSwapBuffers(window);
+	}
+
+	/**
+	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
+	 */
+	public void screenshot() {
+		// Tries to create an image, otherwise throws an exception.
+		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
+		File saveDirectory = new File("screenshots");
+
+		if (!saveDirectory.exists()) {
+			try {
+				saveDirectory.mkdir();
+			} catch (SecurityException e) {
+				System.err.println("The screenshot directory could not be created.");
+				e.printStackTrace();
+				return;
+			}
+		}
+
+		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
+		String format = "png"; // "PNG" or "JPG".
+
+		// Tries to create image.
+		try {
+			ImageIO.write(updateBufferedImage(), format, file);
+		} catch (Exception e) {
+			System.out.println("Failed to take screenshot.");
+			e.printStackTrace();
+		}
+	}
+
+	private BufferedImage updateBufferedImage() { // TODO Update a BufferedImage!
+		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
+		GL11.glReadPixels(0, 0, getWidth(), getHeight(), GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, buffer);
+		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+
+		for (int x = 0; x < image.getWidth(); x++) {
+			for (int y = 0; y < image.getHeight(); y++) {
+				int i = (x + getWidth() * y) * 3;
+				int r = buffer.get(i) & 0xFF;
+				int g = buffer.get(i + 1) & 0xFF;
+				int b = buffer.get(i + 2) & 0xFF;
+				int rgb = ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (b & 0x0ff);
+				image.setRGB(x, y, rgb);
+			}
+		}
+
+		return image;
 	}
 
 	/**

@@ -3,6 +3,7 @@ package flounder.engine;
 import flounder.devices.*;
 import flounder.engine.profiling.*;
 import flounder.fonts.*;
+import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.maths.matrices.*;
 import flounder.processing.*;
@@ -99,7 +100,7 @@ public class FlounderEngine {
 	public static void update() {
 		ManagerDevices.preRender(delta);
 		module.update();
-		// GuiManager.updateGuis();
+		GuiManager.updateGuis();
 		updates++;
 	}
 
