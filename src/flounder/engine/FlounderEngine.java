@@ -75,7 +75,7 @@ public class FlounderEngine {
 
 				// Prints out current engine update and frame stats.
 				if (System.currentTimeMillis() - timerStart > 1000) {
-					System.out.println(updates + "ups, " + frames + "fps.");
+					Logger.log(updates + "ups, " + frames + "fps.");
 					timerStart += 1000;
 					updates = 0;
 					frames = 0;

@@ -29,7 +29,7 @@ public class DeviceSound {
 		int alError = AL10.alGetError();
 
 		if (alError != GL_NO_ERROR) {
-			System.out.println("OpenAL Error: " + alError);
+			Logger.error("OpenAL Error: " + alError);
 		}
 
 		AL10.alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);

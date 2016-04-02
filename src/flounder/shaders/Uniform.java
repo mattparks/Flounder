@@ -1,5 +1,7 @@
 package flounder.shaders;
 
+import flounder.engine.*;
+
 import static org.lwjgl.opengl.GL20.*;
 
 /**
@@ -19,7 +21,7 @@ public abstract class Uniform {
 		location = glGetUniformLocation(programID, name);
 
 		if (location == NOT_FOUND) {
-			System.err.println("No uniform variable called " + name + " found!");
+			Logger.error("No uniform variable called " + name + " found!");
 		}
 	}
 

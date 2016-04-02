@@ -1,5 +1,7 @@
 package flounder.sounds;
 
+import flounder.engine.*;
+
 import java.nio.*;
 import java.util.*;
 
@@ -27,7 +29,7 @@ public class Streamer {
 	 * @throws Exception When something goes wrong :(
 	 */
 	protected Streamer(final Sound sound, final SoundSource source, final AudioController controller) throws Exception {
-		System.out.println("Streaming " + sound.getSoundFile().getPath());
+		Logger.log("Streaming " + sound.getSoundFile().getPath());
 
 		this.source = source;
 		this.controller = controller;

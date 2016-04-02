@@ -1,5 +1,6 @@
 package flounder.textures;
 
+import flounder.engine.*;
 import flounder.maths.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
@@ -68,7 +69,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			System.out.println(file.getPath() + " is being loaded into the texture builder right now!");
+			Logger.log(file.getPath() + " is being loaded into the texture builder right now!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
@@ -90,7 +91,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			System.out.println(file.getPath() + " is being loaded into the texture builder in the background!");
+			Logger.log(file.getPath() + " is being loaded into the texture builder in the background!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			RequestProcessor.sendRequest(new TextureLoadRequest(data, this));

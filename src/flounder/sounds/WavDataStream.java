@@ -1,5 +1,6 @@
 package flounder.sounds;
 
+import flounder.engine.*;
 import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.openal.*;
@@ -111,7 +112,7 @@ public class WavDataStream {
 			buffer.put(data, 0, bytesRead);
 			buffer.flip();
 		} catch (IOException e) {
-			System.err.println("Couldn't read more bytes from audio stream!");
+			Logger.error("Couldn't read more bytes from audio stream!");
 			e.printStackTrace();
 		}
 		return buffer;

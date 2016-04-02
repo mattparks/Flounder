@@ -55,6 +55,4 @@ public abstract class BaseButton implements IButton {
 		wasDown = isDown();
 		return wasDown == !stillDown;
 	}
-
-
 }

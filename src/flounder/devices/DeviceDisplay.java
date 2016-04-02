@@ -1,5 +1,6 @@
 package flounder.devices;
 
+import flounder.engine.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -61,7 +62,7 @@ public class DeviceDisplay {
 
 		// Initialize the library.
 		if (glfwInit() != GLFW_TRUE) {
-			System.out.println("Could not init GLFW!");
+			Logger.error("Could not init GLFW!");
 			System.exit(-1);
 		}
 
@@ -86,7 +87,7 @@ public class DeviceDisplay {
 
 		// Gets any window errors.
 		if (window == NULL) {
-			System.out.println("Could not create the window!");
+			Logger.error("Could not create the window!");
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -101,7 +102,7 @@ public class DeviceDisplay {
 		final long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
-			System.out.println("OpenGL Error: " + glError);
+			Logger.error("OpenGL Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
@@ -174,14 +175,14 @@ public class DeviceDisplay {
 	 */
 	public void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
-		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		File saveDirectory = new File("screenshots");
+		final String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
+		final File saveDirectory = new File("screenshots");
 
 		if (!saveDirectory.exists()) {
 			try {
 				saveDirectory.mkdir();
 			} catch (SecurityException e) {
-				System.err.println("The screenshot directory could not be created.");
+				Logger.error("The screenshot directory could not be created.");
 				e.printStackTrace();
 				return;
 			}
@@ -194,7 +195,7 @@ public class DeviceDisplay {
 		try {
 			ImageIO.write(updateBufferedImage(), format, file);
 		} catch (Exception e) {
-			System.out.println("Failed to take screenshot.");
+			Logger.error("Failed to take screenshot.");
 			e.printStackTrace();
 		}
 	}

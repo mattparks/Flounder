@@ -1,5 +1,7 @@
 package flounder.resources;
 
+import flounder.engine.*;
+
 import java.io.*;
 
 /**
@@ -79,7 +81,7 @@ public class MyFile {
 			final InputStreamReader isr = new InputStreamReader(getInputStream());
 			return new BufferedReader(isr);
 		} catch (Exception e) {
-			System.err.println("Couldn't get reader for " + path);
+			Logger.error("Couldn't get reader for " + path);
 			throw e;
 		}
 	}
@@ -98,15 +100,15 @@ public class MyFile {
 		return name;
 	}
 
-	@Override
-	public String toString() {
-		return "MyFile{" + "path=" + getPath() + "}";
-	}
-
 	/**
 	 * @return The path to the represented file(s).
 	 */
 	public String getPath() {
 		return path;
+	}
+
+	@Override
+	public String toString() {
+		return "MyFile{" + "path=" + getPath() + "}";
 	}
 }

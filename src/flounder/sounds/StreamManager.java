@@ -1,5 +1,7 @@
 package flounder.sounds;
 
+import flounder.engine.*;
+
 import java.util.*;
 
 /**
@@ -28,7 +30,7 @@ public class StreamManager extends Thread {
 	public void run() {
 		while (alive) {
 			final List<Streamer> safeCopy = new ArrayList<>(streamers);
-			safeCopy.forEach(streamer -> updateStreamer(streamer));
+			safeCopy.forEach(this::updateStreamer);
 			removeFinishedStreamers();
 			pause();
 		}
@@ -90,7 +92,7 @@ public class StreamManager extends Thread {
 			streamers.add(new Streamer(sound, source, controller));
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Couldn't open stream for sound " + sound.getSoundFile().getPath());
+			Logger.error("Couldn't open stream for sound " + sound.getSoundFile().getPath());
 		}
 	}
 }

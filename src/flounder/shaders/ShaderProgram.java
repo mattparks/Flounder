@@ -1,5 +1,6 @@
 package flounder.shaders;
 
+import flounder.engine.*;
 import flounder.resources.*;
 import org.lwjgl.opengl.*;
 
@@ -63,7 +64,7 @@ public class ShaderProgram {
 				shaderSource.append(line + "\n");
 			}
 		} catch (Exception e) {
-			System.err.println("Could not read file " + file.getName());
+			Logger.error("Could not read file " + file.getName());
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -87,8 +88,8 @@ public class ShaderProgram {
 		GL20.glCompileShader(shaderID);
 
 		if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
-			System.err.println("Could not compile shader " + shaderName);
+			Logger.error(GL20.glGetShaderInfoLog(shaderID, 500));
+			Logger.error("Could not compile shader " + shaderName);
 			System.exit(-1);
 		}
 

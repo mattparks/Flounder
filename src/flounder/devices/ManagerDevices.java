@@ -1,5 +1,6 @@
 package flounder.devices;
 
+import flounder.engine.*;
 import org.lwjgl.glfw.*;
 
 import java.text.*;
@@ -39,8 +40,8 @@ public class ManagerDevices {
 			sound = new DeviceSound();
 
 			// Logs OpenGL version info.
-			System.out.println("Number of Cores: " + Runtime.getRuntime().availableProcessors());
-			System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
+			Logger.log("Number of Cores: " + Runtime.getRuntime().availableProcessors());
+			Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 			initialized = true;
 		}
 	}

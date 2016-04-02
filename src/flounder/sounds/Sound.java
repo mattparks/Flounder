@@ -1,5 +1,6 @@
 package flounder.sounds;
 
+import flounder.engine.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 import flounder.resources.*;
@@ -49,7 +50,7 @@ public class Sound {
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			System.out.println(file.getPath() + " is being loaded into the sound builder right now!");
+			Logger.log(file.getPath() + " is being loaded into the sound builder right now!");
 			loadedSounds.remove(file.getPath());
 			data = new Sound(file, volume);
 			SoundLoader.doInitialSoundLoad(data);
@@ -72,7 +73,7 @@ public class Sound {
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			System.out.println(file.getPath() + " is being loaded into the sound builder in the background!");
+			Logger.error(file.getPath() + " is being loaded into the sound builder in the background!");
 			loadedSounds.remove(file.getPath());
 			final Sound data2 = new Sound(file, volume);
 			RequestProcessor.sendRequest(() -> SoundLoader.doInitialSoundLoad(data2));

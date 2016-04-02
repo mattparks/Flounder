@@ -1,6 +1,7 @@
 package flounder.fonts;
 
 import flounder.devices.*;
+import flounder.engine.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -51,7 +52,7 @@ public class MetaFile {
 			reader = file.getReader();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Couldn't read font meta file!");
+			Logger.error("Couldn't read font meta file " + file.getPath());
 		}
 	}
 
@@ -74,7 +75,7 @@ public class MetaFile {
 		try {
 			line = reader.readLine();
 		} catch (IOException e) {
-			System.err.println("Failed to read the next line!");
+			Logger.error("Failed to read the next line!");
 			e.printStackTrace();
 		}
 

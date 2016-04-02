@@ -1,5 +1,6 @@
 package flounder.textures;
 
+import flounder.engine.*;
 import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
@@ -55,7 +56,7 @@ public class TextureManager {
 			buffer.flip();
 			in.close();
 		} catch (Exception e) {
-			System.err.println("Tried to load texture '" + file + "', didn't work");
+			Logger.log("Tried to load texture '" + file + "', didn't work");
 			e.printStackTrace();
 			System.exit(-1);
 		}

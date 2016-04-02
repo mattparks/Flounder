@@ -70,13 +70,6 @@ public class GuiTexture {
 
 	@Override
 	public String toString() {
-		return "GuiTexture{" +
-				"texture=" + texture +
-				", position=" + position +
-				", scale=" + scale +
-				", alphaDriver=" + alphaDriver +
-				", alpha=" + alpha +
-				", flipTexture=" + flipTexture +
-				'}';
+		return "GuiTexture{" + "texture=" + texture + ", position=" + position + ", scale=" + scale + ", alphaDriver=" + alphaDriver + ", alpha=" + alpha + ", flipTexture=" + flipTexture + "}";
 	}
 }
