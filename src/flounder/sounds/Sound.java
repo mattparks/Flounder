@@ -37,7 +37,7 @@ public class Sound {
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static final Sound loadSoundNow(final MyFile soundFile, final float volume) {
+	public static Sound loadSoundNow(final MyFile soundFile, final float volume) {
 		Sound sound = new Sound(soundFile, volume);
 		SoundLoader.doInitialSoundLoad(sound);
 		return sound;
@@ -51,7 +51,7 @@ public class Sound {
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static final Sound loadSoundInBackground(final MyFile soundFile, final float volume) {
+	public static Sound loadSoundInBackground(final MyFile soundFile, final float volume) {
 		final Sound sound = new Sound(soundFile, volume);
 		RequestProcessor.sendRequest(() -> SoundLoader.doInitialSoundLoad(sound));
 		return sound;

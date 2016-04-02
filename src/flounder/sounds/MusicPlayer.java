@@ -13,9 +13,9 @@ public class MusicPlayer {
 
 	private float musicVolume;
 
-	private SoundSource source;
+	private final SoundSource source;
 	private Playlist currentPlaylist;
-	private List<Sound> musicQueue;
+	private final List<Sound> musicQueue;
 	private Sound currentlyPlaying;
 	private float selectedTimeout;
 	private float timoutStart;
@@ -28,6 +28,8 @@ public class MusicPlayer {
 	private float minPlayTimeout;
 	private float maxPlayTimeout;
 
+	private boolean paused;
+
 	/**
 	 * Sets up the sound source that the music player will be using to play sounds, and sets the relevant settings.
 	 */
@@ -38,7 +40,7 @@ public class MusicPlayer {
 		source.setUndiminishing();
 		musicQueue = new ArrayList<>();
 		currentlyPlaying = null;
-		selectedTimeout = 0.0f;
+		selectedTimeout = -1.0f;
 		timoutStart = 0.0f;
 		fadeOut = false;
 		fadeFactor = 1.0f;
@@ -46,6 +48,7 @@ public class MusicPlayer {
 		shuffle = false;
 		minPlayTimeout = 2.0f;
 		maxPlayTimeout = 7.0f;
+		paused = false;
 	}
 
 	/**
@@ -58,12 +61,15 @@ public class MusicPlayer {
 			updateFadeOut(delta);
 		}
 
-		if (!source.isPlaying() && !musicQueue.isEmpty()) {
+		if (!paused && !source.isPlaying() && !musicQueue.isEmpty()) {
 			source.setInactive();
 
 			if (timoutStart == 0.0f) {
 				timoutStart = FlounderEngine.getTime();
-				selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
+
+				if (selectedTimeout >= 0.0f) {
+					selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
+				}
 			}
 
 			if (FlounderEngine.getTime() - timoutStart > selectedTimeout) {
@@ -164,6 +170,22 @@ public class MusicPlayer {
 		} else {
 			source.stop();
 		}
+	}
+
+	/**
+	 * Can pause the current track.
+	 */
+	public void pauseTrack() {
+		paused = !paused;
+		source.togglePause();
+	}
+
+	/**
+	 * Skips the track that is currently playing.
+	 */
+	public void skipTrack() {
+		source.stop();
+		selectedTimeout = -1.0f;
 	}
 
 	/**
