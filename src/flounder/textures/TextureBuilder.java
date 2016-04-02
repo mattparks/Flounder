@@ -9,7 +9,7 @@ import java.lang.ref.*;
 import java.util.*;
 
 public class TextureBuilder {
-	private static Map<String, SoftReference<Texture>> loaded = new HashMap<>();
+	private static Map<String, SoftReference<Texture>> loadedTextures = new HashMap<>();
 
 	private boolean clampEdges;
 	private boolean clampToBorder;
@@ -64,36 +64,37 @@ public class TextureBuilder {
 	 * @return The texture that has been created.
 	 */
 	public Texture create() {
-		SoftReference<Texture> ref = loaded.get(file.getPath());
+		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			System.out.println(file.getPath() + " is being loaded into builder memory!");
-			loaded.remove(file.getPath());
+			System.out.println(file.getPath() + " is being loaded into the texture builder right now!");
+			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
 			request.doResourceRequest();
 			request.executeGlRequest();
-			loaded.put(file.getPath(), new SoftReference<>(data));
+			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;
 	}
 
 	/**
-	 * Creates a new texture and sends it to be loaded by the loader thread.
+	 * Creates a new texture and sends it to be loadedTextures by the loader thread.
 	 *
 	 * @return The texture.
 	 */
 	public Texture createInBackground() {
-		SoftReference<Texture> ref = loaded.get(file.getPath());
+		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			loaded.remove(file.getPath());
+			System.out.println(file.getPath() + " is being loaded into the texture builder in the background!");
+			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			RequestProcessor.sendRequest(new TextureLoadRequest(data, this));
-			loaded.put(file.getPath(), new SoftReference<>(data));
+			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;
@@ -105,16 +106,16 @@ public class TextureBuilder {
 	 * @return The texture.
 	 */
 	public Texture createInSecondThread() {
-		SoftReference<Texture> ref = loaded.get(file.getPath());
+		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			loaded.remove(file.getPath());
+			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
 			request.doResourceRequest();
 			GlRequestProcessor.sendRequest(request);
-			loaded.put(file.getPath(), new SoftReference<>(data));
+			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;

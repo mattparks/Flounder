@@ -9,15 +9,12 @@ import java.util.*;
  */
 public class Streamer {
 	private static final int NUM_BUFFERS = 2;
-
+	private final List<Integer> unusedBuffers;
+	private final List<Integer> bufferQueue;
 	private SoundSource source;
 	private AudioController controller;
 	private WavDataStream stream;
-
 	private boolean initialBufferPlaying;
-
-	private List<Integer> unusedBuffers;
-	private List<Integer> bufferQueue;
 
 	/**
 	 * Create a new stream to play a certain sound using a certain sound source.
@@ -31,11 +28,14 @@ public class Streamer {
 	 */
 	protected Streamer(final Sound sound, final SoundSource source, final AudioController controller) throws Exception {
 		System.out.println("Streaming " + sound.getSoundFile().getPath());
+
 		this.source = source;
 		this.controller = controller;
 		stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 		stream.setStartPoint(sound.getBytesRead());
+
 		initialBufferPlaying = true;
+
 		unusedBuffers = new ArrayList<>();
 		bufferQueue = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class Streamer {
 	 * Fills the first unused buffer with data and queues it to be played.
 	 */
 	private void queueUnusedBuffer() {
-		int buffer = unusedBuffers.remove(0);
+		final int buffer = unusedBuffers.remove(0);
 		loadNextDataIntoBuffer(buffer);
 		queueBuffer(buffer);
 	}
@@ -80,7 +80,7 @@ public class Streamer {
 	 * @param buffer The buffer into which the data should be loaded.
 	 */
 	private void loadNextDataIntoBuffer(final int buffer) {
-		ByteBuffer data = stream.loadNextData();
+		final ByteBuffer data = stream.loadNextData();
 		SoundLoader.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
 	}
 
@@ -115,7 +115,7 @@ public class Streamer {
 	 * Refills the buffer at the front of the queue with data and re-adds it ton the end of the queue.
 	 */
 	private void refillTopBuffer() {
-		int topBuffer = unqueueTopBuffer();
+		final int topBuffer = unqueueTopBuffer();
 		loadNextDataIntoBuffer(topBuffer);
 		queueBuffer(topBuffer);
 	}
@@ -126,7 +126,7 @@ public class Streamer {
 	 * @return The ID of the top buffer.
 	 */
 	private int unqueueTopBuffer() {
-		int topBuffer = bufferQueue.remove(0);
+		final int topBuffer = bufferQueue.remove(0);
 		source.unqueue();
 		return topBuffer;
 	}

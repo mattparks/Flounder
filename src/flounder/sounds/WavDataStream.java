@@ -32,15 +32,19 @@ public class WavDataStream {
 	 * @param chunkSize The size of the chunks to read.
 	 */
 	private WavDataStream(final AudioInputStream stream, final int chunkSize) {
-		AudioFormat format = stream.getFormat();
-		audioStream = stream;
-		this.chunkSize = chunkSize;
+		final AudioFormat format = stream.getFormat();
+
 		alFormat = getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
+		sampleRate = (int) format.getSampleRate();
+		totalBytes = (int) (stream.getFrameLength() * format.getFrameSize());
+		bytesPerFrame = format.getFrameSize();
+
+		this.chunkSize = chunkSize;
+		audioStream = stream;
+
 		buffer = BufferUtils.createByteBuffer(chunkSize);
 		data = new byte[chunkSize];
-		sampleRate = (int) format.getSampleRate();
-		bytesPerFrame = format.getFrameSize();
-		totalBytes = (int) (stream.getFrameLength() * bytesPerFrame);
+
 		totalBytesRead = 0;
 	}
 
@@ -52,7 +56,7 @@ public class WavDataStream {
 	 *
 	 * @return The OpenAL format ID of the sound data.
 	 */
-	private static final int getOpenAlFormat(final int channels, final int bitsPerSample) {
+	private static int getOpenAlFormat(final int channels, final int bitsPerSample) {
 		if (channels == 1) {
 			return bitsPerSample == 8 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_MONO16;
 		} else {
@@ -70,10 +74,10 @@ public class WavDataStream {
 	 *
 	 * @throws Exception If something goes wrong.
 	 */
-	protected static final WavDataStream openWavStream(final MyFile wavFile, final int chunkSize) throws Exception {
-		InputStream bufferedInput = new BufferedInputStream(wavFile.getInputStream());
-		AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedInput);
-		WavDataStream wavStream = new WavDataStream(audioStream, chunkSize);
+	protected static WavDataStream openWavStream(final MyFile wavFile, final int chunkSize) throws Exception {
+		final InputStream bufferedInput = new BufferedInputStream(wavFile.getInputStream());
+		final AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedInput);
+		final WavDataStream wavStream = new WavDataStream(audioStream, chunkSize);
 		return wavStream;
 	}
 
@@ -82,11 +86,10 @@ public class WavDataStream {
 	 *
 	 * @param bytesRead Total bytes read.
 	 */
-	protected void setStartPoint(int bytesRead) {
+	protected void setStartPoint(final int bytesRead) {
 		totalBytesRead = bytesRead;
 
 		try {
-			// Why can't I use audioStream.skip(bytesRead)?? Surely that should work, but doesn't :(
 			audioStream.read(data, 0, bytesRead);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -100,9 +103,9 @@ public class WavDataStream {
 	 *
 	 * @return The loaded byte buffer.
 	 */
-	protected final ByteBuffer loadNextData() {
+	protected ByteBuffer loadNextData() {
 		try {
-			int bytesRead = audioStream.read(data, 0, chunkSize);
+			final int bytesRead = audioStream.read(data, 0, chunkSize);
 			totalBytesRead += bytesRead;
 			buffer.clear();
 			buffer.put(data, 0, bytesRead);
@@ -117,7 +120,7 @@ public class WavDataStream {
 	/**
 	 * @return {@code true} if the stream has read all the audio data and reached the end of the data.
 	 */
-	protected final boolean hasEnded() {
+	protected boolean hasEnded() {
 		return totalBytesRead >= totalBytes;
 	}
 

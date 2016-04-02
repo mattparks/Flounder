@@ -273,7 +273,7 @@ public class Loader {
 	/**
 	 * Deletes a VAO from memory along with any associated VBOs.
 	 *
-	 * @param vao
+	 * @param vao The VAO id to delete from vertex arrays and cache.
 	 */
 	public static void deleteVAOFromCache(final int vao) {
 		VAO_CACHE.remove(vao).forEach(GL15::glDeleteBuffers);

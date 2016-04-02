@@ -12,10 +12,9 @@ import java.util.Map.*;
 public class SoundEmitter {
 	private static final float RANGE_THRESHOLD = 1.2f;
 
-	private Vector3f position;
+	private final Vector3f position;
+	private final Map<SoundEffect, AudioController> playingSounds;
 	private float volume;
-
-	private Map<SoundEffect, AudioController> playingSounds;
 
 	public SoundEmitter(final Vector3f position) {
 		this.position = position;
@@ -29,7 +28,7 @@ public class SoundEmitter {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	public void update(final float delta) {
-		Iterator<Entry<SoundEffect, AudioController>> iterator = playingSounds.entrySet().iterator();
+		final Iterator<Entry<SoundEffect, AudioController>> iterator = playingSounds.entrySet().iterator();
 
 		while (iterator.hasNext()) {
 			boolean stillPlaying = updateAudioController(iterator.next(), delta);
@@ -66,9 +65,9 @@ public class SoundEmitter {
 	 * @return {@code true} if the sound effect would be heard by the listener when played from this emitter.
 	 */
 	private boolean isInRange(final SoundEffect soundEffect) {
-		float disSquared = Vector3f.subtract(ManagerDevices.getSound().getCameraPosition(), position, null).lengthSquared();
-		float range = soundEffect.getRange() * RANGE_THRESHOLD;
-		float rangeSquared = range * range;
+		final float disSquared = Vector3f.subtract(ManagerDevices.getSound().getCameraPosition(), position, null).lengthSquared();
+		final float range = soundEffect.getRange() * RANGE_THRESHOLD;
+		final float rangeSquared = range * range;
 		return disSquared < rangeSquared;
 	}
 
@@ -88,10 +87,7 @@ public class SoundEmitter {
 	 */
 	public void setPosition(final float x, final float y, final float z) {
 		position.set(x, y, z);
-
-		for (AudioController controller : playingSounds.values()) {
-			controller.setPosition(position);
-		}
+		playingSounds.values().forEach(audioController -> audioController.setPosition(position));
 	}
 
 	/**
@@ -129,8 +125,8 @@ public class SoundEmitter {
 			return;
 		}
 
-		PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
-		AudioController controller = ManagerDevices.getSound().play3DSound(request);
+		final PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
+		final AudioController controller = ManagerDevices.getSound().play3DSound(request);
 
 		if (controller != null) {
 			playingSounds.put(soundEffect, controller);
@@ -152,10 +148,7 @@ public class SoundEmitter {
 	 * Stops any sound effects that are currently being played from this emitter.
 	 */
 	public void silence() {
-		for (AudioController controller : playingSounds.values()) {
-			controller.stop();
-		}
-
+		playingSounds.values().forEach(AudioController::stop);
 		playingSounds.clear();
 	}
 }

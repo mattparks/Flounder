@@ -25,6 +25,7 @@ public class AudioController {
 		this.source = source;
 		active = true;
 		fading = false;
+
 		finalVolume = 0.0f;
 		fadeFactor = 1.0f;
 	}
@@ -50,7 +51,7 @@ public class AudioController {
 	 *
 	 * @param delta Time in seconds since the last frame.
 	 */
-	private void updateActiveController(float delta) {
+	private void updateActiveController(final float delta) {
 		if (fading) {
 			updateFadingOut(delta);
 		}
@@ -61,7 +62,7 @@ public class AudioController {
 	 *
 	 * @param delta Time in seconds since the last frame.
 	 */
-	private void updateFadingOut(float delta) {
+	private void updateFadingOut(final float delta) {
 		fadeFactor -= delta / FADE_TIME;
 		source.setVolume(finalVolume * fadeFactor);
 
@@ -106,7 +107,7 @@ public class AudioController {
 	 *
 	 * @param position The new position of the source.
 	 */
-	protected void setPosition(Vector3f position) {
+	protected void setPosition(final Vector3f position) {
 		if (active) {
 			source.setPosition(position);
 		}

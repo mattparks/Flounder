@@ -10,12 +10,10 @@ import java.util.*;
  */
 public class MusicPlayer {
 	private static final float FADE_TIME = 2;
-
-	private float musicVolume;
-
 	private final SoundSource source;
-	private Playlist currentPlaylist;
 	private final List<Sound> musicQueue;
+	private float musicVolume;
+	private Playlist currentPlaylist;
 	private Sound currentlyPlaying;
 	private float selectedTimeout;
 	private float timoutStart;
@@ -35,19 +33,25 @@ public class MusicPlayer {
 	 */
 	public MusicPlayer() {
 		musicVolume = 0.0f;
+
 		source = new SoundSource();
 		source.loop(false);
 		source.setUndiminishing();
+
+		currentPlaylist = null;
 		musicQueue = new ArrayList<>();
 		currentlyPlaying = null;
 		selectedTimeout = -1.0f;
 		timoutStart = 0.0f;
+
 		fadeOut = false;
 		fadeFactor = 1.0f;
 		finalVolume = 0.0f;
+
 		shuffle = false;
 		minPlayTimeout = 2.0f;
 		maxPlayTimeout = 7.0f;
+
 		paused = false;
 	}
 
@@ -100,7 +104,7 @@ public class MusicPlayer {
 	 * Plays the next track in the queue and refills the queue with tracks from the current playlist if it's empty.
 	 */
 	private void playNextTrack() {
-		Sound nextTrack = musicQueue.remove(0);
+		final Sound nextTrack = musicQueue.remove(0);
 
 		if (musicQueue.isEmpty()) {
 			fillQueue();

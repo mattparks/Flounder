@@ -8,7 +8,7 @@ import flounder.maths.vectors.*;
  * A request that can be sent to the {@link DeviceSound} specifying what sound should be played and what settings the source playing it should use.
  */
 public class PlayRequest {
-	private Vector3f position;
+	private final Vector3f position;
 	private float innerRange;
 	private float outerRange;
 
@@ -25,11 +25,13 @@ public class PlayRequest {
 	 * @param volume The volume that the sound should be played at.
 	 */
 	private PlayRequest(final Sound sound, final float volume) {
-		position = new Vector3f(0.0f, 0.0f, 0.0f);
+		position = new Vector3f();
 		innerRange = 1.0f;
 		outerRange = 1.0f;
+
 		systemSound = true;
 		loop = false;
+
 		this.volume = volume * OptionsAudio.SOUND_VOLUME;
 		this.sound = sound;
 	}
@@ -57,46 +59,46 @@ public class PlayRequest {
 	 * @return The newly created request.
 	 */
 	public static PlayRequest new3dSoundPlayRequest(final Sound sound, final float volume, final Vector3f position, final float innerRange, final float outerRange) {
-		PlayRequest request = new PlayRequest(sound, volume);
+		final PlayRequest request = new PlayRequest(sound, volume);
 		request.systemSound = false;
 		request.innerRange = innerRange < 1 ? 1 : innerRange;
 		request.outerRange = outerRange;
-		request.position = position;
+		request.position.set(position);
 		return request;
 	}
 
 	/**
 	 * @return The position in the 3D world where the sound should be emitted from.
 	 */
-	public final Vector3f getPosition() {
+	public Vector3f getPosition() {
 		return position;
 	}
 
 	/**
 	 * @return The inner range of the sound. Inside this range the sound is heard at full volume.
 	 */
-	public final float getInnerRange() {
+	public float getInnerRange() {
 		return innerRange;
 	}
 
 	/**
 	 * @return The total range of the sound. Outside this range the sound cannot be heard.
 	 */
-	public final float getOuterRange() {
+	public float getOuterRange() {
 		return outerRange;
 	}
 
 	/**
 	 * @return {@code true} if the sound is a "system sound", meaning that it should be played at full volume regardless of where the {@link IAudioListener} is.
 	 */
-	public final boolean isSystemSound() {
+	public boolean isSystemSound() {
 		return systemSound;
 	}
 
 	/**
 	 * @return {@code true} if the sound should be played on loop.
 	 */
-	public final boolean isLooping() {
+	public boolean isLooping() {
 		return loop;
 	}
 
@@ -112,14 +114,14 @@ public class PlayRequest {
 	/**
 	 * @return The volume at which this sound should be played.
 	 */
-	public final float getVolume() {
+	public float getVolume() {
 		return volume;
 	}
 
 	/**
 	 * @return The sound that is being requested to be played.
 	 */
-	public final Sound getSound() {
+	public Sound getSound() {
 		return sound;
 	}
 }

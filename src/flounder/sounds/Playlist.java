@@ -8,7 +8,7 @@ import java.util.*;
  * A playlist of music tracks that can be played on the {@link MusicPlayer}.
  */
 public class Playlist {
-	private List<Sound> musics;
+	private final List<Sound> musics;
 
 	/**
 	 * Creates a new playlist of music tracks.
@@ -22,7 +22,7 @@ public class Playlist {
 	 *
 	 * @param music The track to be added.
 	 */
-	public void addMusic(Sound music) {
+	public void addMusic(final Sound music) {
 		musics.add(music);
 	}
 
@@ -48,10 +48,10 @@ public class Playlist {
 	 *
 	 * @return The list of tracks in a random order.
 	 */
-	public List<Sound> getShuffledMusicList(Sound previouslyPlayed) {
-		List<Sound> tempList = new ArrayList<Sound>();
+	public List<Sound> getShuffledMusicList(final Sound previouslyPlayed) {
+		final List<Sound> tempList = new ArrayList<>();
 		tempList.addAll(musics);
-		List<Sound> shuffledList = new ArrayList<Sound>();
+		final List<Sound> shuffledList = new ArrayList<>();
 
 		while (!tempList.isEmpty()) {
 			shuffledList.add(removeRandomTrackFromList(tempList));
@@ -68,8 +68,8 @@ public class Playlist {
 	 *
 	 * @return The randomly chosen removed track.
 	 */
-	private Sound removeRandomTrackFromList(List<Sound> listOfMusic) {
-		int index = Maths.RANDOM.nextInt(listOfMusic.size());
+	private Sound removeRandomTrackFromList(final List<Sound> listOfMusic) {
+		final int index = Maths.RANDOM.nextInt(listOfMusic.size());
 		return listOfMusic.remove(index);
 	}
 
@@ -79,9 +79,9 @@ public class Playlist {
 	 * @param newPlaylist The new list.
 	 * @param previouslyPlayed The last track to be played.
 	 */
-	private void ensurePreviousTrackNotRepeated(List<Sound> newPlaylist, Sound previouslyPlayed) {
+	private void ensurePreviousTrackNotRepeated(final List<Sound> newPlaylist, final Sound previouslyPlayed) {
 		if (!newPlaylist.isEmpty() && newPlaylist.get(0) == previouslyPlayed) {
-			Sound track = newPlaylist.remove(0);
+			final Sound track = newPlaylist.remove(0);
 			newPlaylist.add(track);
 		}
 	}

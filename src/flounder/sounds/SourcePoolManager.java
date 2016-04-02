@@ -28,10 +28,10 @@ public class SourcePoolManager {
 	 * Updates all the sources that are currently in use playing sounds and returns any sources that have finished playing their sound to the pool.
 	 */
 	public void update() {
-		Iterator<SoundSource> iterator = usedSources.iterator();
+		final Iterator<SoundSource> iterator = usedSources.iterator();
 
 		while (iterator.hasNext()) {
-			SoundSource source = iterator.next();
+			final SoundSource source = iterator.next();
 
 			if (!source.isPlaying()) {
 				iterator.remove();
@@ -48,9 +48,9 @@ public class SourcePoolManager {
 	 *
 	 * @return The sound source being used to play the requested sound. Returns {@code null} if there was no source available.
 	 */
-	public AudioController play(PlayRequest playRequest) {
+	public AudioController play(final PlayRequest playRequest) {
 		if (!sourcePool.isEmpty()) {
-			SoundSource source = sourcePool.remove(0);
+			final SoundSource source = sourcePool.remove(0);
 			usedSources.add(source);
 			source.setPosition(playRequest.getPosition());
 			source.loop(playRequest.isLooping());
@@ -61,7 +61,7 @@ public class SourcePoolManager {
 				source.setUndiminishing();
 			}
 
-			Sound sound = playRequest.getSound();
+			final Sound sound = playRequest.getSound();
 			source.setVolume(playRequest.getVolume() * sound.getVolume());
 			return source.playSound(sound);
 		}
@@ -73,6 +73,6 @@ public class SourcePoolManager {
 	 * Deletes all of the sound sources when the game is closed.
 	 */
 	public void cleanUp() {
-		sourcePool.forEach(source -> source.delete());
+		sourcePool.forEach(SoundSource::delete);
 	}
 }

@@ -15,11 +15,10 @@ public class AmbientNode {
 	private static final float RADIUS_CHANGE_AGIL = 0.5f;
 	private static final float RANGE_THRESHOLD = 1.2f;
 
-	private Vector3f position;
+	private final Vector3f position;
+	private final List<Sound> sounds;
 	private SmoothFloat innerRadius;
 	private SmoothFloat fadeOutRadius;
-
-	private List<Sound> sounds;
 	private float volume;
 
 	private boolean active;
@@ -39,11 +38,11 @@ public class AmbientNode {
 		this.position = position;
 		innerRadius = new SmoothFloat(innerRange, RADIUS_CHANGE_AGIL);
 		fadeOutRadius = new SmoothFloat(fadeOutRange, RADIUS_CHANGE_AGIL);
+
 		this.sounds = sounds;
 		volume = 1.0f;
+
 		active = false;
-		controller = null;
-		lastPlayed = null;
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class AmbientNode {
 	 */
 	public void update(final float delta) {
 		updateValues(delta);
-		float distance = getDistanceFromListener();
+		final float distance = getDistanceFromListener();
 
 		if (!active && distance <= getRange()) {
 			playNewSound();
@@ -87,8 +86,8 @@ public class AmbientNode {
 	 * Starts playing a random sound from the available sounds list.
 	 */
 	private void playNewSound() {
-		Sound sound = chooseNextSound();
-		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, position, innerRadius.get(), getRange());
+		final Sound sound = chooseNextSound();
+		final PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, position, innerRadius.get(), getRange());
 		controller = ManagerDevices.getSound().play3DSound(request);
 		active = controller != null;
 	}
@@ -123,9 +122,7 @@ public class AmbientNode {
 			controller.stop();
 			active = false;
 		} else {
-			boolean stillPlaying = controller.update(delta);
-
-			if (!stillPlaying) {
+			if (!controller.update(delta)) {
 				playNewSound();
 			}
 		}
@@ -155,7 +152,8 @@ public class AmbientNode {
 	 * @param sounds The list of sounds.
 	 */
 	public void setSounds(final List<Sound> sounds) {
-		this.sounds = sounds;
+		this.sounds.clear();
+		this.sounds.addAll(sounds);
 
 		if (controller != null) {
 			controller.fadeOut();

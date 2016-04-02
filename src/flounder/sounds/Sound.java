@@ -4,10 +4,15 @@ import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 import flounder.resources.*;
 
+import java.lang.ref.*;
+import java.util.*;
+
 /**
  * Represents a single sound effect. Holds a reference to the sound's file, and a reference to any buffers containing loaded data of the sound.
  */
 public class Sound {
+	private static Map<String, SoftReference<Sound>> loadedSounds = new HashMap<>();
+
 	private int bufferID;
 	private MyFile file;
 	private float volume;
@@ -24,37 +29,58 @@ public class Sound {
 	 */
 	private Sound(final MyFile soundFile, final float volume) {
 		file = soundFile;
-		this.volume = 1.0f;
-		loaded = false;
 		this.volume = volume;
+		loaded = false;
+
+		totalBytes = 0;
+		bytesRead = 0;
 	}
 
 	/**
 	 * Loads a sound file and loads some (possibly all for short sounds) of the sound data into an OpenAL buffer.
 	 *
-	 * @param soundFile The sound file.
+	 * @param file The sound file.
 	 * @param volume Used to change the base volume of a sound effect.
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static Sound loadSoundNow(final MyFile soundFile, final float volume) {
-		Sound sound = new Sound(soundFile, volume);
-		SoundLoader.doInitialSoundLoad(sound);
-		return sound;
+	public static Sound loadSoundNow(final MyFile file, final float volume) {
+		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
+		Sound data = ref == null ? null : ref.get();
+
+		if (data == null) {
+			System.out.println(file.getPath() + " is being loaded into the sound builder right now!");
+			loadedSounds.remove(file.getPath());
+			data = new Sound(file, volume);
+			SoundLoader.doInitialSoundLoad(data);
+			loadedSounds.put(file.getPath(), new SoftReference<>(data));
+		}
+
+		return data;
 	}
 
 	/**
 	 * Sends a request to the resource loading thread for the sound to be loaded.
 	 *
-	 * @param soundFile The sound file.
+	 * @param file The sound file.
 	 * @param volume Used to change the base volume of a sound effect.
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static Sound loadSoundInBackground(final MyFile soundFile, final float volume) {
-		final Sound sound = new Sound(soundFile, volume);
-		RequestProcessor.sendRequest(() -> SoundLoader.doInitialSoundLoad(sound));
-		return sound;
+	public static Sound loadSoundInBackground(final MyFile file, final float volume) {
+		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
+		Sound data = ref == null ? null : ref.get();
+
+		if (data == null) {
+			System.out.println(file.getPath() + " is being loaded into the sound builder in the background!");
+			loadedSounds.remove(file.getPath());
+			final Sound data2 = new Sound(file, volume);
+			RequestProcessor.sendRequest(() -> SoundLoader.doInitialSoundLoad(data2));
+			data = data2;
+			loadedSounds.put(file.getPath(), new SoftReference<>(data));
+		}
+
+		return data;
 	}
 
 	/**
@@ -70,7 +96,7 @@ public class Sound {
 	/**
 	 * @return The ID of the sound's buffer.
 	 */
-	public final int getBufferID() {
+	public int getBufferID() {
 		return bufferID;
 	}
 
@@ -89,21 +115,21 @@ public class Sound {
 	/**
 	 * @return The sound file.
 	 */
-	public final MyFile getSoundFile() {
+	public MyFile getSoundFile() {
 		return file;
 	}
 
 	/**
 	 * @return The base volume of the sound.
 	 */
-	public final float getVolume() {
+	public float getVolume() {
 		return volume;
 	}
 
 	/**
 	 * @return Whether the sound is loaded or not.
 	 */
-	public final boolean isLoaded() {
+	public boolean isLoaded() {
 		return loaded;
 	}
 
@@ -113,14 +139,14 @@ public class Sound {
 	 *
 	 * @return {@code true} if the sound file needs streaming when it's played.
 	 */
-	public final boolean needsStreaming() {
+	public boolean needsStreaming() {
 		return bytesRead < totalBytes;
 	}
 
 	/**
 	 * @return The number of bytes from the sound's file that have already been loaded.
 	 */
-	public final int getBytesRead() {
+	public int getBytesRead() {
 		return bytesRead;
 	}
 

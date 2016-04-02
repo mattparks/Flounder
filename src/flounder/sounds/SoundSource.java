@@ -21,6 +21,7 @@ public class SoundSource {
 		sourceID = createSource();
 		volume = 1;
 		active = false;
+
 		AL10.alSource3f(sourceID, AL10.AL_POSITION, 0.0f, 0.0f, 0.0f);
 		AL10.alSource3f(sourceID, AL10.AL_VELOCITY, 1.0f, 0.0f, 0.0f);
 		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 0.0f);
@@ -190,7 +191,7 @@ public class SoundSource {
 	}
 
 	/**
-	 * Toggles if the source is playing. Check if the source is playing by checking {@link @isPlaying()}.
+	 * Toggles if the source is playing. Check if the source is playing by checking {@link #isPlaying()}.
 	 */
 	protected void togglePause() {
 		if (isPlaying()) {
