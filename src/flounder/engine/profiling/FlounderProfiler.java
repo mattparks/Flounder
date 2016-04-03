@@ -25,7 +25,7 @@ public class FlounderProfiler {
 			frame.setSize(420, 720);
 			frame.setResizable(false);
 			frame.setLayout(new BorderLayout());
-			toggle(true);
+			toggle(false);
 
 			tabList = new ArrayList<>();
 			itemsPanel = new JPanel();

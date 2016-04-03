@@ -148,6 +148,14 @@ public class FlounderEngine {
 		return module.getRendererMaster().getProjectionMatrix();
 	}
 
+	public static boolean isGamePaused() {
+		return module.getGame().isGamePaused();
+	}
+
+	public static float getScreenBlur() {
+		return module.getGame().getScreenBlur();
+	}
+
 	public static void setTargetFPS(final float targetFPS) {
 		FlounderEngine.targetFPS = targetFPS;
 	}
