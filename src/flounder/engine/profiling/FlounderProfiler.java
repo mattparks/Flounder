@@ -1,7 +1,5 @@
 package flounder.engine.profiling;
 
-import flounder.engine.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,18 +8,35 @@ import java.util.List;
 
 public class FlounderProfiler {
 	private static boolean initialized;
+
 	private static JFrame frame;
 	private static boolean open;
+
+	private static JPanel itemsPanel;
+
 	private static List<ProfileTab> tabList;
+	private static JMenuBar menuBar;
+	private static JMenu itemsMenu;
+	private static String selectedTab;
 
 	public static void init(final String title) {
 		if (!initialized) {
 			frame = new JFrame(title);
 			frame.setSize(420, 720);
 			frame.setResizable(false);
-			frame.setLayout(new FlowLayout());
-			tabList = new ArrayList<>();
+			frame.setLayout(new BorderLayout());
 			toggle(true);
+
+			tabList = new ArrayList<>();
+			itemsPanel = new JPanel();
+			itemsPanel.setLayout(new FlowLayout());
+			frame.add(itemsPanel);
+
+			menuBar = new JMenuBar();
+			itemsMenu = new JMenu("Menu");
+			menuBar.add(itemsMenu);
+			frame.add(menuBar, BorderLayout.NORTH);
+			selectedTab = "NULL";
 
 			frame.addWindowListener(new WindowAdapter() {
 				@Override
@@ -29,6 +44,7 @@ public class FlounderProfiler {
 					toggle(false);
 				}
 			});
+
 			initialized = true;
 		}
 	}
@@ -43,19 +59,38 @@ public class FlounderProfiler {
 
 	public static void addTab(final ProfileTab tab) {
 		tabList.add(tab);
+		JMenuItem item = new JMenuItem(tab.getTabName());
 
-		Logger.error(tab.getTabName());
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedTab = tab.getTabName();
+			}
+		});
+
+		if (selectedTab.equals("NULL")) {
+			selectedTab = tab.getTabName();
+		}
+
+		itemsMenu.add(item);
 	}
 
 	public static void update() {
+		// TODO: Clear display of artifacts.
+		
 		for (ProfileTab tab : tabList) {
 			for (ProfileLabel label : tab.getLabels()) {
-				frame.remove(label.getJLabel());
-				frame.add(label.getJLabel());
+				if (label.isDisplayed()) {
+					itemsPanel.remove(label.getJLabel());
+					label.setDisplayed(false);
+				}
+
+				if (tab.getTabName().equals(selectedTab)) {
+					itemsPanel.add(label.getJLabel());
+					label.setDisplayed(true);
+				}
 			}
 		}
-
-		//	frame.pack();
 	}
 
 	public static boolean isOpen() {

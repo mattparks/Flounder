@@ -7,6 +7,7 @@ public class ProfileLabel {
 	private String value;
 	private int xPosition, yPosition;
 	private JLabel jLabel;
+	private boolean displayed;
 
 	public ProfileLabel(final String label, final String value, final int xPosition, final int yPosition) {
 		this.label = label;
@@ -16,6 +17,7 @@ public class ProfileLabel {
 		jLabel = new JLabel();
 		jLabel.setText(label + " = " + value);
 		jLabel.setLocation(xPosition, yPosition);
+		displayed = false;
 	}
 
 	public String getLabel() {
@@ -56,5 +58,13 @@ public class ProfileLabel {
 
 	public JLabel getJLabel() {
 		return jLabel;
+	}
+
+	public boolean isDisplayed() {
+		return displayed;
+	}
+
+	public void setDisplayed(boolean displayed) {
+		this.displayed = displayed;
 	}
 }
