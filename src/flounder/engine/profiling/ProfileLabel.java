@@ -2,14 +2,14 @@ package flounder.engine.profiling;
 
 import javax.swing.*;
 
-public class ProfileLabel {
+public class ProfileLabel<T> {
 	private String label;
-	private String value;
+	private T value;
 	private int xPosition, yPosition;
 	private JLabel jLabel;
 	private boolean displayed;
 
-	public ProfileLabel(final String label, final String value, final int xPosition, final int yPosition) {
+	public ProfileLabel(final String label, final T value, final int xPosition, final int yPosition) {
 		this.label = label;
 		this.value = value;
 		this.xPosition = xPosition;
@@ -29,11 +29,11 @@ public class ProfileLabel {
 		jLabel.setText(label + " = " + value);
 	}
 
-	public String getValue() {
+	public T getValue() {
 		return value;
 	}
 
-	public void setValue(final String value) {
+	public void setValue(final T value) {
 		this.value = value;
 		jLabel.setText(label + " = " + value);
 	}

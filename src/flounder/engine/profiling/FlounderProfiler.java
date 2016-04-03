@@ -29,7 +29,7 @@ public class FlounderProfiler {
 
 			tabList = new ArrayList<>();
 			itemsPanel = new JPanel();
-			itemsPanel.setLayout(new FlowLayout());
+			// itemsPanel.setLayout(new FlowLayout());
 			frame.add(itemsPanel);
 
 			menuBar = new JMenuBar();
@@ -77,7 +77,8 @@ public class FlounderProfiler {
 
 	public static void update() {
 		// TODO: Clear display of artifacts.
-		
+		itemsPanel.repaint();
+
 		for (ProfileTab tab : tabList) {
 			for (ProfileLabel label : tab.getLabels()) {
 				if (label.isDisplayed()) {

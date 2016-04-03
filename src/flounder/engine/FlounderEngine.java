@@ -16,6 +16,7 @@ import flounder.textures.*;
 public class FlounderEngine {
 	private static boolean initialized;
 	private static IModule module;
+	private static ProfileTab profileTab;
 
 	private static float targetFPS;
 	private static float currentFrameTime;
@@ -40,6 +41,8 @@ public class FlounderEngine {
 		FlounderEngine.targetFPS = targetFPS;
 		FlounderProfiler.init(displayTitle + " Profiler");
 		ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+		profileTab = new ProfileTab("Engine");
+		FlounderProfiler.addTab(profileTab);
 	}
 
 	/**
@@ -71,6 +74,7 @@ public class FlounderEngine {
 			{
 				render = true;
 				update();
+				addProfileValues();
 				FlounderProfiler.update();
 
 				// Updates static delta and times.
@@ -98,6 +102,16 @@ public class FlounderEngine {
 				}
 			}
 		}
+	}
+
+	private static void addProfileValues() {
+		profileTab.addLabel("Target FPS", targetFPS);
+		profileTab.addLabel("Current Frame Time", currentFrameTime);
+		profileTab.addLabel("Last Frame Time", lastFrameTime);
+		profileTab.addLabel("Frames Per Second", frames);
+		profileTab.addLabel("Updates Per Second", updates);
+		profileTab.addLabel("Delta", delta);
+		profileTab.addLabel("Time", time);
 	}
 
 	/**

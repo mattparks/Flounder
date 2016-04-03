@@ -2,15 +2,23 @@ package flounder.fonts;
 
 import flounder.devices.*;
 import flounder.engine.*;
+import flounder.engine.profiling.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import org.lwjgl.opengl.*;
 
 public class FontRenderer extends IRenderer {
-	private FontShader fontShader;
+	private FontShader shader;
+
+	private int textCount;
+	private ProfileTab profileTab;
 
 	public FontRenderer() {
-		fontShader = new FontShader();
+		shader = new FontShader();
+
+		textCount = 0;
+		profileTab = new ProfileTab("Fonts");
+		FlounderProfiler.addTab(profileTab);
 	}
 
 	@Override
@@ -18,6 +26,9 @@ public class FontRenderer extends IRenderer {
 		prepareRendering();
 		FontManager.getTexts().keySet().forEach(font -> FontManager.getTexts().get(font).forEach(this::renderText));
 		endRendering();
+
+		profileTab.addLabel("Text Count", textCount);
+		textCount = 0;
 	}
 
 	private void prepareRendering() {
@@ -25,29 +36,31 @@ public class FontRenderer extends IRenderer {
 		OpenglUtils.enableAlphaBlending();
 		OpenglUtils.disableDepthTesting();
 		OpenglUtils.cullBackFaces(true);
-		fontShader.start();
+		shader.start();
 	}
 
 	private void endRendering() {
-		fontShader.stop();
+		shader.stop();
 	}
 
 	@Override
 	public void dispose() {
-		fontShader.dispose();
+		shader.dispose();
 	}
 
 	private void renderText(final Text text) {
+		textCount++;
+
 		OpenglUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenglUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
-		fontShader.aspectRatio.loadFloat(ManagerDevices.getDisplay().getAspectRatio());
-		fontShader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
-		fontShader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
-		fontShader.borderColour.loadVec3(text.getBorderColour());
-		fontShader.edgeData.loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
-		fontShader.borderSizes.loadVec2(text.getTotalBorderSize(), text.getGlowSize());
+		shader.aspectRatio.loadFloat(ManagerDevices.getDisplay().getAspectRatio());
+		shader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
+		shader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
+		shader.borderColour.loadVec3(text.getBorderColour());
+		shader.edgeData.loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
+		shader.borderSizes.loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		OpenglUtils.unbindVAO(0, 1);
 	}

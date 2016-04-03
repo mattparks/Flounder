@@ -1,6 +1,7 @@
 package flounder.guis;
 
 import flounder.engine.*;
+import flounder.engine.profiling.*;
 import flounder.loaders.*;
 import flounder.maths.vectors.*;
 import org.lwjgl.opengl.*;
@@ -8,21 +9,29 @@ import org.lwjgl.opengl.*;
 public class GuiRenderer extends IRenderer {
 	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
 
-	private GuiShader shader;
 	private int vaoID;
+	private GuiShader shader;
+
+	private int guiCount;
+	private ProfileTab profileTab;
 
 	public GuiRenderer() {
-		vaoID = Loader.createInterleavedVAO(POSITIONS, 2);
 		shader = new GuiShader();
+		vaoID = Loader.createInterleavedVAO(POSITIONS, 2);
+
+		guiCount = 0;
+		profileTab = new ProfileTab("GUIs");
+		FlounderProfiler.addTab(profileTab);
 	}
 
 	@Override
 	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
 		prepareRendering();
-
 		GuiManager.getGuiTextures().forEach(this::renderGui);
-
 		endRendering();
+
+		profileTab.addLabel("GUI Count", guiCount);
+		guiCount = 0;
 	}
 
 	private void prepareRendering() {
@@ -47,6 +56,7 @@ public class GuiRenderer extends IRenderer {
 			return;
 		}
 
+		guiCount++;
 		OpenglUtils.bindVAO(vaoID, 0);
 		OpenglUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
 		shader.transform.loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);

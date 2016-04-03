@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.engine.profiling.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -37,6 +38,7 @@ public class DeviceDisplay {
 	private int positionX, positionY;
 	private boolean inFocus;
 	private boolean closeRequested;
+	private ProfileTab profileTab;
 
 	/**
 	 * Creates a new GLFW window.
@@ -59,6 +61,8 @@ public class DeviceDisplay {
 		this.samples = samples;
 		inFocus = true;
 		closeRequested = false;
+		profileTab = new ProfileTab("Display");
+		FlounderProfiler.addTab(profileTab);
 
 		// Initialize the library.
 		if (glfwInit() != GLFW_TRUE) {
@@ -162,6 +166,20 @@ public class DeviceDisplay {
 	 */
 	protected void pollEvents() {
 		glfwPollEvents();
+
+		if (FlounderProfiler.isOpen()) {
+			profileTab.addLabel("Width", width);
+			profileTab.addLabel("Height", height);
+			profileTab.addLabel("Title", title);
+			profileTab.addLabel("Enable VSync", enableVSync);
+			profileTab.addLabel("Antialiasing", antialiasing);
+			profileTab.addLabel("Samples", samples);
+			profileTab.addLabel("Fullscreen", fullscreen);
+			profileTab.addLabel("Position X", positionX);
+			profileTab.addLabel("Position Y", positionY);
+			profileTab.addLabel("In Focus", inFocus);
+			profileTab.addLabel("Close Requested", closeRequested);
+		}
 	}
 
 	/**

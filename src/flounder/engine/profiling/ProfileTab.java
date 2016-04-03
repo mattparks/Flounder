@@ -13,7 +13,7 @@ public class ProfileTab {
 		yLocation = 320;
 	}
 
-	public void addLabel(final String title, final String value) {
+	public <T> void addLabel(final String title, final T value) {
 		for (ProfileLabel label : labels) {
 			if (label.getLabel().equals(title)) {
 				label.setValue(value);

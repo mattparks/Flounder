@@ -93,13 +93,13 @@ public class DeviceMouse {
 		lastMousePositionY = mousePositionY;
 
 		if (FlounderProfiler.isOpen()) {
-			profileTab.addLabel("Position X", "" + mousePositionX);
-			profileTab.addLabel("Position Y", "" + mousePositionY);
-			profileTab.addLabel("Delta X", "" + mouseDeltaX);
-			profileTab.addLabel("Delta Y", "" + mouseDeltaY);
-			profileTab.addLabel("Wheel", "" + mouseWheel);
-			profileTab.addLabel("Display Selected", "" + displaySelected);
-			profileTab.addLabel("Last Wheel Time", "" + lastWheelTime);
+			profileTab.addLabel("Position X", mousePositionX);
+			profileTab.addLabel("Position Y", mousePositionY);
+			profileTab.addLabel("Delta X", mouseDeltaX);
+			profileTab.addLabel("Delta Y", mouseDeltaY);
+			profileTab.addLabel("Wheel", mouseWheel);
+			profileTab.addLabel("Last Wheel Time", lastWheelTime);
+			profileTab.addLabel("Display Selected", displaySelected);
 		}
 
 		// TODO: Stop scrolling!
