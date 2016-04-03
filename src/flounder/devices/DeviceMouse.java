@@ -1,5 +1,7 @@
 package flounder.devices;
 
+import flounder.engine.*;
+import flounder.engine.profiling.*;
 import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,7 +23,8 @@ public class DeviceMouse {
 	private float mousePositionY;
 	private float mouseDeltaX;
 	private float mouseDeltaY;
-	private float mouseDeltaWheel;
+	private float mouseWheel;
+	private float lastWheelTime;
 	private boolean displaySelected;
 
 	/**
@@ -35,14 +38,16 @@ public class DeviceMouse {
 		mousePositionY = 0.0f;
 		mouseDeltaX = 0.0f;
 		mouseDeltaY = 0.0f;
-		mouseDeltaWheel = 0.0f;
+		mouseWheel = 0.0f;
+		lastWheelTime = 0.0f;
 		displaySelected = false;
 
 		// Sets the mouse callbacks.
 		glfwSetScrollCallback(ManagerDevices.getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
-				mouseDeltaWheel += yoffset;
+				mouseWheel = (float) yoffset;
+				lastWheelTime = System.currentTimeMillis();
 			}
 		});
 
@@ -84,8 +89,15 @@ public class DeviceMouse {
 		lastMousePositionX = mousePositionX;
 		lastMousePositionY = mousePositionY;
 
-		mouseDeltaWheel += ((mouseDeltaWheel > 0) ? -25 : 25) * delta;
-		mouseDeltaWheel = Math.abs(mouseDeltaWheel) >= Math.abs(0.875f) ? mouseDeltaWheel : 0;
+		// TODO: Stop scrolling!
+		if (EngineProfiler.isOpen()) {
+			EngineProfiler.addLabel("Wheel Time=", lastWheelTime);
+		}
+
+		if (System.currentTimeMillis() - lastWheelTime > 500) {
+			mouseWheel = 0.0f;
+			lastWheelTime = 0.0f;
+		}
 	}
 
 	/**
@@ -141,7 +153,7 @@ public class DeviceMouse {
 	 * @return The mouses wheel delta.
 	 */
 	public float getDeltaWheel() {
-		return mouseDeltaWheel;
+		return mouseWheel;
 	}
 
 	/**

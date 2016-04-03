@@ -192,6 +192,8 @@ public class DeviceDisplay {
 		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
 		String format = "png"; // "PNG" or "JPG".
 
+		Logger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+
 		// Tries to create image.
 		try {
 			ImageIO.write(updateBufferedImage(), format, file);
