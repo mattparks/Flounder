@@ -1,6 +1,5 @@
 package flounder.devices;
 
-import flounder.engine.*;
 import flounder.engine.profiling.*;
 import org.lwjgl.glfw.*;
 
@@ -27,6 +26,8 @@ public class DeviceMouse {
 	private float lastWheelTime;
 	private boolean displaySelected;
 
+	private ProfileTab profileTab;
+
 	/**
 	 * Creates a new GLFW mouse.
 	 */
@@ -41,6 +42,8 @@ public class DeviceMouse {
 		mouseWheel = 0.0f;
 		lastWheelTime = 0.0f;
 		displaySelected = false;
+		profileTab = new ProfileTab("Mouse");
+		FlounderProfiler.addTab(profileTab);
 
 		// Sets the mouse callbacks.
 		glfwSetScrollCallback(ManagerDevices.getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
@@ -89,11 +92,17 @@ public class DeviceMouse {
 		lastMousePositionX = mousePositionX;
 		lastMousePositionY = mousePositionY;
 
-		// TODO: Stop scrolling!
-		if (EngineProfiler.isOpen()) {
-			EngineProfiler.addLabel("Wheel Time=", lastWheelTime);
+		if (FlounderProfiler.isOpen()) {
+			profileTab.addLabel("Position X", "" + mousePositionX);
+			profileTab.addLabel("Position Y", "" + mousePositionY);
+			profileTab.addLabel("Delta X", "" + mouseDeltaX);
+			profileTab.addLabel("Delta Y", "" + mouseDeltaY);
+			profileTab.addLabel("Wheel", "" + mouseWheel);
+			profileTab.addLabel("Display Selected", "" + displaySelected);
+			profileTab.addLabel("Last Wheel Time", "" + lastWheelTime);
 		}
 
+		// TODO: Stop scrolling!
 		if (System.currentTimeMillis() - lastWheelTime > 500) {
 			mouseWheel = 0.0f;
 			lastWheelTime = 0.0f;

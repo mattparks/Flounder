@@ -27,9 +27,6 @@ public class FlounderEngine {
 	private static float time;
 
 	/**
-	 * Carries out any necessary initializations of the engine.
-	 *
-	 * @param module The module for the engine to run off of.
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
@@ -39,9 +36,19 @@ public class FlounderEngine {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public static void init(final IModule module, final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+	public static void preinit(final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+		FlounderEngine.targetFPS = targetFPS;
+		FlounderProfiler.init(displayTitle + " Profiler");
+		ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+	}
+
+	/**
+	 * Carries out any necessary initializations of the engine.
+	 *
+	 * @param module The module for the engine to run off of.
+	 */
+	public static void init(final IModule module) {
 		if (!initialized) {
-			FlounderEngine.targetFPS = targetFPS;
 			currentFrameTime = 0.0f;
 			lastFrameTime = 0.0f;
 			timerStart = System.currentTimeMillis() + 1000;
@@ -50,11 +57,9 @@ public class FlounderEngine {
 			delta = 0.0f;
 			time = 0.0f;
 
-			ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 			FontManager.init();
 			// GuiManager.init();
 			(FlounderEngine.module = module).init();
-			EngineProfiler.init();
 			initialized = true;
 		}
 	}
@@ -66,6 +71,7 @@ public class FlounderEngine {
 			{
 				render = true;
 				update();
+				FlounderProfiler.update();
 
 				// Updates static delta and times.
 				currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;
@@ -159,7 +165,7 @@ public class FlounderEngine {
 			TextureManager.dispose();
 
 			module.dispose();
-			EngineProfiler.dispose();
+			FlounderProfiler.dispose();
 			ManagerDevices.dispose();
 			initialized = false;
 		}
