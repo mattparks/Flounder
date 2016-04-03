@@ -73,7 +73,7 @@ public class Sound {
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			Logger.error(file.getPath() + " is being loaded into the sound builder in the background!");
+			Logger.log(file.getPath() + " is being loaded into the sound builder in the background!");
 			loadedSounds.remove(file.getPath());
 			final Sound data2 = new Sound(file, volume);
 			RequestProcessor.sendRequest(() -> SoundLoader.doInitialSoundLoad(data2));

@@ -28,6 +28,13 @@ public class Logger {
 	}
 
 	/**
+	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
+	 */
+	public static String getDateString() {
+		return "[" + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "]: ";
+	}
+
+	/**
 	 * Error logs strings sent into javas console, and if {@code LOG_TO_FILE} is enabled it will also be logged to a log file.
 	 *
 	 * @param value Errors being added to the log file and possibly to your IDES console.
@@ -39,13 +46,6 @@ public class Logger {
 		if (OptionsLogger.LOG_TO_FILE) {
 			saveData.put("ERROR: " + getDateString(), value.toString());
 		}
-	}
-
-	/**
-	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
-	 */
-	public static String getDateString() {
-		return "[" + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "]: ";
 	}
 
 	private static String getLogsFolder() throws IOException {

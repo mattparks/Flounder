@@ -111,6 +111,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
+			Logger.log(file.getPath() + " is being loaded into the texture builder in seperate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);

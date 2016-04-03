@@ -36,7 +36,7 @@ public class GuiTextButton extends GuiComponent {
 		mouseLeftClickSound = MOUSE_DEFAULT_CLICK_SOUND;
 		mouseRightClickSound = MOUSE_DEFAULT_CLICK_SOUND;
 
-		super.addText(text, 0, 0, 1);
+		super.addText(text, 0.0f, 0.0f, 1.0f);
 	}
 
 	public void setMouseLeftClickSound(final Sound mouseLeftClickSound) {
@@ -62,7 +62,7 @@ public class GuiTextButton extends GuiComponent {
 			mouseOver = true;
 			ManagerDevices.getSound().playSystemSound(MOUSE_OVER_SOUND);
 		} else if (!isMouseOver() && mouseOver) {
-			text.setScaleDriver(new SlideDriver(text.getScale(), 1f, CHANGE_TIME));
+			text.setScaleDriver(new SlideDriver(text.getScale(), 1.0f, CHANGE_TIME));
 			mouseOver = false;
 		}
 

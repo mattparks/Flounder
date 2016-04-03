@@ -70,9 +70,10 @@ public class DeviceDisplay {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
-		glfwWindowHint(GLFW_RESIZABLE, displayFullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // TODO: Make true again!
+		// glfwWindowHint(GLFW_RESIZABLE, displayFullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
 		glfwWindowHint(GLFW_SAMPLES, samples);
 		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE); // Only enabled in fullscreen.
 

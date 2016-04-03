@@ -37,19 +37,6 @@ public class StreamManager extends Thread {
 	}
 
 	/**
-	 * Updates a streamer and checks whether it has finished streaming. If so it indicates that it should be removed from the list of current streamers.
-	 *
-	 * @param streamer The streamer to be updated.
-	 */
-	private void updateStreamer(final Streamer streamer) {
-		boolean stillAlive = streamer.update();
-
-		if (!stillAlive) {
-			toRemove.add(streamer);
-		}
-	}
-
-	/**
 	 * Removes any finished {@link Streamer}s from the list of current streamers, and deletes them (deletes their buffers).
 	 */
 	private synchronized void removeFinishedStreamers() {
@@ -69,6 +56,19 @@ public class StreamManager extends Thread {
 			Thread.sleep(SLEEP_TIME);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Updates a streamer and checks whether it has finished streaming. If so it indicates that it should be removed from the list of current streamers.
+	 *
+	 * @param streamer The streamer to be updated.
+	 */
+	private void updateStreamer(final Streamer streamer) {
+		boolean stillAlive = streamer.update();
+
+		if (!stillAlive) {
+			toRemove.add(streamer);
 		}
 	}
 

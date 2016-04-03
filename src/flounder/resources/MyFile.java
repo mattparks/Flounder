@@ -100,15 +100,15 @@ public class MyFile {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		return "MyFile{" + "path=" + getPath() + "}";
+	}
+
 	/**
 	 * @return The path to the represented file(s).
 	 */
 	public String getPath() {
 		return path;
-	}
-
-	@Override
-	public String toString() {
-		return "MyFile{" + "path=" + getPath() + "}";
 	}
 }
