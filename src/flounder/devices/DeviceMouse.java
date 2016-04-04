@@ -1,6 +1,8 @@
 package flounder.devices;
 
+import flounder.engine.*;
 import flounder.engine.profiling.*;
+import flounder.maths.*;
 import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -23,7 +25,6 @@ public class DeviceMouse {
 	private float mouseDeltaX;
 	private float mouseDeltaY;
 	private float mouseWheel;
-	private float lastWheelTime;
 	private boolean displaySelected;
 
 	private ProfileTab profileTab;
@@ -40,7 +41,6 @@ public class DeviceMouse {
 		mouseDeltaX = 0.0f;
 		mouseDeltaY = 0.0f;
 		mouseWheel = 0.0f;
-		lastWheelTime = 0.0f;
 		displaySelected = false;
 		profileTab = new ProfileTab("Mouse");
 		FlounderProfiler.addTab(profileTab);
@@ -50,7 +50,6 @@ public class DeviceMouse {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
 				mouseWheel = (float) yoffset;
-				lastWheelTime = System.currentTimeMillis();
 			}
 		});
 
@@ -98,14 +97,12 @@ public class DeviceMouse {
 			profileTab.addLabel("Delta X", mouseDeltaX);
 			profileTab.addLabel("Delta Y", mouseDeltaY);
 			profileTab.addLabel("Wheel", mouseWheel);
-			profileTab.addLabel("Last Wheel Time", lastWheelTime);
 			profileTab.addLabel("Display Selected", displaySelected);
 		}
 
-		// TODO: Stop scrolling!
-		if (System.currentTimeMillis() - lastWheelTime > 500) {
-			mouseWheel = 0.0f;
-			lastWheelTime = 0.0f;
+		if (mouseWheel != 0.0f) {
+			mouseWheel -= (((mouseWheel < 0) ? -1 : 1) * FlounderEngine.getDelta());
+			mouseWheel = Maths.deadband(0.1f, mouseWheel);
 		}
 	}
 
