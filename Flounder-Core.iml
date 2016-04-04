@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lwjgl" level="project" />
     <orderEntry type="module" module-name="Flounder-Maths" />
+    <orderEntry type="library" name="LWJGL" level="project" />
   </component>
 </module>
