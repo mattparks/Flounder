@@ -37,11 +37,11 @@ public class UniformVec4 extends Uniform {
 	 */
 	public void loadVec4(final float x, final float y, final float z, final float w) {
 		if (x != currentX || y != currentY || z != currentZ || w != currentW) {
+			glUniform4f(super.getLocation(), x, y, z, w);
 			currentX = x;
 			currentY = y;
 			currentZ = z;
 			currentW = w;
-			glUniform4f(super.getLocation(), x, y, z, w);
 		}
 	}
 

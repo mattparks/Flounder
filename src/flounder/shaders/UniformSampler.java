@@ -19,8 +19,8 @@ public class UniformSampler extends Uniform {
 	 */
 	public void loadTexUnit(int value) {
 		if (currentValue != value) {
-			currentValue = value;
 			glUniform1i(super.getLocation(), value);
+			currentValue = value;
 		}
 	}
 }

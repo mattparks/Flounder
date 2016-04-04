@@ -19,8 +19,8 @@ public class UniformFloat extends Uniform {
 	 */
 	public void loadFloat(float value) {
 		if (currentValue != value) {
-			currentValue = value;
 			glUniform1f(super.getLocation(), value);
+			currentValue = value;
 		}
 	}
 }

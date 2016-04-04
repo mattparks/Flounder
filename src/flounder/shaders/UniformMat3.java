@@ -12,10 +12,12 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class UniformMat3 extends Uniform {
 	private final Matrix3f currentValue;
+	private FloatBuffer floatBuffer;
 
 	public UniformMat3(final String name) {
 		super(name);
 		currentValue = new Matrix3f();
+		floatBuffer = BufferUtils.createFloatBuffer(9);
 	}
 
 	/**
@@ -25,11 +27,12 @@ public class UniformMat3 extends Uniform {
 	 */
 	public void loadMat3(final Matrix3f value) {
 		if (value != null && !currentValue.equals(value)) {
-			FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
-			value.store(matrixBuffer);
-			matrixBuffer.flip();
+			floatBuffer.clear();
+			value.store(floatBuffer);
+			floatBuffer.flip();
+
+			glUniformMatrix3fv(super.getLocation(), false, floatBuffer);
 			currentValue.set(value);
-			glUniformMatrix3fv(super.getLocation(), false, matrixBuffer);
 		}
 	}
 }

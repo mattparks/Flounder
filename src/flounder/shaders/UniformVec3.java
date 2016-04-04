@@ -35,10 +35,10 @@ public class UniformVec3 extends Uniform {
 	 */
 	public void loadVec3(final float x, final float y, final float z) {
 		if (x != currentX || y != currentY || z != currentZ) {
+			glUniform3f(super.getLocation(), x, y, z);
 			currentX = x;
 			currentY = y;
 			currentZ = z;
-			glUniform3f(super.getLocation(), x, y, z);
 		}
 	}
 

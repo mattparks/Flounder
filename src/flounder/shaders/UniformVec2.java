@@ -32,9 +32,9 @@ public class UniformVec2 extends Uniform {
 	 */
 	public void loadVec2(final float x, final float y) {
 		if (x != currentX || y != currentY) {
+			glUniform2f(super.getLocation(), x, y);
 			currentX = x;
 			currentY = y;
-			glUniform2f(super.getLocation(), x, y);
 		}
 	}
 }

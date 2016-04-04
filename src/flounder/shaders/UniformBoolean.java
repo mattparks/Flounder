@@ -19,8 +19,8 @@ public class UniformBoolean extends Uniform {
 	 */
 	public void loadBoolean(boolean value) {
 		if (currentValue != value) {
-			currentValue = value;
 			glUniform1f(super.getLocation(), value ? 1f : 0f);
+			currentValue = value;
 		}
 	}
 }
