@@ -84,8 +84,13 @@ public class DeviceDisplay {
 		// Gets the resolution of the primary monitor.
 		final GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
+		if (displayFullscreen) {
+			this.width = vidmode.width();
+			this.height = vidmode.height();
+		}
+
 		// Create a windowed mode window and its OpenGL context.
-		window = glfwCreateWindow(displayWidth, displayHeight, displayTitle, NULL, NULL);
+		window = glfwCreateWindow(this.width, this.height, displayTitle, displayFullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 
 		// Sets the display to fullscreen or windowed.
 		setFullscreen(displayFullscreen);
@@ -117,7 +122,9 @@ public class DeviceDisplay {
 		setEnableVSync(displayVSync);
 
 		// Centers the window position.
-		glfwSetWindowPos(window, (positionX = (vidmode.width() - displayWidth) / 2), (positionY = (vidmode.height() - displayHeight) / 2));
+		if (!displayFullscreen) {
+			glfwSetWindowPos(window, (positionX = (vidmode.width() - this.width) / 2), (positionY = (vidmode.height() - this.height) / 2));
+		}
 
 		// Shows the OpenGl window.
 		glfwShowWindow(window);
