@@ -13,15 +13,12 @@ public class GuiRenderer extends IRenderer {
 	private GuiShader shader;
 
 	private int guiCount;
-	private ProfileTab profileTab;
 
 	public GuiRenderer() {
 		shader = new GuiShader();
 		vaoID = Loader.createInterleavedVAO(POSITIONS, 2);
 
 		guiCount = 0;
-		profileTab = new ProfileTab("GUIs");
-		FlounderProfiler.addTab(profileTab);
 	}
 
 	@Override
@@ -30,7 +27,8 @@ public class GuiRenderer extends IRenderer {
 		GuiManager.getGuiTextures().forEach(this::renderGui);
 		endRendering();
 
-		profileTab.addLabel("GUI Count", guiCount);
+		FlounderProfiler.add("GUI", "Count", guiCount);
+		FlounderProfiler.add("GUI", "Render Time", super.getRenderTimeMs());
 		guiCount = 0;
 	}
 

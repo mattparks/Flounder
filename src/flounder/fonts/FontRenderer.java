@@ -11,14 +11,11 @@ public class FontRenderer extends IRenderer {
 	private FontShader shader;
 
 	private int textCount;
-	private ProfileTab profileTab;
 
 	public FontRenderer() {
 		shader = new FontShader();
 
 		textCount = 0;
-		profileTab = new ProfileTab("Fonts");
-		FlounderProfiler.addTab(profileTab);
 	}
 
 	@Override
@@ -27,7 +24,8 @@ public class FontRenderer extends IRenderer {
 		FontManager.getTexts().keySet().forEach(font -> FontManager.getTexts().get(font).forEach(this::renderText));
 		endRendering();
 
-		profileTab.addLabel("Text Count", textCount);
+		FlounderProfiler.add("Font", "Text Count", textCount);
+		FlounderProfiler.add("Font", "Render Time", super.getRenderTimeMs());
 		textCount = 0;
 	}
 

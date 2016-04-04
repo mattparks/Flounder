@@ -27,8 +27,6 @@ public class DeviceMouse {
 	private float mouseWheel;
 	private boolean displaySelected;
 
-	private ProfileTab profileTab;
-
 	/**
 	 * Creates a new GLFW mouse.
 	 */
@@ -42,8 +40,6 @@ public class DeviceMouse {
 		mouseDeltaY = 0.0f;
 		mouseWheel = 0.0f;
 		displaySelected = false;
-		profileTab = new ProfileTab("Mouse");
-		FlounderProfiler.addTab(profileTab);
 
 		// Sets the mouse callbacks.
 		glfwSetScrollCallback(ManagerDevices.getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
@@ -92,12 +88,12 @@ public class DeviceMouse {
 		lastMousePositionY = mousePositionY;
 
 		if (FlounderProfiler.isOpen()) {
-			profileTab.addLabel("Position X", mousePositionX);
-			profileTab.addLabel("Position Y", mousePositionY);
-			profileTab.addLabel("Delta X", mouseDeltaX);
-			profileTab.addLabel("Delta Y", mouseDeltaY);
-			profileTab.addLabel("Wheel", mouseWheel);
-			profileTab.addLabel("Display Selected", displaySelected);
+			FlounderProfiler.add("Mouse", "Position X", mousePositionX);
+			FlounderProfiler.add("Mouse", "Position Y", mousePositionY);
+			FlounderProfiler.add("Mouse", "Delta X", mouseDeltaX);
+			FlounderProfiler.add("Mouse", "Delta Y", mouseDeltaY);
+			FlounderProfiler.add("Mouse", "Wheel", mouseWheel);
+			FlounderProfiler.add("Mouse", "Display Selected", displaySelected);
 		}
 
 		if (mouseWheel != 0.0f) {

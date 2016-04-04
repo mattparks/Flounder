@@ -9,7 +9,7 @@ public class ProfileLabel<T> {
 	private JLabel jLabel;
 	private boolean displayed;
 
-	public ProfileLabel(final String label, final T value, final int xPosition, final int yPosition) {
+	protected ProfileLabel(final String label, final T value, final int xPosition, final int yPosition) {
 		this.label = label;
 		this.value = value;
 		this.xPosition = xPosition;
@@ -20,51 +20,51 @@ public class ProfileLabel<T> {
 		displayed = false;
 	}
 
-	public String getLabel() {
+	protected String getLabel() {
 		return label;
 	}
 
-	public void setLabel(final String label) {
+	protected void setLabel(final String label) {
 		this.label = label;
 		jLabel.setText(label + " = " + value);
 	}
 
-	public T getValue() {
+	protected T getValue() {
 		return value;
 	}
 
-	public void setValue(final T value) {
+	protected void setValue(final T value) {
 		this.value = value;
 		jLabel.setText(label + " = " + value);
 	}
 
-	public int getXPosition() {
+	protected int getXPosition() {
 		return xPosition;
 	}
 
-	public void setXPosition(final int xPosition) {
+	protected void setXPosition(final int xPosition) {
 		this.xPosition = xPosition;
 		jLabel.setLocation(xPosition, yPosition);
 	}
 
-	public int getYPosition() {
+	protected int getYPosition() {
 		return yPosition;
 	}
 
-	public void setYPosition(final int yPosition) {
+	protected void setYPosition(final int yPosition) {
 		this.yPosition = yPosition;
 		jLabel.setLocation(xPosition, yPosition);
 	}
 
-	public JLabel getJLabel() {
+	protected JLabel getJLabel() {
 		return jLabel;
 	}
 
-	public boolean isDisplayed() {
+	protected boolean isDisplayed() {
 		return displayed;
 	}
 
-	public void setDisplayed(boolean displayed) {
+	protected void setDisplayed(boolean displayed) {
 		this.displayed = displayed;
 	}
 }

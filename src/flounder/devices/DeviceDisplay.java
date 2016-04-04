@@ -38,7 +38,6 @@ public class DeviceDisplay {
 	private int positionX, positionY;
 	private boolean inFocus;
 	private boolean closeRequested;
-	private ProfileTab profileTab;
 
 	/**
 	 * Creates a new GLFW window.
@@ -61,8 +60,6 @@ public class DeviceDisplay {
 		this.samples = samples;
 		inFocus = true;
 		closeRequested = false;
-		profileTab = new ProfileTab("Display");
-		FlounderProfiler.addTab(profileTab);
 
 		// Initialize the library.
 		if (glfwInit() != GLFW_TRUE) {
@@ -175,17 +172,17 @@ public class DeviceDisplay {
 		glfwPollEvents();
 
 		if (FlounderProfiler.isOpen()) {
-			profileTab.addLabel("Width", width);
-			profileTab.addLabel("Height", height);
-			profileTab.addLabel("Title", title);
-			profileTab.addLabel("Enable VSync", enableVSync);
-			profileTab.addLabel("Antialiasing", antialiasing);
-			profileTab.addLabel("Samples", samples);
-			profileTab.addLabel("Fullscreen", fullscreen);
-			profileTab.addLabel("Position X", positionX);
-			profileTab.addLabel("Position Y", positionY);
-			profileTab.addLabel("In Focus", inFocus);
-			profileTab.addLabel("Close Requested", closeRequested);
+			FlounderProfiler.add("Display", "Width", width);
+			FlounderProfiler.add("Display", "Height", height);
+			FlounderProfiler.add("Display", "Title", title);
+			FlounderProfiler.add("Display", "Enable VSync", enableVSync);
+			FlounderProfiler.add("Display", "Antialiasing", antialiasing);
+			FlounderProfiler.add("Display", "Samples", samples);
+			FlounderProfiler.add("Display", "Fullscreen", fullscreen);
+			FlounderProfiler.add("Display", "Position X", positionX);
+			FlounderProfiler.add("Display", "Position Y", positionY);
+			FlounderProfiler.add("Display", "In Focus", inFocus);
+			FlounderProfiler.add("Display", "Close Requested", closeRequested);
 		}
 	}
 

@@ -7,13 +7,13 @@ public class ProfileTab {
 	private List<ProfileLabel> labels;
 	private int yLocation;
 
-	public ProfileTab(final String tabName) {
+	protected ProfileTab(final String tabName) {
 		this.tabName = tabName;
 		labels = new ArrayList<>();
 		yLocation = 320;
 	}
 
-	public <T> void addLabel(final String title, final T value) {
+	protected <T> void addLabel(final String title, final T value) {
 		for (ProfileLabel label : labels) {
 			if (label.getLabel().equals(title)) {
 				label.setValue(value);
@@ -25,7 +25,7 @@ public class ProfileTab {
 		labels.add(label);
 	}
 
-	//public void removeLabel(final String title) {
+	//protected void removeLabel(final String title) {
 	//	for (ProfileLabel label : labels) {
 	//		if (label.getLabel().equals(title)) {
 	//			labels.remove(label);
@@ -34,15 +34,11 @@ public class ProfileTab {
 	//	}
 	//}
 
-	public String getTabName() {
+	protected String getTabName() {
 		return tabName;
 	}
 
-	public List<ProfileLabel> getLabels() {
+	protected List<ProfileLabel> getLabels() {
 		return labels;
-	}
-
-	public int getyLocation() {
-		return yLocation;
 	}
 }

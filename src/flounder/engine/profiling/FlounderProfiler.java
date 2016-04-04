@@ -57,7 +57,20 @@ public class FlounderProfiler {
 		return frame;
 	}
 
-	public static void addTab(final ProfileTab tab) {
+	public static <T> void add(final String tabName, final String title, final T value) {
+		for (final ProfileTab tab : tabList) {
+			if (tab.getTabName().equals(tabName)) {
+				tab.addLabel(title, value);
+				return;
+			}
+		}
+
+		ProfileTab tab = new ProfileTab(tabName);
+		tab.addLabel(title, value);
+		addTab(tab);
+	}
+
+	protected static void addTab(final ProfileTab tab) {
 		tabList.add(tab);
 		JMenuItem item = new JMenuItem(tab.getTabName());
 
