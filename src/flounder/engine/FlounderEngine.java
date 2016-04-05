@@ -10,7 +10,6 @@ import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 import flounder.textures.*;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -30,7 +29,6 @@ public class FlounderEngine {
 	private static float time;
 
 	/**
-	 *
 	 * @param displayCanvas
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.

@@ -7,7 +7,6 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
 import javax.imageio.*;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
@@ -207,45 +206,13 @@ public class DeviceDisplay {
 			//graphics.setColor(Color.BLACK);
 			//graphics.fillRect(0, 0, 639, 479);
 
-			if(!buffer.contentsLost()) {
+			if (!buffer.contentsLost()) {
 				buffer.show();
 			}
 
-		//	Graphics2D graphics = image.createGraphics();
-		//	canvas.printAll(graphics);
-		//	graphics.dispose();
-		}
-	}
-
-	/**
-	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
-	 */
-	public void screenshot() {
-		// Tries to create an image, otherwise throws an exception.
-		final String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		final File saveDirectory = new File("screenshots");
-
-		if (!saveDirectory.exists()) {
-			try {
-				saveDirectory.mkdir();
-			} catch (SecurityException e) {
-				Logger.error("The screenshot directory could not be created.");
-				e.printStackTrace();
-				return;
-			}
-		}
-
-		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
-		String format = "png"; // "PNG" or "JPG".
-
-		Logger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
-
-		// Tries to create image.
-		try {
-			ImageIO.write(updateBufferedImage(), format, file);
-		} catch (Exception e) {
-			Logger.error("Failed to take screenshot.");
-			e.printStackTrace();
+			//	Graphics2D graphics = image.createGraphics();
+			//	canvas.printAll(graphics);
+			//	graphics.dispose();
 		}
 	}
 
@@ -286,6 +253,38 @@ public class DeviceDisplay {
 	 */
 	public int getHeight() {
 		return height;
+	}
+
+	/**
+	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
+	 */
+	public void screenshot() {
+		// Tries to create an image, otherwise throws an exception.
+		final String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
+		final File saveDirectory = new File("screenshots");
+
+		if (!saveDirectory.exists()) {
+			try {
+				saveDirectory.mkdir();
+			} catch (SecurityException e) {
+				Logger.error("The screenshot directory could not be created.");
+				e.printStackTrace();
+				return;
+			}
+		}
+
+		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
+		String format = "png"; // "PNG" or "JPG".
+
+		Logger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+
+		// Tries to create image.
+		try {
+			ImageIO.write(updateBufferedImage(), format, file);
+		} catch (Exception e) {
+			Logger.error("Failed to take screenshot.");
+			e.printStackTrace();
+		}
 	}
 
 	/**

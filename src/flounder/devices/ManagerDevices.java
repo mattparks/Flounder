@@ -3,7 +3,6 @@ package flounder.devices;
 import flounder.engine.*;
 import org.lwjgl.glfw.*;
 
-import javax.swing.*;
 import java.awt.*;
 import java.text.*;
 
