@@ -16,15 +16,12 @@ public class FlounderTabMenu extends JTabbedPane {
         super(SwingConstants.TOP, WRAP_TAB_LAYOUT);
     }
 
-    private JPanel createTab(String tabName) {
-        JPanel primaryComponent = new JPanel();
-        super.addTab(tabName, primaryComponent);
-        return primaryComponent;
-    }
-
     public void createCategory(String categoryName) {
-        JPanel swingFrame = this.createTab(categoryName);
-        Components.put(categoryName, swingFrame);
+        JPanel primaryComponent = new JPanel();
+        System.out.println(primaryComponent);
+        super.addTab(categoryName, primaryComponent);
+        System.out.println(primaryComponent);
+        Components.put(categoryName, primaryComponent);
     }
 
     public Optional<JPanel> getCategoryComponent(String categoryName) {
