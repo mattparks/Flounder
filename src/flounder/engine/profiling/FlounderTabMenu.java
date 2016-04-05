@@ -1,14 +1,16 @@
 package flounder.engine.profiling;
 
 import javax.swing.*;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Optional;
 
 /**
- * Created by Evan on 4/4/2016.
+ * Created by Evan Merlock on 4/4/2016.
+ * Wraps a few methods around JTabbedPane for convenience
  */
 public class FlounderTabMenu extends JTabbedPane {
 
-    private List<JPanel> Components;
+    private HashMap<String, JPanel> Components;
 
     public FlounderTabMenu() {
         super(SwingConstants.TOP, WRAP_TAB_LAYOUT);
@@ -19,5 +21,20 @@ public class FlounderTabMenu extends JTabbedPane {
         super.addTab(tabName, primaryComponent);
         return primaryComponent;
     }
+
+    public void createCategory(String categoryName) {
+        JPanel swingFrame = this.createTab(categoryName);
+        Components.put(categoryName, swingFrame);
+    }
+
+    public Optional<JPanel> getCategoryComponent(String categoryName) {
+        if (Components.containsKey(categoryName)) {
+            return Optional.of(Components.get(categoryName));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+
 
 }
