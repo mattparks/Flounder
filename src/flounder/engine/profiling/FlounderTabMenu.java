@@ -14,6 +14,7 @@ public class FlounderTabMenu extends JTabbedPane {
 
     public FlounderTabMenu() {
         super(SwingConstants.TOP, WRAP_TAB_LAYOUT);
+        Components = new HashMap<>();
     }
 
     public void createCategory(String categoryName) {
