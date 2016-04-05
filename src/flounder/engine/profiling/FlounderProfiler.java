@@ -17,7 +17,7 @@ public class FlounderProfiler {
 	private static List<ProfileTab> tabList;
 	private static JMenuBar menuBar;
 	private static JMenu itemsMenu;
-	private static String selectedTab;
+	private static ProfileTab selectedTab;
 
 	public static void init(final String title) {
 		if (!initialized) {
@@ -36,7 +36,7 @@ public class FlounderProfiler {
 			itemsMenu = new JMenu("Menu");
 			menuBar.add(itemsMenu);
 			frame.add(menuBar, BorderLayout.NORTH);
-			selectedTab = "NULL";
+			selectedTab = null;
 
 			frame.addWindowListener(new WindowAdapter() {
 				@Override
@@ -77,34 +77,23 @@ public class FlounderProfiler {
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectedTab = tab.getTabName();
+				selectedTab = tab;
 			}
 		});
 
-		if (selectedTab.equals("NULL")) {
-			selectedTab = tab.getTabName();
+		if (selectedTab == null) {
+			selectedTab = tab;
 		}
 
 		itemsMenu.add(item);
 	}
 
 	public static void update() {
-		// TODO: Clear display of artifacts.
-		itemsPanel.repaint();
-
-		for (ProfileTab tab : tabList) {
-			for (ProfileLabel label : tab.getLabels()) {
-				if (label.isDisplayed()) {
-					itemsPanel.remove(label.getJLabel());
-					label.setDisplayed(false);
-				}
-
-				if (tab.getTabName().equals(selectedTab)) {
-					itemsPanel.add(label.getJLabel());
-					label.setDisplayed(true);
-				}
-			}
+		itemsPanel.removeAll();
+		if (selectedTab != null) {
+			selectedTab.update(itemsPanel);
 		}
+		itemsPanel.repaint();
 	}
 
 	public static boolean isOpen() {

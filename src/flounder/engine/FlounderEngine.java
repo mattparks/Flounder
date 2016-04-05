@@ -10,6 +10,9 @@ import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 import flounder.textures.*;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * Deals with much of the initializing, updating, and cleaning up of the engine.
  */
@@ -27,6 +30,8 @@ public class FlounderEngine {
 	private static float time;
 
 	/**
+	 *
+	 * @param displayCanvas
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
@@ -36,10 +41,10 @@ public class FlounderEngine {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public static void preinit(final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+	public static void preinit(final Canvas displayCanvas, final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
 		FlounderEngine.targetFPS = targetFPS;
 		FlounderProfiler.init(displayTitle + " Profiler");
-		ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+		ManagerDevices.init(displayCanvas, displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 	}
 
 	/**

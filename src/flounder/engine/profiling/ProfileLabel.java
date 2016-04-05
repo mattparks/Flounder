@@ -15,7 +15,7 @@ public class ProfileLabel<T> {
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 		jLabel = new JLabel();
-		jLabel.setText(label + " = " + value);
+		jLabel.setText(label + ": " + value);
 		jLabel.setLocation(xPosition, yPosition);
 		displayed = false;
 	}
@@ -26,7 +26,7 @@ public class ProfileLabel<T> {
 
 	protected void setLabel(final String label) {
 		this.label = label;
-		jLabel.setText(label + " = " + value);
+		jLabel.setText(label + ": " + value);
 	}
 
 	protected T getValue() {
@@ -35,7 +35,7 @@ public class ProfileLabel<T> {
 
 	protected void setValue(final T value) {
 		this.value = value;
-		jLabel.setText(label + " = " + value);
+		jLabel.setText(label + ": " + value);
 	}
 
 	protected int getXPosition() {

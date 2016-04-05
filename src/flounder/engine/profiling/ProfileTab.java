@@ -1,5 +1,6 @@
 package flounder.engine.profiling;
 
+import javax.swing.*;
 import java.util.*;
 
 public class ProfileTab {
@@ -13,8 +14,14 @@ public class ProfileTab {
 		yLocation = 320;
 	}
 
+	protected void update(final JPanel itemsPanel) {
+		for (final ProfileLabel label : labels) {
+			itemsPanel.add(label.getJLabel());
+		}
+	}
+
 	protected <T> void addLabel(final String title, final T value) {
-		for (ProfileLabel label : labels) {
+		for (final ProfileLabel label : labels) {
 			if (label.getLabel().equals(title)) {
 				label.setValue(value);
 				return;
@@ -24,15 +31,6 @@ public class ProfileTab {
 		ProfileLabel label = new ProfileLabel(title, value, 210, (yLocation += 50));
 		labels.add(label);
 	}
-
-	//protected void removeLabel(final String title) {
-	//	for (ProfileLabel label : labels) {
-	//		if (label.getLabel().equals(title)) {
-	//			labels.remove(label);
-	//			return;
-	//		}
-	//	}
-	//}
 
 	protected String getTabName() {
 		return tabName;

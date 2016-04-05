@@ -7,6 +7,8 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
 import javax.imageio.*;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
@@ -27,6 +29,7 @@ public class DeviceDisplay {
 	private final GLFWWindowSizeCallback callbackWindowSize;
 	private final GLFWFramebufferSizeCallback callbackFramebufferSize;
 
+	private Canvas canvas;
 	private long window;
 	private int width;
 	private int height;
@@ -42,6 +45,7 @@ public class DeviceDisplay {
 	/**
 	 * Creates a new GLFW window.
 	 *
+	 * @param displayCanvas
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
@@ -50,13 +54,14 @@ public class DeviceDisplay {
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	protected DeviceDisplay(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final int samples, final boolean displayFullscreen) {
+	protected DeviceDisplay(final Canvas displayCanvas, final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final int samples, final boolean displayFullscreen) {
+		this.canvas = displayCanvas;
 		this.width = displayWidth;
 		this.height = displayHeight;
 		this.title = displayTitle;
 		this.enableVSync = displayVSync;
 		this.antialiasing = antialiasing;
-		this.fullscreen = displayFullscreen;
+		this.fullscreen = this.canvas == null && displayFullscreen;
 		this.samples = samples;
 		inFocus = true;
 		closeRequested = false;
@@ -73,9 +78,8 @@ public class DeviceDisplay {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // TODO: Make true again!
-		// glfwWindowHint(GLFW_RESIZABLE, displayFullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
-		glfwWindowHint(GLFW_SAMPLES, samples);
+		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
+		glfwWindowHint(GLFW_SAMPLES, this.samples);
 		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE); // Only enabled in fullscreen.
 
 		// Gets the resolution of the primary monitor.
@@ -87,10 +91,10 @@ public class DeviceDisplay {
 		}
 
 		// Create a windowed mode window and its OpenGL context.
-		window = glfwCreateWindow(this.width, this.height, displayTitle, displayFullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+		window = glfwCreateWindow(this.width, this.height, this.title, this.fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 
 		// Sets the display to fullscreen or windowed.
-		setFullscreen(displayFullscreen);
+		setFullscreen(this.fullscreen);
 
 		// Gets any window errors.
 		if (window == NULL) {
@@ -119,12 +123,14 @@ public class DeviceDisplay {
 		setEnableVSync(displayVSync);
 
 		// Centers the window position.
-		if (!displayFullscreen) {
+		if (!this.fullscreen) {
 			glfwSetWindowPos(window, (positionX = (vidmode.width() - this.width) / 2), (positionY = (vidmode.height() - this.height) / 2));
 		}
 
 		// Shows the OpenGl window.
-		glfwShowWindow(window);
+		if (this.canvas == null) {
+			glfwShowWindow(window);
+		}
 
 		// Sets the displays callbacks.
 		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
@@ -191,6 +197,24 @@ public class DeviceDisplay {
 	 */
 	protected void swapBuffers() {
 		glfwSwapBuffers(window);
+
+		if (this.canvas != null) {
+			BufferStrategy buffer = canvas.getBufferStrategy();
+			BufferedImage image = updateBufferedImage();
+			Graphics graphics = buffer.getDrawGraphics();
+
+			// graphics.
+			//graphics.setColor(Color.BLACK);
+			//graphics.fillRect(0, 0, 639, 479);
+
+			if(!buffer.contentsLost()) {
+				buffer.show();
+			}
+
+		//	Graphics2D graphics = image.createGraphics();
+		//	canvas.printAll(graphics);
+		//	graphics.dispose();
+		}
 	}
 
 	/**
@@ -348,6 +372,7 @@ public class DeviceDisplay {
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
 	public void setFullscreen(final boolean fullscreen) {
+		Logger.log(this.fullscreen && !fullscreen ? "Display going windowed." : !this.fullscreen && fullscreen ? "Display going fullscreen." : "");
 		this.fullscreen = fullscreen;
 		// TODO: Put display in fullscreen!
 		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE);
