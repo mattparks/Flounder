@@ -15,13 +15,17 @@ class FlounderProfilerLabel<T> {
 	protected FlounderProfilerLabel(String contentLabel, T value) {
 		this.contentLabel = contentLabel;
 		this.value = value;
+
+		jLabel = new JLabel(contentLabel + " = " + value);
 	}
 
 	protected T getValue() { return value; }
 	protected String getContentLabel() { return contentLabel; }
+	protected JLabel getDisplayObject() { return jLabel; }
 
 	protected void setValue(T value) {
 		this.value = value;
+		jLabel.setText(contentLabel + " = " + value);
 	}
 
 	protected void setContentLabel(String contentLabel) {
