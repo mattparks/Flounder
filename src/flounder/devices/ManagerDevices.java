@@ -3,6 +3,7 @@ package flounder.devices;
 import flounder.engine.*;
 import org.lwjgl.glfw.*;
 
+import java.awt.*;
 import java.text.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,6 +23,7 @@ public class ManagerDevices {
 	/**
 	 * Creates GLFW devices.
 	 *
+	 * @param displayCanvas
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
@@ -30,10 +32,10 @@ public class ManagerDevices {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public static void init(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+	public static void init(final Canvas displayCanvas, final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
 		if (!initialized) {
 			glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
-			display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+			display = new DeviceDisplay(displayCanvas, displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 			keyboard = new DeviceKeyboard();
 			mouse = new DeviceMouse();
 			joysticks = new DeviceJoysticks();
