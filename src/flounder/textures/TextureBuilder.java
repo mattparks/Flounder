@@ -11,13 +11,12 @@ import java.util.*;
 
 public class TextureBuilder {
 	private static Map<String, SoftReference<Texture>> loadedTextures = new HashMap<>();
-
+	private final Colour borderColour;
 	private boolean clampEdges;
 	private boolean clampToBorder;
 	private boolean mipmap;
 	private boolean anisotropic;
 	private boolean nearest;
-	private final Colour borderColour;
 	private MyFile file;
 
 	protected TextureBuilder(final MyFile textureFile) {

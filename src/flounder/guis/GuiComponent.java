@@ -16,16 +16,12 @@ public abstract class GuiComponent {
 
 	private final Vector2f relativePosition;
 	private final Vector2f relativeScale;
-	private GuiComponent parent;
-
-	private boolean visible;
-
 	private final List<GuiComponent> childComponents;
 	private final Map<Text, Vector3f> componentTexts;
-
 	private final List<GuiComponent> componentsToRemove;
 	private final List<GuiComponent> componentsToAdd;
-
+	private GuiComponent parent;
+	private boolean visible;
 	private boolean initialized;
 
 	public GuiComponent() {

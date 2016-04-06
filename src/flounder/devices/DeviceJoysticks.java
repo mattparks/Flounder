@@ -2,7 +2,6 @@ package flounder.devices;
 
 import flounder.engine.*;
 
-import java.io.*;
 import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;

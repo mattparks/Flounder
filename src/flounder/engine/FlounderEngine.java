@@ -2,7 +2,6 @@ package flounder.engine;
 
 import flounder.devices.*;
 import flounder.engine.profiling.*;
-import flounder.fonts.*;
 import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.maths.matrices.*;

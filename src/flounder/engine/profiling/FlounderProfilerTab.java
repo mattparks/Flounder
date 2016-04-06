@@ -4,21 +4,19 @@ import javax.swing.*;
 import java.util.*;
 
 /**
- * Created by Evan on 4/5/2016.
  * Tab object to store primary component information
  */
 public class FlounderProfilerTab {
-
 	private JPanel primaryComponent;
 	private List<FlounderProfilerLabel> labels;
 
-	protected FlounderProfilerTab(JPanel primaryComponent) {
+	protected FlounderProfilerTab(final JPanel primaryComponent) {
 		this.primaryComponent = primaryComponent;
-		labels = new ArrayList<FlounderProfilerLabel>();
+		this.labels = new ArrayList<>();
 	}
 
-	public <T> void addLabel(String contentLabel, T value) {
-		for (FlounderProfilerLabel label : labels) {
+	public <T> void addLabel(final String contentLabel, final T value) {
+		for (final FlounderProfilerLabel label : labels) {
 			if (label.getContentLabel().equals(contentLabel)) {
 				label.setValue(value);
 				return;
@@ -30,7 +28,7 @@ public class FlounderProfilerTab {
 		labels.add(label);
 	}
 
-	public void removeLabel(String contentLabel) {
+	public void removeLabel(final String contentLabel) {
 		for (FlounderProfilerLabel label : labels) {
 			if (label.getContentLabel().equals(contentLabel)) {
 				primaryComponent.remove(label.getDisplayObject());
@@ -41,12 +39,12 @@ public class FlounderProfilerTab {
 		}
 	}
 
-	protected JPanel getPrimaryComponent() { return primaryComponent; }
+	protected JPanel getPrimaryComponent() {
+		return primaryComponent;
+	}
 
 	public void dispose() {
 		primaryComponent = null;
 		labels = null;
 	}
-
-
 }

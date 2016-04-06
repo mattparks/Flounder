@@ -38,6 +38,15 @@ public class FontRenderer extends IRenderer {
 		shader.start();
 	}
 
+	private void endRendering() {
+		shader.stop();
+	}
+
+	@Override
+	public void dispose() {
+		shader.dispose();
+	}
+
 	private void renderText(final Text text) {
 		textCount++;
 
@@ -53,14 +62,5 @@ public class FontRenderer extends IRenderer {
 		shader.borderSizes.loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		OpenglUtils.unbindVAO(0, 1);
-	}
-
-	private void endRendering() {
-		shader.stop();
-	}
-
-	@Override
-	public void dispose() {
-		shader.dispose();
 	}
 }

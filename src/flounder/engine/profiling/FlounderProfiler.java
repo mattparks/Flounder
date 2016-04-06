@@ -7,28 +7,29 @@ public class FlounderProfiler {
 
 	private static JFrame profilerJFrame;
 	private static FlounderTabMenu primaryTabMenu;
-	private static boolean isInit = false;
-	private static boolean profilerOpen = false;
+
+	private static boolean initialized;
+	private static boolean profilerOpen;
 
 	public static void init(final String title) {
-		if (!isInit) {
+		if (!initialized) {
 			profilerJFrame = new JFrame(title);
 			profilerJFrame.setSize(420, 720);
 			profilerJFrame.setResizable(true);
 
 			primaryTabMenu = new FlounderTabMenu();
 			profilerJFrame.add(primaryTabMenu);
-		}
 
-		isInit = true;
-		profilerOpen = false;
+			profilerOpen = false;
+			initialized = true;
+		}
 	}
 
 	public static void update() {
 	}
 
 	public static void toggle(final boolean open) {
-		if (open == true) {
+		if (open) {
 			profilerJFrame.setVisible(true);
 			profilerOpen = true;
 		} else {
@@ -39,7 +40,7 @@ public class FlounderProfiler {
 
 	public static <T> void add(final String tabName, final String title, final T value) {
 		if (primaryTabMenu.doesCategoryExist(tabName)) {
-			Optional<FlounderProfilerTab> optionalTab = primaryTabMenu.getCategoryComponent(tabName);
+			final Optional<FlounderProfilerTab> optionalTab = primaryTabMenu.getCategoryComponent(tabName);
 			optionalTab.ifPresent(insertObject -> {
 				FlounderProfilerTab grabbedTab = optionalTab.get();
 				grabbedTab.addLabel(title, value);
@@ -59,14 +60,13 @@ public class FlounderProfiler {
 	}
 
 	public static boolean isOpen() {
-		if (profilerOpen) {
-			return true;
-		} else {
-			return false;
-		}
+		return profilerOpen;
 	}
 
 	public static void dispose() {
-		profilerJFrame.dispose();
+		if (initialized) {
+			profilerJFrame.dispose();
+			initialized = false;
+		}
 	}
 }

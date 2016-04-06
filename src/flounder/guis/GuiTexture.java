@@ -9,11 +9,9 @@ import flounder.visual.*;
  * A textured quad, making up part of a GUI component.
  */
 public class GuiTexture {
-	private Texture texture;
-
 	private final Vector2f position;
 	private final Vector2f scale;
-
+	private Texture texture;
 	private ValueDriver alphaDriver;
 
 	private float alpha;
