@@ -17,6 +17,7 @@ public class FlounderProfiler {
 			profilerJFrame.setResizable(true);
 
 			primaryTabMenu = new FlounderTabMenu();
+			profilerJFrame.add(primaryTabMenu);
 		}
 
 		isInit = true;
