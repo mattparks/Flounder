@@ -75,7 +75,6 @@ public class FlounderEngine {
 				render = true;
 				update();
 				addProfileValues();
-				FlounderProfiler.update();
 
 				// Updates static delta and times.
 				currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;

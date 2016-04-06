@@ -10,23 +10,31 @@ import java.util.Optional;
  */
 public class FlounderTabMenu extends JTabbedPane {
 
-    private HashMap<String, FlounderProfilerTab> Components;
+    private HashMap<String, FlounderProfilerTab> components;
 
     public FlounderTabMenu() {
         super(SwingConstants.TOP, WRAP_TAB_LAYOUT);
-        Components = new HashMap<>();
+        components = new HashMap<>();
     }
 
     public void createCategory(String categoryName) {
         JPanel primaryComponent = new JPanel();
         super.addTab(categoryName, primaryComponent);
 	    FlounderProfilerTab contentTab = new FlounderProfilerTab(primaryComponent);
-        Components.put(categoryName, contentTab);
+        components.put(categoryName, contentTab);
+    }
+
+    public Boolean doesCategoryExist(String categoryName) {
+	    if (components.containsKey(categoryName)) {
+		    return true;
+	    } else {
+		    return false;
+	    }
     }
 
     public Optional<FlounderProfilerTab> getCategoryComponent(String categoryName) {
-        if (Components.containsKey(categoryName)) {
-            return Optional.of(Components.get(categoryName));
+        if (components.containsKey(categoryName)) {
+            return Optional.of(components.get(categoryName));
         } else {
             return Optional.empty();
         }
