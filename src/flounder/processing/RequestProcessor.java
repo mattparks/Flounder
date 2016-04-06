@@ -1,5 +1,7 @@
 package flounder.processing;
 
+import flounder.engine.*;
+
 /**
  * Class that is responsible for flounder.processing resource requests in a separate thread.
  */
@@ -74,7 +76,7 @@ public class RequestProcessor extends Thread {
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					FlounderLogger.exception(e);
 				}
 			}
 		}

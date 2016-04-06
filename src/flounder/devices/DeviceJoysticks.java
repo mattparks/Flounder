@@ -32,11 +32,11 @@ public class DeviceJoysticks {
 		for (int j = GLFW_JOYSTICK_1; j < GLFW_JOYSTICK_LAST; j++) {
 			if (glfwJoystickPresent(j) == GL_FALSE) {
 				if (joysticks[j] != null) {
-					Logger.log("Disconnecting Joystick: " + j);
+					FlounderLogger.log("Disconnecting Joystick: " + j);
 					joysticks[j] = null;
 				}
 			} else if (joysticks[j] == null) {
-				Logger.log("Connecting Joystick: " + j);
+				FlounderLogger.log("Connecting Joystick: " + j);
 				joysticks[j] = new Joystick(j);
 			}
 		}

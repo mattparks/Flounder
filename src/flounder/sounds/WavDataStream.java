@@ -112,8 +112,8 @@ public class WavDataStream {
 			buffer.put(data, 0, bytesRead);
 			buffer.flip();
 		} catch (IOException e) {
-			Logger.error("Couldn't read more bytes from audio stream!");
-			e.printStackTrace();
+			FlounderLogger.error("Couldn't read more bytes from audio stream!");
+			FlounderLogger.exception(e);
 		}
 		return buffer;
 	}

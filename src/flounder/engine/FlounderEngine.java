@@ -85,7 +85,7 @@ public class FlounderEngine {
 
 				// Prints out current engine update and frame stats.
 				if (System.currentTimeMillis() - timerStart > 1000) {
-					Logger.log(updates + "ups, " + frames + "fps.");
+					FlounderLogger.log(updates + "ups, " + frames + "fps.");
 					timerStart += 1000;
 					updates = 0;
 					frames = 0;
@@ -191,6 +191,7 @@ public class FlounderEngine {
 			module.dispose();
 			FlounderProfiler.dispose();
 			ManagerDevices.dispose();
+			FlounderLogger.dispose();
 			initialized = false;
 		}
 	}

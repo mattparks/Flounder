@@ -67,7 +67,7 @@ public class DeviceDisplay {
 
 		// Initialize the library.
 		if (glfwInit() != GLFW_TRUE) {
-			Logger.error("Could not init GLFW!");
+			FlounderLogger.error("Could not init GLFW!");
 			System.exit(-1);
 		}
 
@@ -97,7 +97,7 @@ public class DeviceDisplay {
 
 		// Gets any window errors.
 		if (window == NULL) {
-			Logger.error("Could not create the window!");
+			FlounderLogger.error("Could not create the window!");
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -112,7 +112,7 @@ public class DeviceDisplay {
 		final long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
-			Logger.error("OpenGL Error: " + glError);
+			FlounderLogger.error("OpenGL Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
@@ -267,8 +267,8 @@ public class DeviceDisplay {
 			try {
 				saveDirectory.mkdir();
 			} catch (SecurityException e) {
-				Logger.error("The screenshot directory could not be created.");
-				e.printStackTrace();
+				FlounderLogger.error("The screenshot directory could not be created.");
+				FlounderLogger.exception(e);
 				return;
 			}
 		}
@@ -276,14 +276,14 @@ public class DeviceDisplay {
 		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
 		String format = "png"; // "PNG" or "JPG".
 
-		Logger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
 
 		// Tries to create image.
 		try {
 			ImageIO.write(updateBufferedImage(), format, file);
 		} catch (Exception e) {
-			Logger.error("Failed to take screenshot.");
-			e.printStackTrace();
+			FlounderLogger.error("Failed to take screenshot.");
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -371,7 +371,7 @@ public class DeviceDisplay {
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
 	public void setFullscreen(final boolean fullscreen) {
-		Logger.log(this.fullscreen && !fullscreen ? "Display going windowed." : !this.fullscreen && fullscreen ? "Display going fullscreen." : "");
+		FlounderLogger.log(this.fullscreen && !fullscreen ? "Display going windowed." : !this.fullscreen && fullscreen ? "Display going fullscreen." : "");
 		this.fullscreen = fullscreen;
 		// TODO: Put display in fullscreen!
 		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE);

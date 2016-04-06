@@ -5,5 +5,5 @@ package flounder.engine.options;
  */
 public class OptionsLogger {
 	public static final boolean LOG_TO_CONSOLE = true;
-	public static final boolean LOG_TO_FILE = false;
+	public static final boolean LOG_TO_FILE = true;
 }

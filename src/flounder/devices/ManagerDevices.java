@@ -42,8 +42,8 @@ public class ManagerDevices {
 			sound = new DeviceSound();
 
 			// Logs OpenGL version info.
-			Logger.log("Number of Cores: " + Runtime.getRuntime().availableProcessors());
-			Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
+			FlounderLogger.log("Number of Cores: " + Runtime.getRuntime().availableProcessors());
+			FlounderLogger.log("OpenGL Version: " + glGetString(GL_VERSION));
 			initialized = true;
 		}
 	}

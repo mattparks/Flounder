@@ -20,7 +20,7 @@ public class SoundLoader {
 	 */
 	protected static void doInitialSoundLoad(final Sound sound) {
 		try {
-			Logger.log("Loading sound " + sound.getSoundFile().getPath());
+			FlounderLogger.log("Loading sound " + sound.getSoundFile().getPath());
 			final WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			final ByteBuffer byteBuffer = stream.loadNextData();
@@ -29,8 +29,8 @@ public class SoundLoader {
 			sound.setBuffer(bufferID, byteBuffer.limit());
 			stream.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.error("Couldn't load sound file " + sound.getSoundFile());
+			FlounderLogger.error("Couldn't load sound file " + sound.getSoundFile());
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class SoundLoader {
 		final int error = AL10.alGetError();
 
 		if (error != AL10.AL_NO_ERROR) {
-			Logger.error("Problem loading sound data into buffer. " + error);
+			FlounderLogger.error("Problem loading sound data into buffer. " + error);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class SoundLoader {
 		buffers.forEach(buffer -> AL10.alDeleteBuffers(buffer));
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			Logger.error("Problem deleting sound buffers.");
+			FlounderLogger.error("Problem deleting sound buffers.");
 		}
 	}
 }

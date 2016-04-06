@@ -29,7 +29,7 @@ public class Streamer {
 	 * @throws Exception When something goes wrong :(
 	 */
 	protected Streamer(final Sound sound, final SoundSource source, final AudioController controller) throws Exception {
-		Logger.log("Streaming " + sound.getSoundFile().getPath());
+		FlounderLogger.log("Streaming " + sound.getSoundFile().getPath());
 
 		this.source = source;
 		this.controller = controller;
