@@ -128,33 +128,6 @@ public class DeviceJoysticks {
 
 				bbbuttons.clear();
 			}
-
-			// writeData()
-		}
-
-		/**
-		 * Writes the joysticks data into a file.
-		 */
-		public void writeData() {
-			try {
-				PrintStream ps = new PrintStream("joystick" + joystickID + ".txt");
-				ps.println("[" + joystickID + "]: " + name);
-				ps.println("\nAXES");
-
-				for (int i = 0; i < axes.length; i++) {
-					ps.println("[" + i + "]: " + axes[i]);
-				}
-
-				ps.println("\nBUTTONS");
-
-				for (int i = 0; i < buttons.length; i++) {
-					ps.println("[" + i + "]: " + buttons[i]);
-				}
-
-				ps.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
 		}
 
 		/**

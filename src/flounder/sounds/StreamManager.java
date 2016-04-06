@@ -55,7 +55,8 @@ public class StreamManager extends Thread {
 		try {
 			Thread.sleep(SLEEP_TIME);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			FlounderLogger.error("Thread could not sleep!");
+			FlounderLogger.exception(e);
 		}
 	}
 

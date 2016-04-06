@@ -70,7 +70,7 @@ public class FlounderLogger {
 				}
 			} catch (IOException e) {
 				System.err.println("Could not save logs!");
-				e.printStackTrace();
+				FlounderLogger.exception(e);
 			}
 		}
 	}
@@ -84,7 +84,8 @@ public class FlounderLogger {
 			try {
 				saveDirectory.mkdir();
 			} catch (SecurityException e) {
-				e.printStackTrace();
+				FlounderLogger.error("Filed to create logging folder.");
+				FlounderLogger.exception(e);
 			}
 		}
 

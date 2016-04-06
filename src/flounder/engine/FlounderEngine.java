@@ -98,7 +98,8 @@ public class FlounderEngine {
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					FlounderLogger.error("Thread could not sleep!");
+					FlounderLogger.exception(e);
 				}
 			}
 		}
