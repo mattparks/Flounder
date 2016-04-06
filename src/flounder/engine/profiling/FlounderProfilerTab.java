@@ -43,5 +43,10 @@ public class FlounderProfilerTab {
 
 	protected JPanel getPrimaryComponent() { return primaryComponent; }
 
+	public void dispose() {
+		primaryComponent = null;
+		labels = null;
+	}
+
 
 }

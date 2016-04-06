@@ -1,8 +1,7 @@
 package flounder.engine.profiling;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by Evan Merlock on 4/4/2016.
@@ -39,5 +38,14 @@ public class FlounderTabMenu extends JTabbedPane {
             return Optional.empty();
         }
     }
+
+	public void dispose() {
+		Iterator disposalIterator = components.entrySet().iterator();
+		while (disposalIterator.hasNext()) {
+			HashMap.Entry pair = (HashMap.Entry)disposalIterator.next();
+			FlounderProfilerTab disposeObject = (FlounderProfilerTab)pair.getValue();
+			disposeObject.dispose();
+		}
+	}
 
 }

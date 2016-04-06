@@ -67,6 +67,6 @@ public class FlounderProfiler {
 	}
 
 	public static void dispose() {
-		FlounderProfiler.dispose();
+		profilerJFrame.dispose();
 	}
 }
