@@ -24,8 +24,11 @@ public class FontRenderer extends IRenderer {
 		FontManager.getTexts().keySet().forEach(font -> FontManager.getTexts().get(font).forEach(this::renderText));
 		endRendering();
 
-		FlounderProfiler.add("Font", "Text Count", textCount);
-		FlounderProfiler.add("Font", "Render Time", super.getRenderTimeMs());
+		if (FlounderProfiler.isOpen()) {
+			FlounderProfiler.add("Font", "Text Count", textCount);
+			FlounderProfiler.add("Font", "Render Time", super.getRenderTimeMs());
+		}
+
 		textCount = 0;
 	}
 

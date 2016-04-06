@@ -32,11 +32,11 @@ public class DeviceJoysticks {
 		for (int j = GLFW_JOYSTICK_1; j < GLFW_JOYSTICK_LAST; j++) {
 			if (glfwJoystickPresent(j) == GL_FALSE) {
 				if (joysticks[j] != null) {
-					Logger.log("Disconnecting Joystick: " + j);
+					FlounderLogger.log("Disconnecting Joystick: " + j);
 					joysticks[j] = null;
 				}
 			} else if (joysticks[j] == null) {
-				Logger.log("Connecting Joystick: " + j);
+				FlounderLogger.log("Connecting Joystick: " + j);
 				joysticks[j] = new Joystick(j);
 			}
 		}
@@ -127,33 +127,6 @@ public class DeviceJoysticks {
 				}
 
 				bbbuttons.clear();
-			}
-
-			// writeData()
-		}
-
-		/**
-		 * Writes the joysticks data into a file.
-		 */
-		public void writeData() {
-			try {
-				PrintStream ps = new PrintStream("joystick" + joystickID + ".txt");
-				ps.println("[" + joystickID + "]: " + name);
-				ps.println("\nAXES");
-
-				for (int i = 0; i < axes.length; i++) {
-					ps.println("[" + i + "]: " + axes[i]);
-				}
-
-				ps.println("\nBUTTONS");
-
-				for (int i = 0; i < buttons.length; i++) {
-					ps.println("[" + i + "]: " + buttons[i]);
-				}
-
-				ps.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
 			}
 		}
 

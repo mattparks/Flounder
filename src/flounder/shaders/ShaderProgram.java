@@ -64,8 +64,8 @@ public class ShaderProgram {
 				shaderSource.append(line + "\n");
 			}
 		} catch (Exception e) {
-			Logger.error("Could not read file " + file.getName());
-			e.printStackTrace();
+			FlounderLogger.error("Could not read file " + file.getName());
+			FlounderLogger.exception(e);
 			System.exit(-1);
 		}
 
@@ -88,8 +88,8 @@ public class ShaderProgram {
 		GL20.glCompileShader(shaderID);
 
 		if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-			Logger.error(GL20.glGetShaderInfoLog(shaderID, 500));
-			Logger.error("Could not compile shader " + shaderName);
+			FlounderLogger.error(GL20.glGetShaderInfoLog(shaderID, 500));
+			FlounderLogger.error("Could not compile shader " + shaderName);
 			System.exit(-1);
 		}
 

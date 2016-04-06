@@ -51,8 +51,8 @@ public class MetaFile {
 		try {
 			reader = file.getReader();
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.error("Couldn't read font meta file " + file.getPath());
+			FlounderLogger.error("Couldn't read font meta file " + file.getPath());
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -75,8 +75,8 @@ public class MetaFile {
 		try {
 			line = reader.readLine();
 		} catch (IOException e) {
-			Logger.error("Failed to read the next line!");
-			e.printStackTrace();
+			FlounderLogger.error("Failed to read the next line!");
+			FlounderLogger.exception(e);
 		}
 
 		if (line == null) {
@@ -172,7 +172,8 @@ public class MetaFile {
 		try {
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			FlounderLogger.error("Could not close Font MetaFile.");
+			FlounderLogger.exception(e);
 		}
 	}
 

@@ -29,7 +29,7 @@ public class TextureManager {
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			Logger.log(textureFiles[i].getPath() + " is being loaded into the texture cube map!");
+			FlounderLogger.log(textureFiles[i].getPath() + " is being loaded into the texture cube map!");
 			TextureData data = decodeTextureFile(textureFiles[i]);
 			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 		}
@@ -57,8 +57,8 @@ public class TextureManager {
 			buffer.flip();
 			in.close();
 		} catch (Exception e) {
-			Logger.log("Tried to load texture '" + file + "', didn't work");
-			e.printStackTrace();
+			FlounderLogger.log("Tried to load texture '" + file + "', didn't work");
+			FlounderLogger.exception(e);
 			System.exit(-1);
 		}
 

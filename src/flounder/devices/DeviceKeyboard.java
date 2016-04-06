@@ -24,7 +24,7 @@ public class DeviceKeyboard {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (key < 0 || key > GLFW_KEY_LAST) {
-					Logger.error("Invalid action attempted with key: " + key);
+					FlounderLogger.error("Invalid action attempted with key: " + key);
 				} else {
 					// Actions: GLFW_PRESS   GLFW_RELEASE   GLFW_REPEAT
 					keyboardKeys[key] = action;

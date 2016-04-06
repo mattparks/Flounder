@@ -69,7 +69,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			Logger.log(file.getPath() + " is being loaded into the texture builder right now!");
+			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder right now!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
@@ -91,7 +91,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			Logger.log(file.getPath() + " is being loaded into the texture builder in the background!");
+			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in the background!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			RequestProcessor.sendRequest(new TextureLoadRequest(data, this));
@@ -111,7 +111,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			Logger.log(file.getPath() + " is being loaded into the texture builder in seperate thread!");
+			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in seperate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
