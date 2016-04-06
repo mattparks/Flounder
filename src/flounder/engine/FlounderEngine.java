@@ -28,7 +28,9 @@ public class FlounderEngine {
 	private static float time;
 
 	/**
-	 * @param displayCanvas
+	 * Carries out preinitializations for basic engine components like the profiler and display. Call {@link #init(IModule)} immediately after this.
+	 *
+	 * @param displayCanvas A optional Java Canvas to display to instead of a GLFW display.
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
@@ -45,7 +47,7 @@ public class FlounderEngine {
 	}
 
 	/**
-	 * Carries out any necessary initializations of the engine.
+	 * Carries out any necessary initializations of the engine. Call {@link #run()} after this to run the engine.
 	 *
 	 * @param module The module for the engine to run off of.
 	 */
@@ -64,6 +66,9 @@ public class FlounderEngine {
 		}
 	}
 
+	/**
+	 * Runs the engines main game loop. Call {@link #dispose()} right after running to close the engine.
+	 */
 	public static void run() {
 		while (ManagerDevices.getDisplay().isOpen()) {
 			boolean render = false;

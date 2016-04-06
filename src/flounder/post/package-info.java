@@ -1,4 +1,4 @@
 /**
- * Contains classes for applying post effects to the engine renderers {@link engine.textures.fbos.FBO}.
+ * Contains classes for applying post effects to the engine renderers {@link flounder.textures.fbos.FBO}.
  */
-package engine.post;
+package flounder.post;

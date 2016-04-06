@@ -46,7 +46,7 @@ public class DeviceDisplay {
 	/**
 	 * Creates a new GLFW window.
 	 *
-	 * @param displayCanvas
+	 * @param displayCanvas A optional Java Canvas to display to instead of a GLFW display.
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
