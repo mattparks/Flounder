@@ -21,9 +21,9 @@ public class Line {
 	 */
 	protected Line(final double spaceWidth, final double fontSize, final double maxLength) {
 		this.maxLength = maxLength;
-		spaceSize = spaceWidth * fontSize;
-		words = new ArrayList<>();
-		currentLineLength = 0.0;
+		this.spaceSize = spaceWidth * fontSize;
+		this.words = new ArrayList<>();
+		this.currentLineLength = 0.0;
 	}
 
 	/**

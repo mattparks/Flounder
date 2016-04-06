@@ -38,25 +38,25 @@ public class Text {
 	private boolean loaded;
 
 	protected Text(final String text, final FontType font, final float fontSize, final boolean centered) {
-		textString = text;
+		this.textString = text;
 		this.fontSize = fontSize;
-		fontType = font;
-		centerText = centered;
+		this.fontType = font;
+		this.centerText = centered;
 
-		alphaDriver = new ConstantDriver(1.0f);
-		scaleDriver = new ConstantDriver(1.0f);
-		glowDriver = new ConstantDriver(0.0f);
-		borderDriver = new ConstantDriver(0.0f);
-		colour = new Colour(0.0f, 0.0f, 0.0f, 1.0f);
-		borderColour = new Colour(1.0f, 1.0f, 1.0f, 1.0f);
+		this.alphaDriver = new ConstantDriver(1.0f);
+		this.scaleDriver = new ConstantDriver(1.0f);
+		this.glowDriver = new ConstantDriver(0.0f);
+		this.borderDriver = new ConstantDriver(0.0f);
+		this.colour = new Colour(0.0f, 0.0f, 0.0f, 1.0f);
+		this.borderColour = new Colour(1.0f, 1.0f, 1.0f, 1.0f);
 
-		solidBorder = false;
-		glowBorder = false;
+		this.solidBorder = false;
+		this.glowBorder = false;
 
-		glowSize = 0.0f;
-		borderSize = 0.0f;
+		this.glowSize = 0.0f;
+		this.borderSize = 0.0f;
 
-		loaded = false;
+		this.loaded = false;
 	}
 
 	public static TextBuilder newText(final String text) {
@@ -84,9 +84,9 @@ public class Text {
 	}
 
 	protected Vector2f getPosition() {
-		float scaleFactor = (currentScale - 1.0f) / 2.0f;
-		float xChange = scaleFactor * originalWidth;
-		float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1.0f;
+		final float scaleFactor = (currentScale - 1.0f) / 2.0f;
+		final float xChange = scaleFactor * originalWidth;
+		final float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1.0f;
 		return new Vector2f(currentX - xChange, currentY - yChange);
 	}
 
@@ -105,7 +105,7 @@ public class Text {
 	}
 
 	protected float calculateEdgeStart() {
-		float size = fontSize * currentScale;
+		final float size = fontSize * currentScale;
 		return 1.0f / 300.0f * size + 137.0f / 300.0f;
 	}
 

@@ -25,12 +25,12 @@ public class PlayRequest {
 	 * @param volume The volume that the sound should be played at.
 	 */
 	private PlayRequest(final Sound sound, final float volume) {
-		position = new Vector3f();
-		innerRange = 1.0f;
-		outerRange = 1.0f;
+		this.position = new Vector3f();
+		this.innerRange = 1.0f;
+		this.outerRange = 1.0f;
 
-		systemSound = true;
-		loop = false;
+		this.systemSound = true;
+		this.loop = false;
 
 		this.volume = volume * OptionsAudio.SOUND_VOLUME;
 		this.sound = sound;

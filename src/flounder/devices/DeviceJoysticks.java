@@ -42,7 +42,7 @@ public class DeviceJoysticks {
 		}
 
 		// Updates all connected Joysticks.
-		for (Joystick k : joysticks) {
+		for (final Joystick k : joysticks) {
 			if (k != null) {
 				k.update();
 			}

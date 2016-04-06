@@ -9,8 +9,8 @@ import org.lwjgl.opengl.*;
 public class GuiRenderer extends IRenderer {
 	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
 
-	private int vaoID;
-	private GuiShader shader;
+	private final GuiShader shader;
+	private final int vaoID;
 
 	private int guiCount;
 

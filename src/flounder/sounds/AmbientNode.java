@@ -36,13 +36,13 @@ public class AmbientNode {
 	 */
 	public AmbientNode(final Vector3f position, final float innerRange, final float fadeOutRange, final List<Sound> sounds) {
 		this.position = position;
-		innerRadius = new SmoothFloat(innerRange, RADIUS_CHANGE_AGIL);
-		fadeOutRadius = new SmoothFloat(fadeOutRange, RADIUS_CHANGE_AGIL);
+		this.innerRadius = new SmoothFloat(innerRange, RADIUS_CHANGE_AGIL);
+		this.fadeOutRadius = new SmoothFloat(fadeOutRange, RADIUS_CHANGE_AGIL);
 
 		this.sounds = sounds;
-		volume = 1.0f;
+		this.volume = 1.0f;
 
-		active = false;
+		this.active = false;
 	}
 
 	/**

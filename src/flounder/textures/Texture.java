@@ -14,9 +14,9 @@ public class Texture {
 	private boolean loaded;
 
 	protected Texture() {
-		hasTransparency = false;
-		numberOfRows = 1;
-		loaded = false;
+		this.hasTransparency = false;
+		this.numberOfRows = 1;
+		this.loaded = false;
 	}
 
 	/**

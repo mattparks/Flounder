@@ -13,16 +13,16 @@ public class FBOBuilder {
 	private boolean fitToScreen;
 
 	protected FBOBuilder(final int width, final int height) {
-		depthBufferType = DepthBufferType.NONE;
-		useColourBuffer = true;
-		linearFiltering = true;
-		clampEdge = true;
-		alphaChannel = false;
-		antialiased = false;
-		samples = 1;
+		this.depthBufferType = DepthBufferType.NONE;
+		this.useColourBuffer = true;
+		this.linearFiltering = true;
+		this.clampEdge = true;
+		this.alphaChannel = false;
+		this.antialiased = false;
+		this.samples = 1;
 		this.width = width;
 		this.height = height;
-		fitToScreen = false;
+		this.fitToScreen = false;
 	}
 
 	/**

@@ -44,14 +44,14 @@ public class DeviceMouse {
 		// Sets the mouse callbacks.
 		glfwSetScrollCallback(ManagerDevices.getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
-			public void invoke(long window, double xoffset, double yoffset) {
+			public void invoke(final long window, final double xoffset, final double yoffset) {
 				mouseWheel = (float) yoffset;
 			}
 		});
 
 		glfwSetMouseButtonCallback(ManagerDevices.getDisplay().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
 			@Override
-			public void invoke(long window, int button, int action, int mods) {
+			public void invoke(final long window, final int button, final int action, final int mods) {
 				// Actions: GLFW_PRESS   GLFW_RELEASE   GLFW_REPEAT
 				mouseButtons[button] = action;
 			}
@@ -59,7 +59,7 @@ public class DeviceMouse {
 
 		glfwSetCursorPosCallback(ManagerDevices.getDisplay().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
 			@Override
-			public void invoke(long window, double xpos, double ypos) {
+			public void invoke(final long window, final double xpos, final double ypos) {
 				mousePositionX = (float) (xpos / ManagerDevices.getDisplay().getWidth());
 				mousePositionY = (float) (ypos / ManagerDevices.getDisplay().getHeight());
 			}
@@ -67,7 +67,7 @@ public class DeviceMouse {
 
 		glfwSetCursorEnterCallback(ManagerDevices.getDisplay().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
 			@Override
-			public void invoke(long window, int entered) {
+			public void invoke(final long window, final int entered) {
 				displaySelected = entered == GL_TRUE;
 			}
 		});

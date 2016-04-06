@@ -8,13 +8,11 @@ import flounder.maths.vectors.*;
 import org.lwjgl.opengl.*;
 
 public class FontRenderer extends IRenderer {
-	private FontShader shader;
-
+	private final FontShader shader;
 	private int textCount;
 
 	public FontRenderer() {
 		shader = new FontShader();
-
 		textCount = 0;
 	}
 
@@ -40,22 +38,13 @@ public class FontRenderer extends IRenderer {
 		shader.start();
 	}
 
-	private void endRendering() {
-		shader.stop();
-	}
-
-	@Override
-	public void dispose() {
-		shader.dispose();
-	}
-
 	private void renderText(final Text text) {
 		textCount++;
 
 		OpenglUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenglUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
-		Vector2f textPosition = text.getPosition();
-		Colour textColour = text.getColour();
+		final Vector2f textPosition = text.getPosition();
+		final Colour textColour = text.getColour();
 		shader.aspectRatio.loadFloat(ManagerDevices.getDisplay().getAspectRatio());
 		shader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
 		shader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
@@ -64,5 +53,14 @@ public class FontRenderer extends IRenderer {
 		shader.borderSizes.loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		OpenglUtils.unbindVAO(0, 1);
+	}
+
+	private void endRendering() {
+		shader.stop();
+	}
+
+	@Override
+	public void dispose() {
+		shader.dispose();
 	}
 }

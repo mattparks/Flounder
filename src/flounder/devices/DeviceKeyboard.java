@@ -22,7 +22,7 @@ public class DeviceKeyboard {
 		// Sets the keyboards callbacks.
 		glfwSetKeyCallback(ManagerDevices.getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
 			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
+			public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
 				if (key < 0 || key > GLFW_KEY_LAST) {
 					FlounderLogger.error("Invalid action attempted with key: " + key);
 				} else {

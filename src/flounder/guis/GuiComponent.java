@@ -11,20 +11,20 @@ import java.util.*;
  * An component of a GUI. Implementations of this range from a whole GUI frame to a single button. All components can have subtract-components, and the parent component has the responsibility of keeping the subtract-components updated.
  */
 public abstract class GuiComponent {
-	private Vector2f position;
-	private Vector2f scale;
+	private final Vector2f position;
+	private final Vector2f scale;
 
-	private Vector2f relativePosition;
-	private Vector2f relativeScale;
+	private final Vector2f relativePosition;
+	private final Vector2f relativeScale;
 	private GuiComponent parent;
 
 	private boolean visible;
 
-	private List<GuiComponent> childComponents;
-	private Map<Text, Vector3f> componentTexts;
+	private final List<GuiComponent> childComponents;
+	private final Map<Text, Vector3f> componentTexts;
 
-	private List<GuiComponent> componentsToRemove;
-	private List<GuiComponent> componentsToAdd;
+	private final List<GuiComponent> componentsToRemove;
+	private final List<GuiComponent> componentsToAdd;
 
 	private boolean initialized;
 
@@ -235,8 +235,8 @@ public abstract class GuiComponent {
 	 * @param texts All the lists of texts, each associated with the font that all the texts in that list use.
 	 */
 	private void addTextsToRenderBatch(final Map<FontType, List<Text>> texts) {
-		for (Text text : componentTexts.keySet()) {
-			FontType font = text.getFontType();
+		for (final Text text : componentTexts.keySet()) {
+			final FontType font = text.getFontType();
 			List<Text> textBatch = texts.get(font);
 
 			if (textBatch == null) {
@@ -266,7 +266,7 @@ public abstract class GuiComponent {
 	}
 
 	private void removeOldComponents() {
-		for (GuiComponent component : componentsToRemove) {
+		for (final GuiComponent component : componentsToRemove) {
 			childComponents.remove(component);
 			component.delete();
 		}
@@ -274,8 +274,8 @@ public abstract class GuiComponent {
 		componentsToRemove.clear();
 	}
 
-	private void updateAndAddNewChildren(final List<GuiTexture> guiTextures, Map<FontType, List<Text>> texts) {
-		for (GuiComponent component : componentsToAdd) {
+	private void updateAndAddNewChildren(final List<GuiTexture> guiTextures, final Map<FontType, List<Text>> texts) {
+		for (final GuiComponent component : componentsToAdd) {
 			childComponents.add(component);
 			component.updateScreenSpacePosition();
 			component.update(guiTextures, texts);

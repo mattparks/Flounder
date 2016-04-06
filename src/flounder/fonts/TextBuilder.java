@@ -8,9 +8,9 @@ public class TextBuilder {
 
 	protected TextBuilder(final String text) {
 		this.text = text;
-		centered = false;
-		textSize = 1.0f;
-		font = FontManager.SEGOE_UI;
+		this.centered = false;
+		this.textSize = 1.0f;
+		this.font = FontManager.SEGOE_UI;
 	}
 
 	public Text create() {

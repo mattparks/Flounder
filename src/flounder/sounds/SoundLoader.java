@@ -72,7 +72,7 @@ public class SoundLoader {
 		AL10.alDeleteBuffers(bufferID);
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			System.err.println("Problem deleting sound buffer.");
+			FlounderLogger.error("Problem deleting sound buffer.");
 		}
 	}
 

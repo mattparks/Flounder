@@ -21,13 +21,13 @@ public class AudioController {
 	 *
 	 * @param source The sound source that this controller can control.
 	 */
-	protected AudioController(SoundSource source) {
+	protected AudioController(final SoundSource source) {
 		this.source = source;
-		active = true;
-		fading = false;
+		this.active = true;
+		this.fading = false;
 
-		finalVolume = 0.0f;
-		fadeFactor = 1.0f;
+		this.finalVolume = 0.0f;
+		this.fadeFactor = 1.0f;
 	}
 
 	/**

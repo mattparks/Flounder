@@ -35,8 +35,8 @@ public class Character {
 		this.yOffset = yOffset;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		xMaxTextureCoord = xTexSize + xTextureCoord;
-		yMaxTextureCoord = yTexSize + yTextureCoord;
+		this.xMaxTextureCoord = xTexSize + xTextureCoord;
+		this.yMaxTextureCoord = yTexSize + yTextureCoord;
 		this.xAdvance = xAdvance;
 	}
 

@@ -68,7 +68,7 @@ public class FlounderLogger {
 				for (final String line : saveData.toString().split("\n")) {
 					out.println(line);
 				}
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				System.err.println("Could not save logs!");
 				FlounderLogger.exception(e);
 			}
@@ -76,7 +76,7 @@ public class FlounderLogger {
 	}
 
 	private static String getLogsSave() throws IOException {
-		File saveDirectory = new File("logs");
+		final File saveDirectory = new File("logs");
 
 		if (!saveDirectory.exists()) {
 			System.out.println("Creating directory: " + saveDirectory);
@@ -89,9 +89,8 @@ public class FlounderLogger {
 			}
 		}
 
-		String result = saveDirectory + "/" + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.YEAR) + ".log";
-
-		File resultingFile = new File(result);
+		final String result = saveDirectory + "/" + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.YEAR) + ".log";
+		final File resultingFile = new File(result);
 
 		if (!resultingFile.exists()) {
 			resultingFile.createNewFile();

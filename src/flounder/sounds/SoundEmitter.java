@@ -48,7 +48,7 @@ public class SoundEmitter {
 	 * @return {@code true} if the sound is still being played.
 	 */
 	private boolean updateAudioController(final Entry<SoundEffect, AudioController> entry, final float delta) {
-		AudioController controller = entry.getValue();
+		final AudioController controller = entry.getValue();
 
 		if (!isInRange(entry.getKey())) {
 			controller.stop();

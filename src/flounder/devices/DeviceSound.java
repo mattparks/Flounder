@@ -13,6 +13,8 @@ import static org.lwjgl.opengl.GL11.*;
  * An Sound Device implemented using OpenAL.
  */
 public class DeviceSound {
+	// TODO: Live music player volume change.
+
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 
 	private final Vector3f cameraPosition;
@@ -26,7 +28,7 @@ public class DeviceSound {
 	protected DeviceSound() {
 		cameraPosition = new Vector3f(0.0f, 0.0f, 0.0f);
 		context = ALContext.create();
-		int alError = AL10.alGetError();
+		final int alError = AL10.alGetError();
 
 		if (alError != GL_NO_ERROR) {
 			FlounderLogger.error("OpenAL Error: " + alError);

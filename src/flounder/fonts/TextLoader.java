@@ -14,8 +14,8 @@ public class TextLoader {
 	private final MetaFile metaData;
 
 	public TextLoader(final MyFile fontSheet, final MyFile metaFile) {
-		fontTexture = Texture.newTexture(fontSheet).noFiltering().create();
-		metaData = new MetaFile(metaFile);
+		this.fontTexture = Texture.newTexture(fontSheet).noFiltering().create();
+		this.metaData = new MetaFile(metaFile);
 	}
 
 	public int getFontTextureAtlas() {
@@ -29,12 +29,12 @@ public class TextLoader {
 	}
 
 	private List<Line> createStructure(final Text text) {
-		char[] chars = text.getTextString().toCharArray();
-		List<Line> lines = new ArrayList<>();
+		final char[] chars = text.getTextString().toCharArray();
+		final List<Line> lines = new ArrayList<>();
 		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
 		Word currentWord = new Word(text.getFontSize());
 
-		for (char c : chars) {
+		for (final char c : chars) {
 			if (c == SPACE_ASCII) {
 				boolean added = currentLine.attemptToAddWord(currentWord);
 
@@ -48,7 +48,7 @@ public class TextLoader {
 				continue;
 			}
 
-			Character character = metaData.getCharacter(c);
+			final Character character = metaData.getCharacter(c);
 			currentWord.addCharacter(character);
 		}
 
@@ -57,9 +57,7 @@ public class TextLoader {
 	}
 
 	private void completeStructure(final List<Line> lines, Line currentLine, final Word currentWord, final Text text) {
-		boolean added = currentLine.attemptToAddWord(currentWord);
-
-		if (!added) {
+		if (!currentLine.attemptToAddWord(currentWord)) {
 			lines.add(currentLine);
 			currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
 			currentLine.attemptToAddWord(currentWord);
@@ -72,16 +70,16 @@ public class TextLoader {
 		setTextSettings(text, lines);
 		double cursorX = 0f;
 		double cursorY = 0f;
-		List<Float> vertices = new ArrayList<>();
-		List<Float> textureCoords = new ArrayList<>();
+		final List<Float> vertices = new ArrayList<>();
+		final List<Float> textureCoords = new ArrayList<>();
 
-		for (Line line : lines) {
+		for (final Line line : lines) {
 			if (text.isCentered()) {
 				cursorX = (line.getMaxLength() - line.getLineLength()) / 2;
 			}
 
-			for (Word word : line.getWords()) {
-				for (Character letter : word.getCharacters()) {
+			for (final Word word : line.getWords()) {
+				for (final Character letter : word.getCharacters()) {
 					addVerticesForCharacter(cursorX, cursorY, letter, text.getFontSize(), vertices);
 					addTextCoords(textureCoords, letter.getXTextureCoord(), letter.getYTextureCoord(), letter.getXMaxTextureCoord(), letter.getYMaxTextureCoord());
 					cursorX += letter.getXAdvance() * text.getFontSize();
@@ -94,9 +92,9 @@ public class TextLoader {
 			cursorY += LINE_HEIGHT * text.getFontSize();
 		}
 
-		float[] verticesArray = listToArray(vertices);
-		float[] textureArray = listToArray(textureCoords);
-		int vao = Loader.createInterleavedVAO(vertices.size() / 2, verticesArray, textureArray);
+		final float[] verticesArray = listToArray(vertices);
+		final float[] textureArray = listToArray(textureCoords);
+		final int vao = Loader.createInterleavedVAO(vertices.size() / 2, verticesArray, textureArray);
 		text.setMeshInfo(vao, vertices.size() / 2);
 	}
 
@@ -126,10 +124,10 @@ public class TextLoader {
 	}
 
 	private void addVerticesForCharacter(final double cursorX, final double cursorY, final Character character, final double fontSize, final List<Float> vertices) {
-		double x = cursorX + character.getXOffset() * fontSize;
-		double y = cursorY + character.getYOffset() * fontSize;
-		double maxX = x + character.getSizeX() * fontSize;
-		double maxY = y + character.getSizeY() * fontSize;
+		final double x = cursorX + character.getXOffset() * fontSize;
+		final double y = cursorY + character.getYOffset() * fontSize;
+		final double maxX = x + character.getSizeX() * fontSize;
+		final double maxY = y + character.getSizeY() * fontSize;
 		addVertices(vertices, x, y, maxX, maxY);
 	}
 
@@ -149,7 +147,7 @@ public class TextLoader {
 	}
 
 	private float[] listToArray(final List<Float> list) {
-		float[] array = new float[list.size()];
+		final float[] array = new float[list.size()];
 
 		for (int i = 0; i < array.length; i++) {
 			array[i] = list.get(i);

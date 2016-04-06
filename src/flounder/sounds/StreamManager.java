@@ -66,9 +66,7 @@ public class StreamManager extends Thread {
 	 * @param streamer The streamer to be updated.
 	 */
 	private void updateStreamer(final Streamer streamer) {
-		boolean stillAlive = streamer.update();
-
-		if (!stillAlive) {
+		if (!streamer.update()) {
 			toRemove.add(streamer);
 		}
 	}

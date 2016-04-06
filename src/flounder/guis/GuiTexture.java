@@ -11,8 +11,8 @@ import flounder.visual.*;
 public class GuiTexture {
 	private Texture texture;
 
-	private Vector2f position;
-	private Vector2f scale;
+	private final Vector2f position;
+	private final Vector2f scale;
 
 	private ValueDriver alphaDriver;
 

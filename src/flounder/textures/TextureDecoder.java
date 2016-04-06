@@ -37,8 +37,8 @@ public class TextureDecoder {
 
 	public TextureDecoder(final InputStream input) throws IOException {
 		this.input = input;
-		crc = new CRC32();
-		buffer = new byte[4096];
+		this.crc = new CRC32();
+		this.buffer = new byte[4096];
 
 		readFully(buffer, 0, SIGNATURE.length);
 

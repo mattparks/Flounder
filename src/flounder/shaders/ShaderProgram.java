@@ -54,10 +54,10 @@ public class ShaderProgram {
 	}
 
 	private StringBuilder loadFromFile(final MyFile file) {
-		StringBuilder shaderSource = new StringBuilder();
+		final StringBuilder shaderSource = new StringBuilder();
 
 		try {
-			BufferedReader reader = file.getReader();
+			final BufferedReader reader = file.getReader();
 			String line;
 
 			while ((line = reader.readLine()) != null) {
@@ -73,7 +73,7 @@ public class ShaderProgram {
 	}
 
 	private StringBuilder loadFromString(final String string) {
-		StringBuilder shaderSource = new StringBuilder();
+		final StringBuilder shaderSource = new StringBuilder();
 
 		for (String s : string.split("\n")) {
 			shaderSource.append(s + "\n");
@@ -83,7 +83,7 @@ public class ShaderProgram {
 	}
 
 	private int loadShader(final StringBuilder source, final boolean vertexShader, final int type) {
-		int shaderID = GL20.glCreateShader(type);
+		final int shaderID = GL20.glCreateShader(type);
 		GL20.glShaderSource(shaderID, readShader(source, vertexShader, true));
 		GL20.glCompileShader(shaderID);
 
@@ -97,7 +97,7 @@ public class ShaderProgram {
 	}
 
 	private StringBuilder readShader(final StringBuilder source, final boolean vertexShader, final boolean addToLayouts) {
-		StringBuilder shaderSource = new StringBuilder();
+		final StringBuilder shaderSource = new StringBuilder();
 
 		for (String line : source.toString().split("\n")) {
 			if (line.contains("varying")) {
@@ -111,7 +111,7 @@ public class ShaderProgram {
 			if (line.contains("#include")) {
 				String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
 				included = included.substring("#include".length(), included.length());
-				StringBuilder includedString = readShader(loadFromFile(new MyFile(included)), true, false);
+				final StringBuilder includedString = readShader(loadFromFile(new MyFile(included)), true, false);
 				shaderSource.append(includedString);
 			} else if (line.replaceAll("\\s+", "").startsWith("layout") && addToLayouts) {
 				if (line.contains("location")) {
@@ -144,9 +144,9 @@ public class ShaderProgram {
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
 
-		for (String l : layoutLocations) {
+		for (final String l : layoutLocations) {
 			String locationName = l.substring(l.lastIndexOf(" ") + 1, l.length() - 1);
-			int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
+			final int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
 			GL20.glBindAttribLocation(programID, locationValue, locationName);
 		}
 
@@ -158,9 +158,9 @@ public class ShaderProgram {
 
 		start();
 
-		for (String b : layoutBindings) {
+		for (final String b : layoutBindings) {
 			String bindingName = b.substring(b.lastIndexOf(" ") + 1, b.length() - 1);
-			int bindingValue = Integer.parseInt(b.substring(findCharPos(b, '=') + 1, findCharPos(b, ')')).replaceAll("\\s+", ""));
+			final int bindingValue = Integer.parseInt(b.substring(findCharPos(b, '=') + 1, findCharPos(b, ')')).replaceAll("\\s+", ""));
 			UniformSampler sampler = new UniformSampler(bindingName);
 			sampler.storeUniformLocation(programID);
 			sampler.loadTexUnit(bindingValue);

@@ -22,6 +22,8 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Manages the creation, updating and destruction of the display, as well as timing and frame times.
  */
 public class DeviceDisplay {
+	// TODO: Display in fullscreen, put image in canvas.
+
 	private final GLFWWindowCloseCallback callbackWindowClose;
 	private final GLFWWindowFocusCallback callbackWindowFocus;
 	private final GLFWWindowPosCallback callbackWindowPos;
@@ -134,21 +136,21 @@ public class DeviceDisplay {
 		// Sets the displays callbacks.
 		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
 			@Override
-			public void invoke(long window) {
+			public void invoke(final long window) {
 				closeRequested = true;
 			}
 		});
 
 		glfwSetWindowFocusCallback(window, callbackWindowFocus = new GLFWWindowFocusCallback() {
 			@Override
-			public void invoke(long window, int focused) {
+			public void invoke(final long window, final int focused) {
 				inFocus = focused == GL_TRUE;
 			}
 		});
 
 		glfwSetWindowPosCallback(window, callbackWindowPos = new GLFWWindowPosCallback() {
 			@Override
-			public void invoke(long window, int xpos, int ypos) {
+			public void invoke(final long window, final int xpos, final int ypos) {
 				positionX = xpos;
 				positionY = ypos;
 			}
@@ -156,7 +158,7 @@ public class DeviceDisplay {
 
 		glfwSetWindowSizeCallback(window, callbackWindowSize = new GLFWWindowSizeCallback() {
 			@Override
-			public void invoke(long window, int width, int height) {
+			public void invoke(final long window, final int width, final int height) {
 				DeviceDisplay.this.width = width;
 				DeviceDisplay.this.height = height;
 			}
@@ -164,7 +166,7 @@ public class DeviceDisplay {
 
 		glfwSetFramebufferSizeCallback(window, callbackFramebufferSize = new GLFWFramebufferSizeCallback() {
 			@Override
-			public void invoke(long window, int width, int height) {
+			public void invoke(final long window, final int width, final int height) {
 				glViewport(0, 0, width, height);
 			}
 		});
@@ -217,9 +219,9 @@ public class DeviceDisplay {
 	}
 
 	private BufferedImage updateBufferedImage() { // TODO Update a BufferedImage!
-		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
+		final ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
 		GL11.glReadPixels(0, 0, getWidth(), getHeight(), GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, buffer);
-		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+		final BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int y = 0; y < image.getHeight(); y++) {
@@ -233,11 +235,11 @@ public class DeviceDisplay {
 		}
 
 		// Creates the transformation direction (horizontal).
-		AffineTransform at = AffineTransform.getScaleInstance(1, -1);
+		final AffineTransform at = AffineTransform.getScaleInstance(1, -1);
 		at.translate(0, -image.getHeight(null));
 
 		// Applies transformation.
-		AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		final AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 		return opRotated.filter(image, null);
 	}
 
@@ -273,8 +275,8 @@ public class DeviceDisplay {
 			}
 		}
 
-		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
-		String format = "png"; // "PNG" or "JPG".
+		final File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
+		final String format = "png"; // "PNG" or "JPG".
 
 		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
 
@@ -373,7 +375,6 @@ public class DeviceDisplay {
 	public void setFullscreen(final boolean fullscreen) {
 		FlounderLogger.log(this.fullscreen && !fullscreen ? "Display going windowed." : !this.fullscreen && fullscreen ? "Display going fullscreen." : "");
 		this.fullscreen = fullscreen;
-		// TODO: Put display in fullscreen!
 		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE);
 	}
 

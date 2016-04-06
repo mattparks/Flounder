@@ -6,8 +6,8 @@ import flounder.maths.vectors.*;
  * Represents a game entry point for the engine to run from.
  */
 public abstract class IGame {
-	public Vector3f focusPosition;
-	public Vector3f focusRotation;
+	public final Vector3f focusPosition;
+	public final Vector3f focusRotation;
 	public boolean gamePaused;
 	public float screenBlur;
 

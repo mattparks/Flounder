@@ -16,9 +16,9 @@ public class Word {
 	 * @param fontSize The font size of the text which this word is in.
 	 */
 	protected Word(final double fontSize) {
-		characters = new ArrayList<>();
+		this.characters = new ArrayList<>();
 		this.fontSize = fontSize;
-		width = 0.0;
+		this.width = 0.0;
 	}
 
 	/**

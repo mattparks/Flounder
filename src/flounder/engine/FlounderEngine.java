@@ -60,8 +60,6 @@ public class FlounderEngine {
 			delta = 0.0f;
 			time = 0.0f;
 
-			FontManager.init();
-			// GuiManager.init();
 			(FlounderEngine.module = module).init();
 			initialized = true;
 		}

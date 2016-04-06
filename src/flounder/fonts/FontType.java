@@ -18,7 +18,7 @@ public class FontType {
 		loader = new TextLoader(textureAtlas, fontFile);
 	}
 
-	protected void loadText(Text text) {
+	protected void loadText(final Text text) {
 		loader.loadTextIntoMemory(text);
 	}
 

@@ -29,12 +29,12 @@ public class Sound {
 	 * @param volume Used to change the base volume of a sound effect.
 	 */
 	private Sound(final MyFile soundFile, final float volume) {
-		file = soundFile;
+		this.file = soundFile;
 		this.volume = volume;
-		loaded = false;
+		this.loaded = false;
 
-		totalBytes = 0;
-		bytesRead = 0;
+		this.totalBytes = 0;
+		this.bytesRead = 0;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class Sound {
 	 * @return A new sound object which represents the loaded sound.
 	 */
 	public static Sound loadSoundNow(final MyFile file, final float volume) {
-		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
+		final SoftReference<Sound> ref = loadedSounds.get(file.getPath());
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
@@ -69,7 +69,7 @@ public class Sound {
 	 * @return A new sound object which represents the loaded sound.
 	 */
 	public static Sound loadSoundInBackground(final MyFile file, final float volume) {
-		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
+		final SoftReference<Sound> ref = loadedSounds.get(file.getPath());
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {

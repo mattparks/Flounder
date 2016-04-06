@@ -21,7 +21,7 @@ public class TextureLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void executeGlRequest() {
-		int texID = TextureManager.loadTextureToOpenGL(data, builder);
+		final int texID = TextureManager.loadTextureToOpenGL(data, builder);
 		texture.setTextureID(texID);
 		texture.setFile(builder.getFile());
 	}
