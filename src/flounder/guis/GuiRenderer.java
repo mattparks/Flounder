@@ -4,7 +4,8 @@ import flounder.engine.*;
 import flounder.engine.profiling.*;
 import flounder.loaders.*;
 import flounder.maths.vectors.*;
-import org.lwjgl.opengl.*;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class GuiRenderer extends IRenderer {
 	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
@@ -60,7 +61,7 @@ public class GuiRenderer extends IRenderer {
 		shader.transform.loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
 		shader.alpha.loadFloat(gui.getAlpha());
 		shader.flipTexture.loadBoolean(gui.isFlipTexture());
-		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
 		OpenglUtils.unbindVAO(0);
 	}
 }

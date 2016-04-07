@@ -1,9 +1,13 @@
 package flounder.textures.fbos;
 
 import flounder.devices.*;
-import org.lwjgl.opengl.*;
 
 import java.nio.*;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL30.*;
 
 public class FBO {
 	private FBOBuilder.DepthBufferType depthBufferType;
@@ -59,57 +63,57 @@ public class FBO {
 	}
 
 	private void createFBO(final boolean useColourBuffer) {
-		frameBuffer = GL30.glGenFramebuffers();
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-		GL11.glDrawBuffer(useColourBuffer ? GL30.GL_COLOR_ATTACHMENT0 : GL11.GL_FALSE);
+		frameBuffer = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+		glDrawBuffer(useColourBuffer ? GL_COLOR_ATTACHMENT0 : GL_FALSE);
 	}
 
 	private void createTextureAttachment(final boolean linear, final boolean clamp) {
-		colourTexture = GL11.glGenTextures();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, colourTexture);
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, alphaChannel ? GL11.GL_RGBA : GL11.GL_RGB, width, height, 0, alphaChannel ? GL11.GL_RGBA : GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, linear ? GL11.GL_LINEAR : GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, linear ? GL11.GL_LINEAR : GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, clamp ? GL12.GL_CLAMP_TO_EDGE : GL11.GL_REPEAT);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, clamp ? GL12.GL_CLAMP_TO_EDGE : GL11.GL_REPEAT);
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colourTexture, 0);
+		colourTexture = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, colourTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, alphaChannel ? GL_RGBA : GL_RGB, width, height, 0, alphaChannel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR : GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colourTexture, 0);
 	}
 
 	private void createDepthBufferAttachment(final int samples) {
-		depthBuffer = GL30.glGenRenderbuffers();
-		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, depthBuffer);
+		depthBuffer = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 
 		if (antialiased) {
-			GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, samples, GL14.GL_DEPTH_COMPONENT24, width, height);
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT24, width, height);
 		} else {
-			GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
 		}
 
-		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER, depthBuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 	}
 
 	private void createDepthTextureAttachment() {
-		depthTexture = GL11.glGenTextures();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT24, width, height, 0, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, (ByteBuffer) null);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture, 0);
+		depthTexture = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, depthTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	}
 
 	private void attachMutlisampleColourBuffer(final int samples) {
-		colourBuffer = GL30.glGenRenderbuffers();
-		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, colourBuffer);
-		GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, samples, alphaChannel ? GL11.GL_RGBA8 : GL11.GL_RGB8, width, height);
-		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_RENDERBUFFER, colourBuffer);
+		colourBuffer = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, colourBuffer);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, alphaChannel ? GL_RGBA8 : GL_RGB8, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colourBuffer);
 	}
 
 	/**
 	 * Unbinds the FBO so that other rendering objects can be used.
 	 */
 	public void unbindFrameBuffer() {
-		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		GL11.glViewport(0, 0, ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight());
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight());
 	}
 
 	/**
@@ -129,9 +133,9 @@ public class FBO {
 	 */
 	public void bindFrameBuffer() {
 		updateSize();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
-		GL11.glViewport(0, 0, width, height);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
+		glViewport(0, 0, width, height);
 	}
 
 	private void updateSize() {
@@ -147,21 +151,21 @@ public class FBO {
 	 * Deletes the FBO and its attachments.
 	 */
 	public void delete() {
-		GL30.glDeleteFramebuffers(frameBuffer);
-		GL11.glDeleteTextures(colourTexture);
-		GL11.glDeleteTextures(depthTexture);
-		GL30.glDeleteRenderbuffers(depthBuffer);
-		GL30.glDeleteRenderbuffers(colourBuffer);
+		glDeleteFramebuffers(frameBuffer);
+		glDeleteTextures(colourTexture);
+		glDeleteTextures(depthTexture);
+		glDeleteRenderbuffers(depthBuffer);
+		glDeleteRenderbuffers(colourBuffer);
 	}
 
 	/**
 	 * Renders the colour buffer to the display.
 	 */
 	public void blitToScreen() {
-		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, 0);
-		GL11.glDrawBuffer(GL11.GL_BACK);
-		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBuffer);
-		GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight(), GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glDrawBuffer(GL_BACK);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	/**
@@ -171,9 +175,9 @@ public class FBO {
 	 */
 	public void resolveMultisampledFBO(final FBO outputFBO) {
 		outputFBO.updateSize();
-		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
-		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBuffer);
-		GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, outputFBO.width, outputFBO.height, 16640, GL11.GL_NEAREST);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, outputFBO.width, outputFBO.height, 16640, GL_NEAREST);
 		unbindFrameBuffer();
 	}
 

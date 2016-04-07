@@ -183,8 +183,8 @@ public abstract class GuiComponent {
 	 */
 	protected boolean isMouseOver() {
 		if (ManagerDevices.getMouse().isDisplaySelected()) {
-			if (ManagerDevices.getMouse().getPositionX() >= position.x && ManagerDevices.getMouse().getPositionX() <= position.x + scale.x) {
-				if (ManagerDevices.getMouse().getPositionY() >= position.y && ManagerDevices.getMouse().getPositionY() <= position.y + scale.y) {
+			if (GuiManager.getSelector().getCursorX() >= position.x && GuiManager.getSelector().getCursorX() <= position.x + scale.x) {
+				if (GuiManager.getSelector().getCursorY() >= position.y && GuiManager.getSelector().getCursorY() <= position.y + scale.y) {
 					return true;
 				}
 			}

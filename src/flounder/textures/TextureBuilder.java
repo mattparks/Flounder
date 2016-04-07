@@ -110,7 +110,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in seperate thread!");
+			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in separate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			final TextureLoadRequest request = new TextureLoadRequest(data, this);

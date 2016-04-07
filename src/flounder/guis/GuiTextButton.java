@@ -21,8 +21,6 @@ public class GuiTextButton extends GuiComponent {
 	private boolean mouseOver;
 	private Listener listenerLeft;
 	private Listener listenerRight;
-	private MouseButton mouseLeft;
-	private MouseButton mouseRight;
 
 	private Sound mouseLeftClickSound;
 	private Sound mouseRightClickSound;
@@ -30,8 +28,6 @@ public class GuiTextButton extends GuiComponent {
 	public GuiTextButton(final Text text) {
 		this.text = text;
 		mouseOver = false;
-		mouseLeft = new MouseButton(GLFW_MOUSE_BUTTON_LEFT);
-		mouseRight = new MouseButton(GLFW_MOUSE_BUTTON_RIGHT);
 
 		mouseLeftClickSound = MOUSE_DEFAULT_CLICK_SOUND;
 		mouseRightClickSound = MOUSE_DEFAULT_CLICK_SOUND;
@@ -66,12 +62,12 @@ public class GuiTextButton extends GuiComponent {
 			mouseOver = false;
 		}
 
-		if (isMouseOver() && mouseLeft.wasDown() && listenerLeft != null) {
+		if (isMouseOver() && GuiManager.getSelector().isLeftClick() && listenerLeft != null) {
 			ManagerDevices.getSound().playSystemSound(mouseLeftClickSound);
 			listenerLeft.eventOccurred();
 		}
 
-		if (isMouseOver() && mouseRight.wasDown() && listenerRight != null) {
+		if (isMouseOver() && GuiManager.getSelector().isRightClick() && listenerRight != null) {
 			ManagerDevices.getSound().playSystemSound(mouseRightClickSound);
 			listenerRight.eventOccurred();
 		}

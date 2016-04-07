@@ -5,7 +5,8 @@ import flounder.engine.*;
 import flounder.engine.profiling.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
-import org.lwjgl.opengl.*;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class FontRenderer extends IRenderer {
 	private final FontShader shader;
@@ -60,7 +61,7 @@ public class FontRenderer extends IRenderer {
 		shader.borderColour.loadVec3(text.getBorderColour());
 		shader.edgeData.loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
 		shader.borderSizes.loadVec2(text.getTotalBorderSize(), text.getGlowSize());
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
+		glDrawArrays(GL_TRIANGLES, 0, text.getVertexCount());
 		OpenglUtils.unbindVAO(0, 1);
 	}
 }

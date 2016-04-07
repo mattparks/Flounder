@@ -2,10 +2,12 @@ package flounder.shaders;
 
 import flounder.engine.*;
 import flounder.resources.*;
-import org.lwjgl.opengl.*;
 
 import java.io.*;
 import java.util.*;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 /**
  * Represents a user-defined program designed to run on the graphics processor and manages loading, starting, stopping and cleaning uo.
@@ -31,7 +33,7 @@ public class ShaderProgram {
 			layoutLocations = new ArrayList<>();
 			layoutBindings = new ArrayList<>();
 			this.shaderName = shaderName;
-			initShader(loadShader(loadFromFile(vertexFile), true, GL20.GL_VERTEX_SHADER), loadShader(loadFromFile(fragmentFile), false, GL20.GL_FRAGMENT_SHADER));
+			initShader(loadShader(loadFromFile(vertexFile), true, GL_VERTEX_SHADER), loadShader(loadFromFile(fragmentFile), false, GL_FRAGMENT_SHADER));
 			initialized = true;
 		}
 	}
@@ -48,7 +50,7 @@ public class ShaderProgram {
 			layoutLocations = new ArrayList<>();
 			layoutBindings = new ArrayList<>();
 			this.shaderName = shaderName;
-			initShader(loadShader(loadFromString(vertexString), true, GL20.GL_VERTEX_SHADER), loadShader(loadFromString(fragmentString), false, GL20.GL_FRAGMENT_SHADER));
+			initShader(loadShader(loadFromString(vertexString), true, GL_VERTEX_SHADER), loadShader(loadFromString(fragmentString), false, GL_FRAGMENT_SHADER));
 			initialized = true;
 		}
 	}
@@ -83,12 +85,12 @@ public class ShaderProgram {
 	}
 
 	private int loadShader(final StringBuilder source, final boolean vertexShader, final int type) {
-		final int shaderID = GL20.glCreateShader(type);
-		GL20.glShaderSource(shaderID, readShader(source, vertexShader, true));
-		GL20.glCompileShader(shaderID);
+		final int shaderID = glCreateShader(type);
+		glShaderSource(shaderID, readShader(source, vertexShader, true));
+		glCompileShader(shaderID);
 
-		if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-			FlounderLogger.error(GL20.glGetShaderInfoLog(shaderID, 500));
+		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
+			FlounderLogger.error(glGetShaderInfoLog(shaderID, 500));
 			FlounderLogger.error("Could not compile shader " + shaderName);
 			System.exit(-1);
 		}
@@ -140,21 +142,21 @@ public class ShaderProgram {
 	}
 
 	private void initShader(final int vertexShaderID, final int fragmentShaderID) {
-		programID = GL20.glCreateProgram();
-		GL20.glAttachShader(programID, vertexShaderID);
-		GL20.glAttachShader(programID, fragmentShaderID);
+		programID = glCreateProgram();
+		glAttachShader(programID, vertexShaderID);
+		glAttachShader(programID, fragmentShaderID);
 
 		for (final String l : layoutLocations) {
 			String locationName = l.substring(l.lastIndexOf(" ") + 1, l.length() - 1);
 			final int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
-			GL20.glBindAttribLocation(programID, locationValue, locationName);
+			glBindAttribLocation(programID, locationValue, locationName);
 		}
 
-		GL20.glLinkProgram(programID);
-		GL20.glDetachShader(programID, vertexShaderID);
-		GL20.glDetachShader(programID, fragmentShaderID);
-		GL20.glDeleteShader(vertexShaderID);
-		GL20.glDeleteShader(fragmentShaderID);
+		glLinkProgram(programID);
+		glDetachShader(programID, vertexShaderID);
+		glDetachShader(programID, fragmentShaderID);
+		glDeleteShader(vertexShaderID);
+		glDeleteShader(fragmentShaderID);
 
 		start();
 
@@ -180,21 +182,21 @@ public class ShaderProgram {
 			uniform.storeUniformLocation(programID);
 		}
 
-		GL20.glValidateProgram(programID);
+		glValidateProgram(programID);
 	}
 
 	/**
 	 * Starts the shader program.
 	 */
 	public void start() {
-		GL20.glUseProgram(programID);
+		glUseProgram(programID);
 	}
 
 	/**
 	 * Stops the shader program.
 	 */
 	public void stop() {
-		GL20.glUseProgram(0);
+		glUseProgram(0);
 	}
 
 	/**
@@ -202,8 +204,8 @@ public class ShaderProgram {
 	 */
 	public void dispose() {
 		if (initialized) {
-			GL20.glUseProgram(0);
-			GL20.glDeleteProgram(programID);
+			glUseProgram(0);
+			glDeleteProgram(programID);
 			initialized = false;
 		}
 	}

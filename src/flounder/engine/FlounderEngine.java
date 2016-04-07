@@ -17,6 +17,7 @@ import java.awt.*;
 public class FlounderEngine {
 	private static boolean initialized;
 	private static IModule module;
+	//private static Thread gameThread;
 
 	private static float targetFPS;
 	private static float currentFrameTime;
@@ -62,6 +63,7 @@ public class FlounderEngine {
 			time = 0.0f;
 
 			(FlounderEngine.module = module).init();
+		//	gameThread = new Thread("GameLoop");
 			initialized = true;
 		}
 	}

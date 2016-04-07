@@ -4,7 +4,6 @@ import flounder.engine.*;
 import flounder.engine.profiling.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 
 import javax.imageio.*;
 import java.awt.*;
@@ -15,6 +14,7 @@ import java.nio.*;
 import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -75,9 +75,9 @@ public class DeviceDisplay {
 
 		// Configures the window.
 		glfwDefaultWindowHints();
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Only 3.2 and above.
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
 		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
 		glfwWindowHint(GLFW_SAMPLES, this.samples);
@@ -94,6 +94,8 @@ public class DeviceDisplay {
 		// Create a windowed mode window and its OpenGL context.
 		window = glfwCreateWindow(this.width, this.height, this.title, this.fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 
+		glfwSetWindowAspectRatio(window, 3, 2);
+
 		// Sets the display to fullscreen or windowed.
 		setFullscreen(this.fullscreen);
 
@@ -108,7 +110,7 @@ public class DeviceDisplay {
 		glfwMakeContextCurrent(window);
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
-		GL.createCapabilities();
+		createCapabilities();
 
 		// Gets any OpenGL errors.
 		final long glError = glGetError();
@@ -220,17 +222,13 @@ public class DeviceDisplay {
 
 	private BufferedImage updateBufferedImage() { // TODO Update a BufferedImage!
 		final ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
-		GL11.glReadPixels(0, 0, getWidth(), getHeight(), GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, buffer);
+		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGB, GL_UNSIGNED_BYTE, buffer);
 		final BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int y = 0; y < image.getHeight(); y++) {
 				int i = (x + getWidth() * y) * 3;
-				int r = buffer.get(i) & 0xFF;
-				int g = buffer.get(i + 1) & 0xFF;
-				int b = buffer.get(i + 2) & 0xFF;
-				int rgb = ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (b & 0x0ff);
-				image.setRGB(x, y, rgb);
+				image.setRGB(x, y, (((buffer.get(i) & 0xFF) & 0x0ff) << 16) | (((buffer.get(i + 1) & 0xFF) & 0x0ff) << 8) | ((buffer.get(i + 2) & 0xFF) & 0x0ff));
 			}
 		}
 
