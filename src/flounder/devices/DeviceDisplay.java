@@ -99,6 +99,9 @@ public class DeviceDisplay {
 		// Sets the display to fullscreen or windowed.
 		setFullscreen(this.fullscreen);
 
+		// Hides the mouse cursor.
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
 		// Gets any window errors.
 		if (window == NULL) {
 			FlounderLogger.error("Could not create the window!");
