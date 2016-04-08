@@ -17,9 +17,11 @@ public class GuiSelector {
 
 	private float cursorX, cursorY;
 	private boolean leftClick, rightClick;
+	private boolean leftWasClick, rightWasClick;
 
 	private MouseButton mouseLeft;
 	private MouseButton mouseRight;
+	private int selectedJoystick;
 	private JoystickAxis joystickAxisX;
 	private JoystickAxis joystickAxisY;
 	private JoystickButton joystickLeft;
@@ -33,22 +35,31 @@ public class GuiSelector {
 
 		mouseLeft = new MouseButton(GLFW_MOUSE_BUTTON_LEFT);
 		mouseRight = new MouseButton(GLFW_MOUSE_BUTTON_RIGHT);
-		joystickAxisX = new JoystickAxis(0, 0);
-		joystickAxisY = new JoystickAxis(0, 1);
-		joystickLeft = new JoystickButton(0, 0);
-		joystickRight = new JoystickButton(0, 1);
+	}
+
+	public void initJoysticks(final int joystick, final int joystickLeftClick, final int joystickRightClick, final int joystickAxisX, final int joystickAxisY) {
+		this.joystickAxisX = new JoystickAxis(joystick, joystickAxisX);
+		this.joystickAxisY = new JoystickAxis(joystick, joystickAxisY);
+		this.joystickLeft = new JoystickButton(joystick, joystickLeftClick);
+		this.joystickRight = new JoystickButton(joystick, joystickRightClick);
 	}
 
 	protected void update() {
-		if (ManagerDevices.getJoysticks().isConnected(0)) {
-			if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
-				cursorX += joystickAxisX.getAmount() * 0.3f * FlounderEngine.getDelta();
-				cursorY += joystickAxisY.getAmount() * 0.3f * FlounderEngine.getDelta();
-				cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
-				cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
+		if (ManagerDevices.getJoysticks().isConnected(selectedJoystick)) {
+			if (joystickAxisX != null && joystickAxisY != null) {
+				if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
+						cursorX += joystickAxisX.getAmount() * 0.3f * FlounderEngine.getDelta();
+						cursorY += joystickAxisY.getAmount() * 0.3f * FlounderEngine.getDelta();
+						cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
+						cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
+				}
+			}
 
+			if (joystickLeft != null && joystickRight != null) {
 				leftClick = joystickLeft.isDown();
 				rightClick = joystickRight.isDown();
+				leftWasClick = joystickLeft.wasDown();
+				rightWasClick = joystickRight.wasDown();
 			}
 		} else {
 			cursorX = ManagerDevices.getMouse().getPositionX();
@@ -56,12 +67,14 @@ public class GuiSelector {
 
 			leftClick = mouseLeft.isDown();
 			rightClick = mouseRight.isDown();
+			leftWasClick = mouseLeft.wasDown();
+			rightWasClick = mouseRight.wasDown();
 		}
 
-		FlounderProfiler.add("Gui", "SelectorX", cursorX);
-		FlounderProfiler.add("Gui", "SelectorY", cursorY);
-		FlounderProfiler.add("Gui", "Click Left", leftClick);
-		FlounderProfiler.add("Gui", "Click Right", rightClick);
+		FlounderProfiler.add("GUI", "SelectorX", cursorX);
+		FlounderProfiler.add("GUI", "SelectorY", cursorY);
+		FlounderProfiler.add("GUI", "Click Left", leftClick);
+		FlounderProfiler.add("GUI", "Click Right", rightClick);
 
 	}
 
@@ -79,5 +92,13 @@ public class GuiSelector {
 
 	public boolean isRightClick() {
 		return rightClick;
+	}
+
+	public boolean wasLeftClick() {
+		return leftWasClick;
+	}
+
+	public boolean wasRightClick() {
+		return rightWasClick;
 	}
 }

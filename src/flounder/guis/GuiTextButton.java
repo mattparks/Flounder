@@ -62,12 +62,12 @@ public class GuiTextButton extends GuiComponent {
 			mouseOver = false;
 		}
 
-		if (isMouseOver() && GuiManager.getSelector().isLeftClick() && listenerLeft != null) {
+		if (isMouseOver() && GuiManager.getSelector().wasLeftClick() && listenerLeft != null) {
 			ManagerDevices.getSound().playSystemSound(mouseLeftClickSound);
 			listenerLeft.eventOccurred();
 		}
 
-		if (isMouseOver() && GuiManager.getSelector().isRightClick() && listenerRight != null) {
+		if (isMouseOver() && GuiManager.getSelector().wasRightClick() && listenerRight != null) {
 			ManagerDevices.getSound().playSystemSound(mouseRightClickSound);
 			listenerRight.eventOccurred();
 		}

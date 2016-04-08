@@ -19,7 +19,7 @@ public class SoundSource {
 	 */
 	protected SoundSource() {
 		sourceID = createSource();
-		volume = 1;
+		volume = 1.0f;
 		active = false;
 
 		AL10.alSource3f(sourceID, AL10.AL_POSITION, 0.0f, 0.0f, 0.0f);
@@ -45,8 +45,8 @@ public class SoundSource {
 	 * @param radius - the range of the sound. Outside this range the sound can't be heard. Between the position of the source and the outer radius the volume of the sound decreases linearly.
 	 */
 	protected void setRange(final float radius) {
-		AL10.alSourcef(sourceID, AL10.AL_REFERENCE_DISTANCE, 1);
-		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 1);
+		AL10.alSourcef(sourceID, AL10.AL_REFERENCE_DISTANCE, 1.0f);
+		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 1.0f);
 		AL10.alSourcef(sourceID, AL10.AL_MAX_DISTANCE, radius);
 	}
 
@@ -65,8 +65,8 @@ public class SoundSource {
 	 * @param secondaryRadius The outer range.
 	 */
 	protected void setRanges(final float primaryRadius, final float secondaryRadius) {
-		AL10.alSourcef(sourceID, AL10.AL_REFERENCE_DISTANCE, (primaryRadius < 1) ? 1 : primaryRadius);
-		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 1);
+		AL10.alSourcef(sourceID, AL10.AL_REFERENCE_DISTANCE, (primaryRadius < 1.0f) ? 1.0f : primaryRadius);
+		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 1.0f);
 		AL10.alSourcef(sourceID, AL10.AL_MAX_DISTANCE, secondaryRadius);
 	}
 

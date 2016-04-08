@@ -182,13 +182,13 @@ public abstract class GuiComponent {
 	 * @return {@code true} if the mouse cursor is currently over this component.
 	 */
 	protected boolean isMouseOver() {
-		if (ManagerDevices.getMouse().isDisplaySelected()) {
+	//	if (ManagerDevices.getMouse().isDisplaySelected()) {
 			if (GuiManager.getSelector().getCursorX() >= position.x && GuiManager.getSelector().getCursorX() <= position.x + scale.x) {
 				if (GuiManager.getSelector().getCursorY() >= position.y && GuiManager.getSelector().getCursorY() <= position.y + scale.y) {
 					return true;
 				}
 			}
-		}
+	//	}
 
 		return false;
 	}
