@@ -2,14 +2,11 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.fonts.*;
-import flounder.inputs.*;
 import flounder.resources.*;
 import flounder.sounds.*;
 import flounder.visual.*;
 
 import java.util.*;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class GuiTextButton extends GuiComponent {
 	private static final float CHANGE_TIME = 0.15f;
@@ -65,11 +62,13 @@ public class GuiTextButton extends GuiComponent {
 		if (isMouseOver() && GuiManager.getSelector().wasLeftClick() && listenerLeft != null) {
 			ManagerDevices.getSound().playSystemSound(mouseLeftClickSound);
 			listenerLeft.eventOccurred();
+			GuiManager.getSelector().cancelWasEvent();
 		}
 
 		if (isMouseOver() && GuiManager.getSelector().wasRightClick() && listenerRight != null) {
 			ManagerDevices.getSound().playSystemSound(mouseRightClickSound);
 			listenerRight.eventOccurred();
+			GuiManager.getSelector().cancelWasEvent();
 		}
 	}
 

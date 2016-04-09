@@ -6,15 +6,12 @@ import flounder.engine.profiling.*;
 import flounder.inputs.*;
 import flounder.maths.*;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * Represents a virtual cursor that will be used to determine if a GUI action was preformed by a device.
  */
 public class GuiSelector {
-	// TODO: Joysticks.
-
 	private float cursorX, cursorY;
 	private boolean leftClick, rightClick;
 	private boolean leftWasClick, rightWasClick;
@@ -38,6 +35,7 @@ public class GuiSelector {
 	}
 
 	public void initJoysticks(final int joystick, final int joystickLeftClick, final int joystickRightClick, final int joystickAxisX, final int joystickAxisY) {
+		this.selectedJoystick = joystick;
 		this.joystickAxisX = new JoystickAxis(joystick, joystickAxisX);
 		this.joystickAxisY = new JoystickAxis(joystick, joystickAxisY);
 		this.joystickLeft = new JoystickButton(joystick, joystickLeftClick);
@@ -48,10 +46,10 @@ public class GuiSelector {
 		if (ManagerDevices.getJoysticks().isConnected(selectedJoystick)) {
 			if (joystickAxisX != null && joystickAxisY != null) {
 				if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
-						cursorX += joystickAxisX.getAmount() * 0.3f * FlounderEngine.getDelta();
-						cursorY += joystickAxisY.getAmount() * 0.3f * FlounderEngine.getDelta();
-						cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
-						cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
+					cursorX += (joystickAxisX.getAmount()) * 0.5f * FlounderEngine.getDelta();
+					cursorY += (joystickAxisY.getAmount()) * 0.5f * FlounderEngine.getDelta();
+					cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
+					cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
 				}
 			}
 
@@ -71,11 +69,12 @@ public class GuiSelector {
 			rightWasClick = mouseRight.wasDown();
 		}
 
-		FlounderProfiler.add("GUI", "SelectorX", cursorX);
-		FlounderProfiler.add("GUI", "SelectorY", cursorY);
-		FlounderProfiler.add("GUI", "Click Left", leftClick);
-		FlounderProfiler.add("GUI", "Click Right", rightClick);
-
+		if (FlounderProfiler.isOpen()) {
+			FlounderProfiler.add("GUI", "SelectorX", cursorX);
+			FlounderProfiler.add("GUI", "SelectorY", cursorY);
+			FlounderProfiler.add("GUI", "Click Left", leftClick);
+			FlounderProfiler.add("GUI", "Click Right", rightClick);
+		}
 	}
 
 	public float getCursorX() {
@@ -92,6 +91,11 @@ public class GuiSelector {
 
 	public boolean isRightClick() {
 		return rightClick;
+	}
+
+	public void cancelWasEvent() {
+		leftWasClick = false;
+		rightWasClick = false;
 	}
 
 	public boolean wasLeftClick() {

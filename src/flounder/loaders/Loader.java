@@ -100,7 +100,7 @@ public class Loader {
 
 	public static int createEmptyVBO(int floatCount) {
 		int bufferObjectID = glGenBuffers();
-		// vaoCache.get(0).add(bufferObjectID); // TODO
+		// vaoCache.get(0).add(bufferObjectID); // No VAO to add to...
 		glBindBuffer(GL_ARRAY_BUFFER, bufferObjectID);
 		glBufferData(GL_ARRAY_BUFFER, floatCount * 4, GL_STREAM_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -116,7 +116,7 @@ public class Loader {
 		glBindVertexArray(0);
 	}
 
-	public static void updateVBO(int vbo, float[] data, FloatBuffer buffer) { // refillVBOWithData
+	public static void updateVBO(int vbo, float[] data, FloatBuffer buffer) {
 		buffer.clear();
 		buffer.put(data);
 		buffer.flip();

@@ -1,7 +1,8 @@
 package flounder.sounds;
 
 import flounder.maths.vectors.*;
-import org.lwjgl.openal.*;
+
+import static org.lwjgl.openal.AL10.*;
 
 /**
  * Sound sources are what play the sounds in OpenAL. This class represents one source, capable of playing one sound at a time.
@@ -22,19 +23,19 @@ public class SoundSource {
 		volume = 1.0f;
 		active = false;
 
-		AL10.alSource3f(sourceID, AL10.AL_POSITION, 0.0f, 0.0f, 0.0f);
-		AL10.alSource3f(sourceID, AL10.AL_VELOCITY, 1.0f, 0.0f, 0.0f);
-		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 0.0f);
-		AL10.alSourcef(sourceID, AL10.AL_GAIN, volume);
+		alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
+		alSource3f(sourceID, AL_VELOCITY, 1.0f, 0.0f, 0.0f);
+		alSourcef(sourceID, AL_ROLLOFF_FACTOR, 0.0f);
+		alSourcef(sourceID, AL_GAIN, volume);
 	}
 
 	/**
 	 * @return The ID of the newly created OpenAL source.
 	 */
 	private static int createSource() {
-		int sourceID = AL10.alGenSources();
+		int sourceID = alGenSources();
 
-		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
+		if (alGetError() != AL_NO_ERROR) {
 			System.err.println("Problem creating sound source!");
 		}
 
@@ -45,16 +46,16 @@ public class SoundSource {
 	 * @param radius - the range of the sound. Outside this range the sound can't be heard. Between the position of the source and the outer radius the volume of the sound decreases linearly.
 	 */
 	protected void setRange(final float radius) {
-		AL10.alSourcef(sourceID, AL10.AL_REFERENCE_DISTANCE, 1.0f);
-		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 1.0f);
-		AL10.alSourcef(sourceID, AL10.AL_MAX_DISTANCE, radius);
+		alSourcef(sourceID, AL_REFERENCE_DISTANCE, 1.0f);
+		alSourcef(sourceID, AL_ROLLOFF_FACTOR, 1.0f);
+		alSourcef(sourceID, AL_MAX_DISTANCE, radius);
 	}
 
 	/**
 	 * Indicates that the sound has no range, and will always be played at full volume regardless of where the listener and source are.
 	 */
 	protected void setUndiminishing() {
-		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 0);
+		alSourcef(sourceID, AL_ROLLOFF_FACTOR, 0);
 	}
 
 	/**
@@ -65,9 +66,9 @@ public class SoundSource {
 	 * @param secondaryRadius The outer range.
 	 */
 	protected void setRanges(final float primaryRadius, final float secondaryRadius) {
-		AL10.alSourcef(sourceID, AL10.AL_REFERENCE_DISTANCE, (primaryRadius < 1.0f) ? 1.0f : primaryRadius);
-		AL10.alSourcef(sourceID, AL10.AL_ROLLOFF_FACTOR, 1.0f);
-		AL10.alSourcef(sourceID, AL10.AL_MAX_DISTANCE, secondaryRadius);
+		alSourcef(sourceID, AL_REFERENCE_DISTANCE, (primaryRadius < 1.0f) ? 1.0f : primaryRadius);
+		alSourcef(sourceID, AL_ROLLOFF_FACTOR, 1.0f);
+		alSourcef(sourceID, AL_MAX_DISTANCE, secondaryRadius);
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class SoundSource {
 	 */
 	protected void setVolume(final float newVolume) {
 		if (newVolume != volume) {
-			AL10.alSourcef(sourceID, AL10.AL_GAIN, newVolume);
+			alSourcef(sourceID, AL_GAIN, newVolume);
 			volume = newVolume;
 		}
 	}
@@ -93,14 +94,14 @@ public class SoundSource {
 	 * @param position The 3D position of the source in the world.
 	 */
 	protected void setPosition(final Vector3f position) {
-		AL10.alSource3f(sourceID, AL10.AL_POSITION, position.x, position.y, position.z);
+		alSource3f(sourceID, AL_POSITION, position.x, position.y, position.z);
 	}
 
 	/**
 	 * @param loop Whether the source should play sounds on loop or not.
 	 */
 	protected void loop(final boolean loop) {
-		AL10.alSourcei(sourceID, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
+		alSourcei(sourceID, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
 	}
 
 	/**
@@ -122,14 +123,14 @@ public class SoundSource {
 
 		if (sound.needsStreaming()) {
 			queue(sound.getBufferID());
-			AL10.alSourcei(sourceID, AL10.AL_LOOPING, AL10.AL_FALSE);
+			alSourcei(sourceID, AL_LOOPING, AL_FALSE);
 			StreamManager.STREAMER.stream(sound, this, currentController);
 		} else {
-			AL10.alSourcei(sourceID, AL10.AL_LOOPING, AL10.AL_FALSE);
-			AL10.alSourcei(sourceID, AL10.AL_BUFFER, sound.getBufferID());
+			alSourcei(sourceID, AL_LOOPING, AL_FALSE);
+			alSourcei(sourceID, AL_BUFFER, sound.getBufferID());
 		}
 
-		AL10.alSourcePlay(sourceID);
+		alSourcePlay(sourceID);
 		return currentController;
 	}
 
@@ -138,7 +139,7 @@ public class SoundSource {
 	 */
 	protected void stop() {
 		if (isPlaying()) {
-			AL10.alSourceStop(sourceID);
+			alSourceStop(sourceID);
 		}
 
 		setInactive();
@@ -149,7 +150,7 @@ public class SoundSource {
 	 */
 	protected void setInactive() {
 		if (active) {
-			AL10.alSourcei(sourceID, AL10.AL_BUFFER, AL10.AL_NONE);
+			alSourcei(sourceID, AL_BUFFER, AL_NONE);
 			currentController.setInactive();
 
 			for (int i = 0; i < getFinishedBuffersCount(); i++) {
@@ -164,21 +165,21 @@ public class SoundSource {
 	 * Removes the top buffer that has already been played from the queue (for use when streaming).
 	 */
 	protected void unqueue() {
-		AL10.alSourceUnqueueBuffers(sourceID);
+		alSourceUnqueueBuffers(sourceID);
 	}
 
 	/**
 	 * @return The number of buffers in the queue that have already been played (for use when streaming).
 	 */
 	protected final int getFinishedBuffersCount() {
-		return AL10.alGetSourcei(sourceID, AL10.AL_BUFFERS_PROCESSED);
+		return alGetSourcei(sourceID, AL_BUFFERS_PROCESSED);
 	}
 
 	/**
 	 * @return {@code true} if the source is currently playing a sound.
 	 */
 	protected final boolean isPlaying() {
-		return AL10.alGetSourcei(sourceID, AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING;
+		return alGetSourcei(sourceID, AL_SOURCE_STATE) == AL_PLAYING;
 	}
 
 	/**
@@ -187,7 +188,7 @@ public class SoundSource {
 	 * @param buffer The buffer to be queued.
 	 */
 	protected void queue(final int buffer) {
-		AL10.alSourceQueueBuffers(sourceID, buffer);
+		alSourceQueueBuffers(sourceID, buffer);
 	}
 
 	/**
@@ -195,10 +196,10 @@ public class SoundSource {
 	 */
 	protected void togglePause() {
 		if (isPlaying()) {
-			AL10.alSourcePause(sourceID);
+			alSourcePause(sourceID);
 			active = false;
 		} else {
-			AL10.alSourcePlay(sourceID);
+			alSourcePlay(sourceID);
 			active = true;
 		}
 	}
@@ -207,6 +208,6 @@ public class SoundSource {
 	 * Deletes the source.
 	 */
 	protected void delete() {
-		AL10.alDeleteSources(sourceID);
+		alDeleteSources(sourceID);
 	}
 }

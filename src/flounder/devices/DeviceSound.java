@@ -13,8 +13,6 @@ import static org.lwjgl.opengl.GL11.*;
  * An Sound Device implemented using OpenAL.
  */
 public class DeviceSound {
-	// TODO: Live music player volume change.
-
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 
 	private final Vector3f cameraPosition;

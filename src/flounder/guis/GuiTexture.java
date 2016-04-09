@@ -11,13 +11,12 @@ import flounder.visual.*;
 public class GuiTexture {
 	private final Vector2f position;
 	private final Vector2f scale;
+	private final Vector2f textureOffset;
 	private Texture texture;
 	private ValueDriver alphaDriver;
 	private int selectedRow;
-
 	private float alpha;
 	private boolean flipTexture;
-	private final Vector2f textureOffset;
 
 	public GuiTexture(final Texture texture) {
 		this(texture, false);

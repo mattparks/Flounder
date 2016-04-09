@@ -30,7 +30,7 @@ public class JoystickAxis implements IAxis {
 		float result = 0.0f;
 
 		for (int joystickAxe : joystickAxes) {
-			result += (ManagerDevices.getJoysticks() != null && ManagerDevices.getJoysticks().isConnected(joystick) ? ManagerDevices.getJoysticks().getJoystick(joystick).getAxis(joystickAxe) : 0.0f);
+			result += (ManagerDevices.getJoysticks() != null && ManagerDevices.getJoysticks().isConnected(joystick) ? ManagerDevices.getJoysticks().getAxis(joystick, joystickAxe) : 0.0f);
 		}
 
 		return Maths.clamp(result, -1.0f, 1.0f);

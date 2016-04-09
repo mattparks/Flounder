@@ -63,7 +63,7 @@ public class FlounderEngine {
 			time = 0.0f;
 
 			(FlounderEngine.module = module).init();
-		//	gameThread = new Thread("GameLoop");
+			//	gameThread = new Thread("GameLoop");
 			initialized = true;
 		}
 	}
