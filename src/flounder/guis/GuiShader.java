@@ -12,9 +12,10 @@ public class GuiShader extends ShaderProgram {
 	protected final UniformBoolean flipTexture = new UniformBoolean("flipTexture");
 	protected final UniformFloat atlasRows = new UniformFloat("atlasRows");
 	protected final UniformVec2 atlasOffset = new UniformVec2("atlasOffset");
+	protected final UniformVec3 colourOffset = new UniformVec3("colourOffset");
 
 	protected GuiShader() {
 		super("gui", VERTEX_SHADER, FRAGMENT_SHADER);
-		super.storeAllUniformLocations(transform, alpha, flipTexture, atlasRows, atlasOffset);
+		super.storeAllUniformLocations(transform, alpha, flipTexture, atlasRows, atlasOffset, colourOffset);
 	}
 }

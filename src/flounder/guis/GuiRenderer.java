@@ -63,6 +63,7 @@ public class GuiRenderer extends IRenderer {
 		shader.flipTexture.loadBoolean(gui.isFlipTexture());
 		shader.atlasRows.loadFloat(gui.getTexture().getNumberOfRows());
 		shader.atlasOffset.loadVec2(gui.getTextureOffset());
+		shader.colourOffset.loadVec3(gui.getColourOffset());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
 		OpenglUtils.unbindVAO(0);
 	}

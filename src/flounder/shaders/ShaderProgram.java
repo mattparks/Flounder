@@ -19,8 +19,6 @@ public class ShaderProgram {
 	private String shaderName;
 	private int programID;
 
-	// TODO: Load everything to StringBuilder from files / hard code.
-
 	/**
 	 * Creates a new shader program with a fragment and vertex shader.
 	 *
@@ -33,7 +31,7 @@ public class ShaderProgram {
 			layoutLocations = new ArrayList<>();
 			layoutBindings = new ArrayList<>();
 			this.shaderName = shaderName;
-			initShader(loadShader(loadFromFile(vertexFile), true, GL_VERTEX_SHADER), loadShader(loadFromFile(fragmentFile), false, GL_FRAGMENT_SHADER));
+			initShader(loadShader(loadFromFile(vertexFile, true, true), GL_VERTEX_SHADER), loadShader(loadFromFile(fragmentFile, false, true), GL_FRAGMENT_SHADER));
 			initialized = true;
 		}
 	}
@@ -50,12 +48,12 @@ public class ShaderProgram {
 			layoutLocations = new ArrayList<>();
 			layoutBindings = new ArrayList<>();
 			this.shaderName = shaderName;
-			initShader(loadShader(loadFromString(vertexString), true, GL_VERTEX_SHADER), loadShader(loadFromString(fragmentString), false, GL_FRAGMENT_SHADER));
+			initShader(loadShader(loadFromString(vertexString, true, true), GL_VERTEX_SHADER), loadShader(loadFromString(fragmentString, false, true), GL_FRAGMENT_SHADER));
 			initialized = true;
 		}
 	}
 
-	private StringBuilder loadFromFile(final MyFile file) {
+	private StringBuilder loadFromFile(final MyFile file, final boolean vertexShader, final boolean addToLayouts) {
 		final StringBuilder shaderSource = new StringBuilder();
 
 		try {
@@ -63,7 +61,7 @@ public class ShaderProgram {
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-				shaderSource.append(line + "\n");
+				shaderSource.append(processShaderLine(line, vertexShader, addToLayouts) + "\n");
 			}
 		} catch (Exception e) {
 			FlounderLogger.error("Could not read file " + file.getName());
@@ -74,19 +72,46 @@ public class ShaderProgram {
 		return shaderSource;
 	}
 
-	private StringBuilder loadFromString(final String string) {
+	private StringBuilder loadFromString(final String string, final boolean vertexShader, final boolean addToLayouts) {
 		final StringBuilder shaderSource = new StringBuilder();
 
-		for (String s : string.split("\n")) {
-			shaderSource.append(s + "\n");
+		for (String line : string.split("\n")) {
+			shaderSource.append(processShaderLine(line, vertexShader, addToLayouts) + "\n");
 		}
 
 		return shaderSource;
 	}
 
-	private int loadShader(final StringBuilder source, final boolean vertexShader, final int type) {
+	private StringBuilder processShaderLine(final String line, final boolean vertexShader, final boolean addToLayouts) {
+		if (line.contains("varying")) {
+			if (vertexShader) {
+				return new StringBuilder().append(line.replace("varying", "out"));
+			} else {
+				return new StringBuilder().append(line.replace("varying", "in"));
+			}
+		}
+
+		if (line.contains("#include")) {
+			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
+			included = included.substring("#include".length(), included.length());
+			final StringBuilder includedString = loadFromFile(new MyFile(included), true, true);
+			return includedString;
+		} else if (line.replaceAll("\\s+", "").startsWith("layout") && addToLayouts) {
+			if (line.contains("location")) {
+				layoutLocations.add(line);
+				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
+			} else if (line.contains("binding")) {
+				layoutBindings.add(line);
+				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
+			}
+		}
+
+		return new StringBuilder().append(line);
+	}
+
+	private int loadShader(final StringBuilder source, final int type) {
 		final int shaderID = glCreateShader(type);
-		glShaderSource(shaderID, readShader(source, vertexShader, true));
+		glShaderSource(shaderID, source);
 		glCompileShader(shaderID);
 
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
@@ -96,39 +121,6 @@ public class ShaderProgram {
 		}
 
 		return shaderID;
-	}
-
-	private StringBuilder readShader(final StringBuilder source, final boolean vertexShader, final boolean addToLayouts) {
-		final StringBuilder shaderSource = new StringBuilder();
-
-		for (String line : source.toString().split("\n")) {
-			if (line.contains("varying")) {
-				if (vertexShader) {
-					line = line.replace("varying", "out");
-				} else {
-					line = line.replace("varying", "in");
-				}
-			}
-
-			if (line.contains("#include")) {
-				String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
-				included = included.substring("#include".length(), included.length());
-				final StringBuilder includedString = readShader(loadFromFile(new MyFile(included)), true, false);
-				shaderSource.append(includedString);
-			} else if (line.replaceAll("\\s+", "").startsWith("layout") && addToLayouts) {
-				if (line.contains("location")) {
-					layoutLocations.add(line);
-					shaderSource.append(line.substring(findCharPos(line, ')') + 1, line.length())).append("//\n");
-				} else if (line.contains("binding")) {
-					layoutBindings.add(line);
-					shaderSource.append(line.substring(findCharPos(line, ')') + 1, line.length())).append("//\n");
-				}
-			} else {
-				shaderSource.append(line).append("//\n");
-			}
-		}
-
-		return shaderSource;
 	}
 
 	private int findCharPos(final String line, final char c) {

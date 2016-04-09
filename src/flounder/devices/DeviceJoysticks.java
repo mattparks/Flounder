@@ -37,33 +37,27 @@ public class DeviceJoysticks {
 			if (glfwJoystickPresent(i) == GL_TRUE) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {
 					FlounderLogger.log("Connecting Joystick: " + i);
-					joystickAxes[i] = BufferUtils.createFloatBuffer(0);
-					joystickButtons[i] = BufferUtils.createByteBuffer(0);
+					joystickAxes[i] = BufferUtils.createFloatBuffer(glfwGetJoystickAxes(i).capacity());
+					joystickButtons[i] = BufferUtils.createByteBuffer(glfwGetJoystickButtons(i).capacity());
 					joystickNames[i] = glfwGetJoystickName(i);
 				}
 
-				updateJoystick(i);
+				joystickAxes[i].clear();
+				joystickAxes[i].put(glfwGetJoystickAxes(i));
+
+				joystickButtons[i].clear();
+				joystickButtons[i].put(glfwGetJoystickButtons(i));
 			} else {
 				if (joystickAxes[i] != null || joystickButtons[i] != null || joystickNames[i] != null) {
 					FlounderLogger.log("Disconnecting Joystick: " + i);
+					joystickAxes[i].clear();
 					joystickAxes[i] = null;
+
+					joystickButtons[i].clear();
 					joystickButtons[i] = null;
 					joystickNames[i] = null;
 				}
 			}
-		}
-	}
-
-	private void updateJoystick(int i) {
-		FloatBuffer newAxes = glfwGetJoystickAxes(i);
-		ByteBuffer newButtons = glfwGetJoystickButtons(i);
-
-		if (newAxes != null) {
-			joystickAxes[i] = newAxes;
-		}
-
-		if (newButtons != null) {
-			joystickButtons[i] = newButtons;
 		}
 	}
 

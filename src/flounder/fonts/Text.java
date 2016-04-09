@@ -24,6 +24,7 @@ public class Text {
 	private ValueDriver borderDriver;
 	private Colour colour;
 	private Colour borderColour;
+	private Vector2f position;
 
 	private boolean solidBorder;
 	private boolean glowBorder;
@@ -49,6 +50,7 @@ public class Text {
 		this.borderDriver = new ConstantDriver(0.0f);
 		this.colour = new Colour(0.0f, 0.0f, 0.0f, 1.0f);
 		this.borderColour = new Colour(1.0f, 1.0f, 1.0f, 1.0f);
+		this.position = new Vector2f();
 
 		this.solidBorder = false;
 		this.glowBorder = false;
@@ -87,7 +89,7 @@ public class Text {
 		final float scaleFactor = (currentScale - 1.0f) / 2.0f;
 		final float xChange = scaleFactor * originalWidth;
 		final float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1.0f;
-		return new Vector2f(currentX - xChange, currentY - yChange);
+		return position.set(currentX - xChange, currentY - yChange);
 	}
 
 	protected float getTotalBorderSize() {

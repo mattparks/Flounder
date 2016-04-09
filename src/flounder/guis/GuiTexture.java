@@ -1,6 +1,7 @@
 package flounder.guis;
 
 import flounder.engine.*;
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.textures.*;
 import flounder.visual.*;
@@ -12,6 +13,8 @@ public class GuiTexture {
 	private final Vector2f position;
 	private final Vector2f scale;
 	private final Vector2f textureOffset;
+	private final Colour colourOffset;
+
 	private Texture texture;
 	private ValueDriver alphaDriver;
 	private int selectedRow;
@@ -26,11 +29,13 @@ public class GuiTexture {
 		this.texture = texture;
 		position = new Vector2f();
 		scale = new Vector2f();
+		textureOffset = new Vector2f();
+		colourOffset = new Colour();
+
 		alphaDriver = new ConstantDriver(1);
 		selectedRow = 1;
 
 		flipTexture = flip;
-		textureOffset = new Vector2f();
 	}
 
 	public void update() {
@@ -43,6 +48,14 @@ public class GuiTexture {
 
 	public void setTexture(final Texture texture) {
 		this.texture = texture;
+	}
+
+	public Colour getColourOffset() {
+		return colourOffset;
+	}
+
+	public void setColourOffset(final Colour colour) {
+		colourOffset.set(colour);
 	}
 
 	public Vector2f getPosition() {
