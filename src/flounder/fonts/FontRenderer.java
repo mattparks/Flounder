@@ -19,6 +19,10 @@ public class FontRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
+		if (FontManager.getTexts().keySet().size() < 1) {
+			return;
+		}
+
 		prepareRendering();
 		FontManager.getTexts().keySet().forEach(font -> FontManager.getTexts().get(font).forEach(this::renderText));
 		endRendering();

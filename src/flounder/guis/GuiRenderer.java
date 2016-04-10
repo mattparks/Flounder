@@ -24,6 +24,10 @@ public class GuiRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
+		if (GuiManager.getGuiTextures().size() < 1) {
+			return;
+		}
+
 		prepareRendering();
 		GuiManager.getGuiTextures().forEach(this::renderGui);
 		endRendering();
