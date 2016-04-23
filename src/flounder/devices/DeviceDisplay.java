@@ -99,9 +99,6 @@ public class DeviceDisplay {
 		// Sets the display to fullscreen or windowed.
 		setFullscreen(this.fullscreen);
 
-		// Hides the mouse cursor.
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
 		// Gets any window errors.
 		if (window == NULL) {
 			FlounderLogger.error("Could not create the window!");
@@ -288,6 +285,11 @@ public class DeviceDisplay {
 			FlounderLogger.error("Failed to take screenshot.");
 			FlounderLogger.exception(e);
 		}
+	}
+
+	public void setCursorHidden(final boolean hidden) {
+		// Hides the mouse cursor.
+		glfwSetInputMode(window, GLFW_CURSOR, hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
 	}
 
 	/**

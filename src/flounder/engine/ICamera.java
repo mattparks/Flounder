@@ -10,6 +10,11 @@ import flounder.space.*;
  */
 public interface ICamera extends IAudioListener {
 	/**
+	 * Used to initialise the camera.
+	 */
+	void init();
+
+	/**
 	 * @return The distance of the near pane of the view frustum.
 	 */
 	float getNearPlane();

@@ -18,6 +18,7 @@ public class IModule {
 
 	protected void init() {
 		masterRenderer.init();
+		camera.init();
 		game.init();
 	}
 

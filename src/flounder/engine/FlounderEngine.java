@@ -123,7 +123,7 @@ public class FlounderEngine {
 	/**
 	 * Updates many engine systems before every frame.
 	 */
-	public static void update() {
+	private static void update() {
 		ManagerDevices.preRender(delta);
 		module.update();
 		GuiManager.updateGuis();
@@ -133,7 +133,7 @@ public class FlounderEngine {
 	/**
 	 * Renders the engines master renderer and carries out OpenGL request calls.
 	 */
-	public static void render() {
+	private static void render() {
 		module.render();
 		ManagerDevices.postRender();
 		GlRequestProcessor.dealWithTopRequests();
@@ -145,6 +145,10 @@ public class FlounderEngine {
 	 */
 	public static ICamera getCamera() {
 		return module.getCamera();
+	}
+
+	public static IRendererMaster getMasterRenderer() {
+		return module.getRendererMaster();
 	}
 
 	/**
