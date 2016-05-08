@@ -9,7 +9,7 @@ public class CompressionUtils {
 			return null;
 		}
 
-		ByteArrayOutputStream obj=new ByteArrayOutputStream();
+		ByteArrayOutputStream obj = new ByteArrayOutputStream();
 		GZIPOutputStream gzip = new GZIPOutputStream(obj);
 		gzip.write(str.getBytes("UTF-8"));
 		gzip.close();
@@ -27,7 +27,7 @@ public class CompressionUtils {
 		String outStr = "";
 		String line;
 
-		while ((line=bf.readLine())!=null) {
+		while ((line = bf.readLine()) != null) {
 			outStr += line;
 		}
 

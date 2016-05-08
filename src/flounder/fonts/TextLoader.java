@@ -18,6 +18,36 @@ public class TextLoader {
 		this.metaData = new MetaFile(metaFile);
 	}
 
+	private static void addTextCoords(final List<Float> texCoords, final double x, final double y, final double maxX, final double maxY) {
+		texCoords.add((float) x);
+		texCoords.add((float) y);
+		texCoords.add((float) x);
+		texCoords.add((float) maxY);
+		texCoords.add((float) maxX);
+		texCoords.add((float) maxY);
+		texCoords.add((float) maxX);
+		texCoords.add((float) maxY);
+		texCoords.add((float) maxX);
+		texCoords.add((float) y);
+		texCoords.add((float) x);
+		texCoords.add((float) y);
+	}
+
+	private static void addVertices(final List<Float> vertices, final double x, final double y, final double maxX, final double maxY) {
+		vertices.add((float) x);
+		vertices.add((float) y);
+		vertices.add((float) x);
+		vertices.add((float) maxY);
+		vertices.add((float) maxX);
+		vertices.add((float) maxY);
+		vertices.add((float) maxX);
+		vertices.add((float) maxY);
+		vertices.add((float) maxX);
+		vertices.add((float) y);
+		vertices.add((float) x);
+		vertices.add((float) y);
+	}
+
 	public int getFontTextureAtlas() {
 		return fontTexture.getTextureID();
 	}
@@ -98,21 +128,6 @@ public class TextLoader {
 		text.setMeshInfo(vao, vertices.size() / 2);
 	}
 
-	private static void addTextCoords(final List<Float> texCoords, final double x, final double y, final double maxX, final double maxY) {
-		texCoords.add((float) x);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) y);
-	}
-
 	private void setTextSettings(final Text text, final List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 
@@ -129,21 +144,6 @@ public class TextLoader {
 		final double maxX = x + character.getSizeX() * fontSize;
 		final double maxY = y + character.getSizeY() * fontSize;
 		addVertices(vertices, x, y, maxX, maxY);
-	}
-
-	private static void addVertices(final List<Float> vertices, final double x, final double y, final double maxX, final double maxY) {
-		vertices.add((float) x);
-		vertices.add((float) y);
-		vertices.add((float) x);
-		vertices.add((float) maxY);
-		vertices.add((float) maxX);
-		vertices.add((float) maxY);
-		vertices.add((float) maxX);
-		vertices.add((float) maxY);
-		vertices.add((float) maxX);
-		vertices.add((float) y);
-		vertices.add((float) x);
-		vertices.add((float) y);
 	}
 
 	private float[] listToArray(final List<Float> list) {

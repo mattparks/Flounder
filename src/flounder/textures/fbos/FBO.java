@@ -41,6 +41,18 @@ public class FBO {
 		initialiseFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
 	}
 
+	/**
+	 * Creates a new FBO Builder.
+	 *
+	 * @param width The initial width for the new FBO.
+	 * @param height The initial height for the new FBO.
+	 *
+	 * @return A new FBO Builder.
+	 */
+	public static FBOBuilder newFBO(final int width, final int height) {
+		return new FBOBuilder(width, height);
+	}
+
 	private void initialiseFBO(final FBOBuilder.DepthBufferType type, final boolean useColourBuffer, final boolean linear, final boolean clamp, final int samples) {
 		createFBO(useColourBuffer);
 
@@ -114,18 +126,6 @@ public class FBO {
 	public void unbindFrameBuffer() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight());
-	}
-
-	/**
-	 * Creates a new FBO Builder.
-	 *
-	 * @param width The initial width for the new FBO.
-	 * @param height The initial height for the new FBO.
-	 *
-	 * @return A new FBO Builder.
-	 */
-	public static FBOBuilder newFBO(final int width, final int height) {
-		return new FBOBuilder(width, height);
 	}
 
 	/**

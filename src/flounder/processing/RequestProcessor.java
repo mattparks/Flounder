@@ -30,6 +30,13 @@ public class RequestProcessor extends Thread {
 	}
 
 	/**
+	 * Cleans up the request processor and destroys the thread.
+	 */
+	public static void dispose() {
+		PROCESSOR.kill();
+	}
+
+	/**
 	 * Adds a new request to the queue.
 	 *
 	 * @param request The resource request to add.
@@ -48,13 +55,6 @@ public class RequestProcessor extends Thread {
 	 */
 	private synchronized void indicateNewRequests() {
 		notify();
-	}
-
-	/**
-	 * Cleans up the request processor and destroys the thread.
-	 */
-	public static void dispose() {
-		PROCESSOR.kill();
 	}
 
 	/**
