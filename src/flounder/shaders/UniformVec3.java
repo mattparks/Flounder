@@ -1,5 +1,6 @@
 package flounder.shaders;
 
+import flounder.lights.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 
@@ -49,5 +50,14 @@ public class UniformVec3 extends Uniform {
 	 */
 	public void loadVec3(final Colour colour) {
 		loadVec3(colour.r, colour.g, colour.b);
+	}
+
+	/**
+	 * Loads a Attenuation factor to the uniform if the value already on the GPU is not the same as the new value.
+	 *
+	 * @param attenuation The new attenuation.
+	 */
+	public void loadVec3(final Attenuation attenuation) {
+		loadVec3(attenuation.constant, attenuation.linear, attenuation.exponent);
 	}
 }

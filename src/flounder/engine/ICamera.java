@@ -81,6 +81,11 @@ public interface ICamera extends IAudioListener {
 	float getYaw();
 
 	/**
+	 * @return The camera's roll (z rotation).
+	 */
+	float getRoll();
+
+	/**
 	 * @return The cameras aim distance at the terrain.
 	 */
 	float getAimDistance();
