@@ -10,9 +10,11 @@ public class AABBShader extends ShaderProgram {
 	protected final UniformMat4 projectionMatrix = new UniformMat4("projectionMatrix");
 	protected final UniformMat4 viewMatrix = new UniformMat4("viewMatrix");
 	protected final UniformVec4 clipPlane = new UniformVec4("clipPlane");
+	protected final UniformMat4 modelMatrix = new UniformMat4("modelMatrix");
+	protected final UniformVec3 colour = new UniformVec3("colour");
 
 	protected AABBShader() {
 		super("aabb", VERTEX_SHADER, FRAGMENT_SHADER);
-		super.storeAllUniformLocations(projectionMatrix, viewMatrix, clipPlane);
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, clipPlane, modelMatrix, colour);
 	}
 }
