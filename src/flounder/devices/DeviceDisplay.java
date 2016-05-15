@@ -382,14 +382,14 @@ public class DeviceDisplay {
 	}
 
 	/**
-	 * @return The x pos of the display in pixels.
+	 * @return The x posiiton of the display in pixels.
 	 */
 	public int getXPos() {
 		return positionX;
 	}
 
 	/**
-	 * @return The y pos of the display in pixels.
+	 * @return The y posiiton of the display in pixels.
 	 */
 	public int getYPos() {
 		return positionY;

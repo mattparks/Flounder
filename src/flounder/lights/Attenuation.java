@@ -16,7 +16,7 @@ public class Attenuation {
 	 * @param linear The linear Attenuation value.
 	 * @param exponent The exponent Attenuation value.
 	 */
-	public Attenuation(float constant, float linear, float exponent) {
+	public Attenuation(final float constant, final float linear, final float exponent) {
 		this.constant = constant;
 		this.linear = linear;
 		this.exponent = exponent;
@@ -26,7 +26,7 @@ public class Attenuation {
 		return constant;
 	}
 
-	public void setConstant(float constant) {
+	public void setConstant(final float constant) {
 		this.constant = constant;
 	}
 
@@ -34,7 +34,7 @@ public class Attenuation {
 		return linear;
 	}
 
-	public void setLinear(float linear) {
+	public void setLinear(final float linear) {
 		this.linear = linear;
 	}
 
@@ -42,7 +42,7 @@ public class Attenuation {
 		return exponent;
 	}
 
-	public void setExponent(float exponent) {
+	public void setExponent(final float exponent) {
 		this.exponent = exponent;
 	}
 }
