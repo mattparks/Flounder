@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.util.*;
 
 public class FlounderProfiler {
-
 	private static JFrame profilerJFrame;
 	private static FlounderTabMenu primaryTabMenu;
 

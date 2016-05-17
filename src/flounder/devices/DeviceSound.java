@@ -66,7 +66,7 @@ public class DeviceSound {
 	 * @return The controller for the source which plays the sound. Returns {@code null} if no source was available to play the sound.
 	 */
 	public AudioController play3DSound(final PlayRequest playRequest) {
-		if (!playRequest.getSound().isLoaded()) {
+		if (playRequest.getSound() != null && !playRequest.getSound().isLoaded()) {
 			return null;
 		}
 
@@ -81,7 +81,7 @@ public class DeviceSound {
 	 * @return The controller for the playing of this sound.
 	 */
 	public AudioController playSystemSound(final Sound sound) {
-		if (!sound.isLoaded()) {
+		if (sound != null && !sound.isLoaded()) {
 			return null;
 		}
 

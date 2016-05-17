@@ -14,10 +14,9 @@ import java.awt.*;
 /**
  * Deals with much of the initializing, updating, and cleaning up of the engine.
  */
-public class FlounderEngine {
+public class FlounderEngine implements Runnable {
 	private static boolean initialized;
 	private static IModule module;
-	//private static Thread gameThread;
 
 	private static float targetFPS;
 	private static float currentFrameTime;
@@ -29,7 +28,7 @@ public class FlounderEngine {
 	private static float time;
 
 	/**
-	 * Carries out preinitializations for basic engine components like the profiler and display. Call {@link #init(IModule)} immediately after this.
+	 * Carries out pre-initializations for basic engine components like the profiler and display. Call {@link #init(IModule)} immediately after this.
 	 *
 	 * @param displayCanvas A optional Java Canvas to display to instead of a GLFW display.
 	 * @param displayWidth The window width in pixels.
@@ -63,7 +62,6 @@ public class FlounderEngine {
 			time = 0.0f;
 
 			(FlounderEngine.module = module).init();
-			//	gameThread = new Thread("GameLoop");
 			initialized = true;
 		}
 	}
@@ -71,40 +69,29 @@ public class FlounderEngine {
 	/**
 	 * Runs the engines main game loop. Call {@link #dispose()} right after running to close the engine.
 	 */
-	public static void run() {
-		while (ManagerDevices.getDisplay().isOpen()) {
-			boolean render = false;
+	@Override
+	public void run() {
+		while (initialized && ManagerDevices.getDisplay().isOpen()) {
+			// Updates the engine.
+			update();
 
-			{
-				render = true;
-				update();
+			// Updates static delta and times.
+			currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;
+			delta = currentFrameTime - lastFrameTime;
+			lastFrameTime = currentFrameTime;
+			time += delta;
+
+			// Prints out current engine update and frame stats.
+			if (System.currentTimeMillis() - timerStart > 1000) {
+				FlounderLogger.log(updates + "ups, " + frames + "fps.");
 				addProfileValues();
-
-				// Updates static delta and times.
-				currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;
-				delta = currentFrameTime - lastFrameTime;
-				lastFrameTime = currentFrameTime;
-				time += delta;
-
-				// Prints out current engine update and frame stats.
-				if (System.currentTimeMillis() - timerStart > 1000) {
-					FlounderLogger.log(updates + "ups, " + frames + "fps.");
-					timerStart += 1000;
-					updates = 0;
-					frames = 0;
-				}
+				timerStart += 1000;
+				updates = 0;
+				frames = 0;
 			}
 
-			if (render) {
-				render();
-			} else {
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					FlounderLogger.error("Thread could not sleep!");
-					FlounderLogger.exception(e);
-				}
-			}
+			// Renders the engine.
+			render();
 		}
 	}
 
