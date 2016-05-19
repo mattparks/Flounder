@@ -32,7 +32,9 @@ public abstract class BaseButton implements IButton {
 		 * @return True if the button specified by the code is down in the input system, false otherwise.
 		 */
 		boolean isDown(final int code);
-	}	@Override
+	}
+
+	@Override
 	public boolean isDown() {
 		if (codes == null) {
 			return false;

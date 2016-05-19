@@ -6,7 +6,6 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
-import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
@@ -22,15 +21,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Manages the creation, updating and destruction of the display, as well as timing and frame times.
  */
 public class DeviceDisplay {
-	// TODO: Display in fullscreen, put image in canvas.
-
 	private final GLFWWindowCloseCallback callbackWindowClose;
 	private final GLFWWindowFocusCallback callbackWindowFocus;
 	private final GLFWWindowPosCallback callbackWindowPos;
 	private final GLFWWindowSizeCallback callbackWindowSize;
 	private final GLFWFramebufferSizeCallback callbackFramebufferSize;
 
-	private Canvas canvas;
 	private long window;
 	private int width;
 	private int height;
@@ -46,7 +42,6 @@ public class DeviceDisplay {
 	/**
 	 * Creates a new GLFW window.
 	 *
-	 * @param displayCanvas A optional Java Canvas to display to instead of a GLFW display.
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
@@ -55,14 +50,13 @@ public class DeviceDisplay {
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	protected DeviceDisplay(final Canvas displayCanvas, final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final int samples, final boolean displayFullscreen) {
-		this.canvas = displayCanvas;
+	protected DeviceDisplay(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final int samples, final boolean displayFullscreen) {
 		this.width = displayWidth;
 		this.height = displayHeight;
 		this.title = displayTitle;
 		this.enableVSync = displayVSync;
 		this.antialiasing = antialiasing;
-		this.fullscreen = this.canvas == null && displayFullscreen;
+		this.fullscreen = displayFullscreen;
 		this.samples = samples;
 		inFocus = true;
 		closeRequested = false;
@@ -131,9 +125,7 @@ public class DeviceDisplay {
 		}
 
 		// Shows the OpenGl window.
-		if (this.canvas == null) {
-			glfwShowWindow(window);
-		}
+		glfwShowWindow(window);
 
 		// Sets the displays callbacks.
 		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
@@ -200,24 +192,6 @@ public class DeviceDisplay {
 	 */
 	protected void swapBuffers() {
 		glfwSwapBuffers(window);
-
-		if (this.canvas != null) {
-			BufferStrategy buffer = canvas.getBufferStrategy();
-			BufferedImage image = updateBufferedImage();
-			Graphics graphics = buffer.getDrawGraphics();
-
-			// graphics.
-			//graphics.setColor(Color.BLACK);
-			//graphics.fillRect(0, 0, 639, 479);
-
-			if (!buffer.contentsLost()) {
-				buffer.show();
-			}
-
-			//	Graphics2D graphics = image.createGraphics();
-			//	canvas.printAll(graphics);
-			//	graphics.dispose();
-		}
 	}
 
 	private BufferedImage updateBufferedImage() { // TODO Update a BufferedImage!

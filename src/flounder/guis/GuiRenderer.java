@@ -14,6 +14,7 @@ public class GuiRenderer extends IRenderer {
 	private final int vaoID;
 
 	private int guiCount;
+	private boolean lastWireframe;
 
 	public GuiRenderer() {
 		shader = new GuiShader();
@@ -32,20 +33,26 @@ public class GuiRenderer extends IRenderer {
 		GuiManager.getGuiTextures().forEach(this::renderGui);
 		endRendering();
 
-		FlounderProfiler.add("GUI", "Count", guiCount);
+		FlounderProfiler.add("GUI", "Render Count", guiCount);
 		FlounderProfiler.add("GUI", "Render Time", super.getRenderTimeMs());
 		guiCount = 0;
 	}
 
 	private void prepareRendering() {
+		shader.start();
+
+		lastWireframe = OpenglUtils.isInWireframe();
+
 		OpenglUtils.antialias(false);
 		OpenglUtils.cullBackFaces(true);
 		OpenglUtils.enableAlphaBlending();
 		OpenglUtils.disableDepthTesting();
-		shader.start();
+		OpenglUtils.goWireframe(false);
 	}
 
 	private void endRendering() {
+		OpenglUtils.goWireframe(lastWireframe);
+
 		shader.stop();
 	}
 

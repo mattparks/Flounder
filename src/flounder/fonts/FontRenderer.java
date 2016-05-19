@@ -10,7 +10,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class FontRenderer extends IRenderer {
 	private final FontShader shader;
+
 	private int textCount;
+	private boolean lastWireframe;
 
 	public FontRenderer() {
 		shader = new FontShader();
@@ -28,7 +30,7 @@ public class FontRenderer extends IRenderer {
 		endRendering();
 
 		if (FlounderProfiler.isOpen()) {
-			FlounderProfiler.add("Font", "Text Count", textCount);
+			FlounderProfiler.add("Font", "Render Count", textCount);
 			FlounderProfiler.add("Font", "Render Time", super.getRenderTimeMs());
 		}
 
@@ -36,14 +38,20 @@ public class FontRenderer extends IRenderer {
 	}
 
 	private void prepareRendering() {
+		shader.start();
+
+		lastWireframe = OpenglUtils.isInWireframe();
+
 		OpenglUtils.antialias(false);
 		OpenglUtils.enableAlphaBlending();
 		OpenglUtils.disableDepthTesting();
 		OpenglUtils.cullBackFaces(true);
-		shader.start();
+		OpenglUtils.goWireframe(false);
 	}
 
 	private void endRendering() {
+		OpenglUtils.goWireframe(lastWireframe);
+
 		shader.stop();
 	}
 

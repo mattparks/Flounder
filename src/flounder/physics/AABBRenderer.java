@@ -2,6 +2,7 @@ package flounder.physics;
 
 import flounder.devices.*;
 import flounder.engine.*;
+import flounder.engine.profiling.*;
 import flounder.loaders.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -19,10 +20,12 @@ public class AABBRenderer extends IRenderer {
 	private final int VAO;
 
 	private AABBShader shader;
+	private int aabbCount;
 	private boolean lastWireframe;
 
 	public AABBRenderer() {
 		shader = new AABBShader();
+		aabbCount = 0;
 		lastWireframe = false;
 
 		VAO = Loader.createVAO();
@@ -39,6 +42,10 @@ public class AABBRenderer extends IRenderer {
 		}
 
 		endRendering();
+
+		FlounderProfiler.add("AABB", "Render Count", aabbCount);
+		FlounderProfiler.add("AABB", "Render Time", super.getRenderTimeMs());
+		aabbCount = 0;
 	}
 
 	private void prepareRendering(final Vector4f clipPlane, final ICamera camera) {
@@ -82,6 +89,7 @@ public class AABBRenderer extends IRenderer {
 		shader.stop();
 
 		AABBManager.clear();
+		aabbCount++;
 	}
 
 	@Override
