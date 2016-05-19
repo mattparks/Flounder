@@ -87,6 +87,15 @@ public class DeviceMouse {
 		lastMousePositionX = mousePositionX;
 		lastMousePositionY = mousePositionY;
 
+		if (mouseWheel != 0.0f) {
+			mouseWheel -= (((mouseWheel < 0) ? -1 : 1) * FlounderEngine.getDelta());
+			mouseWheel = Maths.deadband(0.1f, mouseWheel);
+		}
+
+		addProfileValues();
+	}
+
+	private void addProfileValues() {
 		if (FlounderProfiler.isOpen()) {
 			FlounderProfiler.add("Mouse", "Position X", mousePositionX);
 			FlounderProfiler.add("Mouse", "Position Y", mousePositionY);
@@ -94,11 +103,6 @@ public class DeviceMouse {
 			FlounderProfiler.add("Mouse", "Delta Y", mouseDeltaY);
 			FlounderProfiler.add("Mouse", "Wheel", mouseWheel);
 			FlounderProfiler.add("Mouse", "Display Selected", displaySelected);
-		}
-
-		if (mouseWheel != 0.0f) {
-			mouseWheel -= (((mouseWheel < 0) ? -1 : 1) * FlounderEngine.getDelta());
-			mouseWheel = Maths.deadband(0.1f, mouseWheel);
 		}
 	}
 

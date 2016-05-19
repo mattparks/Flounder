@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.engine.profiling.*;
 import org.lwjgl.*;
 
 import java.nio.*;

@@ -26,8 +26,9 @@ public class FlounderEngine implements Runnable {
 	private static float time;
 
 	/**
-	 * Carries out pre-initializations for basic engine components like the profiler and display. Call {@link #init(IModule)} immediately after this.
+	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #run()} immediately after this.
 	 *
+	 * @param module The module for the engine to run off of.
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.
 	 * @param displayTitle The window title.
@@ -37,19 +38,12 @@ public class FlounderEngine implements Runnable {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public static void preinit(final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
-		FlounderEngine.targetFPS = targetFPS;
-		FlounderProfiler.init(displayTitle + " Profiler");
-		ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
-	}
-
-	/**
-	 * Carries out any necessary initializations of the engine. Call {@link #run()} after this to run the engine.
-	 *
-	 * @param module The module for the engine to run off of.
-	 */
-	public static void init(final IModule module) {
+	public FlounderEngine(final IModule module, final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
 		if (!initialized) {
+			FlounderEngine.targetFPS = targetFPS;
+			FlounderProfiler.init(displayTitle + " Profiler");
+			ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+
 			currentFrameTime = 0.0f;
 			lastFrameTime = 0.0f;
 			timerStart = System.currentTimeMillis() + 1000;
@@ -92,7 +86,7 @@ public class FlounderEngine implements Runnable {
 		}
 	}
 
-	private static void addProfileValues() {
+	private void addProfileValues() {
 		if (FlounderProfiler.isOpen()) {
 			FlounderProfiler.add("Engine", "Target FPS", targetFPS);
 			FlounderProfiler.add("Engine", "Current Frame Time", currentFrameTime);
@@ -107,7 +101,7 @@ public class FlounderEngine implements Runnable {
 	/**
 	 * Updates many engine systems before every frame.
 	 */
-	private static void update() {
+	private void update() {
 		ManagerDevices.preRender(delta);
 		module.update();
 		GuiManager.updateGuis();
@@ -117,7 +111,7 @@ public class FlounderEngine implements Runnable {
 	/**
 	 * Renders the engines master renderer and carries out OpenGL request calls.
 	 */
-	private static void render() {
+	private void render() {
 		module.render();
 		ManagerDevices.postRender();
 		GlRequestProcessor.dealWithTopRequests();
@@ -173,7 +167,7 @@ public class FlounderEngine implements Runnable {
 	/**
 	 * Deals with closing down the engine and all necessary systems.
 	 */
-	public static void dispose() {
+	public void dispose() {
 		if (initialized) {
 			Loader.dispose();
 			RequestProcessor.dispose();

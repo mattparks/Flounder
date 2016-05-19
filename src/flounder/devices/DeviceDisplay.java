@@ -171,7 +171,10 @@ public class DeviceDisplay {
 	 */
 	protected void pollEvents() {
 		glfwPollEvents();
+		addProfileValues();
+	}
 
+	private void addProfileValues() {
 		if (FlounderProfiler.isOpen()) {
 			FlounderProfiler.add("Display", "Width", width);
 			FlounderProfiler.add("Display", "Height", height);
