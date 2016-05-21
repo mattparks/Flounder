@@ -116,7 +116,7 @@ public class MetaFile {
 		processNextLine();
 		final int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
 		verticalPerPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
-		horizontalPerPixelSize = verticalPerPixelSize / ManagerDevices.getDisplay().getAspectRatio(); // TODO: Move aspect ratio out.
+		horizontalPerPixelSize = verticalPerPixelSize / ManagerDevices.getDisplay().getAspectRatio(); // TODO
 	}
 
 	/**

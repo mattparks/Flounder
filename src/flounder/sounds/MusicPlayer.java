@@ -10,7 +10,7 @@ import java.util.*;
  * The class in charge of playing background music!
  */
 public class MusicPlayer {
-	private static final float FADE_TIME = 2;
+	private static final float FADE_TIME = 2.0f;
 	private final SoundSource source;
 	private final List<Sound> musicQueue;
 	private float musicVolume;

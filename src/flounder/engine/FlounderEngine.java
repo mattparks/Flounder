@@ -14,6 +14,7 @@ import flounder.textures.*;
  */
 public class FlounderEngine implements Runnable {
 	private static boolean initialized;
+	private static ManagerDevices devices;
 	private static IModule module;
 
 	private static float targetFPS;
@@ -42,7 +43,7 @@ public class FlounderEngine implements Runnable {
 		if (!initialized) {
 			FlounderEngine.targetFPS = targetFPS;
 			FlounderProfiler.init(displayTitle + " Profiler");
-			ManagerDevices.init(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+			devices = new ManagerDevices(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 
 			currentFrameTime = 0.0f;
 			lastFrameTime = 0.0f;
@@ -57,12 +58,24 @@ public class FlounderEngine implements Runnable {
 		}
 	}
 
+	public void startEngine() {
+		devices.run();
+		this.run();
+	}
+
+	public void stopEngine() {
+		this.dispose();
+		devices.dispose();
+	}
+
 	/**
 	 * Runs the engines main game loop. Call {@link #dispose()} right after running to close the engine.
 	 */
 	@Override
 	public void run() {
 		while (initialized && ManagerDevices.getDisplay().isOpen()) {
+			devices.run();
+
 			// Updates the engine.
 			update();
 
@@ -102,7 +115,6 @@ public class FlounderEngine implements Runnable {
 	 * Updates many engine systems before every frame.
 	 */
 	private void update() {
-		ManagerDevices.preRender(delta);
 		module.update();
 		GuiManager.updateGuis();
 		updates++;
@@ -113,7 +125,7 @@ public class FlounderEngine implements Runnable {
 	 */
 	private void render() {
 		module.render();
-		ManagerDevices.postRender();
+		devices.swapToDisplay();
 		GlRequestProcessor.dealWithTopRequests();
 		frames++;
 	}
@@ -176,7 +188,6 @@ public class FlounderEngine implements Runnable {
 
 			module.dispose();
 			FlounderProfiler.dispose();
-			ManagerDevices.dispose();
 			FlounderLogger.dispose();
 			initialized = false;
 		}

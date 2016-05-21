@@ -88,8 +88,6 @@ public class DeviceDisplay {
 		// Create a windowed mode window and its OpenGL context.
 		window = glfwCreateWindow(this.width, this.height, this.title, this.fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 
-		glfwSetWindowAspectRatio(window, 3, 2);
-
 		// Sets the display to fullscreen or windowed.
 		setFullscreen(this.fullscreen);
 

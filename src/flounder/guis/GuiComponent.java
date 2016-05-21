@@ -1,5 +1,6 @@
 package flounder.guis;
 
+import flounder.devices.*;
 import flounder.engine.*;
 import flounder.fonts.*;
 import flounder.maths.vectors.*;
@@ -17,6 +18,7 @@ public abstract class GuiComponent {
 	private final Vector2f relativeScale;
 	private final List<GuiComponent> childComponents;
 	private final Map<Text, Vector3f> componentTexts;
+	private final List<GuiComponent> componentsToDelete;
 	private final List<GuiComponent> componentsToRemove;
 	private final List<GuiComponent> componentsToAdd;
 	private GuiComponent parent;
@@ -31,6 +33,7 @@ public abstract class GuiComponent {
 		visible = true;
 		childComponents = new ArrayList<>();
 		componentTexts = new HashMap<>();
+		componentsToDelete = new ArrayList<>();
 		componentsToRemove = new ArrayList<>();
 		componentsToAdd = new ArrayList<>();
 		initialized = false;
@@ -64,10 +67,15 @@ public abstract class GuiComponent {
 	/**
 	 * Indicates that a child component should be removed from this component and deleted.
 	 *
-	 * @param component - the child component to be removed.
+	 * @param component The child component to be removed.
+	 * @param deleteObject If true the object will be cleared and deleted.
 	 */
-	public void removeComponent(final GuiComponent component) {
-		componentsToRemove.add(component);
+	public void removeComponent(final GuiComponent component, final boolean deleteObject) {
+		if (deleteObject) {
+			componentsToDelete.add(component);
+		} else {
+			componentsToRemove.add(component);
+		}
 	}
 
 	/**
@@ -181,13 +189,13 @@ public abstract class GuiComponent {
 	 * @return {@code true} if the mouse cursor is currently over this component.
 	 */
 	protected boolean isMouseOver() {
-		//	if (ManagerDevices.getMouse().isDisplaySelected()) {
-		if (GuiManager.getSelector().getCursorX() >= position.x && GuiManager.getSelector().getCursorX() <= position.x + scale.x) {
-			if (GuiManager.getSelector().getCursorY() >= position.y && GuiManager.getSelector().getCursorY() <= position.y + scale.y) {
-				return true;
+		if (ManagerDevices.getMouse().isDisplaySelected()) {
+			if (GuiManager.getSelector().getCursorX() >= position.x && GuiManager.getSelector().getCursorX() <= position.x + scale.x) {
+				if (GuiManager.getSelector().getCursorY() >= position.y && GuiManager.getSelector().getCursorY() <= position.y + scale.y) {
+					return true;
+				}
 			}
 		}
-		//	}
 
 		return false;
 	}
@@ -255,17 +263,22 @@ public abstract class GuiComponent {
 	 */
 	private void delete() {
 		componentTexts.keySet().forEach(Text::deleteFromMemory);
-		componentsToRemove.forEach(GuiComponent::delete);
+		componentsToDelete.forEach(GuiComponent::delete);
 		componentsToAdd.forEach(GuiComponent::delete);
 		childComponents.forEach(GuiComponent::delete);
 	}
 
 	private void removeOldComponents() {
-		for (final GuiComponent component : componentsToRemove) {
+		for (final GuiComponent component : componentsToDelete) {
 			childComponents.remove(component);
 			component.delete();
 		}
 
+		for (final GuiComponent component : componentsToRemove) {
+			childComponents.remove(component);
+		}
+
+		componentsToDelete.clear();
 		componentsToRemove.clear();
 	}
 

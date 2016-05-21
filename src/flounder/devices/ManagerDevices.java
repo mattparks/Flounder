@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Manages the GLFW devices.
  */
-public class ManagerDevices {
+public class ManagerDevices implements Runnable {
 	private static boolean initialized;
 	private static DeviceDisplay display;
 	private static DeviceKeyboard keyboard;
@@ -30,7 +30,7 @@ public class ManagerDevices {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public static void init(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+	public ManagerDevices(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
 		if (!initialized) {
 			glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 			display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
@@ -47,22 +47,24 @@ public class ManagerDevices {
 	}
 
 	/**
-	 * Updates the before frame device systems.
-	 *
-	 * @param delta The time in seconds since the last frame.
+	 * Runs the engines main device loop. Call {@link #dispose()} right after running to close the device system.
 	 */
-	public static void preRender(final float delta) {
-		display.pollEvents();
-		joysticks.update(delta);
-		keyboard.update(delta);
-		mouse.update(delta);
-		sound.update(delta);
+	@Override
+	public void run() {
+//		while (initialized && ManagerDevices.getDisplay().isOpen()) {
+			final float delta = FlounderEngine.getDelta();
+			display.pollEvents();
+			joysticks.update(delta);
+			keyboard.update(delta);
+			mouse.update(delta);
+			sound.update(delta);
+//		}
 	}
 
 	/**
 	 * Updates the after frame device systems.
 	 */
-	public static void postRender() {
+	public void swapToDisplay() {
 		display.swapBuffers();
 	}
 
@@ -133,7 +135,7 @@ public class ManagerDevices {
 	/**
 	 * Closes the GLFW devices, do not use device objects after calling this.
 	 */
-	public static void dispose() {
+	public void dispose() {
 		if (initialized) {
 			joysticks.dispose();
 			keyboard.dispose();

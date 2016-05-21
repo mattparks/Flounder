@@ -5,6 +5,7 @@ import flounder.engine.options.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.sounds.*;
+import javafx.scene.*;
 import org.lwjgl.openal.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -44,11 +45,14 @@ public class DeviceSound {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	public void update(final float delta) {
-		cameraPosition.set(FlounderEngine.getCamera().getPosition());
-		AL10.alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
-		musicPlayer.update(delta);
-		sourcePool.update();
+	protected void update(final float delta) {
+		final ICamera camera = FlounderEngine.getCamera();
+		if (camera != null) {
+			cameraPosition.set(camera.getPosition());
+			AL10.alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+			musicPlayer.update(FlounderEngine.getDelta());
+			sourcePool.update();
+		}
 	}
 
 	/**
