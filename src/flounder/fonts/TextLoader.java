@@ -36,7 +36,7 @@ public class TextLoader {
 
 		for (final char c : chars) {
 			if (c == SPACE_ASCII) {
-				boolean added = currentLine.attemptToAddWord(currentWord);
+				final boolean added = currentLine.attemptToAddWord(currentWord);
 
 				if (!added) {
 					lines.add(currentLine);

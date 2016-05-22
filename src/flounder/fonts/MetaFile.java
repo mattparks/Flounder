@@ -23,8 +23,7 @@ public class MetaFile {
 
 	private final Map<Integer, Character> metaData;
 	private final Map<String, String> values;
-	private double verticalPerPixelSize;
-	private double horizontalPerPixelSize;
+	private double perPixelSize;
 	private double spaceWidth;
 	private int[] padding;
 	private int paddingWidth;
@@ -115,8 +114,7 @@ public class MetaFile {
 	private void loadLineSizes() {
 		processNextLine();
 		final int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
-		verticalPerPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
-		horizontalPerPixelSize = verticalPerPixelSize / ManagerDevices.getDisplay().getAspectRatio(); // TODO
+		perPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
 	}
 
 	/**
@@ -147,22 +145,22 @@ public class MetaFile {
 		final int id = getValueOfVariable("id");
 
 		if (id == TextLoader.SPACE_ASCII) {
-			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
+			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * (float)(perPixelSize / ManagerDevices.getDisplay().getAspectRatio());
 			return null;
 		}
 
-		final double xTex = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
-		final double yTex = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
+		final double xTextureCoord = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
+		final double yTextureCoord = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
 		final int width = getValueOfVariable("width") - (paddingWidth - 2 * DESIRED_PADDING);
 		final int height = getValueOfVariable("height") - (paddingHeight - 2 * DESIRED_PADDING);
-		final double quadWidth = width * horizontalPerPixelSize;
-		final double quadHeight = height * verticalPerPixelSize;
+		final double quadWidth = width * (float)(perPixelSize / ManagerDevices.getDisplay().getAspectRatio());
+		final double quadHeight = height * perPixelSize;
 		final double xTexSize = (double) width / imageSize;
 		final double yTexSize = (double) height / imageSize;
-		final double xOff = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * horizontalPerPixelSize;
-		final double yOff = (getValueOfVariable("yoffset") + padding[PAD_TOP] - DESIRED_PADDING) * verticalPerPixelSize;
-		final double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
-		return new Character(id, xTex, yTex, xTexSize, yTexSize, xOff, yOff, quadWidth, quadHeight, xAdvance);
+		final double xOffset = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * (float)(perPixelSize / ManagerDevices.getDisplay().getAspectRatio());
+		final double yOffset = (getValueOfVariable("yoffset") + padding[PAD_TOP] - DESIRED_PADDING) * perPixelSize;
+		final double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * (float)(perPixelSize / ManagerDevices.getDisplay().getAspectRatio());
+		return new Character(id, xTextureCoord, yTextureCoord, xTexSize, yTexSize, xOffset, yOffset, quadWidth, quadHeight, xAdvance);
 	}
 
 	/**

@@ -36,6 +36,10 @@ public class PipelineGaussian extends PostPipeline {
 		filterBlurVertical.dispose();
 	}
 
+	public void setBlendSpreadValue(final float x, final float y, final float z, final float w) {
+		this.blendSpreadValue.set(x, y, z, w);
+	}
+
 	public void setBlendSpreadValue(final Vector4f spreadValue) {
 		this.blendSpreadValue.set(spreadValue);
 	}
