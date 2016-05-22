@@ -125,7 +125,13 @@ public class MetaFile {
 	 * @return The value of the variable.
 	 */
 	private int getValueOfVariable(final String variable) {
-		return Integer.parseInt(values.get(variable));
+		final String value = values.get(variable);
+
+		if (value == null) {
+			FlounderLogger.error("Could not font find variable: " + variable);
+		}
+
+		return Integer.parseInt(value);
 	}
 
 	private void loadCharacterData(final int imageWidth) {
