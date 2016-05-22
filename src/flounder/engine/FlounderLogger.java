@@ -1,7 +1,5 @@
 package flounder.engine;
 
-import flounder.engine.options.*;
-
 import java.io.*;
 import java.util.*;
 
@@ -9,7 +7,10 @@ import java.util.*;
  * Various utility functions for Debugging.
  */
 public class FlounderLogger {
-	private static final StringBuilder saveData = new StringBuilder();
+	public static final boolean LOG_TO_CONSOLE = true;
+	public static final boolean LOG_TO_FILE = true;
+
+	private static final StringBuilder SAVE_DATA = new StringBuilder();
 
 	/**
 	 * Log logs strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
@@ -18,12 +19,12 @@ public class FlounderLogger {
 	 * @param <T> The object type to be logged.
 	 */
 	public static <T> void log(final T value) {
-		if (OptionsLogger.LOG_TO_CONSOLE) {
+		if (LOG_TO_CONSOLE) {
 			System.out.println("LOG: " + "[" + getDateString() + "]: " + value.toString());
 		}
 
-		if (OptionsLogger.LOG_TO_FILE) {
-			saveData.append("LOG: " + "[" + getDateString() + "]: " + value.toString() + "\n");
+		if (LOG_TO_FILE) {
+			SAVE_DATA.append("LOG: " + "[" + getDateString() + "]: " + value.toString() + "\n");
 		}
 	}
 
@@ -43,8 +44,8 @@ public class FlounderLogger {
 	public static <T> void error(final T value) {
 		System.err.println("ERROR: " + "[" + getDateString() + "]: " + value.toString());
 
-		if (OptionsLogger.LOG_TO_FILE) {
-			saveData.append("ERROR: " + "[" + getDateString() + "]: " + value.toString() + "\n");
+		if (LOG_TO_FILE) {
+			SAVE_DATA.append("ERROR: " + "[" + getDateString() + "]: " + value.toString() + "\n");
 		}
 	}
 
@@ -56,16 +57,15 @@ public class FlounderLogger {
 	public static void exception(final Exception exception) {
 		System.err.println("EXCEPTION: " + "[" + getDateString() + "]: " + exception.toString());
 
-		if (OptionsLogger.LOG_TO_FILE) {
-			saveData.append("EXCEPTION: " + "[" + getDateString() + "]: " + exception.toString() + "\n");
+		if (LOG_TO_FILE) {
+			SAVE_DATA.append("EXCEPTION: " + "[" + getDateString() + "]: " + exception.toString() + "\n");
 		}
 	}
 
 	public static void dispose() {
-		if (OptionsLogger.LOG_TO_FILE) {
-			// getLogsSave(), saveData
+		if (LOG_TO_FILE) {
 			try (PrintWriter out = new PrintWriter(getLogsSave())) {
-				for (final String line : saveData.toString().split("\n")) {
+				for (final String line : SAVE_DATA.toString().split("\n")) {
 					out.println(line);
 				}
 			} catch (final IOException e) {

@@ -23,17 +23,17 @@ public class FilterBlurHorizontal extends PostFilter {
 		init(widthValue);
 	}
 
-	public FilterBlurHorizontal() {
-		super(new ShaderProgram("filterBlurHorizontal", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")), FBO.newFBO(ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight()).fitToScreen().create());
-		fitToDisplay = true;
-		init(ManagerDevices.getDisplay().getWidth());
-	}
-
 	private void init(int widthValue) {
 		super.storeUniforms(width, scale, blendSpread);
 		this.widthValue = widthValue;
 		this.scaleValue = 2.0f;
 		this.blendSpreadValue = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
+	}
+
+	public FilterBlurHorizontal() {
+		super(new ShaderProgram("filterBlurHorizontal", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")), FBO.newFBO(ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight()).fitToScreen().create());
+		fitToDisplay = true;
+		init(ManagerDevices.getDisplay().getWidth());
 	}
 
 	public void setBlendSpread(final Vector4f blendSpreadValue) {

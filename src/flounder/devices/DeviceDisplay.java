@@ -194,6 +194,38 @@ public class DeviceDisplay {
 		glfwSwapBuffers(window);
 	}
 
+	/**
+	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
+	 */
+	public void screenshot() {
+		// Tries to create an image, otherwise throws an exception.
+		final String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
+		final File saveDirectory = new File("screenshots");
+
+		if (!saveDirectory.exists()) {
+			try {
+				saveDirectory.mkdir();
+			} catch (SecurityException e) {
+				FlounderLogger.error("The screenshot directory could not be created.");
+				FlounderLogger.exception(e);
+				return;
+			}
+		}
+
+		final File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
+		final String format = "png"; // "PNG" or "JPG".
+
+		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+
+		// Tries to create image.
+		try {
+			ImageIO.write(updateBufferedImage(), format, file);
+		} catch (Exception e) {
+			FlounderLogger.error("Failed to take screenshot.");
+			FlounderLogger.exception(e);
+		}
+	}
+
 	private BufferedImage updateBufferedImage() { // TODO Update a BufferedImage!
 		final ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
 		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGB, GL_UNSIGNED_BYTE, buffer);
@@ -227,38 +259,6 @@ public class DeviceDisplay {
 	 */
 	public int getHeight() {
 		return height;
-	}
-
-	/**
-	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
-	 */
-	public void screenshot() {
-		// Tries to create an image, otherwise throws an exception.
-		final String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		final File saveDirectory = new File("screenshots");
-
-		if (!saveDirectory.exists()) {
-			try {
-				saveDirectory.mkdir();
-			} catch (SecurityException e) {
-				FlounderLogger.error("The screenshot directory could not be created.");
-				FlounderLogger.exception(e);
-				return;
-			}
-		}
-
-		final File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
-		final String format = "png"; // "PNG" or "JPG".
-
-		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
-
-		// Tries to create image.
-		try {
-			ImageIO.write(updateBufferedImage(), format, file);
-		} catch (Exception e) {
-			FlounderLogger.error("Failed to take screenshot.");
-			FlounderLogger.exception(e);
-		}
 	}
 
 	public void setCursorHidden(final boolean hidden) {

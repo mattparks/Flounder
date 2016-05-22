@@ -1,11 +1,9 @@
 package flounder.devices;
 
 import flounder.engine.*;
-import flounder.engine.options.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.sounds.*;
-import javafx.scene.*;
 import org.lwjgl.openal.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -37,7 +35,7 @@ public class DeviceSound {
 		StreamManager.STREAMER.start();
 		sourcePool = new SourcePoolManager();
 		musicPlayer = new MusicPlayer();
-		musicPlayer.setVolume(OptionsAudio.SOUND_VOLUME);
+		musicPlayer.setVolume(MusicPlayer.SOUND_VOLUME);
 	}
 
 	/**

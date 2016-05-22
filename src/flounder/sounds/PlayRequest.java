@@ -1,7 +1,6 @@
 package flounder.sounds;
 
 import flounder.devices.*;
-import flounder.engine.options.*;
 import flounder.maths.vectors.*;
 
 /**
@@ -32,7 +31,7 @@ public class PlayRequest {
 		this.systemSound = true;
 		this.loop = false;
 
-		this.volume = volume * OptionsAudio.SOUND_VOLUME;
+		this.volume = volume * MusicPlayer.SOUND_VOLUME;
 		this.sound = sound;
 	}
 

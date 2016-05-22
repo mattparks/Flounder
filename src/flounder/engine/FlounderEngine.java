@@ -58,14 +58,55 @@ public class FlounderEngine implements Runnable {
 		}
 	}
 
+	/**
+	 * @return The engines camera implementation.
+	 */
+	public static ICamera getCamera() {
+		return module.getCamera();
+	}
+
+	public static IRendererMaster getMasterRenderer() {
+		return module.getRendererMaster();
+	}
+
+	/**
+	 * @return The projection matrix used in the current scene renderObjects.
+	 */
+	public static Matrix4f getProjectionMatrix() {
+		return module.getRendererMaster().getProjectionMatrix();
+	}
+
+	public static boolean isGamePaused() {
+		return module.getGame().isGamePaused();
+	}
+
+	public static float getScreenBlur() {
+		return module.getGame().getScreenBlur();
+	}
+
+	public static void setTargetFPS(final float targetFPS) {
+		FlounderEngine.targetFPS = targetFPS;
+	}
+
+	public static float getFPS() {
+		return frames;
+	}
+
+	public static float getUPS() {
+		return updates;
+	}
+
+	public static float getDelta() {
+		return delta;
+	}
+
+	public static float getTime() {
+		return time;
+	}
+
 	public void startEngine() {
 		devices.run();
 		this.run();
-	}
-
-	public void stopEngine() {
-		this.dispose();
-		devices.dispose();
 	}
 
 	/**
@@ -130,50 +171,9 @@ public class FlounderEngine implements Runnable {
 		frames++;
 	}
 
-	/**
-	 * @return The engines camera implementation.
-	 */
-	public static ICamera getCamera() {
-		return module.getCamera();
-	}
-
-	public static IRendererMaster getMasterRenderer() {
-		return module.getRendererMaster();
-	}
-
-	/**
-	 * @return The projection matrix used in the current scene renderObjects.
-	 */
-	public static Matrix4f getProjectionMatrix() {
-		return module.getRendererMaster().getProjectionMatrix();
-	}
-
-	public static boolean isGamePaused() {
-		return module.getGame().isGamePaused();
-	}
-
-	public static float getScreenBlur() {
-		return module.getGame().getScreenBlur();
-	}
-
-	public static void setTargetFPS(final float targetFPS) {
-		FlounderEngine.targetFPS = targetFPS;
-	}
-
-	public static float getFPS() {
-		return frames;
-	}
-
-	public static float getUPS() {
-		return updates;
-	}
-
-	public static float getDelta() {
-		return delta;
-	}
-
-	public static float getTime() {
-		return time;
+	public void stopEngine() {
+		this.dispose();
+		devices.dispose();
 	}
 
 	/**

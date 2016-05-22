@@ -47,28 +47,6 @@ public class ManagerDevices implements Runnable {
 	}
 
 	/**
-	 * Runs the engines main device loop. Call {@link #dispose()} right after running to close the device system.
-	 */
-	@Override
-	public void run() {
-//		while (initialized && ManagerDevices.getDisplay().isOpen()) {
-			final float delta = FlounderEngine.getDelta();
-			display.pollEvents();
-			joysticks.update(delta);
-			keyboard.update(delta);
-			mouse.update(delta);
-			sound.update(delta);
-//		}
-	}
-
-	/**
-	 * Updates the after frame device systems.
-	 */
-	public void swapToDisplay() {
-		display.swapBuffers();
-	}
-
-	/**
 	 * Gets the current display device manager.
 	 *
 	 * @return The current display device manager.
@@ -130,6 +108,28 @@ public class ManagerDevices implements Runnable {
 		sb.append("Max memory: " + format.format(maxMemory / 1024) + "\n");
 		sb.append("Total free memory: " + format.format((freeMemory + maxMemory - allocatedMemory) / 1024) + "\n");
 		return sb;
+	}
+
+	/**
+	 * Runs the engines main device loop. Call {@link #dispose()} right after running to close the device system.
+	 */
+	@Override
+	public void run() {
+//		while (initialized && ManagerDevices.getDisplay().isOpen()) {
+		final float delta = FlounderEngine.getDelta();
+		display.pollEvents();
+		joysticks.update(delta);
+		keyboard.update(delta);
+		mouse.update(delta);
+		sound.update(delta);
+//		}
+	}
+
+	/**
+	 * Updates the after frame device systems.
+	 */
+	public void swapToDisplay() {
+		display.swapBuffers();
 	}
 
 	/**

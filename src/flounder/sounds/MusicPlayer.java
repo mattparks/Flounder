@@ -1,7 +1,6 @@
 package flounder.sounds;
 
 import flounder.engine.*;
-import flounder.engine.options.*;
 import flounder.maths.*;
 
 import java.util.*;
@@ -11,6 +10,8 @@ import java.util.*;
  */
 public class MusicPlayer {
 	private static final float FADE_TIME = 2.0f;
+	public static float SOUND_VOLUME = 1.0f;
+
 	private final SoundSource source;
 	private final List<Sound> musicQueue;
 	private float musicVolume;
@@ -65,7 +66,7 @@ public class MusicPlayer {
 		if (fadeOut) {
 			updateFadeOut(delta);
 		} else {
-			source.setVolume(musicVolume * OptionsAudio.SOUND_VOLUME);
+			source.setVolume(musicVolume * SOUND_VOLUME);
 		}
 
 		if (!paused && !source.isPlaying() && !musicQueue.isEmpty()) {
@@ -94,7 +95,7 @@ public class MusicPlayer {
 	 */
 	private void updateFadeOut(final float delta) {
 		fadeFactor -= delta / FADE_TIME;
-		source.setVolume(finalVolume * OptionsAudio.SOUND_VOLUME * fadeFactor);
+		source.setVolume(finalVolume * SOUND_VOLUME * fadeFactor);
 
 		if (fadeFactor <= 0) {
 			fadeOut = false;

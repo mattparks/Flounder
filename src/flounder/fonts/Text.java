@@ -162,12 +162,12 @@ public class Text {
 		return colour;
 	}
 
-	public void setColour(final float r, final float g, final float b) {
-		this.colour.set(r, g, b);
-	}
-
 	public void setColour(Colour colour) {
 		this.colour.set(colour);
+	}
+
+	public void setColour(final float r, final float g, final float b) {
+		this.colour.set(r, g, b);
 	}
 
 	protected Colour getBorderColour() {
