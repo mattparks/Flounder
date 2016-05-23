@@ -10,7 +10,7 @@ public class TextBuilder {
 		this.text = text;
 		this.centered = false;
 		this.textSize = 1.0f;
-		this.font = FontManager.NEXA_BOLD;
+		this.font = FontManager.SEGOE_UI;
 	}
 
 	public Text create() {
