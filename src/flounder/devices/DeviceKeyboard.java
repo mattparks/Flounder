@@ -20,7 +20,7 @@ public class DeviceKeyboard {
 		keyboardKeys = new int[GLFW_KEY_LAST + 1];
 
 		// Sets the keyboards callbacks.
-		glfwSetKeyCallback(ManagerDevices.getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
+		glfwSetKeyCallback(FlounderDevices.getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
 			@Override
 			public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
 				if (key < 0 || key > GLFW_KEY_LAST) {

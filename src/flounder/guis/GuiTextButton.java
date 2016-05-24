@@ -53,20 +53,20 @@ public class GuiTextButton extends GuiComponent {
 		if (isMouseOver() && !mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), MAX_SCALE, CHANGE_TIME));
 			mouseOver = true;
-			ManagerDevices.getSound().playSystemSound(MOUSE_OVER_SOUND);
+			FlounderDevices.getSound().playSystemSound(MOUSE_OVER_SOUND);
 		} else if (!isMouseOver() && mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), 1.0f, CHANGE_TIME));
 			mouseOver = false;
 		}
 
 		if (isMouseOver() && GuiManager.getSelector().wasLeftClick() && listenerLeft != null) {
-			ManagerDevices.getSound().playSystemSound(mouseLeftClickSound);
+			FlounderDevices.getSound().playSystemSound(mouseLeftClickSound);
 			listenerLeft.eventOccurred();
 			GuiManager.getSelector().cancelWasEvent();
 		}
 
 		if (isMouseOver() && GuiManager.getSelector().wasRightClick() && listenerRight != null) {
-			ManagerDevices.getSound().playSystemSound(mouseRightClickSound);
+			FlounderDevices.getSound().playSystemSound(mouseRightClickSound);
 			listenerRight.eventOccurred();
 			GuiManager.getSelector().cancelWasEvent();
 		}

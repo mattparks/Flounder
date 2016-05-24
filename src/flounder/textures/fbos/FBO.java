@@ -113,7 +113,7 @@ public class FBO {
 	 */
 	public void unbindFrameBuffer() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight());
+		glViewport(0, 0, FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight());
 	}
 
 	/**
@@ -139,10 +139,10 @@ public class FBO {
 	}
 
 	private void updateSize() {
-		if (fitToScreen && (width != ManagerDevices.getDisplay().getWidth() || height != ManagerDevices.getDisplay().getHeight())) {
+		if (fitToScreen && (width != FlounderDevices.getDisplay().getWidth() || height != FlounderDevices.getDisplay().getHeight())) {
 			delete();
-			width = ManagerDevices.getDisplay().getWidth();
-			height = ManagerDevices.getDisplay().getHeight();
+			width = FlounderDevices.getDisplay().getWidth();
+			height = FlounderDevices.getDisplay().getHeight();
 			initialiseFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
 		}
 	}
@@ -165,7 +165,7 @@ public class FBO {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glDrawBuffer(GL_BACK);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	/**

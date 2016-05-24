@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Manages the GLFW devices.
  */
-public class ManagerDevices implements Runnable {
+public class FlounderDevices implements Runnable {
 	private static boolean initialized;
 	private static DeviceDisplay display;
 	private static DeviceKeyboard keyboard;
@@ -30,7 +30,7 @@ public class ManagerDevices implements Runnable {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public ManagerDevices(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+	public FlounderDevices(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
 		if (!initialized) {
 			glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 			display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
@@ -115,7 +115,7 @@ public class ManagerDevices implements Runnable {
 	 */
 	@Override
 	public void run() {
-//		while (initialized && ManagerDevices.getDisplay().isOpen()) {
+//		while (initialized && FlounderDevices.getDisplay().isOpen()) {
 		final float delta = FlounderEngine.getDelta();
 		display.pollEvents();
 		joysticks.update(delta);

@@ -56,7 +56,7 @@ public class AABBRenderer extends IRenderer {
 
 		lastWireframe = OpenglUtils.isInWireframe();
 
-		OpenglUtils.antialias(ManagerDevices.getDisplay().isAntialiasing());
+		OpenglUtils.antialias(FlounderDevices.getDisplay().isAntialiasing());
 		OpenglUtils.cullBackFaces(false);
 		OpenglUtils.goWireframe(true);
 		OpenglUtils.enableDepthTesting();

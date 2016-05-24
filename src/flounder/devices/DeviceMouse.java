@@ -42,14 +42,14 @@ public class DeviceMouse {
 		displaySelected = false;
 
 		// Sets the mouse callbacks.
-		glfwSetScrollCallback(ManagerDevices.getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
+		glfwSetScrollCallback(FlounderDevices.getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
 			public void invoke(final long window, final double xoffset, final double yoffset) {
 				mouseWheel = (float) yoffset;
 			}
 		});
 
-		glfwSetMouseButtonCallback(ManagerDevices.getDisplay().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(FlounderDevices.getDisplay().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(final long window, final int button, final int action, final int mods) {
 				// Actions: GLFW_PRESS   GLFW_RELEASE   GLFW_REPEAT
@@ -57,15 +57,15 @@ public class DeviceMouse {
 			}
 		});
 
-		glfwSetCursorPosCallback(ManagerDevices.getDisplay().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
+		glfwSetCursorPosCallback(FlounderDevices.getDisplay().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(final long window, final double xpos, final double ypos) {
-				mousePositionX = (float) (xpos / ManagerDevices.getDisplay().getWidth());
-				mousePositionY = (float) (ypos / ManagerDevices.getDisplay().getHeight());
+				mousePositionX = (float) (xpos / FlounderDevices.getDisplay().getWidth());
+				mousePositionY = (float) (ypos / FlounderDevices.getDisplay().getHeight());
 			}
 		});
 
-		glfwSetCursorEnterCallback(ManagerDevices.getDisplay().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
+		glfwSetCursorEnterCallback(FlounderDevices.getDisplay().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
 			@Override
 			public void invoke(final long window, final int entered) {
 				displaySelected = entered == GL_TRUE;

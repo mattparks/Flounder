@@ -31,9 +31,9 @@ public class FilterBlurVertical extends PostFilter {
 	}
 
 	public FilterBlurVertical() {
-		super(new ShaderProgram("filterBlurVertical", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl")), FBO.newFBO(ManagerDevices.getDisplay().getWidth(), ManagerDevices.getDisplay().getHeight()).fitToScreen().create());
+		super(new ShaderProgram("filterBlurVertical", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl")), FBO.newFBO(FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight()).fitToScreen().create());
 		fitToDisplay = true;
-		init(ManagerDevices.getDisplay().getHeight());
+		init(FlounderDevices.getDisplay().getHeight());
 	}
 
 	public void setBlendSpread(final Vector4f blendSpreadValue) {
@@ -47,7 +47,7 @@ public class FilterBlurVertical extends PostFilter {
 	@Override
 	public void storeValues() {
 		if (fitToDisplay) {
-			heightValue = ManagerDevices.getDisplay().getHeight();
+			heightValue = FlounderDevices.getDisplay().getHeight();
 		}
 
 		height.loadFloat(heightValue);

@@ -65,7 +65,7 @@ public class SoundEmitter {
 	 * @return {@code true} if the sound effect would be heard by the listener when played from this emitter.
 	 */
 	private boolean isInRange(final SoundEffect soundEffect) {
-		final float disSquared = Vector3f.subtract(ManagerDevices.getSound().getCameraPosition(), position, null).lengthSquared();
+		final float disSquared = Vector3f.subtract(FlounderDevices.getSound().getCameraPosition(), position, null).lengthSquared();
 		final float range = soundEffect.getRange() * RANGE_THRESHOLD;
 		final float rangeSquared = range * range;
 		return disSquared < rangeSquared;
@@ -126,7 +126,7 @@ public class SoundEmitter {
 		}
 
 		final PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
-		final AudioController controller = ManagerDevices.getSound().play3DSound(request);
+		final AudioController controller = FlounderDevices.getSound().play3DSound(request);
 
 		if (controller != null) {
 			playingSounds.put(soundEffect, controller);

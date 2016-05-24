@@ -14,7 +14,7 @@ import flounder.textures.*;
  */
 public class FlounderEngine implements Runnable {
 	private static boolean initialized;
-	private static ManagerDevices devices;
+	private static FlounderDevices devices;
 	private static IModule module;
 
 	private static float targetFPS;
@@ -43,7 +43,7 @@ public class FlounderEngine implements Runnable {
 		if (!initialized) {
 			FlounderEngine.targetFPS = targetFPS;
 			FlounderProfiler.init(displayTitle + " Profiler");
-			devices = new ManagerDevices(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+			devices = new FlounderDevices(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 
 			currentFrameTime = 0.0f;
 			lastFrameTime = 0.0f;
@@ -114,14 +114,14 @@ public class FlounderEngine implements Runnable {
 	 */
 	@Override
 	public void run() {
-		while (initialized && ManagerDevices.getDisplay().isOpen()) {
+		while (initialized && FlounderDevices.getDisplay().isOpen()) {
 			devices.run();
 
 			// Updates the engine.
 			update();
 
 			// Updates static delta and times.
-			currentFrameTime = ManagerDevices.getDisplay().getTime() / 1000.0f;
+			currentFrameTime = FlounderDevices.getDisplay().getTime() / 1000.0f;
 			delta = currentFrameTime - lastFrameTime;
 			lastFrameTime = currentFrameTime;
 			time += delta;

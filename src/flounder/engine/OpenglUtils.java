@@ -87,7 +87,7 @@ public class OpenglUtils {
 	}
 
 	public static void antialias(final boolean enable) {
-		if (!ManagerDevices.getDisplay().isAntialiasing()) {
+		if (!FlounderDevices.getDisplay().isAntialiasing()) {
 			return;
 		}
 

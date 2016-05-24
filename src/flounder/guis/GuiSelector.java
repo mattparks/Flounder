@@ -43,7 +43,7 @@ public class GuiSelector {
 	}
 
 	protected void update() {
-		if (ManagerDevices.getJoysticks().isConnected(selectedJoystick)) {
+		if (FlounderDevices.getJoysticks().isConnected(selectedJoystick)) {
 			if (joystickAxisX != null && joystickAxisY != null) {
 				if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
 					cursorX += (joystickAxisX.getAmount()) * 0.5f * FlounderEngine.getDelta();
@@ -60,8 +60,8 @@ public class GuiSelector {
 				rightWasClick = joystickRight.wasDown();
 			}
 		} else {
-			cursorX = ManagerDevices.getMouse().getPositionX();
-			cursorY = ManagerDevices.getMouse().getPositionY();
+			cursorX = FlounderDevices.getMouse().getPositionX();
+			cursorY = FlounderDevices.getMouse().getPositionY();
 
 			leftClick = mouseLeft.isDown();
 			rightClick = mouseRight.isDown();

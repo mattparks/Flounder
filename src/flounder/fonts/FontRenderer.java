@@ -67,7 +67,7 @@ public class FontRenderer extends IRenderer {
 		OpenglUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		final Vector2f textPosition = text.getPosition();
 		final Colour textColour = text.getColour();
-		shader.aspectRatio.loadFloat(ManagerDevices.getDisplay().getAspectRatio());
+		shader.aspectRatio.loadFloat(FlounderDevices.getDisplay().getAspectRatio());
 		shader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
 		shader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
 		shader.borderColour.loadVec3(text.getBorderColour());

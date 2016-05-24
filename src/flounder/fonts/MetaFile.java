@@ -151,7 +151,7 @@ public class MetaFile {
 		final int id = getValueOfVariable("id");
 
 		if (id == TextLoader.SPACE_ASCII) {
-			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize * (1.0f / ManagerDevices.getDisplay().getAspectRatio());
+			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize * (1.0f / FlounderDevices.getDisplay().getAspectRatio());
 			return null;
 		}
 
