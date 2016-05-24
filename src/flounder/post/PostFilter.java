@@ -46,6 +46,8 @@ public abstract class PostFilter {
 	 * @param textures A list of textures in indexed order to be bound for the shader program.
 	 */
 	public void applyFilter(final int... textures) {
+		boolean lastWireframe = OpenglUtils.isInWireframe();
+
 		fbo.bindFrameBuffer();
 		OpenglUtils.prepareNewRenderParse(1.0f, 1.0f, 1.0f);
 		shader.start();
@@ -53,6 +55,7 @@ public abstract class PostFilter {
 		OpenglUtils.antialias(false);
 		OpenglUtils.disableDepthTesting();
 		OpenglUtils.cullBackFaces(true);
+		OpenglUtils.goWireframe(false);
 		OpenglUtils.bindVAO(VAO, 0);
 
 		for (int i = 0; i < textures.length; i++) {
@@ -62,6 +65,7 @@ public abstract class PostFilter {
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length); // Render post filter.
 
 		OpenglUtils.unbindVAO(0);
+		OpenglUtils.goWireframe(lastWireframe);
 		shader.stop();
 		OpenglUtils.disableBlending();
 		OpenglUtils.enableDepthTesting();
