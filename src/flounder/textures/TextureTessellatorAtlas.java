@@ -29,7 +29,9 @@ public class TextureTessellatorAtlas {
 		if (coords == null) {
 			return new Vector2f(0, 0);
 		}
+
 		// TODO: Do some maths off of this..
+
 		return coords;
 	}
 

@@ -16,8 +16,8 @@ public class GuiTextButton extends GuiComponent {
 
 	private Text text;
 	private boolean mouseOver;
-	private Listener listenerLeft;
-	private Listener listenerRight;
+	private GuiListener guiListenerLeft;
+	private GuiListener guiListenerRight;
 
 	private Sound mouseLeftClickSound;
 	private Sound mouseRightClickSound;
@@ -40,12 +40,12 @@ public class GuiTextButton extends GuiComponent {
 		this.mouseRightClickSound = mouseRightClickSound;
 	}
 
-	public void addLeftListener(final Listener listener) {
-		listenerLeft = listener;
+	public void addLeftListener(final GuiListener guiListener) {
+		guiListenerLeft = guiListener;
 	}
 
-	public void addRightListener(final Listener listener) {
-		listenerRight = listener;
+	public void addRightListener(final GuiListener guiListener) {
+		guiListenerRight = guiListener;
 	}
 
 	@Override
@@ -59,15 +59,15 @@ public class GuiTextButton extends GuiComponent {
 			mouseOver = false;
 		}
 
-		if (isMouseOver() && GuiManager.getSelector().wasLeftClick() && listenerLeft != null) {
+		if (isMouseOver() && GuiManager.getSelector().wasLeftClick() && guiListenerLeft != null) {
 			FlounderDevices.getSound().playSystemSound(mouseLeftClickSound);
-			listenerLeft.eventOccurred();
+			guiListenerLeft.eventOccurred();
 			GuiManager.getSelector().cancelWasEvent();
 		}
 
-		if (isMouseOver() && GuiManager.getSelector().wasRightClick() && listenerRight != null) {
+		if (isMouseOver() && GuiManager.getSelector().wasRightClick() && guiListenerRight != null) {
 			FlounderDevices.getSound().playSystemSound(mouseRightClickSound);
-			listenerRight.eventOccurred();
+			guiListenerRight.eventOccurred();
 			GuiManager.getSelector().cancelWasEvent();
 		}
 	}

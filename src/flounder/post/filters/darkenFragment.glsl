@@ -6,9 +6,7 @@ out vec4 out_colour;
 
 layout(binding = 0) uniform sampler2D originalTexture;
 
-uniform vec2 cameraPosition;
-
 void main(void) {
-    out_colour = texture(originalTexture, pass_textureCoords);
-    // TODO: Make effects!
+    vec3 colour = texture(originalTexture, pass_textureCoords).rgb;
+	out_colour = vec4(colour * 0.45, 1.0);
 }

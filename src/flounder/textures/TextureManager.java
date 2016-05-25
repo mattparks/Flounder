@@ -96,8 +96,8 @@ public class TextureManager {
 		} else if (builder.isClampToBorder()) {
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
-			final FloatBuffer buffer = BufferUtils.createFloatBuffer(4); // TODO: Do the buffer stuff in the Colour class.
-			buffer.put(new float[]{builder.getBorderColour().getR(), builder.getBorderColour().getG(), builder.getBorderColour().getB(), builder.getBorderColour().getA()});
+			final FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+			builder.getBorderColour().store(buffer);
 			buffer.flip();
 			GL11.glTexParameterfv(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_BORDER_COLOR, buffer);
 		} else {

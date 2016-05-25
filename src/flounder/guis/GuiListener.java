@@ -1,5 +1,5 @@
 package flounder.guis;
 
-public interface Listener {
+public interface GuiListener {
 	void eventOccurred();
 }
