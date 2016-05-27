@@ -151,7 +151,10 @@ public class SoundSource {
 	protected void setInactive() {
 		if (active) {
 			alSourcei(sourceID, AL_BUFFER, AL_NONE);
-			currentController.setInactive();
+
+			if (currentController != null) {
+				currentController.setInactive();
+			}
 
 			for (int i = 0; i < getFinishedBuffersCount(); i++) {
 				unqueue();

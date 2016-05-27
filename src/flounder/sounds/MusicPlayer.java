@@ -184,15 +184,21 @@ public class MusicPlayer {
 	 * Can pause the current track.
 	 */
 	public void pauseTrack() {
+		if (source != null) {
+			source.togglePause();
+		}
+
 		paused = !paused;
-		source.togglePause();
 	}
 
 	/**
 	 * Skips the track that is currently playing.
 	 */
 	public void skipTrack() {
-		source.stop();
+		if (source != null) {
+			source.stop();
+		}
+
 		selectedTimeout = -1.0f;
 	}
 
