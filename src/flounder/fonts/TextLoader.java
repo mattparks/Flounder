@@ -25,7 +25,6 @@ public class TextLoader {
 	public void loadTextIntoMemory(final Text text) {
 		List<Line> lines = createStructure(text);
 		loadStructureToOpenGL(text, lines);
-		// GUIManager.addNewText(text);
 	}
 
 	private List<Line> createStructure(final Text text) {

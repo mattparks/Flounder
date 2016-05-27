@@ -2,6 +2,7 @@ package flounder.engine;
 
 import flounder.devices.*;
 import flounder.engine.profiling.*;
+import flounder.fonts.*;
 import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.maths.matrices.*;
@@ -27,7 +28,7 @@ public class FlounderEngine implements Runnable {
 	private static float time;
 
 	/**
-	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #run()} immediately after this.
+	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #startModule(FontType)} immediately after this.
 	 *
 	 * @param module The module for the engine to run off of.
 	 * @param displayWidth The window width in pixels.
@@ -53,9 +54,22 @@ public class FlounderEngine implements Runnable {
 			delta = 0.0f;
 			time = 0.0f;
 
-			(FlounderEngine.module = module).init();
+			FlounderEngine.module = module;
 			initialized = true;
 		}
+	}
+
+	/**
+	 * Sets the default family to be used when creating a font. Call {@link #run()} immediately after this.
+	 *
+	 * @param defaultFontType The default font family to use when creating texts, this can be overridden with Text.setFont().
+	 */
+	public void startModule(final FontType defaultFontType) {
+		if (defaultFontType != null) {
+			TextBuilder.DEFAULT_TYPE = defaultFontType;
+		}
+
+		module.init();
 	}
 
 	/**

@@ -1,6 +1,8 @@
 package flounder.fonts;
 
 public class TextBuilder {
+	public static FontType DEFAULT_TYPE = FontManager.FFF_FORWARD;
+
 	private final String text;
 	private boolean centered;
 	private float textSize;
@@ -10,7 +12,7 @@ public class TextBuilder {
 		this.text = text;
 		this.centered = false;
 		this.textSize = 1.0f;
-		this.font = FontManager.FFF_FORWARD;
+		this.font = DEFAULT_TYPE;
 	}
 
 	public Text create() {
