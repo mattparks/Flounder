@@ -1,5 +1,6 @@
 package flounder.fonts;
 
+import flounder.engine.*;
 import flounder.loaders.*;
 import flounder.resources.*;
 import flounder.textures.*;
@@ -48,6 +49,11 @@ public class TextLoader {
 			}
 
 			final Character character = metaData.getCharacter(c);
+
+			if (character == null) {
+				FlounderLogger.error("Could not find font char for: " + c);
+			}
+
 			currentWord.addCharacter(character);
 		}
 

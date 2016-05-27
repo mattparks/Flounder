@@ -1,5 +1,7 @@
 package flounder.fonts;
 
+import flounder.engine.*;
+
 import java.util.*;
 
 /**
@@ -27,6 +29,11 @@ public class Word {
 	 * @param character The character to be added.
 	 */
 	protected void addCharacter(final Character character) {
+		if (character == null) {
+			FlounderLogger.error("Invalid character detected!");
+			return;
+		}
+
 		characters.add(character);
 		width += character.getXAdvance() * fontSize;
 	}
