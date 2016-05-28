@@ -27,6 +27,9 @@ public class FlounderEngine implements Runnable {
 	private static float delta;
 	private static float time;
 
+	private static float currentFPS;
+	private static float currentUPS;
+
 	/**
 	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #startModule(FontType)} immediately after this.
 	 *
@@ -53,6 +56,9 @@ public class FlounderEngine implements Runnable {
 			updates = 0.0f;
 			delta = 0.0f;
 			time = 0.0f;
+
+			currentFPS = 0.0f;
+			currentUPS = 0.0f;
 
 			FlounderEngine.module = module;
 			initialized = true;
@@ -103,11 +109,11 @@ public class FlounderEngine implements Runnable {
 	}
 
 	public static float getFPS() {
-		return frames;
+		return currentFPS;
 	}
 
 	public static float getUPS() {
-		return updates;
+		return currentUPS;
 	}
 
 	public static float getDelta() {
@@ -142,6 +148,8 @@ public class FlounderEngine implements Runnable {
 
 			// Prints out current engine update and frame stats.
 			if (System.currentTimeMillis() - timerStart > 1000) {
+				currentFPS = frames;
+				currentUPS = updates;
 				FlounderLogger.log(updates + "ups, " + frames + "fps.");
 				addProfileValues();
 				timerStart += 1000;

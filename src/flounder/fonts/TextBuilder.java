@@ -1,7 +1,7 @@
 package flounder.fonts;
 
 public class TextBuilder {
-	public static FontType DEFAULT_TYPE = FontManager.FFF_FORWARD;
+	public static FontType DEFAULT_TYPE = FontManager.COMIC_SANS;
 
 	private final String text;
 	private boolean centered;

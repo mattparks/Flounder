@@ -141,8 +141,10 @@ public abstract class GuiComponent {
 	 * @param text The text currently in the component that needs to be removed.
 	 */
 	public void deleteText(final Text text) {
-		componentTexts.remove(text);
-		text.deleteFromMemory();
+		if (text != null) {
+			componentTexts.remove(text);
+			text.deleteFromMemory();
+		}
 	}
 
 	/**
