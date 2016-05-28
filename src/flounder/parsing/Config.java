@@ -1,5 +1,8 @@
 package flounder.parsing;
 
+import flounder.engine.*;
+import flounder.resources.*;
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -9,23 +12,48 @@ import java.util.Map.*;
  * Loads and parses a configuration file.
  */
 public class Config {
-	private final String fileName;
+	private final MyFile file;
 	private final Map<String, String> map;
 
 	/**
 	 * Loads and parses a configuration file.
 	 *
-	 * @param fileName The name and path to the configuration file.
+	 * @param file The path to the configuration file.
 	 *
 	 * @throws FileNotFoundException If the file cannot be found.
 	 * @throws IOException If the file cannot be loaded.
 	 * @throws ParseException If the file cannot be properly parsed.
 	 */
-	public Config(final String fileName) throws IOException, ParseException {
-		this.fileName = fileName;
+	public Config(final MyFile file) {
+		this.file = file;
 		map = new HashMap<>();
 
-		try (final BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+		final File saveDirectory = new File(file.getPath().replaceAll(file.getName(), "").substring(1));
+		final File sameFile = new File(file.getPath().substring(1));
+
+		if (!saveDirectory.exists()) {
+			System.out.println("Creating directory: " + saveDirectory);
+
+			try {
+				saveDirectory.mkdir();
+			} catch (final SecurityException e) {
+				FlounderLogger.error("Filed to create " + file.getPath() + " folder.");
+				FlounderLogger.exception(e);
+			}
+		}
+
+		if (!sameFile.exists()) {
+			System.out.println("Creating file: " + sameFile);
+
+			try {
+				sameFile.createNewFile();
+			} catch (final IOException e) {
+				FlounderLogger.error("Filed to create " + file.getPath() + " file.");
+				FlounderLogger.exception(e);
+			}
+		}
+
+		try (final BufferedReader br = new BufferedReader(new FileReader(file.getPath().substring(1)))) {
 			String line;
 			int lineNumber = 0;
 
@@ -50,29 +78,33 @@ public class Config {
 
 				map.put(tokens[0].trim(), tokens[1].trim());
 			}
+		} catch (final IOException e) {
+			FlounderLogger.exception(e);
+		} catch (final ParseException e) {
+			FlounderLogger.exception(e);
 		}
 	}
 
 	/**
-	 * Saves a new configuration file using this configs fileName.
+	 * Saves a new configuration file using this configs file.
 	 *
 	 * @param map The values being written to the config.
 	 *
 	 * @throws IOException If the file cannot be written.
 	 */
-	public void write(final Map<String, String> map) throws IOException {
-		write(fileName, map);
+	public void write(final Map<String, String> map) {
+		write(file.getPath().substring(1), map);
 	}
 
 	/**
-	 * Saves a new configuration file using a provided fileName.
+	 * Saves a new configuration file using a provided file.
 	 *
 	 * @param fileName The name and path of the output file.
 	 * @param map The values being written to the config.
 	 *
 	 * @throws IOException If the file cannot be written.
 	 */
-	public void write(final String fileName, final Map<String, String> map) throws IOException {
+	public void write(final String fileName, final Map<String, String> map) {
 		try (final BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
 			final Iterator<Entry<String, String>> it = map.entrySet().iterator();
 
@@ -81,6 +113,8 @@ public class Config {
 				final String line = pair.getKey() + "=" + pair.getValue() + "\n";
 				bw.write(line);
 			}
+		} catch (final IOException e) {
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -94,11 +128,13 @@ public class Config {
 	public String getString(final String entry) {
 		final String result = map.get(entry);
 
+		if (result == null) {
+			FlounderLogger.error("Config could not find string '" + entry + "' in file: " + file);
+		}
+
 		if (result != null && result.charAt(0) == '$') {
 			return getString(result.substring(1));
 		}
-
-		// Logger.error("Config could not find string '" + entry + "' in file: " + fileName);
 
 		return result;
 	}

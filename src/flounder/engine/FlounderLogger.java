@@ -83,7 +83,7 @@ public class FlounderLogger {
 
 			try {
 				saveDirectory.mkdir();
-			} catch (SecurityException e) {
+			} catch (final SecurityException e) {
 				FlounderLogger.error("Filed to create logging folder.");
 				FlounderLogger.exception(e);
 			}
