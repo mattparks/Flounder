@@ -52,9 +52,9 @@ public class TextLoader {
 
 			if (character == null) {
 				FlounderLogger.error("Could not find font char for: " + c);
+			} else {
+				currentWord.addCharacter(character);
 			}
-
-			currentWord.addCharacter(character);
 		}
 
 		completeStructure(lines, currentLine, currentWord, text);

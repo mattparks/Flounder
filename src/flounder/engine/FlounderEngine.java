@@ -66,7 +66,7 @@ public class FlounderEngine implements Runnable {
 	}
 
 	/**
-	 * Sets the default family to be used when creating a font. Call {@link #run()} immediately after this.
+	 * Sets the default family to be used when creating a font. Call {@link #startEngine()} immediately after this.
 	 *
 	 * @param defaultFontType The default font family to use when creating texts, this can be overridden with Text.setFont().
 	 */
@@ -130,7 +130,7 @@ public class FlounderEngine implements Runnable {
 	}
 
 	/**
-	 * Runs the engines main game loop. Call {@link #dispose()} right after running to close the engine.
+	 * Runs the engines main game loop. Call {@link #closeEngine()} right after running to close the engine.
 	 */
 	@Override
 	public void run() {
@@ -193,15 +193,10 @@ public class FlounderEngine implements Runnable {
 		frames++;
 	}
 
-	public void stopEngine() {
-		this.dispose();
-		devices.dispose();
-	}
-
 	/**
-	 * Deals with closing down the engine and all necessary systems.
+	 * Deals with closing down the engine and all necessary systems. Do not run OpenGL after this.
 	 */
-	public void dispose() {
+	public void closeEngine() {
 		if (initialized) {
 			Loader.dispose();
 			RequestProcessor.dispose();
@@ -211,6 +206,7 @@ public class FlounderEngine implements Runnable {
 			module.dispose();
 			FlounderProfiler.dispose();
 			FlounderLogger.dispose();
+			devices.dispose();
 			initialized = false;
 		}
 	}

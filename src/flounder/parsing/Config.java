@@ -86,26 +86,14 @@ public class Config {
 	}
 
 	/**
-	 * Saves a new configuration file using this configs file.
+	 * Saves a new configuration file using a provided file.
 	 *
 	 * @param map The values being written to the config.
 	 *
 	 * @throws IOException If the file cannot be written.
 	 */
 	public void write(final Map<String, String> map) {
-		write(file.getPath().substring(1), map);
-	}
-
-	/**
-	 * Saves a new configuration file using a provided file.
-	 *
-	 * @param fileName The name and path of the output file.
-	 * @param map The values being written to the config.
-	 *
-	 * @throws IOException If the file cannot be written.
-	 */
-	public void write(final String fileName, final Map<String, String> map) {
-		try (final BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+		try (final BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
 			final Iterator<Entry<String, String>> it = map.entrySet().iterator();
 
 			while (it.hasNext()) {
@@ -176,7 +164,7 @@ public class Config {
 	 * Get a string from the configuration file, with a default if that string cannot be found.
 	 *
 	 * @param entry The name of the configuration entry.
-	 * @param defaultEntry The name of the default configuration entry.
+	 * @param defaultEntry The the default configuration entry.
 	 *
 	 * @return The string assigned to the entry if found, otherwise the string assigned to the default entry.
 	 */
@@ -184,7 +172,9 @@ public class Config {
 		String result = getString(entry);
 
 		if (result == null) {
-			result = getString(defaultEntry);
+			map.put(entry, defaultEntry);
+			write(map);
+			result = getString(entry);
 		}
 
 		return result;
@@ -194,35 +184,35 @@ public class Config {
 	 * Get an integer from the configuration file, with a default if that integer cannot be found.
 	 *
 	 * @param entry The name of the configuration entry.
-	 * @param defaultEntry The name of the default configuration entry.
+	 * @param defaultEntry The the default configuration entry.
 	 *
 	 * @return The integer assigned to the entry if found, otherwise the integer assigned to the default entry.
 	 */
-	public int getIntWithDefault(final String entry, final String defaultEntry) {
-		return Integer.parseInt(getStringWithDefault(entry, defaultEntry));
+	public int getIntWithDefault(final String entry, final int defaultEntry) {
+		return Integer.parseInt(getStringWithDefault(entry, "" + defaultEntry));
 	}
 
 	/**
 	 * Get a double from the configuration file, with a default if that double cannot be found.
 	 *
 	 * @param entry The name of the configuration entry.
-	 * @param defaultEntry The name of the default configuration entry.
+	 * @param defaultEntry The the default configuration entry.
 	 *
 	 * @return The double assigned to the entry if found, otherwise the double assigned to the default entry.
 	 */
-	public double getDoubleWithDefault(final String entry, final String defaultEntry) {
-		return Double.parseDouble(getStringWithDefault(entry, defaultEntry));
+	public double getDoubleWithDefault(final String entry, final double defaultEntry) {
+		return Double.parseDouble(getStringWithDefault(entry, "" + defaultEntry));
 	}
 
 	/**
 	 * Get a boolean from the configuration file, with a default if that boolean cannot be found.
 	 *
 	 * @param entry The name of the configuration entry.
-	 * @param defaultEntry The name of the default configuration entry.
+	 * @param defaultEntry The the default configuration entry.
 	 *
 	 * @return The boolean assigned to the entry if found, otherwise the boolean assigned to the default entry.
 	 */
-	public boolean getBooleanWithDefault(final String entry, final String defaultEntry) {
-		return Boolean.parseBoolean(getStringWithDefault(entry, defaultEntry));
+	public boolean getBooleanWithDefault(final String entry, final boolean defaultEntry) {
+		return Boolean.parseBoolean(getStringWithDefault(entry, "" + defaultEntry));
 	}
 }
