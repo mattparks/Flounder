@@ -2,9 +2,9 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.engine.*;
-import flounder.engine.profiling.*;
 import flounder.inputs.*;
 import flounder.maths.*;
+import flounder.profiling.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 

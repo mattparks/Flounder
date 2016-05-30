@@ -1,4 +1,4 @@
-package flounder.engine.profiling;
+package flounder.profiling;
 
 import javax.swing.*;
 

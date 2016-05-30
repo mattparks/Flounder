@@ -2,9 +2,9 @@ package flounder.fonts;
 
 import flounder.devices.*;
 import flounder.engine.*;
-import flounder.engine.profiling.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.profiling.*;
 
 import static org.lwjgl.opengl.GL11.*;
 

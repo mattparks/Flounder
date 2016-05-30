@@ -1,7 +1,7 @@
 package flounder.engine;
 
-import flounder.engine.profiling.*;
 import flounder.maths.vectors.*;
+import flounder.profiling.*;
 
 /**
  * Represents a sub renderer in the engine.

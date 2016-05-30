@@ -1,9 +1,9 @@
 package flounder.guis;
 
 import flounder.engine.*;
-import flounder.engine.profiling.*;
 import flounder.loaders.*;
 import flounder.maths.vectors.*;
+import flounder.profiling.*;
 
 import static org.lwjgl.opengl.GL11.*;
 

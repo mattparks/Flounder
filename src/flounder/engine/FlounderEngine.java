@@ -1,13 +1,13 @@
 package flounder.engine;
 
 import flounder.devices.*;
-import flounder.engine.profiling.*;
 import flounder.fonts.*;
 import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.maths.matrices.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
+import flounder.profiling.*;
 import flounder.textures.*;
 
 /**
@@ -66,19 +66,6 @@ public class FlounderEngine implements Runnable {
 	}
 
 	/**
-	 * Sets the default family to be used when creating a font. Call {@link #startEngine()} immediately after this.
-	 *
-	 * @param defaultFontType The default font family to use when creating texts, this can be overridden with Text.setFont().
-	 */
-	public void startModule(final FontType defaultFontType) {
-		if (defaultFontType != null) {
-			TextBuilder.DEFAULT_TYPE = defaultFontType;
-		}
-
-		module.init();
-	}
-
-	/**
 	 * @return The engines camera implementation.
 	 */
 	public static ICamera getCamera() {
@@ -124,8 +111,17 @@ public class FlounderEngine implements Runnable {
 		return time;
 	}
 
-	public void startEngine() {
-		devices.run();
+	/**
+	 * Starts the engine and sets the default family to be used when creating a font. Call {@link #closeEngine()} immediately after this.
+	 *
+	 * @param defaultFontType The default font family to use when creating texts, this can be overridden with Text.setFont().
+	 */
+	public void startEngine(final FontType defaultFontType) {
+		if (defaultFontType != null) {
+			TextBuilder.DEFAULT_TYPE = defaultFontType;
+		}
+
+		module.init();
 		this.run();
 	}
 

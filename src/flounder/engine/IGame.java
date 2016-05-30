@@ -15,8 +15,8 @@ public abstract class IGame {
 	 * Creates a new game entry point.
 	 */
 	public IGame() {
-		focusPosition = new Vector3f(0.0f, 0.0f, 0.0f);
-		focusRotation = new Vector3f(0.0f, 0.0f, 0.0f);
+		focusPosition = new Vector3f();
+		focusRotation = new Vector3f();
 		gamePaused = false;
 		screenBlur = 0.0f;
 	}

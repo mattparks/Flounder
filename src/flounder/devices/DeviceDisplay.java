@@ -1,7 +1,8 @@
 package flounder.devices;
 
 import flounder.engine.*;
-import flounder.engine.profiling.*;
+import flounder.engine.*;
+import flounder.profiling.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 

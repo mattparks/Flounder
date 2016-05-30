@@ -45,7 +45,8 @@ public class DeviceSound {
 	 */
 	protected void update(final float delta) {
 		final ICamera camera = FlounderEngine.getCamera();
-		if (camera != null) {
+
+		if (camera != null && camera.getPosition() != null) {
 			cameraPosition.set(camera.getPosition());
 			AL10.alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 			musicPlayer.update(FlounderEngine.getDelta());
