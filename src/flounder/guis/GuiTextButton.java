@@ -11,33 +11,30 @@ import java.util.*;
 public class GuiTextButton extends GuiComponent {
 	private static final float CHANGE_TIME = 0.15f;
 	private static final float MAX_SCALE = 1.1f;
-	private static final Sound MOUSE_DEFAULT_CLICK_SOUND = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button2.wav"), 0.2f);
-	private static final Sound MOUSE_OVER_SOUND = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button1.wav"), 0.2f);
 
 	private Text text;
 	private boolean mouseOver;
 	private GuiListener guiListenerLeft;
 	private GuiListener guiListenerRight;
 
+	private Sound mouseHoverOverSound;
 	private Sound mouseLeftClickSound;
 	private Sound mouseRightClickSound;
 
 	public GuiTextButton(final Text text) {
 		this.text = text;
 		mouseOver = false;
-
-		mouseLeftClickSound = MOUSE_DEFAULT_CLICK_SOUND;
-		mouseRightClickSound = MOUSE_DEFAULT_CLICK_SOUND;
-
 		super.addText(text, 0.0f, 0.0f, 1.0f);
 	}
 
-	public void setMouseLeftClickSound(final Sound mouseLeftClickSound) {
+	public void setSounds(final Sound mouseHoverOverSound, final Sound mouseLeftClickSound, final Sound mouseRightClickSound) {
+		this.mouseHoverOverSound = mouseHoverOverSound;
 		this.mouseLeftClickSound = mouseLeftClickSound;
+		this.mouseRightClickSound = mouseRightClickSound;
 	}
 
-	public void setMouseRightClickSound(final Sound mouseRightClickSound) {
-		this.mouseRightClickSound = mouseRightClickSound;
+	public Text getText() {
+		return text;
 	}
 
 	public void addLeftListener(final GuiListener guiListener) {
@@ -53,7 +50,7 @@ public class GuiTextButton extends GuiComponent {
 		if (isMouseOver() && !mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), MAX_SCALE, CHANGE_TIME));
 			mouseOver = true;
-			FlounderDevices.getSound().playSystemSound(MOUSE_OVER_SOUND);
+			FlounderDevices.getSound().playSystemSound(mouseHoverOverSound);
 		} else if (!isMouseOver() && mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), 1.0f, CHANGE_TIME));
 			mouseOver = false;
