@@ -6,10 +6,10 @@ import java.util.*;
  * Represents a line of text during the loading of a text.
  */
 public class Line {
-	private final double maxLength;
-	private final double spaceSize;
+	private double maxLength;
+	private double spaceSize;
 
-	private final List<Word> words;
+	private List<Word> words;
 	private double currentLineLength;
 
 	/**
@@ -19,7 +19,7 @@ public class Line {
 	 * @param fontSize The size of font being used.
 	 * @param maxLength The screen-space maximum length of a line.
 	 */
-	protected Line(final double spaceWidth, final double fontSize, final double maxLength) {
+	protected Line(double spaceWidth, double fontSize, double maxLength) {
 		this.maxLength = maxLength;
 		this.spaceSize = spaceWidth * fontSize;
 		this.words = new ArrayList<>();
@@ -33,7 +33,7 @@ public class Line {
 	 *
 	 * @return {@code true} if the word has successfully been added to the line.
 	 */
-	protected boolean attemptToAddWord(final Word word) {
+	protected boolean attemptToAddWord(Word word) {
 		double additionalLength = word.getWordWidth();
 		additionalLength += !words.isEmpty() ? spaceSize : 0.0;
 

@@ -8,9 +8,9 @@ import java.util.*;
 public class GuiManager {
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
-	private static final GuiScreenContainer container = new GuiScreenContainer();
-	private static final List<GuiTexture> guiTextures = new ArrayList<>();
-	private static final GuiSelector selector = new GuiSelector();
+	private static GuiScreenContainer container = new GuiScreenContainer();
+	private static List<GuiTexture> guiTextures = new ArrayList<>();
+	private static GuiSelector selector = new GuiSelector();
 
 	public static void updateGuis() {
 		guiTextures.clear();
@@ -19,7 +19,7 @@ public class GuiManager {
 		container.update(guiTextures, FontManager.getTexts());
 	}
 
-	public static void addComponent(final GuiComponent component, final float relX, final float relY, final float relScaleX, final float relScaleY) {
+	public static void addComponent(GuiComponent component, float relX, float relY, float relScaleX, float relScaleY) {
 		container.addComponent(component, relX, relY, relScaleX, relScaleY);
 	}
 

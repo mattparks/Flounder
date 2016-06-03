@@ -26,7 +26,7 @@ public class ShaderProgram {
 	 * @param vertexFile The vertex shader file.
 	 * @param fragmentFile The fragment shader file.
 	 */
-	public ShaderProgram(final String shaderName, final MyFile vertexFile, final MyFile fragmentFile) {
+	public ShaderProgram(String shaderName, MyFile vertexFile, MyFile fragmentFile) {
 		if (!initialized) {
 			layoutLocations = new ArrayList<>();
 			layoutBindings = new ArrayList<>();
@@ -43,7 +43,7 @@ public class ShaderProgram {
 	 * @param vertexString The vertex shader string.
 	 * @param fragmentString The fragment shader string.
 	 */
-	public ShaderProgram(final String shaderName, final String vertexString, final String fragmentString) {
+	public ShaderProgram(String shaderName, String vertexString, String fragmentString) {
 		if (!initialized) {
 			layoutLocations = new ArrayList<>();
 			layoutBindings = new ArrayList<>();
@@ -53,11 +53,11 @@ public class ShaderProgram {
 		}
 	}
 
-	private StringBuilder loadFromFile(final MyFile file, final boolean vertexShader, final boolean addToLayouts) {
-		final StringBuilder shaderSource = new StringBuilder();
+	private StringBuilder loadFromFile(MyFile file, boolean vertexShader, boolean addToLayouts) {
+		StringBuilder shaderSource = new StringBuilder();
 
 		try {
-			final BufferedReader reader = file.getReader();
+			BufferedReader reader = file.getReader();
 			String line;
 
 			while ((line = reader.readLine()) != null) {
@@ -72,8 +72,8 @@ public class ShaderProgram {
 		return shaderSource;
 	}
 
-	private StringBuilder loadFromString(final String string, final boolean vertexShader, final boolean addToLayouts) {
-		final StringBuilder shaderSource = new StringBuilder();
+	private StringBuilder loadFromString(String string, boolean vertexShader, boolean addToLayouts) {
+		StringBuilder shaderSource = new StringBuilder();
 
 		for (String line : string.split("\n")) {
 			shaderSource.append(processShaderLine(line, vertexShader, addToLayouts) + "\n");
@@ -82,7 +82,7 @@ public class ShaderProgram {
 		return shaderSource;
 	}
 
-	private StringBuilder processShaderLine(final String line, final boolean vertexShader, final boolean addToLayouts) {
+	private StringBuilder processShaderLine(String line, boolean vertexShader, boolean addToLayouts) {
 		if (line.contains("varying")) {
 			if (vertexShader) {
 				return new StringBuilder().append(line.replace("varying", "out"));
@@ -94,7 +94,7 @@ public class ShaderProgram {
 		if (line.contains("#include")) {
 			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
 			included = included.substring("#include".length(), included.length());
-			final StringBuilder includedString = loadFromFile(new MyFile(included), true, true);
+			StringBuilder includedString = loadFromFile(new MyFile(included), true, true);
 			return includedString;
 		} else if (line.replaceAll("\\s+", "").startsWith("layout") && addToLayouts) {
 			if (line.contains("location")) {
@@ -109,8 +109,8 @@ public class ShaderProgram {
 		return new StringBuilder().append(line);
 	}
 
-	private int loadShader(final StringBuilder source, final int type) {
-		final int shaderID = glCreateShader(type);
+	private int loadShader(StringBuilder source, int type) {
+		int shaderID = glCreateShader(type);
 		glShaderSource(shaderID, source);
 		glCompileShader(shaderID);
 
@@ -123,7 +123,7 @@ public class ShaderProgram {
 		return shaderID;
 	}
 
-	private int findCharPos(final String line, final char c) {
+	private int findCharPos(String line, char c) {
 		for (int i = 0; i < line.length(); i++) {
 			if (line.charAt(i) == c) {
 				return i;
@@ -133,14 +133,14 @@ public class ShaderProgram {
 		return 0;
 	}
 
-	private void initShader(final int vertexShaderID, final int fragmentShaderID) {
+	private void initShader(int vertexShaderID, int fragmentShaderID) {
 		programID = glCreateProgram();
 		glAttachShader(programID, vertexShaderID);
 		glAttachShader(programID, fragmentShaderID);
 
-		for (final String l : layoutLocations) {
+		for (String l : layoutLocations) {
 			String locationName = l.substring(l.lastIndexOf(" ") + 1, l.length() - 1);
-			final int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
+			int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
 			glBindAttribLocation(programID, locationValue, locationName);
 		}
 
@@ -152,9 +152,9 @@ public class ShaderProgram {
 
 		start();
 
-		for (final String b : layoutBindings) {
+		for (String b : layoutBindings) {
 			String bindingName = b.substring(b.lastIndexOf(" ") + 1, b.length() - 1);
-			final int bindingValue = Integer.parseInt(b.substring(findCharPos(b, '=') + 1, findCharPos(b, ')')).replaceAll("\\s+", ""));
+			int bindingValue = Integer.parseInt(b.substring(findCharPos(b, '=') + 1, findCharPos(b, ')')).replaceAll("\\s+", ""));
 			UniformSampler sampler = new UniformSampler(bindingName);
 			sampler.storeUniformLocation(programID);
 			sampler.loadTexUnit(bindingValue);
@@ -169,7 +169,7 @@ public class ShaderProgram {
 		layoutBindings = null;
 	}
 
-	public void storeAllUniformLocations(final Uniform... uniforms) {
+	public void storeAllUniformLocations(Uniform... uniforms) {
 		for (Uniform uniform : uniforms) {
 			uniform.storeUniformLocation(programID);
 		}

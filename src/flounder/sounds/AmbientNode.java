@@ -15,8 +15,8 @@ public class AmbientNode {
 	private static final float RADIUS_CHANGE_AGIL = 0.5f;
 	private static final float RANGE_THRESHOLD = 1.2f;
 
-	private final Vector3f position;
-	private final List<Sound> sounds;
+	private Vector3f position;
+	private List<Sound> sounds;
 	private SmoothFloat innerRadius;
 	private SmoothFloat fadeOutRadius;
 	private float volume;
@@ -34,7 +34,7 @@ public class AmbientNode {
 	 * @param fadeOutRange The distance between the inner and outer radius's of the node.
 	 * @param sounds The various sounds that the node can play.
 	 */
-	public AmbientNode(final Vector3f position, final float innerRange, final float fadeOutRange, final List<Sound> sounds) {
+	public AmbientNode(Vector3f position, float innerRange, float fadeOutRange, List<Sound> sounds) {
 		this.position = position;
 		this.innerRadius = new SmoothFloat(innerRange, RADIUS_CHANGE_AGIL);
 		this.fadeOutRadius = new SmoothFloat(fadeOutRange, RADIUS_CHANGE_AGIL);
@@ -50,9 +50,9 @@ public class AmbientNode {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	public void update(final float delta) {
+	public void update(float delta) {
 		updateValues(delta);
-		final float distance = getDistanceFromListener();
+		float distance = getDistanceFromListener();
 
 		if (!active && distance <= getRange()) {
 			playNewSound();
@@ -66,7 +66,7 @@ public class AmbientNode {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	private void updateValues(final float delta) {
+	private void updateValues(float delta) {
 		innerRadius.update(delta);
 		fadeOutRadius.update(delta);
 
@@ -86,8 +86,8 @@ public class AmbientNode {
 	 * Starts playing a random sound from the available sounds list.
 	 */
 	private void playNewSound() {
-		final Sound sound = chooseNextSound();
-		final PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, position, innerRadius.get(), getRange());
+		Sound sound = chooseNextSound();
+		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, position, innerRadius.get(), getRange());
 		controller = FlounderDevices.getSound().play3DSound(request);
 		active = controller != null;
 	}
@@ -117,7 +117,7 @@ public class AmbientNode {
 	 * @param delta The time in seconds since the last frame.
 	 * @param distance The distance of the {@link IAudioListener} from the node's center.
 	 */
-	private void updateActiveNode(final float delta, final float distance) {
+	private void updateActiveNode(float delta, float distance) {
 		if (distance >= getRange() * RANGE_THRESHOLD) {
 			controller.stop();
 			active = false;
@@ -141,7 +141,7 @@ public class AmbientNode {
 	 * @param innerRange The distance from the center of the node to the inner radius. Within this radius the ambient sounds are played at full volume.
 	 * @param fadeOutRange The distance between the inner and outer radius's.
 	 */
-	public void setRanges(final float innerRange, final float fadeOutRange) {
+	public void setRanges(float innerRange, float fadeOutRange) {
 		innerRadius.set(innerRange);
 		fadeOutRadius.set(fadeOutRange);
 	}
@@ -151,7 +151,7 @@ public class AmbientNode {
 	 *
 	 * @param sounds The list of sounds.
 	 */
-	public void setSounds(final List<Sound> sounds) {
+	public void setSounds(List<Sound> sounds) {
 		this.sounds.clear();
 		this.sounds.addAll(sounds);
 
@@ -165,7 +165,7 @@ public class AmbientNode {
 	 *
 	 * @param sound The sound to be played on repeat.
 	 */
-	public void setSound(final Sound sound) {
+	public void setSound(Sound sound) {
 		sounds.clear();
 		sounds.add(sound);
 
@@ -179,7 +179,7 @@ public class AmbientNode {
 	 *
 	 * @param sound The new sound to be added to the list.
 	 */
-	public void addSound(final Sound sound) {
+	public void addSound(Sound sound) {
 		sounds.add(sound);
 	}
 
@@ -188,7 +188,7 @@ public class AmbientNode {
 	 *
 	 * @param sound The sound to remove.
 	 */
-	public void removeSound(final Sound sound) {
+	public void removeSound(Sound sound) {
 		sounds.remove(sound);
 	}
 
@@ -197,7 +197,7 @@ public class AmbientNode {
 	 *
 	 * @param targetVolume The desired volume.
 	 */
-	public void setVolume(final float targetVolume) {
+	public void setVolume(float targetVolume) {
 		volume = targetVolume;
 	}
 }

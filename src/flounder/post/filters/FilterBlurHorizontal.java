@@ -7,14 +7,14 @@ import flounder.shaders.*;
 import flounder.textures.fbos.*;
 
 public class FilterBlurHorizontal extends PostFilter {
-	private final UniformFloat width = new UniformFloat("width");
-	private final UniformFloat scale = new UniformFloat("scale");
+	private UniformFloat width = new UniformFloat("width");
+	private UniformFloat scale = new UniformFloat("scale");
 
 	private int widthValue;
 	private float scaleValue;
 	private boolean fitToDisplay;
 
-	public FilterBlurHorizontal(final int widthValue, final int heightValue) {
+	public FilterBlurHorizontal(int widthValue, int heightValue) {
 		super(new ShaderProgram("filterBlurHorizontal", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")), FBO.newFBO(widthValue, heightValue).create());
 		fitToDisplay = false;
 		init(widthValue);
@@ -32,7 +32,7 @@ public class FilterBlurHorizontal extends PostFilter {
 		init(FlounderDevices.getDisplay().getWidth());
 	}
 
-	public void setScale(final float scale) {
+	public void setScale(float scale) {
 		this.scaleValue = scale;
 	}
 

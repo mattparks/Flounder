@@ -27,7 +27,7 @@ public class FBO {
 	private int depthBuffer;
 	private int colourBuffer;
 
-	protected FBO(final int width, final int height, final boolean fitToScreen, final FBOBuilder.DepthBufferType depthBufferType, final boolean useColourBuffer, final boolean linearFiltering, final boolean clampEdge, final boolean alphaChannel, final boolean antialiased, final int samples) {
+	protected FBO(int width, int height, boolean fitToScreen, FBOBuilder.DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
 		this.width = width;
 		this.height = height;
 		this.fitToScreen = fitToScreen;
@@ -41,7 +41,7 @@ public class FBO {
 		initialiseFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
 	}
 
-	private void initialiseFBO(final FBOBuilder.DepthBufferType type, final boolean useColourBuffer, final boolean linear, final boolean clamp, final int samples) {
+	private void initialiseFBO(FBOBuilder.DepthBufferType type, boolean useColourBuffer, boolean linear, boolean clamp, int samples) {
 		createFBO(useColourBuffer);
 
 		if (!antialiased) {
@@ -62,13 +62,13 @@ public class FBO {
 		unbindFrameBuffer();
 	}
 
-	private void createFBO(final boolean useColourBuffer) {
+	private void createFBO(boolean useColourBuffer) {
 		frameBuffer = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 		glDrawBuffer(useColourBuffer ? GL_COLOR_ATTACHMENT0 : GL_FALSE);
 	}
 
-	private void createTextureAttachment(final boolean linear, final boolean clamp) {
+	private void createTextureAttachment(boolean linear, boolean clamp) {
 		colourTexture = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, colourTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, alphaChannel ? GL_RGBA : GL_RGB, width, height, 0, alphaChannel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
@@ -79,7 +79,7 @@ public class FBO {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colourTexture, 0);
 	}
 
-	private void createDepthBufferAttachment(final int samples) {
+	private void createDepthBufferAttachment(int samples) {
 		depthBuffer = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 
@@ -101,7 +101,7 @@ public class FBO {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	}
 
-	private void attachMutlisampleColourBuffer(final int samples) {
+	private void attachMutlisampleColourBuffer(int samples) {
 		colourBuffer = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, colourBuffer);
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, alphaChannel ? GL_RGBA8 : GL_RGB8, width, height);
@@ -124,7 +124,7 @@ public class FBO {
 	 *
 	 * @return A new FBO Builder.
 	 */
-	public static FBOBuilder newFBO(final int width, final int height) {
+	public static FBOBuilder newFBO(int width, int height) {
 		return new FBOBuilder(width, height);
 	}
 
@@ -173,7 +173,7 @@ public class FBO {
 	 *
 	 * @param outputFBO The other FBO to blit to.
 	 */
-	public void resolveMultisampledFBO(final FBO outputFBO) {
+	public void resolveMultisampledFBO(FBO outputFBO) {
 		outputFBO.updateSize();
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);

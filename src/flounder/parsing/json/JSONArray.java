@@ -10,14 +10,14 @@ import java.util.*;
  * An array in a JSON file.
  */
 public class JSONArray extends JSONValue {
-	private final List<JSONValue> values;
+	private List<JSONValue> values;
 
 	/**
 	 * Creates a new JSONArray from an existing array.
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final JSONValue[] arr) {
+	public JSONArray(JSONValue[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -37,7 +37,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Integer[] arr) {
+	public JSONArray(Integer[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -50,7 +50,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final int val) {
+	public void add(int val) {
 		add(create(val));
 	}
 
@@ -59,7 +59,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Short[] arr) {
+	public JSONArray(Short[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -72,7 +72,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final short val) {
+	public void add(short val) {
 		add(create(val));
 	}
 
@@ -81,7 +81,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Long[] arr) {
+	public JSONArray(Long[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -94,7 +94,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final long val) {
+	public void add(long val) {
 		add(create(val));
 	}
 
@@ -103,7 +103,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Byte[] arr) {
+	public JSONArray(Byte[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -116,7 +116,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final byte val) {
+	public void add(byte val) {
 		add(create(val));
 	}
 
@@ -125,7 +125,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Character[] arr) {
+	public JSONArray(Character[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -138,7 +138,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final char val) {
+	public void add(char val) {
 		add(create(val));
 	}
 
@@ -147,7 +147,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Float[] arr) {
+	public JSONArray(Float[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -160,7 +160,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final float val) {
+	public void add(float val) {
 		add(create(val));
 	}
 
@@ -169,7 +169,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Double[] arr) {
+	public JSONArray(Double[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -182,7 +182,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final double val) {
+	public void add(double val) {
 		add(create(val));
 	}
 
@@ -191,7 +191,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final Boolean[] arr) {
+	public JSONArray(Boolean[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -204,7 +204,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final boolean val) {
+	public void add(boolean val) {
 		add(create(val));
 	}
 
@@ -213,7 +213,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final int[] arr) {
+	public JSONArray(int[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -226,7 +226,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final long[] arr) {
+	public JSONArray(long[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -239,7 +239,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final short[] arr) {
+	public JSONArray(short[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -252,7 +252,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final byte[] arr) {
+	public JSONArray(byte[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -265,7 +265,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final float[] arr) {
+	public JSONArray(float[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -278,7 +278,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final double[] arr) {
+	public JSONArray(double[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -291,7 +291,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final char[] arr) {
+	public JSONArray(char[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -304,7 +304,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final boolean[] arr) {
+	public JSONArray(boolean[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -317,7 +317,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param arr The array to create from.
 	 */
-	public JSONArray(final String[] arr) {
+	public JSONArray(String[] arr) {
 		this();
 
 		for (int i = 0; i < arr.length; i++) {
@@ -330,7 +330,7 @@ public class JSONArray extends JSONValue {
 	 *
 	 * @param val The value to add.
 	 */
-	public void add(final String val) {
+	public void add(String val) {
 		add(create(val));
 	}
 
@@ -345,8 +345,8 @@ public class JSONArray extends JSONValue {
 	 * @throws IOException If a token cannot be read.
 	 * @throws ParseException If the tokens cannot be parsed into a JSONValue.
 	 */
-	public static JSONValue parse(final TokenReader tokens, String token) throws IOException, ParseException {
-		final JSONArray result = new JSONArray();
+	public static JSONValue parse(TokenReader tokens, String token) throws IOException, ParseException {
+		JSONArray result = new JSONArray();
 
 		if ((token = tokens.next()).equals("]")) {
 			return result;
@@ -381,14 +381,14 @@ public class JSONArray extends JSONValue {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + ((values == null) ? 0 : values.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -401,7 +401,7 @@ public class JSONArray extends JSONValue {
 			return false;
 		}
 
-		final JSONArray other = (JSONArray) obj;
+		JSONArray other = (JSONArray) obj;
 
 		if (values == null) {
 			if (other.values != null) {
@@ -420,9 +420,9 @@ public class JSONArray extends JSONValue {
 	}
 
 	@Override
-	public void write(final Writer writer) throws IOException {
+	public void write(Writer writer) throws IOException {
 		writer.write('[');
-		final Iterator<JSONValue> it = values.iterator();
+		Iterator<JSONValue> it = values.iterator();
 
 		while (it.hasNext()) {
 			it.next().write(writer);

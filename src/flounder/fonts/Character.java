@@ -4,16 +4,16 @@ package flounder.fonts;
  * Simple data structure class holding information about a certain glyph in the font texture atlas. All sizes are for a font-size of 1.
  */
 public class Character {
-	private final int id;
-	private final double xTextureCoord;
-	private final double yTextureCoord;
-	private final double xMaxTextureCoord;
-	private final double yMaxTextureCoord;
-	private final double xOffset;
-	private final double yOffset;
-	private final double sizeX;
-	private final double sizeY;
-	private final double xAdvance;
+	private int id;
+	private double xTextureCoord;
+	private double yTextureCoord;
+	private double xMaxTextureCoord;
+	private double yMaxTextureCoord;
+	private double xOffset;
+	private double yOffset;
+	private double sizeX;
+	private double sizeY;
+	private double xAdvance;
 
 	/**
 	 * @param id The ASCII value of the character.
@@ -27,7 +27,7 @@ public class Character {
 	 * @param sizeY The height of the character's quad in screen space.
 	 * @param xAdvance How much the cursor will move forward after this character.
 	 */
-	protected Character(final int id, final double xTextureCoord, final double yTextureCoord, final double xTexSize, final double yTexSize, final double xOffset, final double yOffset, final double sizeX, final double sizeY, final double xAdvance) {
+	protected Character(int id, double xTextureCoord, double yTextureCoord, double xTexSize, double yTexSize, double xOffset, double yOffset, double sizeX, double sizeY, double xAdvance) {
 		this.id = id;
 		this.xTextureCoord = xTextureCoord;
 		this.yTextureCoord = yTextureCoord;

@@ -10,14 +10,14 @@ import flounder.profiling.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class AABBRenderer extends IRenderer {
-	public static final Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
-	public static final Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
-	public static final Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
-	public static final Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
+	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
+	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
+	public static Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
+	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
 
-	private final int[] INDICES = {1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 1, 3, 19, 7, 5, 20, 4, 9, 21, 10, 12, 22, 13, 15, 23, 0, 17};
-	private final float[] VERTICES = {1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 0.999999f, 1.0f, 1.000001f, 1.0f, -1.0f, 1.0f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f};
-	private final int VAO;
+	private int[] INDICES = {1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 1, 3, 19, 7, 5, 20, 4, 9, 21, 10, 12, 22, 13, 15, 23, 0, 17};
+	private float[] VERTICES = {1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 0.999999f, 1.0f, 1.000001f, 1.0f, -1.0f, 1.0f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f};
+	private int VAO;
 
 	private AABBShader shader;
 	private int aabbCount;
@@ -34,10 +34,10 @@ public class AABBRenderer extends IRenderer {
 	}
 
 	@Override
-	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
+	public void renderObjects(Vector4f clipPlane, ICamera camera) {
 		prepareRendering(clipPlane, camera);
 
-		for (final AABB aabb : AABBManager.getRenderAABB()) {
+		for (AABB aabb : AABBManager.getRenderAABB()) {
 			renderAABB(aabb);
 		}
 
@@ -48,7 +48,7 @@ public class AABBRenderer extends IRenderer {
 		aabbCount = 0;
 	}
 
-	private void prepareRendering(final Vector4f clipPlane, final ICamera camera) {
+	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
 		shader.start();
 		shader.projectionMatrix.loadMat4(FlounderEngine.getProjectionMatrix());
 		shader.viewMatrix.loadMat4(camera.getViewMatrix());
@@ -64,7 +64,7 @@ public class AABBRenderer extends IRenderer {
 		OpenglUtils.bindVAO(VAO, 0);
 	}
 
-	private void renderAABB(final AABB aabb) {
+	private void renderAABB(AABB aabb) {
 		Vector3f.add(aabb.getMaxExtents(), aabb.getMinExtents(), POSITION_REUSABLE);
 		POSITION_REUSABLE.set(POSITION_REUSABLE.x / 2.0f, POSITION_REUSABLE.y / 2.0f, POSITION_REUSABLE.z / 2.0f);
 

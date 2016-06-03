@@ -9,14 +9,14 @@ import java.text.*;
  * A string in a JSON file.
  */
 public class JSONString extends JSONValue {
-	private final String value;
+	private String value;
 
 	/**
 	 * Creates a JSONString from a Java character.
 	 *
 	 * @param value The character to create from.
 	 */
-	public JSONString(final char value) {
+	public JSONString(char value) {
 		this(Character.toString(value));
 	}
 
@@ -25,7 +25,7 @@ public class JSONString extends JSONValue {
 	 *
 	 * @param value the String to create from.
 	 */
-	public JSONString(final String value) {
+	public JSONString(String value) {
 		if (value == null) {
 			throw new NullPointerException("String cannot have a null value");
 		}
@@ -44,20 +44,20 @@ public class JSONString extends JSONValue {
 	 * @throws IOException If a token cannot be read.
 	 * @throws ParseException If the tokens cannot be parsed into a JSONValue.
 	 */
-	public static JSONValue parse(final TokenReader tokens, final String currentToken) throws IOException, ParseException {
+	public static JSONValue parse(TokenReader tokens, String currentToken) throws IOException, ParseException {
 		return new JSONString(currentToken.substring(1, currentToken.length() - 1));
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -70,7 +70,7 @@ public class JSONString extends JSONValue {
 			return false;
 		}
 
-		final JSONString other = (JSONString) obj;
+		JSONString other = (JSONString) obj;
 
 		if (value == null) {
 			if (other.value != null) {
@@ -89,7 +89,7 @@ public class JSONString extends JSONValue {
 	}
 
 	@Override
-	public void write(final Writer writer) throws IOException {
+	public void write(Writer writer) throws IOException {
 		writer.write('\"' + value + '\"');
 	}
 

@@ -18,7 +18,7 @@ public class FlounderLogger {
 	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public static <T> void log(final T value) {
+	public static <T> void log(T value) {
 		if (LOG_TO_CONSOLE) {
 			System.out.println("LOG: " + "[" + getDateString() + "]: " + value.toString());
 		}
@@ -41,7 +41,7 @@ public class FlounderLogger {
 	 * @param value Errors being added to the log file and possibly to your IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public static <T> void error(final T value) {
+	public static <T> void error(T value) {
 		System.err.println("ERROR: " + "[" + getDateString() + "]: " + value.toString());
 
 		if (LOG_TO_FILE) {
@@ -54,7 +54,7 @@ public class FlounderLogger {
 	 *
 	 * @param exception The exception added to the log file and possibly to your IDES console.
 	 */
-	public static void exception(final Exception exception) {
+	public static void exception(Exception exception) {
 		System.err.println("EXCEPTION: " + "[" + getDateString() + "]: " + exception.toString());
 
 		if (LOG_TO_FILE) {
@@ -65,10 +65,10 @@ public class FlounderLogger {
 	public static void dispose() {
 		if (LOG_TO_FILE) {
 			try (PrintWriter out = new PrintWriter(getLogsSave())) {
-				for (final String line : SAVE_DATA.toString().split("\n")) {
+				for (String line : SAVE_DATA.toString().split("\n")) {
 					out.println(line);
 				}
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				System.err.println("Could not save logs!");
 				FlounderLogger.exception(e);
 			}
@@ -76,21 +76,21 @@ public class FlounderLogger {
 	}
 
 	private static String getLogsSave() throws IOException {
-		final File saveDirectory = new File("logs");
+		File saveDirectory = new File("logs");
 
 		if (!saveDirectory.exists()) {
 			System.out.println("Creating directory: " + saveDirectory);
 
 			try {
 				saveDirectory.mkdir();
-			} catch (final SecurityException e) {
+			} catch (SecurityException e) {
 				FlounderLogger.error("Filed to create logging folder.");
 				FlounderLogger.exception(e);
 			}
 		}
 
-		final String result = saveDirectory + "/" + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.YEAR) + ".log";
-		final File resultingFile = new File(result);
+		String result = saveDirectory + "/" + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.YEAR) + ".log";
+		File resultingFile = new File(result);
 
 		if (!resultingFile.exists()) {
 			resultingFile.createNewFile();

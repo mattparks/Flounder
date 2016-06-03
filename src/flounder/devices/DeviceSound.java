@@ -14,10 +14,10 @@ import static org.lwjgl.opengl.GL11.*;
 public class DeviceSound {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 
-	private final Vector3f cameraPosition;
-	private final SourcePoolManager sourcePool;
-	private final MusicPlayer musicPlayer;
-	private final ALContext context;
+	private Vector3f cameraPosition;
+	private SourcePoolManager sourcePool;
+	private MusicPlayer musicPlayer;
+	private ALContext context;
 
 	/**
 	 * Initializes all the sound related things. Should be called when the game loads.
@@ -25,7 +25,7 @@ public class DeviceSound {
 	protected DeviceSound() {
 		cameraPosition = new Vector3f(0.0f, 0.0f, 0.0f);
 		context = ALContext.create();
-		final int alError = AL10.alGetError();
+		int alError = AL10.alGetError();
 
 		if (alError != GL_NO_ERROR) {
 			FlounderLogger.error("OpenAL Error: " + alError);
@@ -43,8 +43,8 @@ public class DeviceSound {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	protected void update(final float delta) {
-		final ICamera camera = FlounderEngine.getCamera();
+	protected void update(float delta) {
+		ICamera camera = FlounderEngine.getCamera();
 
 		if (camera != null && camera.getPosition() != null) {
 			cameraPosition.set(camera.getPosition());
@@ -68,7 +68,7 @@ public class DeviceSound {
 	 *
 	 * @return The controller for the source which plays the sound. Returns {@code null} if no source was available to play the sound.
 	 */
-	public AudioController play3DSound(final PlayRequest playRequest) {
+	public AudioController play3DSound(PlayRequest playRequest) {
 		if (playRequest.getSound() != null && !playRequest.getSound().isLoaded()) {
 			return null;
 		}
@@ -83,7 +83,7 @@ public class DeviceSound {
 	 *
 	 * @return The controller for the playing of this sound.
 	 */
-	public AudioController playSystemSound(final Sound sound) {
+	public AudioController playSystemSound(Sound sound) {
 		if (sound != null && !sound.isLoaded()) {
 			return null;
 		}

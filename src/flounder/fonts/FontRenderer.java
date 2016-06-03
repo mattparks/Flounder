@@ -9,7 +9,7 @@ import flounder.profiling.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class FontRenderer extends IRenderer {
-	private final FontShader shader;
+	private FontShader shader;
 
 	private int textCount;
 	private boolean lastWireframe;
@@ -20,7 +20,7 @@ public class FontRenderer extends IRenderer {
 	}
 
 	@Override
-	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
+	public void renderObjects(Vector4f clipPlane, ICamera camera) {
 		if (FontManager.getTexts().keySet().size() < 1) {
 			return;
 		}
@@ -60,13 +60,13 @@ public class FontRenderer extends IRenderer {
 		shader.dispose();
 	}
 
-	private void renderText(final Text text) {
+	private void renderText(Text text) {
 		textCount++;
 
 		OpenglUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenglUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
-		final Vector2f textPosition = text.getPosition();
-		final Colour textColour = text.getColour();
+		Vector2f textPosition = text.getPosition();
+		Colour textColour = text.getColour();
 		shader.aspectRatio.loadFloat(FlounderDevices.getDisplay().getAspectRatio());
 		shader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
 		shader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());

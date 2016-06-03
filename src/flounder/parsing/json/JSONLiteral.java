@@ -24,9 +24,9 @@ public class JSONLiteral extends JSONValue {
 	 */
 	public static final JSONLiteral FALSE = new JSONLiteral("false");
 
-	private final String string;
+	private String string;
 
-	private JSONLiteral(final String string) {
+	private JSONLiteral(String string) {
 		this.string = string;
 	}
 
@@ -41,7 +41,7 @@ public class JSONLiteral extends JSONValue {
 	 * @throws IOException If a token cannot be read.
 	 * @throws ParseException If the tokens cannot be parsed into a JSONValue.
 	 */
-	public static JSONValue parse(final TokenReader tokens, final String currentToken) throws IOException, ParseException {
+	public static JSONValue parse(TokenReader tokens, String currentToken) throws IOException, ParseException {
 		switch (currentToken.charAt(0)) {
 			case 'n':
 				return parseNull(tokens, currentToken);
@@ -55,17 +55,17 @@ public class JSONLiteral extends JSONValue {
 		return null;
 	}
 
-	private static JSONValue parseFalse(final TokenReader tokens, final String token) throws ParseException {
+	private static JSONValue parseFalse(TokenReader tokens, String token) throws ParseException {
 		tokens.parseAssert(token.equals("false"), "'false' expected");
 		return FALSE;
 	}
 
-	private static JSONValue parseTrue(final TokenReader tokens, final String token) throws ParseException {
+	private static JSONValue parseTrue(TokenReader tokens, String token) throws ParseException {
 		tokens.parseAssert(token.equals("true"), "'true' expected");
 		return TRUE;
 	}
 
-	private static JSONValue parseNull(final TokenReader tokens, final String token) throws ParseException {
+	private static JSONValue parseNull(TokenReader tokens, String token) throws ParseException {
 		tokens.parseAssert(token.equals("null"), "'null' expected");
 		return NULL;
 	}
@@ -77,7 +77,7 @@ public class JSONLiteral extends JSONValue {
 	 *
 	 * @return A JSONLiteral representing the given value.
 	 */
-	public static JSONLiteral create(final boolean value) {
+	public static JSONLiteral create(boolean value) {
 		return value ? TRUE : FALSE;
 	}
 
@@ -87,7 +87,7 @@ public class JSONLiteral extends JSONValue {
 	}
 
 	@Override
-	public void write(final Writer writer) throws IOException {
+	public void write(Writer writer) throws IOException {
 		writer.write(string);
 	}
 

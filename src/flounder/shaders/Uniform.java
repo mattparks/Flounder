@@ -10,14 +10,14 @@ import static org.lwjgl.opengl.GL20.*;
 public abstract class Uniform {
 	private static final int NOT_FOUND = -1;
 
-	private final String name;
+	private String name;
 	private int location;
 
-	protected Uniform(final String name) {
+	protected Uniform(String name) {
 		this.name = name;
 	}
 
-	protected void storeUniformLocation(final int programID) {
+	protected void storeUniformLocation(int programID) {
 		location = glGetUniformLocation(programID, name);
 
 		if (location == NOT_FOUND) {

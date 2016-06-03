@@ -14,9 +14,10 @@ import flounder.textures.*;
  * Deals with much of the initializing, updating, and cleaning up of the engine.
  */
 public class FlounderEngine implements Runnable {
-	private static boolean initialized;
 	private static FlounderDevices devices;
 	private static IModule module;
+
+	private static boolean initialized;
 
 	private static float targetFPS;
 	private static float currentFrameTime;
@@ -43,7 +44,7 @@ public class FlounderEngine implements Runnable {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public FlounderEngine(final IModule module, final int displayWidth, final int displayHeight, final String displayTitle, final float targetFPS, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+	public FlounderEngine(IModule module, int displayWidth, int displayHeight, String displayTitle, float targetFPS, boolean displayVSync, boolean displayAntialiasing, int displaySamples, boolean displayFullscreen) {
 		if (!initialized) {
 			FlounderEngine.targetFPS = targetFPS;
 			FlounderProfiler.init(displayTitle + " Profiler");
@@ -91,7 +92,7 @@ public class FlounderEngine implements Runnable {
 		return module.getGame().getScreenBlur();
 	}
 
-	public static void setTargetFPS(final float targetFPS) {
+	public static void setTargetFPS(float targetFPS) {
 		FlounderEngine.targetFPS = targetFPS;
 	}
 
@@ -116,7 +117,7 @@ public class FlounderEngine implements Runnable {
 	 *
 	 * @param defaultFontType The default font family to use when creating texts, this can be overridden with Text.setFont().
 	 */
-	public void startEngine(final FontType defaultFontType) {
+	public void startEngine(FontType defaultFontType) {
 		if (defaultFontType != null) {
 			TextBuilder.DEFAULT_TYPE = defaultFontType;
 		}

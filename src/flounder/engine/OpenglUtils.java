@@ -19,11 +19,11 @@ public class OpenglUtils {
 	private static boolean additiveBlending = false;
 	private static boolean antialiasing = false;
 
-	public static void prepareNewRenderParse(final Colour colour) {
+	public static void prepareNewRenderParse(Colour colour) {
 		prepareNewRenderParse(colour.getR(), colour.getG(), colour.getB());
 	}
 
-	public static void prepareNewRenderParse(final float r, final float g, final float b) {
+	public static void prepareNewRenderParse(float r, float g, float b) {
 		glClearColor(r, g, b, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		disableBlending();
@@ -39,7 +39,7 @@ public class OpenglUtils {
 		}
 	}
 
-	public static void cullBackFaces(final boolean cull) {
+	public static void cullBackFaces(boolean cull) {
 		if (cull && !cullingBackFace) {
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
@@ -58,7 +58,7 @@ public class OpenglUtils {
 		return inWireframe;
 	}
 
-	public static void goWireframe(final boolean goWireframe) {
+	public static void goWireframe(boolean goWireframe) {
 		if (goWireframe && !inWireframe) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			inWireframe = true;
@@ -86,7 +86,7 @@ public class OpenglUtils {
 		}
 	}
 
-	public static void antialias(final boolean enable) {
+	public static void antialias(boolean enable) {
 		if (!FlounderDevices.getDisplay().isAntialiasing()) {
 			return;
 		}
@@ -104,7 +104,7 @@ public class OpenglUtils {
 		glDisable(GL_DEPTH_TEST);
 	}
 
-	public static void bindVAO(final int vaoID, final int... attributes) {
+	public static void bindVAO(int vaoID, int... attributes) {
 		glBindVertexArray(vaoID);
 
 		for (int i : attributes) {
@@ -112,7 +112,7 @@ public class OpenglUtils {
 		}
 	}
 
-	public static void unbindVAO(final int... attributes) {
+	public static void unbindVAO(int... attributes) {
 		for (int i : attributes) {
 			glDisableVertexAttribArray(i);
 		}
@@ -120,12 +120,12 @@ public class OpenglUtils {
 		glBindVertexArray(0);
 	}
 
-	public static void bindTextureToBank(final int textureID, final int bankID) {
+	public static void bindTextureToBank(int textureID, int bankID) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 
-	public static void bindTextureToBank(final int textureID, final int bankID, final int lodBias) {
+	public static void bindTextureToBank(int textureID, int bankID, int lodBias) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, lodBias);

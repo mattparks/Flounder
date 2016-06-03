@@ -31,7 +31,7 @@ public class DeviceJoysticks {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	protected void update(final float delta) {
+	protected void update(float delta) {
 		// For each joystick check if connected and update.
 		for (int i = 0; i < GLFW_JOYSTICK_LAST; i++) {
 			if (glfwJoystickPresent(i) == GL_TRUE) {
@@ -68,7 +68,7 @@ public class DeviceJoysticks {
 	 *
 	 * @return If the joystick is connected.
 	 */
-	public boolean isConnected(final int joystick) {
+	public boolean isConnected(int joystick) {
 		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && joystickNames[joystick] != null;
 	}
 
@@ -79,7 +79,7 @@ public class DeviceJoysticks {
 	 *
 	 * @return The joysticks name.
 	 */
-	public String getName(final int joystick) {
+	public String getName(int joystick) {
 		return joystickNames[joystick];
 	}
 
@@ -91,7 +91,7 @@ public class DeviceJoysticks {
 	 *
 	 * @return The value of the joystick's axis.
 	 */
-	public float getAxis(final int joystick, final int axis) {
+	public float getAxis(int joystick, int axis) {
 		return joystickAxes[joystick].get(axis);
 	}
 
@@ -103,7 +103,7 @@ public class DeviceJoysticks {
 	 *
 	 * @return Whether a button on a joystick is pressed.
 	 */
-	public boolean getButton(final int joystick, final int button) {
+	public boolean getButton(int joystick, int button) {
 		return joystickButtons[joystick].get(button) != 0;
 	}
 
@@ -114,7 +114,7 @@ public class DeviceJoysticks {
 	 *
 	 * @return The number of axes the joystick offers.
 	 */
-	public int getCountAxes(final int joystick) {
+	public int getCountAxes(int joystick) {
 		return joystickAxes[joystick].capacity();
 	}
 
@@ -125,7 +125,7 @@ public class DeviceJoysticks {
 	 *
 	 * @return The number of buttons the joystick offers.
 	 */
-	public int getCountButtons(final int joystick) {
+	public int getCountButtons(int joystick) {
 		return joystickButtons[joystick].capacity();
 	}
 

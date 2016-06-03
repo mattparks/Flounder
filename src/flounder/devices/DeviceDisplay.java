@@ -21,11 +21,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Manages the creation, updating and destruction of the display, as well as timing and frame times.
  */
 public class DeviceDisplay {
-	private final GLFWWindowCloseCallback callbackWindowClose;
-	private final GLFWWindowFocusCallback callbackWindowFocus;
-	private final GLFWWindowPosCallback callbackWindowPos;
-	private final GLFWWindowSizeCallback callbackWindowSize;
-	private final GLFWFramebufferSizeCallback callbackFramebufferSize;
+	private GLFWWindowCloseCallback callbackWindowClose;
+	private GLFWWindowFocusCallback callbackWindowFocus;
+	private GLFWWindowPosCallback callbackWindowPos;
+	private GLFWWindowSizeCallback callbackWindowSize;
+	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
 	private long window;
 	private int width;
@@ -50,7 +50,7 @@ public class DeviceDisplay {
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	protected DeviceDisplay(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean antialiasing, final int samples, final boolean displayFullscreen) {
+	protected DeviceDisplay(int displayWidth, int displayHeight, String displayTitle, boolean displayVSync, boolean antialiasing, int samples, boolean displayFullscreen) {
 		this.width = displayWidth;
 		this.height = displayHeight;
 		this.title = displayTitle;
@@ -77,7 +77,7 @@ public class DeviceDisplay {
 		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE); // Only enabled in fullscreen.
 
 		// Gets the resolution of the primary monitor.
-		final GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 		if (displayFullscreen) {
 			this.width = vidmode.width();
@@ -104,7 +104,7 @@ public class DeviceDisplay {
 		createCapabilities();
 
 		// Gets any OpenGL errors.
-		final long glError = glGetError();
+		long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
 			FlounderLogger.error("OpenGL Error: " + glError);
@@ -127,21 +127,21 @@ public class DeviceDisplay {
 		// Sets the displays callbacks.
 		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
 			@Override
-			public void invoke(final long window) {
+			public void invoke(long window) {
 				closeRequested = true;
 			}
 		});
 
 		glfwSetWindowFocusCallback(window, callbackWindowFocus = new GLFWWindowFocusCallback() {
 			@Override
-			public void invoke(final long window, final int focused) {
+			public void invoke(long window, int focused) {
 				inFocus = focused == GL_TRUE;
 			}
 		});
 
 		glfwSetWindowPosCallback(window, callbackWindowPos = new GLFWWindowPosCallback() {
 			@Override
-			public void invoke(final long window, final int xpos, final int ypos) {
+			public void invoke(long window, int xpos, int ypos) {
 				positionX = xpos;
 				positionY = ypos;
 			}
@@ -149,7 +149,7 @@ public class DeviceDisplay {
 
 		glfwSetWindowSizeCallback(window, callbackWindowSize = new GLFWWindowSizeCallback() {
 			@Override
-			public void invoke(final long window, final int width, final int height) {
+			public void invoke(long window, int width, int height) {
 				DeviceDisplay.this.width = width;
 				DeviceDisplay.this.height = height;
 			}
@@ -157,7 +157,7 @@ public class DeviceDisplay {
 
 		glfwSetFramebufferSizeCallback(window, callbackFramebufferSize = new GLFWFramebufferSizeCallback() {
 			@Override
-			public void invoke(final long window, final int width, final int height) {
+			public void invoke(long window, int width, int height) {
 				glViewport(0, 0, width, height);
 			}
 		});
@@ -199,8 +199,8 @@ public class DeviceDisplay {
 	 */
 	public void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
-		final String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		final File saveDirectory = new File("screenshots");
+		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
+		File saveDirectory = new File("screenshots");
 
 		if (!saveDirectory.exists()) {
 			try {
@@ -212,8 +212,8 @@ public class DeviceDisplay {
 			}
 		}
 
-		final File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
-		final String format = "png"; // "PNG" or "JPG".
+		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
+		String format = "png"; // "PNG" or "JPG".
 
 		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
 
@@ -227,9 +227,9 @@ public class DeviceDisplay {
 	}
 
 	private BufferedImage updateBufferedImage() { // TODO Update a BufferedImage!
-		final ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
 		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGB, GL_UNSIGNED_BYTE, buffer);
-		final BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int y = 0; y < image.getHeight(); y++) {
@@ -239,11 +239,11 @@ public class DeviceDisplay {
 		}
 
 		// Creates the transformation direction (horizontal).
-		final AffineTransform at = AffineTransform.getScaleInstance(1, -1);
+		AffineTransform at = AffineTransform.getScaleInstance(1, -1);
 		at.translate(0, -image.getHeight(null));
 
 		// Applies transformation.
-		final AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 		return opRotated.filter(image, null);
 	}
 
@@ -261,7 +261,7 @@ public class DeviceDisplay {
 		return height;
 	}
 
-	public void setCursorHidden(final boolean hidden) {
+	public void setCursorHidden(boolean hidden) {
 		// Hides the mouse cursor.
 		glfwSetInputMode(window, GLFW_CURSOR, hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
 	}
@@ -299,7 +299,7 @@ public class DeviceDisplay {
 	 *
 	 * @param enableVSync Weather or not to use vSync.
 	 */
-	public void setEnableVSync(final boolean enableVSync) {
+	public void setEnableVSync(boolean enableVSync) {
 		this.enableVSync = enableVSync;
 		glfwSwapInterval(this.enableVSync ? 1 : 0);
 	}
@@ -316,7 +316,7 @@ public class DeviceDisplay {
 	 *
 	 * @param antialiasing If the display should antialias.
 	 */
-	public void setAntialiasing(final boolean antialiasing) {
+	public void setAntialiasing(boolean antialiasing) {
 		this.antialiasing = antialiasing;
 	}
 
@@ -332,7 +332,7 @@ public class DeviceDisplay {
 	 *
 	 * @param samples The amount of MFSS samples to be used in the window.
 	 */
-	public void setSamples(final int samples) {
+	public void setSamples(int samples) {
 		this.samples = samples;
 		glfwWindowHint(GLFW_SAMPLES, samples);
 	}
@@ -349,7 +349,7 @@ public class DeviceDisplay {
 	 *
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
-	public void setFullscreen(final boolean fullscreen) {
+	public void setFullscreen(boolean fullscreen) {
 		FlounderLogger.log(this.fullscreen && !fullscreen ? "Display going windowed." : !this.fullscreen && fullscreen ? "Display going fullscreen." : "");
 		this.fullscreen = fullscreen;
 		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE);

@@ -9,11 +9,11 @@ import java.util.*;
  * The class in charge of playing background music!
  */
 public class MusicPlayer {
-	private static final float FADE_TIME = 2.0f;
+	public static float FADE_TIME = 2.0f;
 	public static float SOUND_VOLUME = 1.0f;
 
-	private final SoundSource source;
-	private final List<Sound> musicQueue;
+	private SoundSource source;
+	private List<Sound> musicQueue;
 	private float musicVolume;
 	private Playlist currentPlaylist;
 	private Sound currentlyPlaying;
@@ -22,7 +22,7 @@ public class MusicPlayer {
 
 	private boolean fadeOut;
 	private float fadeFactor;
-	private float finalVolume;
+	private float Volume;
 
 	private boolean shuffle;
 	private float minPlayTimeout;
@@ -48,7 +48,7 @@ public class MusicPlayer {
 
 		fadeOut = false;
 		fadeFactor = 1.0f;
-		finalVolume = 0.1f;
+		Volume = 0.1f;
 
 		shuffle = false;
 		minPlayTimeout = 2.0f;
@@ -62,7 +62,7 @@ public class MusicPlayer {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	public void update(final float delta) {
+	public void update(float delta) {
 		if (fadeOut) {
 			updateFadeOut(delta);
 		} else {
@@ -93,9 +93,9 @@ public class MusicPlayer {
 	 *
 	 * @param delta Time in seconds since the last frame.
 	 */
-	private void updateFadeOut(final float delta) {
+	private void updateFadeOut(float delta) {
 		fadeFactor -= delta / FADE_TIME;
-		source.setVolume(finalVolume * SOUND_VOLUME * fadeFactor);
+		source.setVolume(Volume * SOUND_VOLUME * fadeFactor);
 
 		if (fadeFactor <= 0) {
 			fadeOut = false;
@@ -108,7 +108,7 @@ public class MusicPlayer {
 	 * Plays the next track in the queue and refills the queue with tracks from the current playlist if it's empty.
 	 */
 	private void playNextTrack() {
-		final Sound nextTrack = musicQueue.remove(0);
+		Sound nextTrack = musicQueue.remove(0);
 
 		if (musicQueue.isEmpty()) {
 			fillQueue();
@@ -142,7 +142,7 @@ public class MusicPlayer {
 	 * @param minPlayTimeout The minimum time (in seconds) to pause between shuffling music.
 	 * @param maxPlayTimeout The maximum time (in seconds) to pause between shuffling music.
 	 */
-	public void playMusicPlaylist(final Playlist playlist, final boolean shuffle, final float minPlayTimeout, final float maxPlayTimeout) {
+	public void playMusicPlaylist(Playlist playlist, boolean shuffle, float minPlayTimeout, float maxPlayTimeout) {
 		this.shuffle = shuffle;
 		this.minPlayTimeout = minPlayTimeout;
 		this.maxPlayTimeout = maxPlayTimeout;
@@ -158,7 +158,7 @@ public class MusicPlayer {
 	private void fadeOutCurrentTrack() {
 		if (currentlyPlaying != null) {
 			fadeOut = true;
-			finalVolume = source.getVolume();
+			Volume = source.getVolume();
 		}
 	}
 
@@ -170,7 +170,7 @@ public class MusicPlayer {
 	 * @param music The one-off music track.
 	 * @param fadeOutPrevious Whether the currently playing track should be faded out, or just stopped instantly.
 	 */
-	public void playEventMusic(final Sound music, final boolean fadeOutPrevious) {
+	public void playEventMusic(Sound music, boolean fadeOutPrevious) {
 		musicQueue.add(0, music);
 
 		if (fadeOutPrevious) {
@@ -214,7 +214,7 @@ public class MusicPlayer {
 	 *
 	 * @param volume The new music volume.
 	 */
-	public void setVolume(final float volume) {
+	public void setVolume(float volume) {
 		musicVolume = volume;
 
 		if (currentlyPlaying != null) {

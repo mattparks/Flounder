@@ -11,7 +11,8 @@ import java.util.*;
 
 public class TextureBuilder {
 	private static Map<String, SoftReference<Texture>> loadedTextures = new HashMap<>();
-	private final Colour borderColour;
+
+	private Colour borderColour;
 	private boolean clampEdges;
 	private boolean clampToBorder;
 	private boolean mipmap;
@@ -19,7 +20,7 @@ public class TextureBuilder {
 	private boolean nearest;
 	private MyFile file;
 
-	protected TextureBuilder(final MyFile textureFile) {
+	protected TextureBuilder(MyFile textureFile) {
 		this.clampEdges = false;
 		this.clampToBorder = false;
 		this.mipmap = true;
@@ -35,7 +36,7 @@ public class TextureBuilder {
 		return this;
 	}
 
-	public TextureBuilder clampToBorder(final Colour colour) {
+	public TextureBuilder clampToBorder(Colour colour) {
 		clampEdges = false;
 		clampToBorder = true;
 		borderColour.set(colour);
@@ -64,14 +65,14 @@ public class TextureBuilder {
 	 * @return The texture that has been created.
 	 */
 	public Texture create() {
-		final SoftReference<Texture> ref = loadedTextures.get(file.getPath());
+		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder right now!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			final TextureLoadRequest request = new TextureLoadRequest(data, this);
+			TextureLoadRequest request = new TextureLoadRequest(data, this);
 			request.doResourceRequest();
 			request.executeGlRequest();
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
@@ -86,7 +87,7 @@ public class TextureBuilder {
 	 * @return The texture.
 	 */
 	public Texture createInBackground() {
-		final SoftReference<Texture> ref = loadedTextures.get(file.getPath());
+		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
@@ -106,14 +107,14 @@ public class TextureBuilder {
 	 * @return The texture.
 	 */
 	public Texture createInSecondThread() {
-		final SoftReference<Texture> ref = loadedTextures.get(file.getPath());
+		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in separate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			final TextureLoadRequest request = new TextureLoadRequest(data, this);
+			TextureLoadRequest request = new TextureLoadRequest(data, this);
 			request.doResourceRequest();
 			GlRequestProcessor.sendRequest(request);
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));

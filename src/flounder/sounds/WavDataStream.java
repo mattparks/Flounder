@@ -13,16 +13,16 @@ import java.nio.*;
  * Class that enables streaming wav data.
  */
 public class WavDataStream {
-	private final int alFormat;
-	private final int sampleRate;
-	private final int totalBytes;
-	private final int bytesPerFrame;
+	private int alFormat;
+	private int sampleRate;
+	private int totalBytes;
+	private int bytesPerFrame;
 
-	private final int chunkSize;
-	private final AudioInputStream audioStream;
+	private int chunkSize;
+	private AudioInputStream audioStream;
 
-	private final ByteBuffer buffer;
-	private final byte[] data;
+	private ByteBuffer buffer;
+	private byte[] data;
 
 	private int totalBytesRead;
 
@@ -32,8 +32,8 @@ public class WavDataStream {
 	 * @param stream The audio input stream.
 	 * @param chunkSize The size of the chunks to read.
 	 */
-	private WavDataStream(final AudioInputStream stream, final int chunkSize) {
-		final AudioFormat format = stream.getFormat();
+	private WavDataStream(AudioInputStream stream, int chunkSize) {
+		AudioFormat format = stream.getFormat();
 
 		alFormat = getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
 		sampleRate = (int) format.getSampleRate();
@@ -57,7 +57,7 @@ public class WavDataStream {
 	 *
 	 * @return The OpenAL format ID of the sound data.
 	 */
-	private static int getOpenAlFormat(final int channels, final int bitsPerSample) {
+	private static int getOpenAlFormat(int channels, int bitsPerSample) {
 		if (channels == 1) {
 			return bitsPerSample == 8 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_MONO16;
 		} else {
@@ -75,10 +75,10 @@ public class WavDataStream {
 	 *
 	 * @throws Exception If something goes wrong.
 	 */
-	protected static WavDataStream openWavStream(final MyFile wavFile, final int chunkSize) throws Exception {
-		final InputStream bufferedInput = new BufferedInputStream(wavFile.getInputStream());
-		final AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedInput);
-		final WavDataStream wavStream = new WavDataStream(audioStream, chunkSize);
+	protected static WavDataStream openWavStream(MyFile wavFile, int chunkSize) throws Exception {
+		InputStream bufferedInput = new BufferedInputStream(wavFile.getInputStream());
+		AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedInput);
+		WavDataStream wavStream = new WavDataStream(audioStream, chunkSize);
 		return wavStream;
 	}
 
@@ -87,7 +87,7 @@ public class WavDataStream {
 	 *
 	 * @param bytesRead Total bytes read.
 	 */
-	protected void setStartPoint(final int bytesRead) {
+	protected void setStartPoint(int bytesRead) {
 		totalBytesRead = bytesRead;
 
 		try {
@@ -107,7 +107,7 @@ public class WavDataStream {
 	 */
 	protected ByteBuffer loadNextData() {
 		try {
-			final int bytesRead = audioStream.read(data, 0, chunkSize);
+			int bytesRead = audioStream.read(data, 0, chunkSize);
 			totalBytesRead += bytesRead;
 			buffer.clear();
 			buffer.put(data, 0, bytesRead);

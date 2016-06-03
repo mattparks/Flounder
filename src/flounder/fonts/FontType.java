@@ -6,7 +6,7 @@ import flounder.resources.*;
  * Represents a font type that can be used in any text.
  */
 public class FontType {
-	private final TextLoader loader;
+	private TextLoader loader;
 
 	/**
 	 * Creates a new font type.
@@ -14,11 +14,11 @@ public class FontType {
 	 * @param textureAtlas The image that holds the signed distance values.
 	 * @param fontFile The file that describes how to renderObjects the font, file usually ends in '.fnt'.
 	 */
-	public FontType(final MyFile textureAtlas, final MyFile fontFile) {
+	public FontType(MyFile textureAtlas, MyFile fontFile) {
 		loader = new TextLoader(textureAtlas, fontFile);
 	}
 
-	protected void loadText(final Text text) {
+	protected void loadText(Text text) {
 		loader.loadTextIntoMemory(text);
 	}
 

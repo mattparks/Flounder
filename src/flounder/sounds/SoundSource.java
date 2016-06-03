@@ -45,7 +45,7 @@ public class SoundSource {
 	/**
 	 * @param radius - the range of the sound. Outside this range the sound can't be heard. Between the position of the source and the outer radius the volume of the sound decreases linearly.
 	 */
-	protected void setRange(final float radius) {
+	protected void setRange(float radius) {
 		alSourcef(sourceID, AL_REFERENCE_DISTANCE, 1.0f);
 		alSourcef(sourceID, AL_ROLLOFF_FACTOR, 1.0f);
 		alSourcef(sourceID, AL_MAX_DISTANCE, radius);
@@ -65,7 +65,7 @@ public class SoundSource {
 	 * @param primaryRadius The inner range.
 	 * @param secondaryRadius The outer range.
 	 */
-	protected void setRanges(final float primaryRadius, final float secondaryRadius) {
+	protected void setRanges(float primaryRadius, float secondaryRadius) {
 		alSourcef(sourceID, AL_REFERENCE_DISTANCE, (primaryRadius < 1.0f) ? 1.0f : primaryRadius);
 		alSourcef(sourceID, AL_ROLLOFF_FACTOR, 1.0f);
 		alSourcef(sourceID, AL_MAX_DISTANCE, secondaryRadius);
@@ -83,7 +83,7 @@ public class SoundSource {
 	 *
 	 * @param newVolume The new volume.
 	 */
-	protected void setVolume(final float newVolume) {
+	protected void setVolume(float newVolume) {
 		if (newVolume != volume) {
 			alSourcef(sourceID, AL_GAIN, newVolume);
 			volume = newVolume;
@@ -93,14 +93,14 @@ public class SoundSource {
 	/**
 	 * @param position The 3D position of the source in the world.
 	 */
-	protected void setPosition(final Vector3f position) {
+	protected void setPosition(Vector3f position) {
 		alSource3f(sourceID, AL_POSITION, position.x, position.y, position.z);
 	}
 
 	/**
 	 * @param loop Whether the source should play sounds on loop or not.
 	 */
-	protected void loop(final boolean loop) {
+	protected void loop(boolean loop) {
 		alSourcei(sourceID, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
 	}
 
@@ -112,7 +112,7 @@ public class SoundSource {
 	 *
 	 * @return The controller for the playing of this sound.
 	 */
-	protected AudioController playSound(final Sound sound) {
+	protected AudioController playSound(Sound sound) {
 		if (!sound.isLoaded()) {
 			return null;
 		}
@@ -174,14 +174,14 @@ public class SoundSource {
 	/**
 	 * @return The number of buffers in the queue that have already been played (for use when streaming).
 	 */
-	protected final int getFinishedBuffersCount() {
+	protected int getFinishedBuffersCount() {
 		return alGetSourcei(sourceID, AL_BUFFERS_PROCESSED);
 	}
 
 	/**
 	 * @return {@code true} if the source is currently playing a sound.
 	 */
-	protected final boolean isPlaying() {
+	protected boolean isPlaying() {
 		return alGetSourcei(sourceID, AL_SOURCE_STATE) == AL_PLAYING;
 	}
 
@@ -190,7 +190,7 @@ public class SoundSource {
 	 *
 	 * @param buffer The buffer to be queued.
 	 */
-	protected void queue(final int buffer) {
+	protected void queue(int buffer) {
 		alSourceQueueBuffers(sourceID, buffer);
 	}
 

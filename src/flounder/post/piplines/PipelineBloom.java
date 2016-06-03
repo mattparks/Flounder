@@ -8,11 +8,11 @@ public class PipelineBloom extends PostPipeline {
 	private static final int BLUR_TEXTURE_WIDTH = 256;
 	private static final int BLUR_TEXTURE_HEIGHT = 144;
 
-	private final FilterFXAA filterFXAA;
-	private final FilterTone filterTone;
-	private final FilterBloom1 filterBloom1;
-	private final PipelineGaussian pipelineGaussian;
-	private final FilterBloom2 filterBloom2;
+	private FilterFXAA filterFXAA;
+	private FilterTone filterTone;
+	private FilterBloom1 filterBloom1;
+	private PipelineGaussian pipelineGaussian;
+	private FilterBloom2 filterBloom2;
 
 	public PipelineBloom() {
 		filterFXAA = new FilterFXAA();
@@ -23,7 +23,7 @@ public class PipelineBloom extends PostPipeline {
 	}
 
 	@Override
-	public void renderPipeline(final FBO startFBO) {
+	public void renderPipeline(FBO startFBO) {
 		filterFXAA.applyFilter(startFBO.getColourTexture());
 		filterTone.applyFilter(filterFXAA.fbo.getColourTexture());
 		filterBloom1.applyFilter(filterTone.fbo.getColourTexture());

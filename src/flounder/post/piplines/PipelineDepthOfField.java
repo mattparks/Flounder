@@ -8,9 +8,9 @@ public class PipelineDepthOfField extends PostPipeline {
 	private static final int BLUR_TEXTURE_WIDTH = 256;
 	private static final int BLUR_TEXTURE_HEIGHT = 144;
 
-	private final PipelineGaussian pipelineGaussian;
-	private final FilterFXAA filterFXAA;
-	private final FilterDOF filterDOF;
+	private PipelineGaussian pipelineGaussian;
+	private FilterFXAA filterFXAA;
+	private FilterDOF filterDOF;
 
 	public PipelineDepthOfField() {
 		pipelineGaussian = new PipelineGaussian(BLUR_TEXTURE_WIDTH, BLUR_TEXTURE_HEIGHT, false);
@@ -19,7 +19,7 @@ public class PipelineDepthOfField extends PostPipeline {
 	}
 
 	@Override
-	public void renderPipeline(final FBO startFBO) {
+	public void renderPipeline(FBO startFBO) {
 		filterFXAA.applyFilter(startFBO.getColourTexture());
 		pipelineGaussian.setScale(0.5f);
 		pipelineGaussian.renderPipeline(filterFXAA.fbo);

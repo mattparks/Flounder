@@ -4,11 +4,11 @@ import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 
 public class TextureLoadRequest implements ResourceRequest, GlRequest {
-	private final Texture texture;
-	private final TextureBuilder builder;
+	private Texture texture;
+	private TextureBuilder builder;
 	private TextureData data;
 
-	protected TextureLoadRequest(final Texture texture, final TextureBuilder builder) {
+	protected TextureLoadRequest(Texture texture, TextureBuilder builder) {
 		this.texture = texture;
 		this.builder = builder;
 	}
@@ -21,7 +21,7 @@ public class TextureLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void executeGlRequest() {
-		final int texID = TextureManager.loadTextureToOpenGL(data, builder);
+		int texID = TextureManager.loadTextureToOpenGL(data, builder);
 		texture.setTextureID(texID);
 		texture.setFile(builder.getFile());
 	}

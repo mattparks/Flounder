@@ -6,7 +6,7 @@ import java.util.*;
  * Holds OpenGL requests that are in queue.
  */
 public class GlRequestQueue {
-	private final List<GlRequest> requestQueue;
+	private List<GlRequest> requestQueue;
 
 	/**
 	 * Creates a new GL request queue.

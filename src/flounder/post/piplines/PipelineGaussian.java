@@ -5,16 +5,16 @@ import flounder.post.filters.*;
 import flounder.textures.fbos.*;
 
 public class PipelineGaussian extends PostPipeline {
-	private final FilterBlurHorizontal filterBlurHorizontal;
-	private final FilterBlurVertical filterBlurVertical;
+	private FilterBlurHorizontal filterBlurHorizontal;
+	private FilterBlurVertical filterBlurVertical;
 
-	public PipelineGaussian(final int width, final int height, final boolean fitToDisplay) {
+	public PipelineGaussian(int width, int height, boolean fitToDisplay) {
 		filterBlurHorizontal = fitToDisplay ? new FilterBlurHorizontal() : new FilterBlurHorizontal(width, height);
 		filterBlurVertical = fitToDisplay ? new FilterBlurVertical() : new FilterBlurVertical(width, height);
 	}
 
 	@Override
-	public void renderPipeline(final FBO startFBO) {
+	public void renderPipeline(FBO startFBO) {
 		filterBlurHorizontal.applyFilter(startFBO.getColourTexture());
 		filterBlurVertical.applyFilter(filterBlurHorizontal.fbo.getColourTexture());
 	}
@@ -30,7 +30,7 @@ public class PipelineGaussian extends PostPipeline {
 		filterBlurVertical.dispose();
 	}
 
-	public void setScale(final float scale) {
+	public void setScale(float scale) {
 		filterBlurHorizontal.setScale(scale);
 		filterBlurVertical.setScale(scale);
 	}

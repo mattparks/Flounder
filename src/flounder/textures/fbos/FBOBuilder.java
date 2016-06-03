@@ -12,7 +12,7 @@ public class FBOBuilder {
 	private int height;
 	private boolean fitToScreen;
 
-	protected FBOBuilder(final int width, final int height) {
+	protected FBOBuilder(int width, int height) {
 		this.depthBufferType = DepthBufferType.NONE;
 		this.useColourBuffer = true;
 		this.linearFiltering = true;
@@ -32,7 +32,7 @@ public class FBOBuilder {
 		return new FBO(width, height, fitToScreen, depthBufferType, useColourBuffer, linearFiltering, clampEdge, alphaChannel, antialiased, samples);
 	}
 
-	public FBOBuilder depthBuffer(final DepthBufferType type) {
+	public FBOBuilder depthBuffer(DepthBufferType type) {
 		depthBufferType = type;
 		return this;
 	}
@@ -52,12 +52,12 @@ public class FBOBuilder {
 		return this;
 	}
 
-	public FBOBuilder withAlphaChannel(final boolean alpha) {
+	public FBOBuilder withAlphaChannel(boolean alpha) {
 		alphaChannel = alpha;
 		return this;
 	}
 
-	public FBOBuilder antialias(final int samples) {
+	public FBOBuilder antialias(int samples) {
 		antialiased = true;
 		this.samples = samples;
 		return this;

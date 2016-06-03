@@ -6,7 +6,7 @@ import java.util.*;
  * Holds resource requests that are in queue.
  */
 public class RequestQueue {
-	private final List<ResourceRequest> requestQueue;
+	private List<ResourceRequest> requestQueue;
 
 	/**
 	 * Creates a new request queue.

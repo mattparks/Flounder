@@ -14,7 +14,7 @@ public class UniformVec4 extends Uniform {
 	private float currentZ;
 	private float currentW;
 
-	public UniformVec4(final String name) {
+	public UniformVec4(String name) {
 		super(name);
 	}
 
@@ -23,7 +23,7 @@ public class UniformVec4 extends Uniform {
 	 *
 	 * @param vector The new vector.
 	 */
-	public void loadVec4(final Vector4f vector) {
+	public void loadVec4(Vector4f vector) {
 		loadVec4(vector.x, vector.y, vector.z, vector.w);
 	}
 
@@ -35,7 +35,7 @@ public class UniformVec4 extends Uniform {
 	 * @param z The new z value.
 	 * @param w The new w value.
 	 */
-	public void loadVec4(final float x, final float y, final float z, final float w) {
+	public void loadVec4(float x, float y, float z, float w) {
 		if (x != currentX || y != currentY || z != currentZ || w != currentW) {
 			glUniform4f(super.getLocation(), x, y, z, w);
 			currentX = x;
@@ -50,7 +50,7 @@ public class UniformVec4 extends Uniform {
 	 *
 	 * @param colour The new colour.
 	 */
-	public void loadVec4(final Colour colour) {
+	public void loadVec4(Colour colour) {
 		loadVec4(colour.r, colour.g, colour.b, colour.a);
 	}
 }

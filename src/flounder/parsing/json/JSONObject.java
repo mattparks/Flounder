@@ -10,7 +10,7 @@ import java.util.*;
  * An Object in a JSON file.
  */
 public class JSONObject extends JSONValue {
-	private final Map<String, JSONValue> map;
+	private Map<String, JSONValue> map;
 
 	/**
 	 * Creates a new JSONObject.
@@ -30,15 +30,15 @@ public class JSONObject extends JSONValue {
 	 * @throws IOException If a token cannot be read.
 	 * @throws ParseException If the tokens cannot be parsed into a JSONValue.
 	 */
-	public static JSONValue parse(final TokenReader tokens, String token) throws IOException, ParseException {
-		final JSONObject result = new JSONObject();
+	public static JSONValue parse(TokenReader tokens, String token) throws IOException, ParseException {
+		JSONObject result = new JSONObject();
 
 		if ((token = tokens.next()).equals("}")) {
 			return result;
 		}
 
 		do {
-			final String key = JSONString.parse(tokens, token).toString();
+			String key = JSONString.parse(tokens, token).toString();
 			tokens.parseAssert((token = tokens.next()).equals(":"), "Separating ':' expected!");
 			result.put(key, JSONValue.parse(tokens, tokens.next()));
 
@@ -59,7 +59,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final JSONValue value) {
+	public void put(String key, JSONValue value) {
 		if (key == null) {
 			throw new NullPointerException("Key cannot be null");
 		}
@@ -77,7 +77,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final int value) {
+	public void put(String key, int value) {
 		put(key, create(value));
 	}
 
@@ -87,7 +87,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final byte value) {
+	public void put(String key, byte value) {
 		put(key, create(value));
 	}
 
@@ -97,7 +97,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final short value) {
+	public void put(String key, short value) {
 		put(key, create(value));
 	}
 
@@ -107,7 +107,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final long value) {
+	public void put(String key, long value) {
 		put(key, create(value));
 	}
 
@@ -117,7 +117,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final float value) {
+	public void put(String key, float value) {
 		put(key, create(value));
 	}
 
@@ -127,7 +127,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final double value) {
+	public void put(String key, double value) {
 		put(key, create(value));
 	}
 
@@ -137,7 +137,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final boolean value) {
+	public void put(String key, boolean value) {
 		put(key, create(value));
 	}
 
@@ -147,7 +147,7 @@ public class JSONObject extends JSONValue {
 	 * @param key The name for the value.
 	 * @param value The actual value.
 	 */
-	public void put(final String key, final char value) {
+	public void put(String key, char value) {
 		put(key, create(value));
 	}
 
@@ -163,14 +163,14 @@ public class JSONObject extends JSONValue {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + ((map == null) ? 0 : map.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -183,7 +183,7 @@ public class JSONObject extends JSONValue {
 			return false;
 		}
 
-		final JSONObject other = (JSONObject) obj;
+		JSONObject other = (JSONObject) obj;
 
 		if (map == null) {
 			if (other.map != null) {
@@ -202,7 +202,7 @@ public class JSONObject extends JSONValue {
 	}
 
 	@Override
-	public void write(final Writer writer) throws IOException {
+	public void write(Writer writer) throws IOException {
 		write(writer, 1);
 	}
 
@@ -216,7 +216,7 @@ public class JSONObject extends JSONValue {
 		return Collections.unmodifiableMap(map);
 	}
 
-	private void writeNewLine(final Writer writer, final int tabLevel) throws IOException {
+	private void writeNewLine(Writer writer, int tabLevel) throws IOException {
 		writer.write('\n');
 
 		for (int i = 0; i < tabLevel; i++) {
@@ -224,19 +224,19 @@ public class JSONObject extends JSONValue {
 		}
 	}
 
-	private void write(final Writer writer, final int tabLevel) throws IOException {
+	private void write(Writer writer, int tabLevel) throws IOException {
 		writer.write('{');
 		writeNewLine(writer, tabLevel);
 
 		Iterator<Map.Entry<String, JSONValue>> it = map.entrySet().iterator();
 
 		while (it.hasNext()) {
-			final Map.Entry<String, JSONValue> current = it.next();
+			Map.Entry<String, JSONValue> current = it.next();
 			new JSONString(current.getKey()).write(writer);
 			writer.write(':');
 			writer.write(' ');
 
-			final JSONValue value = current.getValue();
+			JSONValue value = current.getValue();
 
 			if (value.isObject()) {
 				((JSONObject) value).write(writer, tabLevel + 1);

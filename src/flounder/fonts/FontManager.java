@@ -16,7 +16,7 @@ public class FontManager {
 	public static final FontType SERIF = new FontType(new MyFile(FONTS_LOC, "serif.png"), new MyFile(FONTS_LOC, "serif.fnt"));
 	public static final FontType TREBUCHET = new FontType(new MyFile(FONTS_LOC, "trebuchet.png"), new MyFile(FONTS_LOC, "trebuchet.fnt"));
 
-	private static final Map<FontType, List<Text>> texts = new HashMap<>();
+	private static Map<FontType, List<Text>> texts = new HashMap<>();
 
 	public static Map<FontType, List<Text>> getTexts() {
 		return texts;

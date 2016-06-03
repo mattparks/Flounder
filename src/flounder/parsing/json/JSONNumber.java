@@ -9,14 +9,14 @@ import java.text.*;
  * A value of a number in a JSON file.
  */
 public class JSONNumber extends JSONValue {
-	private final String value;
+	private String value;
 
 	/**
 	 * Creates a JSONNumber from a value.
 	 *
 	 * @param value The value representing the number.
 	 */
-	public JSONNumber(final byte value) {
+	public JSONNumber(byte value) {
 		this(Byte.toString(value));
 	}
 
@@ -25,7 +25,7 @@ public class JSONNumber extends JSONValue {
 	 *
 	 * @param value The value representing the number.
 	 */
-	public JSONNumber(final String value) {
+	public JSONNumber(String value) {
 		if (value == null) {
 			throw new NullPointerException("Number cannot have a null value");
 		}
@@ -38,7 +38,7 @@ public class JSONNumber extends JSONValue {
 	 *
 	 * @param value The value representing the number.
 	 */
-	public JSONNumber(final short value) {
+	public JSONNumber(short value) {
 		this(Short.toString(value));
 	}
 
@@ -47,7 +47,7 @@ public class JSONNumber extends JSONValue {
 	 *
 	 * @param value The value representing the number.
 	 */
-	public JSONNumber(final int value) {
+	public JSONNumber(int value) {
 		this(Integer.toString(value));
 	}
 
@@ -56,7 +56,7 @@ public class JSONNumber extends JSONValue {
 	 *
 	 * @param value The value representing the number.
 	 */
-	public JSONNumber(final long value) {
+	public JSONNumber(long value) {
 		this(Long.toString(value));
 	}
 
@@ -65,7 +65,7 @@ public class JSONNumber extends JSONValue {
 	 *
 	 * @param value The value representing the number.
 	 */
-	public JSONNumber(final float value) {
+	public JSONNumber(float value) {
 		this(Float.toString(value));
 	}
 
@@ -74,7 +74,7 @@ public class JSONNumber extends JSONValue {
 	 *
 	 * @param value The value representing the number.
 	 */
-	public JSONNumber(final double value) {
+	public JSONNumber(double value) {
 		this(Double.toString(value));
 	}
 
@@ -89,20 +89,20 @@ public class JSONNumber extends JSONValue {
 	 * @throws IOException If a token cannot be read.
 	 * @throws ParseException If the tokens cannot be parsed into a JSONValue.
 	 */
-	public static JSONValue parse(final TokenReader tokens, final String currentToken) throws IOException, ParseException {
+	public static JSONValue parse(TokenReader tokens, String currentToken) throws IOException, ParseException {
 		return new JSONNumber(currentToken);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -115,7 +115,7 @@ public class JSONNumber extends JSONValue {
 			return false;
 		}
 
-		final JSONNumber other = (JSONNumber) obj;
+		JSONNumber other = (JSONNumber) obj;
 
 		if (value == null) {
 			if (other.value != null) {
@@ -134,7 +134,7 @@ public class JSONNumber extends JSONValue {
 	}
 
 	@Override
-	public void write(final Writer writer) throws IOException {
+	public void write(Writer writer) throws IOException {
 		writer.write(value);
 	}
 

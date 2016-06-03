@@ -19,6 +19,10 @@ public class FlounderDevices implements Runnable {
 	private static DeviceJoysticks joysticks;
 	private static DeviceSound sound;
 
+	private static float currentFrameTime;
+	private static float lastFrameTime;
+	private static float delta;
+
 	/**
 	 * Creates GLFW devices.
 	 *
@@ -30,7 +34,7 @@ public class FlounderDevices implements Runnable {
 	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param displayFullscreen If the window will start fullscreen.
 	 */
-	public FlounderDevices(final int displayWidth, final int displayHeight, final String displayTitle, final boolean displayVSync, final boolean displayAntialiasing, final int displaySamples, final boolean displayFullscreen) {
+	public FlounderDevices(int displayWidth, int displayHeight, String displayTitle, boolean displayVSync, boolean displayAntialiasing, int displaySamples, boolean displayFullscreen) {
 		if (!initialized) {
 			glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 			display = new DeviceDisplay(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
@@ -38,6 +42,10 @@ public class FlounderDevices implements Runnable {
 			mouse = new DeviceMouse();
 			joysticks = new DeviceJoysticks();
 			sound = new DeviceSound();
+
+			currentFrameTime = 0.0f;
+			lastFrameTime = 0.0f;
+			delta = 0.0f;
 
 			// Logs OpenGL version info.
 			FlounderLogger.log("Number of Cores: " + Runtime.getRuntime().availableProcessors());
@@ -95,13 +103,13 @@ public class FlounderDevices implements Runnable {
 	 * @return Returns memory stats in a string.
 	 */
 	public static StringBuilder getUsedMemory() {
-		final Runtime runtime = Runtime.getRuntime();
-		final NumberFormat format = NumberFormat.getInstance();
+		Runtime runtime = Runtime.getRuntime();
+		NumberFormat format = NumberFormat.getInstance();
 
-		final StringBuilder sb = new StringBuilder();
-		final long maxMemory = runtime.maxMemory();
-		final long allocatedMemory = runtime.totalMemory();
-		final long freeMemory = runtime.freeMemory();
+		StringBuilder sb = new StringBuilder();
+		long maxMemory = runtime.maxMemory();
+		long allocatedMemory = runtime.totalMemory();
+		long freeMemory = runtime.freeMemory();
 
 		sb.append("Free memory: " + format.format(freeMemory / 1024) + "\n");
 		sb.append("Allocated memory: " + format.format(allocatedMemory / 1024) + "\n");
@@ -116,7 +124,11 @@ public class FlounderDevices implements Runnable {
 	@Override
 	public void run() {
 //		while (initialized && FlounderDevices.getDisplay().isOpen()) {
-		final float delta = FlounderEngine.getDelta();
+		// Updates static delta and times.
+		currentFrameTime = FlounderDevices.getDisplay().getTime() / 1000.0f;
+		delta = currentFrameTime - lastFrameTime;
+		lastFrameTime = currentFrameTime;
+
 		display.pollEvents();
 		joysticks.update(delta);
 		keyboard.update(delta);

@@ -10,7 +10,7 @@ public class IModule {
 	 * @param camera The main camera to use.
 	 * @param masterRenderer The master renderer to render with.
 	 */
-	public IModule(final IGame game, final ICamera camera, final IRendererMaster masterRenderer) {
+	public IModule(IGame game, ICamera camera, IRendererMaster masterRenderer) {
 		IModule.game = game;
 		IModule.camera = camera;
 		IModule.masterRenderer = masterRenderer;

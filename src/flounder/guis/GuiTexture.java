@@ -10,10 +10,10 @@ import flounder.visual.*;
  * A textured quad, making up part of a GUI component.
  */
 public class GuiTexture {
-	private final Vector2f position;
-	private final Vector2f scale;
-	private final Vector2f textureOffset;
-	private final Colour colourOffset;
+	private Vector2f position;
+	private Vector2f scale;
+	private Vector2f textureOffset;
+	private Colour colourOffset;
 
 	private Texture texture;
 	private ValueDriver alphaDriver;
@@ -21,11 +21,11 @@ public class GuiTexture {
 	private float alpha;
 	private boolean flipTexture;
 
-	public GuiTexture(final Texture texture) {
+	public GuiTexture(Texture texture) {
 		this(texture, false);
 	}
 
-	public GuiTexture(final Texture texture, final boolean flip) {
+	public GuiTexture(Texture texture, boolean flip) {
 		this.texture = texture;
 		position = new Vector2f();
 		scale = new Vector2f();
@@ -46,7 +46,7 @@ public class GuiTexture {
 		return texture;
 	}
 
-	public void setTexture(final Texture texture) {
+	public void setTexture(Texture texture) {
 		this.texture = texture;
 	}
 
@@ -54,7 +54,7 @@ public class GuiTexture {
 		return colourOffset;
 	}
 
-	public void setColourOffset(final Colour colour) {
+	public void setColourOffset(Colour colour) {
 		colourOffset.set(colour);
 	}
 
@@ -62,7 +62,7 @@ public class GuiTexture {
 		return position;
 	}
 
-	public void setPosition(final float x, final float y, final float width, final float height) {
+	public void setPosition(float x, float y, float width, float height) {
 		position.set(x, y);
 		scale.set(width, height);
 	}
@@ -71,7 +71,7 @@ public class GuiTexture {
 		return scale;
 	}
 
-	public void setAlphaDriver(final ValueDriver driver) {
+	public void setAlphaDriver(ValueDriver driver) {
 		alphaDriver = driver;
 	}
 

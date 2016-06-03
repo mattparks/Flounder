@@ -20,9 +20,10 @@ public class TextureDecoder {
 	private static final byte COLOUR_INDEXED = 3;
 	private static final byte COLOUR_GREYALPHA = 4;
 	private static final byte COLOUR_TRUEALPHA = 6;
-	private final InputStream input;
-	private final CRC32 crc;
-	private final byte[] buffer;
+
+	private InputStream input;
+	private CRC32 crc;
+	private byte[] buffer;
 	private int chunkLength;
 	private int chunkType;
 	private int chunkRemaining;
@@ -35,7 +36,7 @@ public class TextureDecoder {
 	private byte[] paletteA;
 	private byte[] transPixel;
 
-	public TextureDecoder(final InputStream input) throws IOException {
+	public TextureDecoder(InputStream input) throws IOException {
 		this.input = input;
 		this.crc = new CRC32();
 		this.buffer = new byte[4096];
@@ -73,7 +74,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private static boolean checkSignature(final byte[] buffer) {
+	private static boolean checkSignature(byte[] buffer) {
 		for (int i = 0; i < SIGNATURE.length; i++) {
 			if (buffer[i] != SIGNATURE[i]) {
 				return false;
@@ -128,7 +129,7 @@ public class TextureDecoder {
 	 * @throws UnsupportedOperationException If the tRNS chunk data can't be set.
 	 * @see #hasAlphaChannel()
 	 */
-	public void overwriteTRNS(final byte r, final byte g, final byte b) {
+	public void overwriteTRNS(byte r, byte g, byte b) {
 		if (hasAlphaChannel()) {
 			throw new UnsupportedOperationException("Image has an alpha channel!");
 		}
@@ -157,7 +158,7 @@ public class TextureDecoder {
 	 *
 	 * @throws UnsupportedOperationException If this PNG file can't be decoded.
 	 */
-	public Format decideTextureFormat(final Format format) {
+	public Format decideTextureFormat(Format format) {
 		switch (colourType) {
 			case COLOUR_TRUECOLOUR:
 				switch (format) {
@@ -214,7 +215,7 @@ public class TextureDecoder {
 	 * @throws IllegalArgumentException Of the start position of a line falls outside the buffer.
 	 * @throws UnsupportedOperationException Of the image can't be decoded into the desired format.
 	 */
-	public void decodeFlipped(final ByteBuffer buffer, final int stride, final Format format) throws IOException {
+	public void decodeFlipped(ByteBuffer buffer, int stride, Format format) throws IOException {
 		if (stride <= 0) {
 			throw new IllegalArgumentException("Stride");
 		}
@@ -237,13 +238,13 @@ public class TextureDecoder {
 	 * @throws IllegalArgumentException If the start position of a line falls outside the buffer.
 	 * @throws UnsupportedOperationException If the image can't be decoded into the desired format.
 	 */
-	public void decode(final ByteBuffer buffer, final int stride, final Format format) throws IOException {
-		final int offset = buffer.position();
-		final int lineSize = (width * bitdepth + 7) / 8 * bytesPerPixel;
+	public void decode(ByteBuffer buffer, int stride, Format format) throws IOException {
+		int offset = buffer.position();
+		int lineSize = (width * bitdepth + 7) / 8 * bytesPerPixel;
 		byte[] curLine = new byte[lineSize + 1];
 		byte[] prevLine = new byte[lineSize + 1];
 		byte[] palLine = bitdepth < 8 ? new byte[width + 1] : null;
-		final Inflater inflater = new Inflater();
+		Inflater inflater = new Inflater();
 
 		try {
 			for (int y = 0; y < height; y++) {
@@ -352,7 +353,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void readChunkUnzip(final Inflater inflater, final byte[] buffer, int offset, int length) throws IOException {
+	private void readChunkUnzip(Inflater inflater, byte[] buffer, int offset, int length) throws IOException {
 		assert buffer != this.buffer;
 
 		try {
@@ -379,7 +380,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void refillInflater(final Inflater inflater) throws IOException {
+	private void refillInflater(Inflater inflater) throws IOException {
 		while (chunkRemaining == 0) {
 			closeChunk();
 			openChunk(IDAT);
@@ -420,7 +421,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void readFully(final byte[] buffer, int offset, int length) throws IOException {
+	private void readFully(byte[] buffer, int offset, int length) throws IOException {
 		do {
 			int read = input.read(buffer, offset, length);
 
@@ -433,11 +434,11 @@ public class TextureDecoder {
 		} while (length > 0);
 	}
 
-	private int readInt(final byte[] buffer, final int offset) {
+	private int readInt(byte[] buffer, int offset) {
 		return buffer[offset] << 24 | (buffer[offset + 1] & 255) << 16 | (buffer[offset + 2] & 255) << 8 | buffer[offset + 3] & 255;
 	}
 
-	private void openChunk(final int expected) throws IOException {
+	private void openChunk(int expected) throws IOException {
 		openChunk();
 
 		if (chunkType != expected) {
@@ -454,7 +455,7 @@ public class TextureDecoder {
 		crc.update(buffer, 4, 4); // Only chunkType.
 	}
 
-	private int readChunk(final byte[] buffer, final int offset, int length) throws IOException {
+	private int readChunk(byte[] buffer, int offset, int length) throws IOException {
 		if (length > chunkRemaining) {
 			length = chunkRemaining;
 		}
@@ -465,7 +466,7 @@ public class TextureDecoder {
 		return length;
 	}
 
-	private void unfilter(final byte[] curLine, final byte[] prevLine) throws IOException {
+	private void unfilter(byte[] curLine, byte[] prevLine) throws IOException {
 		switch (curLine[0]) {
 			case 0: // none
 				break;
@@ -487,21 +488,21 @@ public class TextureDecoder {
 	}
 
 	private void unfilterSub(byte[] curLine) {
-		final int bpp = bytesPerPixel;
+		int bpp = bytesPerPixel;
 
 		for (int i = bpp + 1, n = curLine.length; i < n; ++i) {
 			curLine[i] += curLine[i - bpp];
 		}
 	}
 
-	private void unfilterUp(byte[] curLine, final byte[] prevLine) {
+	private void unfilterUp(byte[] curLine, byte[] prevLine) {
 		for (int i = 1, n = curLine.length; i < n; ++i) {
 			curLine[i] += prevLine[i];
 		}
 	}
 
-	private void unfilterAverage(byte[] curLine, final byte[] prevLine) {
-		final int bpp = bytesPerPixel;
+	private void unfilterAverage(byte[] curLine, byte[] prevLine) {
+		int bpp = bytesPerPixel;
 		int i;
 
 		for (i = 1; i <= bpp; ++i) {
@@ -513,8 +514,8 @@ public class TextureDecoder {
 		}
 	}
 
-	private void unfilterPaeth(byte[] curLine, final byte[] prevLine) {
-		final int bpp = bytesPerPixel;
+	private void unfilterPaeth(byte[] curLine, byte[] prevLine) {
+		int bpp = bytesPerPixel;
 		int i;
 
 		for (i = 1; i <= bpp; ++i) {
@@ -554,7 +555,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void copyRGBtoABGR(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyRGBtoABGR(ByteBuffer buffer, byte[] curLine) {
 		if (transPixel != null) {
 			byte tr = transPixel[1];
 			byte tg = transPixel[3];
@@ -579,7 +580,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void copyRGBtoRGBA(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyRGBtoRGBA(ByteBuffer buffer, byte[] curLine) {
 		if (transPixel != null) {
 			byte tr = transPixel[1];
 			byte tg = transPixel[3];
@@ -604,7 +605,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void copyRGBtoBGRA(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyRGBtoBGRA(ByteBuffer buffer, byte[] curLine) {
 		if (transPixel != null) {
 			byte tr = transPixel[1];
 			byte tg = transPixel[3];
@@ -629,29 +630,29 @@ public class TextureDecoder {
 		}
 	}
 
-	private void copy(final ByteBuffer buffer, final byte[] curLine) {
+	private void copy(ByteBuffer buffer, byte[] curLine) {
 		buffer.put(curLine, 1, curLine.length - 1);
 	}
 
-	private void copyRGBAtoABGR(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyRGBAtoABGR(ByteBuffer buffer, byte[] curLine) {
 		for (int i = 1, n = curLine.length; i < n; i += 4) {
 			buffer.put(curLine[i + 3]).put(curLine[i + 2]).put(curLine[i + 1]).put(curLine[i]);
 		}
 	}
 
-	private void copyRGBAtoBGRA(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyRGBAtoBGRA(ByteBuffer buffer, byte[] curLine) {
 		for (int i = 1, n = curLine.length; i < n; i += 4) {
 			buffer.put(curLine[i + 2]).put(curLine[i + 1]).put(curLine[i]).put(curLine[i + 3]);
 		}
 	}
 
-	private void copyRGBAtoRGB(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyRGBAtoRGB(ByteBuffer buffer, byte[] curLine) {
 		for (int i = 1, n = curLine.length; i < n; i += 4) {
 			buffer.put(curLine[i]).put(curLine[i + 1]).put(curLine[i + 2]);
 		}
 	}
 
-	private void expand4(final byte[] source, byte[] destination) {
+	private void expand4(byte[] source, byte[] destination) {
 		for (int i = 1, n = destination.length; i < n; i += 2) {
 			int val = source[1 + (i >> 1)] & 255;
 
@@ -664,7 +665,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void expand2(final byte[] source, byte[] destination) {
+	private void expand2(byte[] source, byte[] destination) {
 		for (int i = 1, n = destination.length; i < n; i += 4) {
 			int val = source[1 + (i >> 2)] & 255;
 
@@ -681,7 +682,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void expand1(final byte[] source, byte[] destination) {
+	private void expand1(byte[] source, byte[] destination) {
 		for (int i = 1, n = destination.length; i < n; i += 8) {
 			int val = source[1 + (i >> 3)] & 255;
 
@@ -706,7 +707,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void copyPALtoABGR(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyPALtoABGR(ByteBuffer buffer, byte[] curLine) {
 		if (paletteA != null) {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
@@ -728,7 +729,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void copyPALtoRGBA(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyPALtoRGBA(ByteBuffer buffer, byte[] curLine) {
 		if (paletteA != null) {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
@@ -750,7 +751,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void copyPALtoBGRA(final ByteBuffer buffer, final byte[] curLine) {
+	private void copyPALtoBGRA(ByteBuffer buffer, byte[] curLine) {
 		if (paletteA != null) {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
@@ -874,7 +875,7 @@ public class TextureDecoder {
 		}
 	}
 
-	private void checkChunkLength(final int expected) throws IOException {
+	private void checkChunkLength(int expected) throws IOException {
 		if (chunkLength != expected) {
 			throw new IOException("Chunk has wrong size");
 		}
@@ -883,8 +884,8 @@ public class TextureDecoder {
 	public enum Format {
 		ALPHA(1, true), LUMINANCE(1, false), LUMINANCE_ALPHA(2, true), RGB(3, false), RGBA(4, true), BGRA(4, true), ABGR(4, true);
 
-		private final int m_numComponents;
-		private final boolean m_hasAlpha;
+		private int m_numComponents;
+		private boolean m_hasAlpha;
 
 		Format(int numComponents, boolean hasAlpha) {
 			m_numComponents = numComponents;

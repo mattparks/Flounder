@@ -11,15 +11,15 @@ public class MyFile {
 	public static final String FILE_SEPARATOR = "/";
 	public static final MyFile RES_FOLDER = new MyFile("res");
 
-	private final String path;
-	private final String name;
+	private String path;
+	private String name;
 
 	/**
 	 * Constructor for MyFile.
 	 *
 	 * @param path The path for this file to represent.
 	 */
-	public MyFile(final String path) {
+	public MyFile(String path) {
 		this.path = FILE_SEPARATOR + path;
 		String[] dirs = path.split(FILE_SEPARATOR);
 		name = dirs[dirs.length - 1];
@@ -30,7 +30,7 @@ public class MyFile {
 	 *
 	 * @param paths Paths for this file to represent.
 	 */
-	public MyFile(final String... paths) {
+	public MyFile(String... paths) {
 		String path = "";
 
 		for (String part : paths) {
@@ -48,7 +48,7 @@ public class MyFile {
 	 * @param file The file for this file to represent.
 	 * @param subFile The name of the represented sub file.
 	 */
-	public MyFile(final MyFile file, final String subFile) {
+	public MyFile(MyFile file, String subFile) {
 		path = file.path + FILE_SEPARATOR + subFile;
 		name = subFile;
 	}
@@ -59,7 +59,7 @@ public class MyFile {
 	 * @param file The file for this file to represent.
 	 * @param subFiles Names of the represented sub file.
 	 */
-	public MyFile(final MyFile file, final String... subFiles) {
+	public MyFile(MyFile file, String... subFiles) {
 		String path = file.path;
 
 		for (String part : subFiles) {
@@ -78,7 +78,7 @@ public class MyFile {
 	 */
 	public BufferedReader getReader() {
 		try {
-			final InputStreamReader isr = new InputStreamReader(getInputStream());
+			InputStreamReader isr = new InputStreamReader(getInputStream());
 			return new BufferedReader(isr);
 		} catch (Exception e) {
 			FlounderLogger.error("Couldn't get reader for " + path);

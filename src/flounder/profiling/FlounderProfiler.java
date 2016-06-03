@@ -10,7 +10,7 @@ public class FlounderProfiler {
 	private static boolean initialized;
 	private static boolean profilerOpen;
 
-	public static void init(final String title) {
+	public static void init(String title) {
 		if (!initialized) {
 			profilerJFrame = new JFrame(title);
 			profilerJFrame.setSize(420, 720);
@@ -27,7 +27,7 @@ public class FlounderProfiler {
 	public static void update() {
 	}
 
-	public static void toggle(final boolean open) {
+	public static void toggle(boolean open) {
 		if (open) {
 			profilerJFrame.setVisible(true);
 			profilerOpen = true;
@@ -37,9 +37,9 @@ public class FlounderProfiler {
 		}
 	}
 
-	public static <T> void add(final String tabName, final String title, final T value) {
+	public static <T> void add(String tabName, String title, T value) {
 		if (primaryTabMenu.doesCategoryExist(tabName)) {
-			final Optional<FlounderProfilerTab> optionalTab = primaryTabMenu.getCategoryComponent(tabName);
+			Optional<FlounderProfilerTab> optionalTab = primaryTabMenu.getCategoryComponent(tabName);
 			optionalTab.ifPresent(insertObject -> {
 				FlounderProfilerTab grabbedTab = optionalTab.get();
 				grabbedTab.addLabel(title, value);
@@ -50,7 +50,7 @@ public class FlounderProfiler {
 		}
 	}
 
-	public static void addTab(final String tabName) {
+	public static void addTab(String tabName) {
 		if (primaryTabMenu.doesCategoryExist(tabName)) {
 			// NOP
 		} else {

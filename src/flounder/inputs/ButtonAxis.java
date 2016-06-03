@@ -4,8 +4,8 @@ package flounder.inputs;
  * Axis composed of two buttons.
  */
 public class ButtonAxis implements IAxis {
-	private final IButton positive;
-	private final IButton negative;
+	private IButton positive;
+	private IButton negative;
 
 	/**
 	 * Creates an axis from two buttons.
@@ -13,7 +13,7 @@ public class ButtonAxis implements IAxis {
 	 * @param negative When this button is down, the axis is negative.
 	 * @param positive When this button is down, the axis is positive.
 	 */
-	public ButtonAxis(final IButton negative, final IButton positive) {
+	public ButtonAxis(IButton negative, IButton positive) {
 		this.negative = negative;
 		this.positive = positive;
 	}

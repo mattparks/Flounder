@@ -5,13 +5,14 @@ import flounder.maths.vectors.*;
 import java.util.*;
 
 public class TextureTessellatorAtlas {
-	private Map<String, Vector2f> texcoords;
-	private int width, height;
+	private Map<String, Vector2f> textureCoords;
+	private int width;
+	private int height;
 	private Texture texture;
 	private float ax, ay;
 
-	public TextureTessellatorAtlas(final int textureWidth, final int textureHeight, final Texture texture) {
-		texcoords = new HashMap<>();
+	public TextureTessellatorAtlas(int textureWidth, int textureHeight, Texture texture) {
+		textureCoords = new HashMap<>();
 		this.width = textureWidth;
 		this.height = textureHeight;
 		this.texture = texture;
@@ -19,12 +20,12 @@ public class TextureTessellatorAtlas {
 		ay = 16f / (float) height;
 	}
 
-	public void registerTextureCoords(final String name, final Vector2f texcoords) {
-		this.texcoords.put(name.toLowerCase(), texcoords);
+	public void registerTextureCoords(String name, Vector2f texcoords) {
+		this.textureCoords.put(name.toLowerCase(), texcoords);
 	}
 
-	public Vector2f getTextureCoords(final String name) {
-		final Vector2f coords = texcoords.get(name.toLowerCase());
+	public Vector2f getTextureCoords(String name) {
+		Vector2f coords = textureCoords.get(name.toLowerCase());
 
 		if (coords == null) {
 			return new Vector2f(0, 0);

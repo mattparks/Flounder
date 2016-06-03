@@ -3,12 +3,12 @@ package flounder.fonts;
 public class TextBuilder {
 	public static FontType DEFAULT_TYPE = FontManager.COMIC_SANS;
 
-	private final String text;
+	private String text;
 	private boolean centered;
 	private float textSize;
 	private FontType font;
 
-	protected TextBuilder(final String text) {
+	protected TextBuilder(String text) {
 		this.text = text;
 		this.centered = false;
 		this.textSize = 1.0f;
@@ -24,12 +24,12 @@ public class TextBuilder {
 		return this;
 	}
 
-	public TextBuilder setFontSize(final float size) {
+	public TextBuilder setFontSize(float size) {
 		textSize = size;
 		return this;
 	}
 
-	public TextBuilder setFont(final FontType font) {
+	public TextBuilder setFont(FontType font) {
 		this.font = font;
 		return this;
 	}

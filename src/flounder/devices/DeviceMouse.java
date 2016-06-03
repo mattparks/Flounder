@@ -12,10 +12,10 @@ import static org.lwjgl.opengl.GL11.*;
  * Manages the creation, updating and destruction of the mouse.
  */
 public class DeviceMouse {
-	private final GLFWScrollCallback callbackScroll;
-	private final GLFWMouseButtonCallback callbackMouseButton;
-	private final GLFWCursorPosCallback callbackCursorPos;
-	private final GLFWCursorEnterCallback callbackCursorEnter;
+	private GLFWScrollCallback callbackScroll;
+	private GLFWMouseButtonCallback callbackMouseButton;
+	private GLFWCursorPosCallback callbackCursorPos;
+	private GLFWCursorEnterCallback callbackCursorEnter;
 
 	private int mouseButtons[];
 	private float lastMousePositionX;
@@ -44,14 +44,14 @@ public class DeviceMouse {
 		// Sets the mouse callbacks.
 		glfwSetScrollCallback(FlounderDevices.getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
-			public void invoke(final long window, final double xoffset, final double yoffset) {
+			public void invoke(long window, double xoffset, double yoffset) {
 				mouseWheel = (float) yoffset;
 			}
 		});
 
 		glfwSetMouseButtonCallback(FlounderDevices.getDisplay().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
 			@Override
-			public void invoke(final long window, final int button, final int action, final int mods) {
+			public void invoke(long window, int button, int action, int mods) {
 				// Actions: GLFW_PRESS   GLFW_RELEASE   GLFW_REPEAT
 				mouseButtons[button] = action;
 			}
@@ -59,7 +59,7 @@ public class DeviceMouse {
 
 		glfwSetCursorPosCallback(FlounderDevices.getDisplay().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
 			@Override
-			public void invoke(final long window, final double xpos, final double ypos) {
+			public void invoke(long window, double xpos, double ypos) {
 				mousePositionX = (float) (xpos / FlounderDevices.getDisplay().getWidth());
 				mousePositionY = (float) (ypos / FlounderDevices.getDisplay().getHeight());
 			}
@@ -67,7 +67,7 @@ public class DeviceMouse {
 
 		glfwSetCursorEnterCallback(FlounderDevices.getDisplay().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
 			@Override
-			public void invoke(final long window, final int entered) {
+			public void invoke(long window, int entered) {
 				displaySelected = entered == GL_TRUE;
 			}
 		});
@@ -80,7 +80,7 @@ public class DeviceMouse {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	protected void update(final float delta) {
+	protected void update(float delta) {
 		mouseDeltaX = (lastMousePositionX - mousePositionX) * delta;
 		mouseDeltaY = (lastMousePositionY - mousePositionY) * delta;
 
@@ -88,7 +88,7 @@ public class DeviceMouse {
 		lastMousePositionY = mousePositionY;
 
 		if (mouseWheel != 0.0f) {
-			mouseWheel -= (((mouseWheel < 0) ? -1 : 1) * FlounderEngine.getDelta());
+			mouseWheel -= (((mouseWheel < 0.0f) ? -1.0f : 1.0f) * FlounderEngine.getDelta());
 			mouseWheel = Maths.deadband(0.1f, mouseWheel);
 		}
 
@@ -113,7 +113,7 @@ public class DeviceMouse {
 	 *
 	 * @return If the mouse button is currently pressed.
 	 */
-	public boolean getMouse(final int button) {
+	public boolean getMouse(int button) {
 		return mouseButtons[button] != GLFW_RELEASE;
 	}
 

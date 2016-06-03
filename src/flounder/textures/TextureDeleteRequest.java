@@ -3,9 +3,9 @@ package flounder.textures;
 import flounder.processing.glProcessing.*;
 
 public class TextureDeleteRequest implements GlRequest {
-	private final int textureID;
+	private int textureID;
 
-	public TextureDeleteRequest(final int textureID) {
+	public TextureDeleteRequest(int textureID) {
 		this.textureID = textureID;
 	}
 

@@ -7,7 +7,7 @@ import flounder.maths.vectors.*;
  * A request that can be sent to the {@link DeviceSound} specifying what sound should be played and what settings the source playing it should use.
  */
 public class PlayRequest {
-	private final Vector3f position;
+	private Vector3f position;
 	private float innerRange;
 	private float outerRange;
 
@@ -23,7 +23,7 @@ public class PlayRequest {
 	 * @param sound The sound that needs to be played.
 	 * @param volume The volume that the sound should be played at.
 	 */
-	private PlayRequest(final Sound sound, final float volume) {
+	private PlayRequest(Sound sound, float volume) {
 		this.position = new Vector3f();
 		this.innerRange = 1.0f;
 		this.outerRange = 1.0f;
@@ -42,7 +42,7 @@ public class PlayRequest {
 	 *
 	 * @return The newly created play request.
 	 */
-	public static PlayRequest newSystemPlayRequest(final Sound systemSound) {
+	public static PlayRequest newSystemPlayRequest(Sound systemSound) {
 		return new PlayRequest(systemSound, 1);
 	}
 
@@ -57,8 +57,8 @@ public class PlayRequest {
 	 *
 	 * @return The newly created request.
 	 */
-	public static PlayRequest new3dSoundPlayRequest(final Sound sound, final float volume, final Vector3f position, final float innerRange, final float outerRange) {
-		final PlayRequest request = new PlayRequest(sound, volume);
+	public static PlayRequest new3dSoundPlayRequest(Sound sound, float volume, Vector3f position, float innerRange, float outerRange) {
+		PlayRequest request = new PlayRequest(sound, volume);
 		request.systemSound = false;
 		request.innerRange = innerRange < 1 ? 1 : innerRange;
 		request.outerRange = outerRange;
@@ -106,7 +106,7 @@ public class PlayRequest {
 	 *
 	 * @param loop Whether the sound should be played on loop or not.
 	 */
-	public void setLooping(final boolean loop) {
+	public void setLooping(boolean loop) {
 		this.loop = loop;
 	}
 

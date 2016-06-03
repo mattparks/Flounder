@@ -11,10 +11,10 @@ import static org.lwjgl.opengl.GL20.*;
  * Represents a Matrix4F uniform type that can be loaded to the shader.
  */
 public class UniformMat4 extends Uniform {
-	private final Matrix4f currentValue;
+	private Matrix4f currentValue;
 	private FloatBuffer floatBuffer;
 
-	public UniformMat4(final String name) {
+	public UniformMat4(String name) {
 		super(name);
 		currentValue = new Matrix4f();
 		floatBuffer = BufferUtils.createFloatBuffer(16);
@@ -25,7 +25,7 @@ public class UniformMat4 extends Uniform {
 	 *
 	 * @param value The new value.
 	 */
-	public void loadMat4(final Matrix4f value) {
+	public void loadMat4(Matrix4f value) {
 		if (value != null && !currentValue.equals(value)) {
 			floatBuffer.clear();
 			value.store(floatBuffer);

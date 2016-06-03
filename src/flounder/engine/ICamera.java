@@ -36,7 +36,7 @@ public interface ICamera extends IAudioListener {
 	 * @param focusRotation The rotation of the object the camera focuses on.
 	 * @param gamePaused Is the game currently paused? Used to stop inputs to camera in menus.
 	 */
-	void moveCamera(final Vector3f focusPosition, final Vector3f focusRotation, final boolean gamePaused);
+	void moveCamera(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused);
 
 	/**
 	 * @return The view matrix created by the current camera position and rotation.
@@ -55,14 +55,14 @@ public interface ICamera extends IAudioListener {
 	 *
 	 * @return The view matrix to be used for the reflection renderObjects pass.
 	 */
-	Matrix4f getReflectionViewMatrix(final float planeHeight);
+	Matrix4f getReflectionViewMatrix(float planeHeight);
 
 	/**
 	 * Prepares the camera for the reflection renderObjects pass.
 	 *
 	 * @param waterHeight The height of the water to be reflected on.
 	 */
-	void reflect(final float waterHeight);
+	void reflect(float waterHeight);
 
 	/**
 	 * @return The camera's 3D position in the world.

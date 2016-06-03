@@ -6,7 +6,7 @@ import flounder.maths.*;
  * Represents a fog in the world.
  */
 public class Fog {
-	private final Colour fogColour;
+	private Colour fogColour;
 	private float fogDensity;
 	private float fogGradient;
 	private float skyLowerLimit;
@@ -21,7 +21,7 @@ public class Fog {
 	 * @param skyLowerLimit At what height will the skybox fog begin to appear.
 	 * @param skyUpperLimit At what height will there be skybox no fog.
 	 */
-	public Fog(final Colour fogColour, final float fogDensity, final float fogGradient, final float skyLowerLimit, final float skyUpperLimit) {
+	public Fog(Colour fogColour, float fogDensity, float fogGradient, float skyLowerLimit, float skyUpperLimit) {
 		this.fogColour = fogColour;
 		this.fogDensity = fogDensity;
 		this.fogGradient = fogGradient;
@@ -33,7 +33,7 @@ public class Fog {
 		return fogColour;
 	}
 
-	public void setFogColour(final Colour fogColour) {
+	public void setFogColour(Colour fogColour) {
 		this.fogColour.set(fogColour);
 	}
 
@@ -41,7 +41,7 @@ public class Fog {
 		return fogDensity;
 	}
 
-	public void setFogDensity(final float fogDensity) {
+	public void setFogDensity(float fogDensity) {
 		this.fogDensity = fogDensity;
 	}
 
@@ -49,7 +49,7 @@ public class Fog {
 		return fogGradient;
 	}
 
-	public void setFogGradient(final float fogGradient) {
+	public void setFogGradient(float fogGradient) {
 		this.fogGradient = fogGradient;
 	}
 

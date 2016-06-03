@@ -6,9 +6,9 @@ import flounder.maths.vectors.*;
 import flounder.visual.*;
 
 public class Text {
-	private final float fontSize;
-	private final FontType fontType;
-	private final boolean centerText;
+	private float fontSize;
+	private FontType fontType;
+	private boolean centerText;
 	private String textString;
 	private int textMesh;
 	private int vertexCount;
@@ -38,7 +38,7 @@ public class Text {
 
 	private boolean loaded;
 
-	protected Text(final String text, final FontType font, final float fontSize, final boolean centered) {
+	protected Text(String text, FontType font, float fontSize, boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.fontType = font;
@@ -61,11 +61,11 @@ public class Text {
 		this.loaded = false;
 	}
 
-	public static TextBuilder newText(final String text) {
+	public static TextBuilder newText(String text) {
 		return new TextBuilder(text);
 	}
 
-	public void initialize(final float absX, final float absY, final float maxXLength) {
+	public void initialize(float absX, float absY, float maxXLength) {
 		positionXDriver = new ConstantDriver(absX);
 		positionYDriver = new ConstantDriver(absY);
 		lineMaxSize = maxXLength;
@@ -76,7 +76,7 @@ public class Text {
 		}
 	}
 
-	public void update(final float delta) {
+	public void update(float delta) {
 		currentScale = scaleDriver.update(delta);
 		currentX = positionXDriver.update(delta);
 		currentY = positionYDriver.update(delta);
@@ -86,9 +86,9 @@ public class Text {
 	}
 
 	protected Vector2f getPosition() {
-		final float scaleFactor = (currentScale - 1.0f) / 2.0f;
-		final float xChange = scaleFactor * originalWidth;
-		final float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1.0f;
+		float scaleFactor = (currentScale - 1.0f) / 2.0f;
+		float xChange = scaleFactor * originalWidth;
+		float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1.0f;
 		return position.set(currentX - xChange, currentY - yChange);
 	}
 
@@ -107,7 +107,7 @@ public class Text {
 	}
 
 	protected float calculateEdgeStart() {
-		final float size = fontSize * currentScale;
+		float size = fontSize * currentScale;
 		return 1.0f / 300.0f * size + 137.0f / 300.0f;
 	}
 
@@ -141,7 +141,7 @@ public class Text {
 		return textMesh;
 	}
 
-	protected void setMeshInfo(final int vao, final int verticesCount) {
+	protected void setMeshInfo(int vao, int verticesCount) {
 		textMesh = vao;
 		vertexCount = verticesCount;
 	}
@@ -154,7 +154,7 @@ public class Text {
 		return lineMaxSize;
 	}
 
-	protected void setOriginalWidth(final float width) {
+	protected void setOriginalWidth(float width) {
 		originalWidth = width;
 	}
 
@@ -166,7 +166,7 @@ public class Text {
 		this.colour.set(colour);
 	}
 
-	public void setColour(final float r, final float g, final float b) {
+	public void setColour(float r, float g, float b) {
 		this.colour.set(r, g, b);
 	}
 
@@ -174,15 +174,15 @@ public class Text {
 		return borderColour;
 	}
 
-	public void setBorderColour(final float r, final float g, final float b) {
+	public void setBorderColour(float r, float g, float b) {
 		borderColour.set(r, g, b);
 	}
 
-	public void setScaleDriver(final ValueDriver scaleDriver) {
+	public void setScaleDriver(ValueDriver scaleDriver) {
 		this.scaleDriver = scaleDriver;
 	}
 
-	public void setBorder(final ValueDriver driver) {
+	public void setBorder(ValueDriver driver) {
 		borderDriver = driver;
 		solidBorder = true;
 		glowBorder = false;
@@ -193,13 +193,13 @@ public class Text {
 		glowBorder = false;
 	}
 
-	public void setGlowing(final ValueDriver driver) {
+	public void setGlowing(ValueDriver driver) {
 		solidBorder = false;
 		glowBorder = true;
 		glowDriver = driver;
 	}
 
-	public void setAlphaDriver(final ValueDriver driver) {
+	public void setAlphaDriver(ValueDriver driver) {
 		alphaDriver = driver;
 	}
 
@@ -211,7 +211,7 @@ public class Text {
 		return numberOfLines;
 	}
 
-	public void setNumberOfLines(final int number) {
+	public void setNumberOfLines(int number) {
 		numberOfLines = number;
 	}
 

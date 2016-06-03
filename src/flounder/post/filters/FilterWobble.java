@@ -6,7 +6,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterWobble extends PostFilter {
-	private final UniformFloat moveIt = new UniformFloat("moveIt");
+	private UniformFloat moveIt = new UniformFloat("moveIt");
 
 	private float wobbleAmount;
 

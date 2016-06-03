@@ -8,7 +8,7 @@ import flounder.engine.*;
 public class RequestProcessor extends Thread {
 	private static RequestProcessor PROCESSOR = new RequestProcessor();
 
-	private final RequestQueue requestQueue;
+	private RequestQueue requestQueue;
 	private boolean running;
 
 	/**

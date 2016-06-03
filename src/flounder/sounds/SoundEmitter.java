@@ -12,11 +12,11 @@ import java.util.Map.*;
 public class SoundEmitter {
 	private static final float RANGE_THRESHOLD = 1.2f;
 
-	private final Vector3f position;
-	private final Map<SoundEffect, AudioController> playingSounds;
+	private Vector3f position;
+	private Map<SoundEffect, AudioController> playingSounds;
 	private float volume;
 
-	public SoundEmitter(final Vector3f position) {
+	public SoundEmitter(Vector3f position) {
 		this.position = position;
 		volume = 1;
 		playingSounds = new HashMap<>();
@@ -27,8 +27,8 @@ public class SoundEmitter {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	public void update(final float delta) {
-		final Iterator<Entry<SoundEffect, AudioController>> iterator = playingSounds.entrySet().iterator();
+	public void update(float delta) {
+		Iterator<Entry<SoundEffect, AudioController>> iterator = playingSounds.entrySet().iterator();
 
 		while (iterator.hasNext()) {
 			boolean stillPlaying = updateAudioController(iterator.next(), delta);
@@ -47,8 +47,8 @@ public class SoundEmitter {
 	 *
 	 * @return {@code true} if the sound is still being played.
 	 */
-	private boolean updateAudioController(final Entry<SoundEffect, AudioController> entry, final float delta) {
-		final AudioController controller = entry.getValue();
+	private boolean updateAudioController(Entry<SoundEffect, AudioController> entry, float delta) {
+		AudioController controller = entry.getValue();
 
 		if (!isInRange(entry.getKey())) {
 			controller.stop();
@@ -64,17 +64,17 @@ public class SoundEmitter {
 	 *
 	 * @return {@code true} if the sound effect would be heard by the listener when played from this emitter.
 	 */
-	private boolean isInRange(final SoundEffect soundEffect) {
-		final float disSquared = Vector3f.subtract(FlounderDevices.getSound().getCameraPosition(), position, null).lengthSquared();
-		final float range = soundEffect.getRange() * RANGE_THRESHOLD;
-		final float rangeSquared = range * range;
+	private boolean isInRange(SoundEffect soundEffect) {
+		float disSquared = Vector3f.subtract(FlounderDevices.getSound().getCameraPosition(), position, null).lengthSquared();
+		float range = soundEffect.getRange() * RANGE_THRESHOLD;
+		float rangeSquared = range * range;
 		return disSquared < rangeSquared;
 	}
 
 	/**
 	 * @return The position of the emitter in the 3D world.
 	 */
-	public final Vector3f getPosition() {
+	public Vector3f getPosition() {
 		return position;
 	}
 
@@ -85,7 +85,7 @@ public class SoundEmitter {
 	 * @param y The y position.
 	 * @param z The z position.
 	 */
-	public void setPosition(final float x, final float y, final float z) {
+	public void setPosition(float x, float y, float z) {
 		position.set(x, y, z);
 		playingSounds.values().forEach(audioController -> audioController.setPosition(position));
 	}
@@ -93,7 +93,7 @@ public class SoundEmitter {
 	/**
 	 * @return The volume of the sound emitter.
 	 */
-	public final float getVolume() {
+	public float getVolume() {
 		return volume;
 	}
 
@@ -102,7 +102,7 @@ public class SoundEmitter {
 	 *
 	 * @param volume The new volume.
 	 */
-	public void setVolume(final float volume) {
+	public void setVolume(float volume) {
 		this.volume = volume;
 	}
 
@@ -111,7 +111,7 @@ public class SoundEmitter {
 	 *
 	 * @return {@code true} if any sounds are currently being played by this emitter.
 	 */
-	public final boolean isInUse() {
+	public boolean isInUse() {
 		return !playingSounds.isEmpty();
 	}
 
@@ -120,13 +120,13 @@ public class SoundEmitter {
 	 *
 	 * @param soundEffect The sound effect to be played from this emitter.
 	 */
-	public void playSound(final SoundEffect soundEffect) {
+	public void playSound(SoundEffect soundEffect) {
 		if (!soundEffect.getSound().isLoaded() || isPlayingSound(soundEffect) || !isInRange(soundEffect)) {
 			return;
 		}
 
-		final PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
-		final AudioController controller = FlounderDevices.getSound().play3DSound(request);
+		PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
+		AudioController controller = FlounderDevices.getSound().play3DSound(request);
 
 		if (controller != null) {
 			playingSounds.put(soundEffect, controller);
@@ -140,7 +140,7 @@ public class SoundEmitter {
 	 *
 	 * @return {@code true} if the sound effect in question is being played by this emitter.
 	 */
-	public final boolean isPlayingSound(final SoundEffect sound) {
+	public boolean isPlayingSound(SoundEffect sound) {
 		return playingSounds.containsKey(sound);
 	}
 

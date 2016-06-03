@@ -21,8 +21,8 @@ public abstract class JSONValue {
 	 * @throws IOException If a token cannot be read.
 	 * @throws ParseException If the tokens cannot be parsed into a JSONValue.
 	 */
-	public static JSONValue parse(final TokenReader tokens, final String currentToken) throws IOException, ParseException {
-		final int c = currentToken.charAt(0);
+	public static JSONValue parse(TokenReader tokens, String currentToken) throws IOException, ParseException {
+		int c = currentToken.charAt(0);
 
 		if (TokenReader.isNumber(c)) {
 			return JSONNumber.parse(tokens, currentToken);
@@ -51,7 +51,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final int value) {
+	public static JSONValue create(int value) {
 		return new JSONNumber(value);
 	}
 
@@ -62,7 +62,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final long value) {
+	public static JSONValue create(long value) {
 		return new JSONNumber(value);
 	}
 
@@ -73,7 +73,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final float value) {
+	public static JSONValue create(float value) {
 		return new JSONNumber(value);
 	}
 
@@ -84,7 +84,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final double value) {
+	public static JSONValue create(double value) {
 		return new JSONNumber(value);
 	}
 
@@ -95,7 +95,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final short value) {
+	public static JSONValue create(short value) {
 		return new JSONNumber(value);
 	}
 
@@ -106,7 +106,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final byte value) {
+	public static JSONValue create(byte value) {
 		return new JSONNumber(value);
 	}
 
@@ -117,7 +117,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final char value) {
+	public static JSONValue create(char value) {
 		return new JSONString(value);
 	}
 
@@ -128,7 +128,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final boolean value) {
+	public static JSONValue create(boolean value) {
 		return JSONLiteral.create(value);
 	}
 
@@ -139,7 +139,7 @@ public abstract class JSONValue {
 	 *
 	 * @return The JSONValue equivalent of value.
 	 */
-	public static JSONValue create(final String value) {
+	public static JSONValue create(String value) {
 		if (value == null) {
 			return JSONLiteral.NULL;
 		} else {
@@ -154,7 +154,7 @@ public abstract class JSONValue {
 	 *
 	 * @throws IOException If the value cannot be written.
 	 */
-	public abstract void write(final Writer writer) throws IOException;
+	public abstract void write(Writer writer) throws IOException;
 
 	/**
 	 * Gets if this is a JSONObject.

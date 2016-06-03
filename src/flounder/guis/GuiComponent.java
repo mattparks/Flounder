@@ -11,17 +11,17 @@ import java.util.*;
  * An component of a GUI. Implementations of this range from a whole GUI frame to a single button. All components can have subtract-components, and the parent component has the responsibility of keeping the subtract-components updated.
  */
 public abstract class GuiComponent {
-	private final Vector2f position;
-	private final Vector2f scale;
+	private Vector2f position;
+	private Vector2f scale;
 
-	private final Vector2f relativePosition;
-	private final Vector2f relativeScale;
-	private final List<GuiComponent> childComponents;
-	private final Map<Text, Vector3f> componentTexts;
-	private final List<GuiComponent> componentsToDelete;
-	private final List<GuiComponent> componentsToRemove;
-	private final List<GuiComponent> componentsToAdd;
-	private final List<GuiListenerAdvanced> actionEvents;
+	private Vector2f relativePosition;
+	private Vector2f relativeScale;
+	private List<GuiComponent> childComponents;
+	private Map<Text, Vector3f> componentTexts;
+	private List<GuiComponent> componentsToDelete;
+	private List<GuiComponent> componentsToRemove;
+	private List<GuiComponent> componentsToAdd;
+	private List<GuiListenerAdvanced> actionEvents;
 	private GuiComponent parent;
 	private boolean visible;
 	private boolean initialized;
@@ -46,7 +46,7 @@ public abstract class GuiComponent {
 	 *
 	 * @param visible Whether the component should be visible or not.
 	 */
-	public void show(final boolean visible) {
+	public void show(boolean visible) {
 		this.visible = visible;
 	}
 
@@ -55,7 +55,7 @@ public abstract class GuiComponent {
 	 *
 	 * @param actionListener The action listener.
 	 */
-	public void addActionListener(final GuiListenerAdvanced actionListener) {
+	public void addActionListener(GuiListenerAdvanced actionListener) {
 		actionEvents.add(actionListener);
 	}
 
@@ -64,7 +64,7 @@ public abstract class GuiComponent {
 	 *
 	 * @param actionListener The action listener to remove.
 	 */
-	public void removeActionListener(final GuiListenerAdvanced actionListener) {
+	public void removeActionListener(GuiListenerAdvanced actionListener) {
 		actionEvents.remove(actionListener);
 	}
 
@@ -77,7 +77,7 @@ public abstract class GuiComponent {
 	 * @param relScaleX The x scale of the child component, in relation to the x scale of this component.
 	 * @param relScaleY The y scale of the child component, in relation to the y scale of this component.
 	 */
-	public void addComponent(final GuiComponent component, final float relX, final float relY, final float relScaleX, final float relScaleY) {
+	public void addComponent(GuiComponent component, float relX, float relY, float relScaleX, float relScaleY) {
 		component.relativePosition.set(relX, relY);
 		component.relativeScale.set(relScaleX, relScaleY);
 		component.parent = this;
@@ -90,7 +90,7 @@ public abstract class GuiComponent {
 	 * @param component The child component to be removed.
 	 * @param deleteObject If true the object will be cleared and deleted.
 	 */
-	public void removeComponent(final GuiComponent component, final boolean deleteObject) {
+	public void removeComponent(GuiComponent component, boolean deleteObject) {
 		if (deleteObject) {
 			componentsToDelete.add(component);
 		} else {
@@ -106,7 +106,7 @@ public abstract class GuiComponent {
 	 * @param relY The y position of the top edge of the text, relative to this component's size and position (0 = top edge, 1 = bottom edge).
 	 * @param relLineWidth The width of the line of text, relative to the width of the component.
 	 */
-	public void addText(final Text text, final float relX, final float relY, final float relLineWidth) {
+	public void addText(Text text, float relX, float relY, float relLineWidth) {
 		Vector3f relativePosition = new Vector3f(relX, relY, relLineWidth);
 		componentTexts.put(text, relativePosition);
 
@@ -121,7 +121,7 @@ public abstract class GuiComponent {
 	 * @param text The text whose screen-space position needs to be set.
 	 * @param relativePosition The position of the text relative to this component's top-left corner. The z component is the line width, specified relative to the width of this component.
 	 */
-	private void setTextScreenSpacePosition(final Text text, final Vector3f relativePosition) {
+	private void setTextScreenSpacePosition(Text text, Vector3f relativePosition) {
 		float x = position.x + scale.x * relativePosition.x;
 		float y = position.y + scale.y * relativePosition.y;
 		float lineWidth = relativePosition.z * scale.x;
@@ -140,7 +140,7 @@ public abstract class GuiComponent {
 	 *
 	 * @param text The text currently in the component that needs to be removed.
 	 */
-	public void deleteText(final Text text) {
+	public void deleteText(Text text) {
 		if (text != null) {
 			componentTexts.remove(text);
 			text.deleteFromMemory();
@@ -154,7 +154,7 @@ public abstract class GuiComponent {
 		return relativePosition.x;
 	}
 
-	public void setRelativeX(final float x) {
+	public void setRelativeX(float x) {
 		relativePosition.x = x;
 		updateScreenSpacePosition();
 	}
@@ -181,13 +181,13 @@ public abstract class GuiComponent {
 	 * @param width The width of the component in screen-space.
 	 * @param height The height of the component in screen-space.
 	 */
-	protected void setScreenSpacePosition(final float x, final float y, final float width, final float height) {
+	protected void setScreenSpacePosition(float x, float y, float width, float height) {
 		position.set(x, y);
 		scale.set(width, height);
 		initialized = true;
 	}
 
-	public void increaseRelativePosition(final float dX, final float dY) {
+	public void increaseRelativePosition(float dX, float dY) {
 		relativePosition.x += dX;
 		relativePosition.y += dY;
 		updateScreenSpacePosition();
@@ -228,12 +228,12 @@ public abstract class GuiComponent {
 	 * @param guiTextures The list of {@link GuiTexture}s to be rendered.
 	 * @param texts The map of texts to be rendered this frame.
 	 */
-	public final void update(final List<GuiTexture> guiTextures, final Map<FontType, List<Text>> texts) {
+	public void update(List<GuiTexture> guiTextures, Map<FontType, List<Text>> texts) {
 		if (!visible) {
 			return;
 		}
 
-		for (final GuiListenerAdvanced listener : actionEvents) {
+		for (GuiListenerAdvanced listener : actionEvents) {
 			if (listener.hasOccurred()) {
 				listener.run();
 			}
@@ -258,16 +258,16 @@ public abstract class GuiComponent {
 	 *
 	 * @param guiTextures The list of GUI textures that are going to be rendered. This method adds any necessary {@link GuiTexture}s from this component to that list.
 	 */
-	protected abstract void getGuiTextures(final List<GuiTexture> guiTextures);
+	protected abstract void getGuiTextures(List<GuiTexture> guiTextures);
 
 	/**
 	 * Adds the texts from this component into the map of texts for rendering this frame. There is a list of texts for each font being used.
 	 *
 	 * @param texts All the lists of texts, each associated with the font that all the texts in that list use.
 	 */
-	private void addTextsToRenderBatch(final Map<FontType, List<Text>> texts) {
-		for (final Text text : componentTexts.keySet()) {
-			final FontType font = text.getFontType();
+	private void addTextsToRenderBatch(Map<FontType, List<Text>> texts) {
+		for (Text text : componentTexts.keySet()) {
+			FontType font = text.getFontType();
 			List<Text> textBatch = texts.get(font);
 
 			if (textBatch == null) {
@@ -297,12 +297,12 @@ public abstract class GuiComponent {
 	}
 
 	private void removeOldComponents() {
-		for (final GuiComponent component : componentsToDelete) {
+		for (GuiComponent component : componentsToDelete) {
 			childComponents.remove(component);
 			component.delete();
 		}
 
-		for (final GuiComponent component : componentsToRemove) {
+		for (GuiComponent component : componentsToRemove) {
 			childComponents.remove(component);
 		}
 
@@ -310,8 +310,8 @@ public abstract class GuiComponent {
 		componentsToRemove.clear();
 	}
 
-	private void updateAndAddNewChildren(final List<GuiTexture> guiTextures, final Map<FontType, List<Text>> texts) {
-		for (final GuiComponent component : componentsToAdd) {
+	private void updateAndAddNewChildren(List<GuiTexture> guiTextures, Map<FontType, List<Text>> texts) {
+		for (GuiComponent component : componentsToAdd) {
 			childComponents.add(component);
 			component.updateScreenSpacePosition();
 			component.update(guiTextures, texts);

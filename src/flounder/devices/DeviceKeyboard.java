@@ -9,9 +9,9 @@ import static org.lwjgl.glfw.GLFW.*;
  * Manages the creation, updating and destruction of the keyboard keyboardKeys.
  */
 public class DeviceKeyboard {
-	private final GLFWKeyCallback callbackKey;
+	private GLFWKeyCallback callbackKey;
 
-	private final int keyboardKeys[];
+	private int keyboardKeys[];
 
 	/**
 	 * Creates a new GLFW keyboard.
@@ -22,7 +22,7 @@ public class DeviceKeyboard {
 		// Sets the keyboards callbacks.
 		glfwSetKeyCallback(FlounderDevices.getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
 			@Override
-			public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
+			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (key < 0 || key > GLFW_KEY_LAST) {
 					FlounderLogger.error("Invalid action attempted with key: " + key);
 				} else {
@@ -40,7 +40,7 @@ public class DeviceKeyboard {
 	 *
 	 * @param delta The time in seconds since the last frame.
 	 */
-	protected void update(final float delta) {
+	protected void update(float delta) {
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class DeviceKeyboard {
 	 *
 	 * @return If the key is currently pressed.
 	 */
-	public boolean getKey(final int key) {
+	public boolean getKey(int key) {
 		return keyboardKeys[key] != GLFW_RELEASE;
 	}
 

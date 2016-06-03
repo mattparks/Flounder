@@ -12,6 +12,6 @@ public class KeyButton extends BaseButton {
 	 * @param keyCodes The codes for the buttons being checked. They should be IInput.KEY values.
 	 */
 	public KeyButton(int... keyCodes) {
-		super((int code) -> (FlounderDevices.getKeyboard() != null ? FlounderDevices.getKeyboard().getKey(code) : false), keyCodes);
+		super((int code) -> FlounderDevices.getKeyboard() != null && FlounderDevices.getKeyboard().getKey(code), keyCodes);
 	}
 }

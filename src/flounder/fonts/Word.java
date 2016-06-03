@@ -8,8 +8,8 @@ import java.util.*;
  * During the loading of a text this represents one word in the text.
  */
 public class Word {
-	private final List<Character> characters;
-	private final double fontSize;
+	private List<Character> characters;
+	private double fontSize;
 	private double width;
 
 	/**
@@ -17,7 +17,7 @@ public class Word {
 	 *
 	 * @param fontSize The font size of the text which this word is in.
 	 */
-	protected Word(final double fontSize) {
+	protected Word(double fontSize) {
 		this.characters = new ArrayList<>();
 		this.fontSize = fontSize;
 		this.width = 0.0;
@@ -28,7 +28,7 @@ public class Word {
 	 *
 	 * @param character The character to be added.
 	 */
-	protected void addCharacter(final Character character) {
+	protected void addCharacter(Character character) {
 		if (character == null) {
 			FlounderLogger.error("Invalid character detected!");
 			return;

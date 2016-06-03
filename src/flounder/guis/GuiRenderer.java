@@ -10,8 +10,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class GuiRenderer extends IRenderer {
 	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
 
-	private final GuiShader shader;
-	private final int vaoID;
+	private GuiShader shader;
+	private int vaoID;
 
 	private int guiCount;
 	private boolean lastWireframe;
@@ -24,7 +24,7 @@ public class GuiRenderer extends IRenderer {
 	}
 
 	@Override
-	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
+	public void renderObjects(Vector4f clipPlane, ICamera camera) {
 		if (GuiManager.getGuiTextures().size() < 1) {
 			return;
 		}
@@ -61,7 +61,7 @@ public class GuiRenderer extends IRenderer {
 		shader.dispose();
 	}
 
-	private void renderGui(final GuiTexture gui) {
+	private void renderGui(GuiTexture gui) {
 		if (!gui.getTexture().isLoaded()) {
 			return;
 		}

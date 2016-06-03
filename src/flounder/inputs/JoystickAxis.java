@@ -7,8 +7,8 @@ import flounder.maths.*;
  * Axis from a joystick.
  */
 public class JoystickAxis implements IAxis {
-	private final int joystick;
-	private final int[] joystickAxes;
+	private int joystick;
+	private int[] joystickAxes;
 
 	/**
 	 * Creates a new JoystickAxis.
@@ -16,7 +16,7 @@ public class JoystickAxis implements IAxis {
 	 * @param joystick The joystick. Should be one of the IInput.JOYSTICK values.
 	 * @param joystickAxes The axes on the joystick being checked.
 	 */
-	public JoystickAxis(final int joystick, final int... joystickAxes) {
+	public JoystickAxis(int joystick, int... joystickAxes) {
 		this.joystick = joystick;
 		this.joystickAxes = joystickAxes;
 	}

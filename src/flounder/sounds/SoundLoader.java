@@ -10,7 +10,7 @@ import java.util.*;
  * Contains methods used for loading and deleting sounds, and also keeps track of all the sound buffers that are currently loaded so that it can delete them when the game closes.
  */
 public class SoundLoader {
-	private static final List<Integer> buffers = new ArrayList<>();
+	private static List<Integer> buffers = new ArrayList<>();
 
 	/**
 	 * Generates an OpenAL buffer and loads some, if not all, of the sound data into it. The buffer and other information about the audio data gets
@@ -18,13 +18,13 @@ public class SoundLoader {
 	 *
 	 * @param sound The sound to be loaded.
 	 */
-	protected static void doInitialSoundLoad(final Sound sound) {
+	protected static void doInitialSoundLoad(Sound sound) {
 		try {
 			FlounderLogger.log("Loading sound " + sound.getSoundFile().getPath());
-			final WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
+			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
-			final ByteBuffer byteBuffer = stream.loadNextData();
-			final int bufferID = generateBuffer();
+			ByteBuffer byteBuffer = stream.loadNextData();
+			int bufferID = generateBuffer();
 			loadSoundDataIntoBuffer(bufferID, byteBuffer, stream.getAlFormat(), stream.getSampleRate());
 			sound.setBuffer(bufferID, byteBuffer.limit());
 			stream.close();
@@ -42,9 +42,9 @@ public class SoundLoader {
 	 * @param format The OpenAL format of the data (mono, stereo, etc.)
 	 * @param sampleRate The sample rate of the audio.
 	 */
-	protected static void loadSoundDataIntoBuffer(final int bufferID, final ByteBuffer data, final int format, final int sampleRate) {
+	protected static void loadSoundDataIntoBuffer(int bufferID, ByteBuffer data, int format, int sampleRate) {
 		AL10.alBufferData(bufferID, format, data, sampleRate);
-		final int error = AL10.alGetError();
+		int error = AL10.alGetError();
 
 		if (error != AL10.AL_NO_ERROR) {
 			FlounderLogger.error("Problem loading sound data into buffer. " + error);
@@ -57,7 +57,7 @@ public class SoundLoader {
 	 * @return The ID of the buffer.
 	 */
 	protected static int generateBuffer() {
-		final int bufferID = AL10.alGenBuffers();
+		int bufferID = AL10.alGenBuffers();
 		buffers.add(bufferID);
 		return bufferID;
 	}
@@ -67,7 +67,7 @@ public class SoundLoader {
 	 *
 	 * @param bufferID The ID of the buffer to be deleted.
 	 */
-	protected static void deleteBuffer(final Integer bufferID) {
+	protected static void deleteBuffer(Integer bufferID) {
 		buffers.remove(bufferID);
 		AL10.alDeleteBuffers(bufferID);
 
@@ -80,7 +80,11 @@ public class SoundLoader {
 	 * Deletes all the sound buffers that are currently in memory. Should be called when the application closes.
 	 */
 	public static void cleanUp() {
-		buffers.forEach(buffer -> AL10.alDeleteBuffers(buffer));
+		buffers.forEach(buffer -> {
+			if (buffer != null) {
+				AL10.alDeleteBuffers(buffer);
+			}
+		});
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
 			FlounderLogger.error("Problem deleting sound buffers.");

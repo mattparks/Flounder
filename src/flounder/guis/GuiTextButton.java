@@ -2,7 +2,6 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.fonts.*;
-import flounder.resources.*;
 import flounder.sounds.*;
 import flounder.visual.*;
 
@@ -21,13 +20,13 @@ public class GuiTextButton extends GuiComponent {
 	private Sound mouseLeftClickSound;
 	private Sound mouseRightClickSound;
 
-	public GuiTextButton(final Text text) {
+	public GuiTextButton(Text text) {
 		this.text = text;
 		mouseOver = false;
 		super.addText(text, 0.0f, 0.0f, 1.0f);
 	}
 
-	public void setSounds(final Sound mouseHoverOverSound, final Sound mouseLeftClickSound, final Sound mouseRightClickSound) {
+	public void setSounds(Sound mouseHoverOverSound, Sound mouseLeftClickSound, Sound mouseRightClickSound) {
 		this.mouseHoverOverSound = mouseHoverOverSound;
 		this.mouseLeftClickSound = mouseLeftClickSound;
 		this.mouseRightClickSound = mouseRightClickSound;
@@ -37,11 +36,11 @@ public class GuiTextButton extends GuiComponent {
 		return text;
 	}
 
-	public void addLeftListener(final GuiListener guiListener) {
+	public void addLeftListener(GuiListener guiListener) {
 		guiListenerLeft = guiListener;
 	}
 
-	public void addRightListener(final GuiListener guiListener) {
+	public void addRightListener(GuiListener guiListener) {
 		guiListenerRight = guiListener;
 	}
 
@@ -70,6 +69,6 @@ public class GuiTextButton extends GuiComponent {
 	}
 
 	@Override
-	protected void getGuiTextures(final List<GuiTexture> guiTextures) {
+	protected void getGuiTextures(List<GuiTexture> guiTextures) {
 	}
 }

@@ -28,7 +28,7 @@ public class Sound {
 	 * @param soundFile The sound's file.
 	 * @param volume Used to change the base volume of a sound effect.
 	 */
-	private Sound(final MyFile soundFile, final float volume) {
+	private Sound(MyFile soundFile, float volume) {
 		this.file = soundFile;
 		this.volume = volume;
 		this.loaded = false;
@@ -45,8 +45,8 @@ public class Sound {
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static Sound loadSoundNow(final MyFile file, final float volume) {
-		final SoftReference<Sound> ref = loadedSounds.get(file.getPath());
+	public static Sound loadSoundNow(MyFile file, float volume) {
+		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
@@ -68,14 +68,14 @@ public class Sound {
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static Sound loadSoundInBackground(final MyFile file, final float volume) {
-		final SoftReference<Sound> ref = loadedSounds.get(file.getPath());
+	public static Sound loadSoundInBackground(MyFile file, float volume) {
+		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(file.getPath() + " is being loaded into the sound builder in the background!");
 			loadedSounds.remove(file.getPath());
-			final Sound data2 = new Sound(file, volume);
+			Sound data2 = new Sound(file, volume);
 			RequestProcessor.sendRequest(() -> SoundLoader.doInitialSoundLoad(data2));
 			data = data2;
 			loadedSounds.put(file.getPath(), new SoftReference<>(data));
@@ -107,7 +107,7 @@ public class Sound {
 	 * @param buffer The ID of the OpenAL buffer which contains the sound's loaded audio data.
 	 * @param bytesRead The number of bytes of the sound's audio which have been loaded into the buffer.
 	 */
-	public void setBuffer(final int buffer, final int bytesRead) {
+	public void setBuffer(int buffer, int bytesRead) {
 		bufferID = buffer;
 		this.bytesRead = bytesRead;
 		loaded = true;
@@ -156,7 +156,7 @@ public class Sound {
 	 *
 	 * @param totalBytes The total number of bytes of data.
 	 */
-	public void setTotalBytes(final int totalBytes) {
+	public void setTotalBytes(int totalBytes) {
 		this.totalBytes = totalBytes;
 	}
 }

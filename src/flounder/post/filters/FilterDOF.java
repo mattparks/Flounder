@@ -6,9 +6,9 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterDOF extends PostFilter {
-	private final UniformFloat aimDistance = new UniformFloat("aimDistance");
-	private final UniformFloat nearPlane = new UniformFloat("nearPlane");
-	private final UniformFloat farPlane = new UniformFloat("farPlane");
+	private UniformFloat aimDistance = new UniformFloat("aimDistance");
+	private UniformFloat nearPlane = new UniformFloat("nearPlane");
+	private UniformFloat farPlane = new UniformFloat("farPlane");
 
 	public FilterDOF() {
 		super("filterDOF", new MyFile(PostFilter.POST_LOC, "dofFragment.glsl"));

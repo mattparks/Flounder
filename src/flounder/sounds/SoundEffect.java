@@ -4,8 +4,8 @@ package flounder.sounds;
  * Represents a 3D sound effect which can be played in the 3D world.
  */
 public class SoundEffect {
-	private final Sound sound;
-	private final float range;
+	private Sound sound;
+	private float range;
 
 	/**
 	 * @param sound The sound used by this sound effect.

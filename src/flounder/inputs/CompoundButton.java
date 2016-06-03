@@ -4,7 +4,7 @@ package flounder.inputs;
  * Handles multiple buttons at once.
  */
 public class CompoundButton implements IButton {
-	private final IButton[] buttons;
+	private IButton[] buttons;
 	private boolean wasDown;
 
 	/**
@@ -12,7 +12,7 @@ public class CompoundButton implements IButton {
 	 *
 	 * @param buttons The list of buttons being checked.
 	 */
-	public CompoundButton(final IButton... buttons) {
+	public CompoundButton(IButton... buttons) {
 		this.buttons = buttons;
 		wasDown = false;
 	}

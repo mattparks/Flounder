@@ -9,7 +9,7 @@ import java.text.*;
  * Reads or writes JSON files.
  */
 public class JSON {
-	private final JSONValue value;
+	private JSONValue value;
 
 	/**
 	 * Loads a JSON file.
@@ -19,7 +19,7 @@ public class JSON {
 	 * @throws IOException If the file cannot be loaded.
 	 * @throws ParseException If the file cannot be properly parsed.
 	 */
-	public JSON(final String fileName) throws IOException, ParseException {
+	public JSON(String fileName) throws IOException, ParseException {
 		TokenReader tokens;
 		tokens = new TokenReader(new FileReader(fileName));
 		value = JSONValue.parse(tokens, tokens.next());
@@ -35,7 +35,7 @@ public class JSON {
 	 *
 	 * @param value The value to write to file.
 	 */
-	public JSON(final JSONValue value) {
+	public JSON(JSONValue value) {
 		this.value = value;
 	}
 
@@ -46,8 +46,8 @@ public class JSON {
 	 *
 	 * @throws IOException If the file cannot be written.
 	 */
-	public void write(final String fileName) throws IOException {
-		final BufferedWriter br = new BufferedWriter(new FileWriter(fileName));
+	public void write(String fileName) throws IOException {
+		BufferedWriter br = new BufferedWriter(new FileWriter(fileName));
 		value.write(br);
 		br.close();
 	}

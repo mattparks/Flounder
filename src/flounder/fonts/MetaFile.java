@@ -21,8 +21,8 @@ public class MetaFile {
 	private static final String SPLITTER = " ";
 	private static final String NUMBER_SEPARATOR = ",";
 
-	private final Map<Integer, Character> metaData;
-	private final Map<String, String> values;
+	private Map<Integer, Character> metaData;
+	private Map<String, String> values;
 	private double perPixelSize;
 	private double spaceWidth;
 	private int[] padding;
@@ -35,7 +35,7 @@ public class MetaFile {
 	 *
 	 * @param file The font file.
 	 */
-	protected MetaFile(final MyFile file) {
+	protected MetaFile(MyFile file) {
 		metaData = new HashMap<>();
 		values = new HashMap<>();
 
@@ -46,7 +46,7 @@ public class MetaFile {
 		close();
 	}
 
-	private void openFile(final MyFile file) {
+	private void openFile(MyFile file) {
 		try {
 			reader = file.getReader();
 		} catch (Exception e) {
@@ -82,7 +82,7 @@ public class MetaFile {
 			return false;
 		}
 
-		for (final String part : line.split(SPLITTER)) {
+		for (String part : line.split(SPLITTER)) {
 			String[] valuePairs = part.split("=");
 
 			if (valuePairs.length == 2) {
@@ -100,9 +100,9 @@ public class MetaFile {
 	 *
 	 * @return The int array of values associated with the variable.
 	 */
-	private int[] getValuesOfVariable(final String variable) {
-		final String[] numbers = values.get(variable).split(NUMBER_SEPARATOR);
-		final int[] actualValues = new int[numbers.length];
+	private int[] getValuesOfVariable(String variable) {
+		String[] numbers = values.get(variable).split(NUMBER_SEPARATOR);
+		int[] actualValues = new int[numbers.length];
 
 		for (int i = 0; i < actualValues.length; i++) {
 			actualValues[i] = Integer.parseInt(numbers[i]);
@@ -113,7 +113,7 @@ public class MetaFile {
 
 	private void loadLineSizes() {
 		processNextLine();
-		final int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
+		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
 		perPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
 	}
 
@@ -124,8 +124,8 @@ public class MetaFile {
 	 *
 	 * @return The value of the variable.
 	 */
-	private int getValueOfVariable(final String variable) {
-		final String value = values.get(variable);
+	private int getValueOfVariable(String variable) {
+		String value = values.get(variable);
 
 		if (value == null) {
 			FlounderLogger.error("Could not font find variable: " + variable);
@@ -134,12 +134,12 @@ public class MetaFile {
 		return Integer.parseInt(value);
 	}
 
-	private void loadCharacterData(final int imageWidth) {
+	private void loadCharacterData(int imageWidth) {
 		processNextLine();
 		processNextLine();
 
 		while (processNextLine()) {
-			final Character c = loadCharacter(imageWidth);
+			Character c = loadCharacter(imageWidth);
 
 			if (c != null) {
 				metaData.put(c.getId(), c);
@@ -147,25 +147,25 @@ public class MetaFile {
 		}
 	}
 
-	private Character loadCharacter(final int imageSize) {
-		final int id = getValueOfVariable("id");
+	private Character loadCharacter(int imageSize) {
+		int id = getValueOfVariable("id");
 
 		if (id == TextLoader.SPACE_ASCII) {
 			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize * (1.0f / FlounderDevices.getDisplay().getAspectRatio());
 			return null;
 		}
 
-		final double xTextureCoord = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
-		final double yTextureCoord = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
-		final int width = getValueOfVariable("width") - (paddingWidth - 2 * DESIRED_PADDING);
-		final int height = getValueOfVariable("height") - (paddingHeight - 2 * DESIRED_PADDING);
-		final double quadWidth = width * perPixelSize;
-		final double quadHeight = height * perPixelSize;
-		final double xTexSize = (double) width / imageSize;
-		final double yTexSize = (double) height / imageSize;
-		final double xOffset = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * perPixelSize;
-		final double yOffset = (getValueOfVariable("yoffset") + padding[PAD_TOP] - DESIRED_PADDING) * perPixelSize;
-		final double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize;
+		double xTextureCoord = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
+		double yTextureCoord = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
+		int width = getValueOfVariable("width") - (paddingWidth - 2 * DESIRED_PADDING);
+		int height = getValueOfVariable("height") - (paddingHeight - 2 * DESIRED_PADDING);
+		double quadWidth = width * perPixelSize;
+		double quadHeight = height * perPixelSize;
+		double xTexSize = (double) width / imageSize;
+		double yTexSize = (double) height / imageSize;
+		double xOffset = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * perPixelSize;
+		double yOffset = (getValueOfVariable("yoffset") + padding[PAD_TOP] - DESIRED_PADDING) * perPixelSize;
+		double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize;
 		return new Character(id, xTextureCoord, yTextureCoord, xTexSize, yTexSize, xOffset, yOffset, quadWidth, quadHeight, xAdvance);
 	}
 
@@ -181,7 +181,7 @@ public class MetaFile {
 		}
 	}
 
-	protected Character getCharacter(final int ascii) {
+	protected Character getCharacter(int ascii) {
 		return metaData.get(ascii);
 	}
 

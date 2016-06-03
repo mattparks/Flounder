@@ -16,17 +16,17 @@ public abstract class PostFilter {
 	public static final MyFile POST_LOC = new MyFile("flounder/post/filters");
 	public static final MyFile VERTEX_LOCATION = new MyFile(POST_LOC, "defaultVertex.glsl");
 
-	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
-	private static final int VAO = Loader.createInterleavedVAO(POSITIONS, 2);
+	private static float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
+	private static int VAO = Loader.createInterleavedVAO(POSITIONS, 2);
 
-	public final ShaderProgram shader;
-	public final FBO fbo;
+	public ShaderProgram shader;
+	public FBO fbo;
 
-	public PostFilter(final String filterName, final MyFile fragmentShader) {
+	public PostFilter(String filterName, MyFile fragmentShader) {
 		this(new ShaderProgram(filterName, VERTEX_LOCATION, fragmentShader), FBO.newFBO(FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight()).fitToScreen().create());
 	}
 
-	public PostFilter(final ShaderProgram shader, final FBO fbo) {
+	public PostFilter(ShaderProgram shader, FBO fbo) {
 		this.shader = shader;
 		this.fbo = fbo;
 	}
@@ -36,7 +36,7 @@ public abstract class PostFilter {
 	 *
 	 * @param uniforms The uniforms to store in the shader program.
 	 */
-	public void storeUniforms(final Uniform... uniforms) {
+	public void storeUniforms(Uniform... uniforms) {
 		shader.storeAllUniformLocations(uniforms);
 	}
 
@@ -45,7 +45,7 @@ public abstract class PostFilter {
 	 *
 	 * @param textures A list of textures in indexed order to be bound for the shader program.
 	 */
-	public void applyFilter(final int... textures) {
+	public void applyFilter(int... textures) {
 		boolean lastWireframe = OpenglUtils.isInWireframe();
 
 		fbo.bindFrameBuffer();

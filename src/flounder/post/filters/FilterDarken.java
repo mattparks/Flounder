@@ -5,7 +5,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterDarken extends PostFilter {
-	private final UniformFloat factor = new UniformFloat("factor");
+	private UniformFloat factor = new UniformFloat("factor");
 	private float factorValue;
 
 	public FilterDarken() {
@@ -18,7 +18,7 @@ public class FilterDarken extends PostFilter {
 		return factorValue;
 	}
 
-	public void setFactorValue(final float factorValue) {
+	public void setFactorValue(float factorValue) {
 		this.factorValue = factorValue;
 	}
 

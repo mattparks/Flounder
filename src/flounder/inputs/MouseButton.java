@@ -12,6 +12,6 @@ public class MouseButton extends BaseButton {
 	 * @param mouseButtons The codes for the mouse buttons being checked. They should be IInput.MOUSE_BUTTON values.
 	 */
 	public MouseButton(int... mouseButtons) {
-		super((int code) -> (FlounderDevices.getMouse() != null ? FlounderDevices.getMouse().getMouse(code) : false), mouseButtons);
+		super((int code) -> FlounderDevices.getMouse() != null && FlounderDevices.getMouse().getMouse(code), mouseButtons);
 	}
 }

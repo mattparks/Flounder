@@ -13,8 +13,8 @@ public class StreamManager extends Thread {
 	public static final long SLEEP_TIME = 100;
 	public static final StreamManager STREAMER = new StreamManager();
 
-	private final List<Streamer> streamers;
-	private final List<Streamer> toRemove;
+	private List<Streamer> streamers;
+	private List<Streamer> toRemove;
 	private boolean alive;
 
 	/**
@@ -29,7 +29,7 @@ public class StreamManager extends Thread {
 	@Override
 	public void run() {
 		while (alive) {
-			final List<Streamer> safeCopy = new ArrayList<>(streamers);
+			List<Streamer> safeCopy = new ArrayList<>(streamers);
 			safeCopy.forEach(this::updateStreamer);
 			removeFinishedStreamers();
 			pause();
@@ -65,7 +65,7 @@ public class StreamManager extends Thread {
 	 *
 	 * @param streamer The streamer to be updated.
 	 */
-	private void updateStreamer(final Streamer streamer) {
+	private void updateStreamer(Streamer streamer) {
 		if (!streamer.update()) {
 			toRemove.add(streamer);
 		}
@@ -86,7 +86,7 @@ public class StreamManager extends Thread {
 	 * @param controller The controller which can be used to find out when the source
 	 * has finished playing the sound in question.
 	 */
-	protected synchronized void stream(final Sound sound, final SoundSource source, final AudioController controller) {
+	protected synchronized void stream(Sound sound, SoundSource source, AudioController controller) {
 		try {
 			streamers.add(new Streamer(sound, source, controller));
 		} catch (Exception e) {

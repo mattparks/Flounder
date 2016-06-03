@@ -6,8 +6,8 @@ import flounder.maths.vectors.*;
  * Represents a game entry point for the engine to run from.
  */
 public abstract class IGame {
-	public final Vector3f focusPosition;
-	public final Vector3f focusRotation;
+	public Vector3f focusPosition;
+	public Vector3f focusRotation;
 	public boolean gamePaused;
 	public float screenBlur;
 
@@ -45,7 +45,7 @@ public abstract class IGame {
 	 * @param gamePaused If game paused. Used to stop inputs to camera in menus.
 	 * @param screenBlur The factor (-1 to 1) by where the screen will be blurred from on the paused screen.
 	 */
-	public void updateGame(final Vector3f focusPosition, final Vector3f focusRotation, final boolean gamePaused, final float screenBlur) {
+	public void updateGame(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused, float screenBlur) {
 		this.focusPosition.set(focusPosition);
 		this.focusRotation.set(focusRotation);
 		this.gamePaused = gamePaused;

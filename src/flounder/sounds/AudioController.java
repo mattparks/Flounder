@@ -13,7 +13,7 @@ public class AudioController {
 	private boolean active;
 	private boolean fading;
 
-	private float finalVolume;
+	private float Volume;
 	private float fadeFactor;
 
 	/**
@@ -21,12 +21,12 @@ public class AudioController {
 	 *
 	 * @param source The sound source that this controller can control.
 	 */
-	protected AudioController(final SoundSource source) {
+	protected AudioController(SoundSource source) {
 		this.source = source;
 		this.active = true;
 		this.fading = false;
 
-		this.finalVolume = 0.0f;
+		this.Volume = 0.0f;
 		this.fadeFactor = 1.0f;
 	}
 
@@ -38,7 +38,7 @@ public class AudioController {
 	 * @return {@code true} if the controller is still active. If the source has stopped playing the sound that this controller was created for
 	 * then the controller is no longer active and will return {@code false}.
 	 */
-	protected boolean update(final float delta) {
+	protected boolean update(float delta) {
 		if (active) {
 			updateActiveController(delta);
 		}
@@ -51,7 +51,7 @@ public class AudioController {
 	 *
 	 * @param delta Time in seconds since the last frame.
 	 */
-	private void updateActiveController(final float delta) {
+	private void updateActiveController(float delta) {
 		if (fading) {
 			updateFadingOut(delta);
 		}
@@ -62,9 +62,9 @@ public class AudioController {
 	 *
 	 * @param delta Time in seconds since the last frame.
 	 */
-	private void updateFadingOut(final float delta) {
+	private void updateFadingOut(float delta) {
 		fadeFactor -= delta / FADE_TIME;
-		source.setVolume(finalVolume * fadeFactor);
+		source.setVolume(Volume * fadeFactor);
 
 		if (fadeFactor <= 0) {
 			source.stop();
@@ -99,7 +99,7 @@ public class AudioController {
 	 */
 	protected void fadeOut() {
 		fading = true;
-		finalVolume = source.getVolume();
+		Volume = source.getVolume();
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class AudioController {
 	 *
 	 * @param position The new position of the source.
 	 */
-	protected void setPosition(final Vector3f position) {
+	protected void setPosition(Vector3f position) {
 		if (active) {
 			source.setPosition(position);
 		}

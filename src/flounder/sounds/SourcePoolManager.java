@@ -9,8 +9,8 @@ import java.util.*;
 public class SourcePoolManager {
 	private static final int NUMBER_SOURCES = 20;
 
-	private final List<SoundSource> sourcePool;
-	private final List<SoundSource> usedSources;
+	private List<SoundSource> sourcePool;
+	private List<SoundSource> usedSources;
 
 	/**
 	 * Creates all the sound sources that will ever be used to play sound.
@@ -28,10 +28,10 @@ public class SourcePoolManager {
 	 * Updates all the sources that are currently in use playing sounds and returns any sources that have finished playing their sound to the pool.
 	 */
 	public void update() {
-		final Iterator<SoundSource> iterator = usedSources.iterator();
+		Iterator<SoundSource> iterator = usedSources.iterator();
 
 		while (iterator.hasNext()) {
-			final SoundSource source = iterator.next();
+			SoundSource source = iterator.next();
 
 			if (!source.isPlaying()) {
 				iterator.remove();
@@ -48,9 +48,9 @@ public class SourcePoolManager {
 	 *
 	 * @return The sound source being used to play the requested sound. Returns {@code null} if there was no source available.
 	 */
-	public AudioController play(final PlayRequest playRequest) {
+	public AudioController play(PlayRequest playRequest) {
 		if (!sourcePool.isEmpty()) {
-			final SoundSource source = sourcePool.remove(0);
+			SoundSource source = sourcePool.remove(0);
 			usedSources.add(source);
 			source.setPosition(playRequest.getPosition());
 			source.loop(playRequest.isLooping());
@@ -61,7 +61,7 @@ public class SourcePoolManager {
 				source.setUndiminishing();
 			}
 
-			final Sound sound = playRequest.getSound();
+			Sound sound = playRequest.getSound();
 			source.setVolume(playRequest.getVolume() * sound.getVolume());
 			return source.playSound(sound);
 		}

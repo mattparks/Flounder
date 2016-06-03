@@ -14,7 +14,7 @@ public class UniformVec3 extends Uniform {
 	private float currentY;
 	private float currentZ;
 
-	public UniformVec3(final String name) {
+	public UniformVec3(String name) {
 		super(name);
 	}
 
@@ -23,7 +23,7 @@ public class UniformVec3 extends Uniform {
 	 *
 	 * @param vector The new vector.
 	 */
-	public void loadVec3(final Vector3f vector) {
+	public void loadVec3(Vector3f vector) {
 		loadVec3(vector.x, vector.y, vector.z);
 	}
 
@@ -34,7 +34,7 @@ public class UniformVec3 extends Uniform {
 	 * @param y The new y value.
 	 * @param z The new z value.
 	 */
-	public void loadVec3(final float x, final float y, final float z) {
+	public void loadVec3(float x, float y, float z) {
 		if (x != currentX || y != currentY || z != currentZ) {
 			glUniform3f(super.getLocation(), x, y, z);
 			currentX = x;
@@ -48,7 +48,7 @@ public class UniformVec3 extends Uniform {
 	 *
 	 * @param colour The new colour.
 	 */
-	public void loadVec3(final Colour colour) {
+	public void loadVec3(Colour colour) {
 		loadVec3(colour.r, colour.g, colour.b);
 	}
 
@@ -57,7 +57,7 @@ public class UniformVec3 extends Uniform {
 	 *
 	 * @param attenuation The new attenuation.
 	 */
-	public void loadVec3(final Attenuation attenuation) {
+	public void loadVec3(Attenuation attenuation) {
 		loadVec3(attenuation.constant, attenuation.linear, attenuation.exponent);
 	}
 }

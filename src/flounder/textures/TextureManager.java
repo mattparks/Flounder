@@ -22,8 +22,8 @@ public class TextureManager {
 	 *
 	 * @return The textureID for the cube map.
 	 */
-	public static int loadCubeMap(final MyFile... textureFiles) {
-		final int texID = GL11.glGenTextures();
+	public static int loadCubeMap(MyFile... textureFiles) {
+		int texID = GL11.glGenTextures();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
@@ -42,14 +42,14 @@ public class TextureManager {
 		return texID;
 	}
 
-	protected static TextureData decodeTextureFile(final MyFile file) {
+	protected static TextureData decodeTextureFile(MyFile file) {
 		int width = 0;
 		int height = 0;
 		ByteBuffer buffer = null;
 
 		try {
-			final InputStream in = file.getInputStream();
-			final TextureDecoder decoder = new TextureDecoder(in);
+			InputStream in = file.getInputStream();
+			TextureDecoder decoder = new TextureDecoder(in);
 			width = decoder.getWidth();
 			height = decoder.getHeight();
 			buffer = ByteBuffer.allocateDirect(4 * width * height);
@@ -65,8 +65,8 @@ public class TextureManager {
 		return new TextureData(buffer, width, height);
 	}
 
-	protected static int loadTextureToOpenGL(final TextureData data, final TextureBuilder builder) {
-		final int texID = GL11.glGenTextures();
+	protected static int loadTextureToOpenGL(TextureData data, TextureBuilder builder) {
+		int texID = GL11.glGenTextures();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
@@ -79,7 +79,7 @@ public class TextureManager {
 
 			if (builder.isAnisotropic()) {
 				GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0);
-				final float maxAnisotropy = GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+				float maxAnisotropy = GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
 				GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
 			}
 		} else if (builder.isNearest()) {
@@ -96,7 +96,7 @@ public class TextureManager {
 		} else if (builder.isClampToBorder()) {
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
-			final FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+			FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
 			builder.getBorderColour().store(buffer);
 			buffer.flip();
 			GL11.glTexParameterfv(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_BORDER_COLOR, buffer);
@@ -109,7 +109,7 @@ public class TextureManager {
 		return texID;
 	}
 
-	protected static void deleteTexture(final Integer textureID) {
+	protected static void deleteTexture(Integer textureID) {
 		textureCache.remove(textureID);
 		GL11.glDeleteTextures(textureID);
 	}

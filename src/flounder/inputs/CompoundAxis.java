@@ -6,14 +6,14 @@ import flounder.maths.*;
  * Axis composed of multiple other axes.
  */
 public class CompoundAxis implements IAxis {
-	private final IAxis[] axes;
+	private IAxis[] axes;
 
 	/**
 	 * Creates a new axis from a list of axes.
 	 *
 	 * @param axes The list of axes to combine.
 	 */
-	public CompoundAxis(final IAxis... axes) {
+	public CompoundAxis(IAxis... axes) {
 		this.axes = axes;
 	}
 

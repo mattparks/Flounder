@@ -34,7 +34,7 @@ public class GuiSelector {
 		mouseRight = new MouseButton(GLFW_MOUSE_BUTTON_RIGHT);
 	}
 
-	public void initJoysticks(final int joystick, final int joystickLeftClick, final int joystickRightClick, final int joystickAxisX, final int joystickAxisY) {
+	public void initJoysticks(int joystick, int joystickLeftClick, int joystickRightClick, int joystickAxisX, int joystickAxisY) {
 		this.selectedJoystick = joystick;
 		this.joystickAxisX = new JoystickAxis(joystick, joystickAxisX);
 		this.joystickAxisY = new JoystickAxis(joystick, joystickAxisY);

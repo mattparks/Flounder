@@ -12,8 +12,8 @@ import java.util.Map.*;
  * Loads and parses a configuration file.
  */
 public class Config {
-	private final MyFile file;
-	private final Map<String, String> map;
+	private MyFile file;
+	private Map<String, String> map;
 
 	/**
 	 * Loads and parses a configuration file.
@@ -24,19 +24,19 @@ public class Config {
 	 * @throws IOException If the file cannot be loaded.
 	 * @throws ParseException If the file cannot be properly parsed.
 	 */
-	public Config(final MyFile file) {
+	public Config(MyFile file) {
 		this.file = file;
 		map = new HashMap<>();
 
-		final File saveDirectory = new File(file.getPath().replaceAll(file.getName(), "").substring(1));
-		final File sameFile = new File(file.getPath().substring(1));
+		File saveDirectory = new File(file.getPath().replaceAll(file.getName(), "").substring(1));
+		File sameFile = new File(file.getPath().substring(1));
 
 		if (!saveDirectory.exists()) {
 			System.out.println("Creating directory: " + saveDirectory);
 
 			try {
 				saveDirectory.mkdir();
-			} catch (final SecurityException e) {
+			} catch (SecurityException e) {
 				FlounderLogger.error("Filed to create " + file.getPath() + " folder.");
 				FlounderLogger.exception(e);
 			}
@@ -47,13 +47,13 @@ public class Config {
 
 			try {
 				sameFile.createNewFile();
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				FlounderLogger.error("Filed to create " + file.getPath() + " file.");
 				FlounderLogger.exception(e);
 			}
 		}
 
-		try (final BufferedReader br = new BufferedReader(new FileReader(file.getPath().substring(1)))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(file.getPath().substring(1)))) {
 			String line;
 			int lineNumber = 0;
 
@@ -64,13 +64,13 @@ public class Config {
 					continue;
 				}
 
-				final char start = line.charAt(0);
+				char start = line.charAt(0);
 
 				if (start == '[' || start == '#') {
 					continue;
 				}
 
-				final String[] tokens = line.split("=");
+				String[] tokens = line.split("=");
 
 				if (tokens.length != 2) {
 					throw new ParseException("Only one '=' expected (line " + lineNumber + ")", lineNumber);
@@ -78,9 +78,9 @@ public class Config {
 
 				map.put(tokens[0].trim(), tokens[1].trim());
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			FlounderLogger.exception(e);
-		} catch (final ParseException e) {
+		} catch (ParseException e) {
 			FlounderLogger.exception(e);
 		}
 	}
@@ -92,16 +92,16 @@ public class Config {
 	 *
 	 * @throws IOException If the file cannot be written.
 	 */
-	public void write(final Map<String, String> map) {
-		try (final BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
-			final Iterator<Entry<String, String>> it = map.entrySet().iterator();
+	public void write(Map<String, String> map) {
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
+			Iterator<Entry<String, String>> it = map.entrySet().iterator();
 
 			while (it.hasNext()) {
-				final Entry<String, String> pair = it.next();
-				final String line = pair.getKey() + "=" + pair.getValue() + "\n";
+				Entry<String, String> pair = it.next();
+				String line = pair.getKey() + "=" + pair.getValue() + "\n";
 				bw.write(line);
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			FlounderLogger.exception(e);
 		}
 	}
@@ -113,8 +113,8 @@ public class Config {
 	 *
 	 * @return The string assigned to that entry.
 	 */
-	public String getString(final String entry) {
-		final String result = map.get(entry);
+	public String getString(String entry) {
+		String result = map.get(entry);
 
 		if (result == null) {
 			FlounderLogger.error("Config could not find string '" + entry + "' in file: " + file);
@@ -134,7 +134,7 @@ public class Config {
 	 *
 	 * @return The integer assigned to that entry.
 	 */
-	public int getInt(final String entry) {
+	public int getInt(String entry) {
 		return Integer.parseInt(getString(entry));
 	}
 
@@ -145,7 +145,7 @@ public class Config {
 	 *
 	 * @return The double assigned to that entry.
 	 */
-	public double getDouble(final String entry) {
+	public double getDouble(String entry) {
 		return Double.parseDouble(getString(entry));
 	}
 
@@ -156,7 +156,7 @@ public class Config {
 	 *
 	 * @return The boolean assigned to that entry.
 	 */
-	public boolean getBoolean(final String entry) {
+	public boolean getBoolean(String entry) {
 		return Boolean.parseBoolean(getString(entry));
 	}
 
@@ -168,7 +168,7 @@ public class Config {
 	 *
 	 * @return The string assigned to the entry if found, otherwise the string assigned to the default entry.
 	 */
-	public String getStringWithDefault(final String entry, final String defaultEntry) {
+	public String getStringWithDefault(String entry, String defaultEntry) {
 		String result = getString(entry);
 
 		if (result == null) {
@@ -188,7 +188,7 @@ public class Config {
 	 *
 	 * @return The integer assigned to the entry if found, otherwise the integer assigned to the default entry.
 	 */
-	public int getIntWithDefault(final String entry, final int defaultEntry) {
+	public int getIntWithDefault(String entry, int defaultEntry) {
 		return Integer.parseInt(getStringWithDefault(entry, "" + defaultEntry));
 	}
 
@@ -200,7 +200,7 @@ public class Config {
 	 *
 	 * @return The double assigned to the entry if found, otherwise the double assigned to the default entry.
 	 */
-	public double getDoubleWithDefault(final String entry, final double defaultEntry) {
+	public double getDoubleWithDefault(String entry, double defaultEntry) {
 		return Double.parseDouble(getStringWithDefault(entry, "" + defaultEntry));
 	}
 
@@ -212,7 +212,7 @@ public class Config {
 	 *
 	 * @return The boolean assigned to the entry if found, otherwise the boolean assigned to the default entry.
 	 */
-	public boolean getBooleanWithDefault(final String entry, final boolean defaultEntry) {
+	public boolean getBooleanWithDefault(String entry, boolean defaultEntry) {
 		return Boolean.parseBoolean(getStringWithDefault(entry, "" + defaultEntry));
 	}
 }

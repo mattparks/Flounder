@@ -17,7 +17,7 @@ public class Light {
 	 * @param colour The colour of the light.
 	 * @param position The world position of the light.
 	 */
-	public Light(final Colour colour, final Vector3f position) {
+	public Light(Colour colour, Vector3f position) {
 		this(colour, position, new Attenuation(1.0f, 0.0f, 0.0f));
 	}
 
@@ -28,7 +28,7 @@ public class Light {
 	 * @param position The world position of the light.
 	 * @param attenuation How much the intensity of the light is lost over a distance.
 	 */
-	public Light(final Colour colour, final Vector3f position, final Attenuation attenuation) {
+	public Light(Colour colour, Vector3f position, Attenuation attenuation) {
 		this.colour = colour;
 		this.position = position;
 		this.attenuation = attenuation;
@@ -38,7 +38,7 @@ public class Light {
 		return colour;
 	}
 
-	public void setColour(final Colour colour) {
+	public void setColour(Colour colour) {
 		this.colour = colour;
 	}
 
@@ -46,7 +46,7 @@ public class Light {
 		return position;
 	}
 
-	public void setPosition(final Vector3f position) {
+	public void setPosition(Vector3f position) {
 		this.position = position;
 	}
 
@@ -54,7 +54,7 @@ public class Light {
 		return attenuation;
 	}
 
-	public void setAttenuation(final Attenuation attenuation) {
+	public void setAttenuation(Attenuation attenuation) {
 		this.attenuation = attenuation;
 	}
 }

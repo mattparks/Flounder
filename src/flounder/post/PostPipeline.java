@@ -11,7 +11,7 @@ public abstract class PostPipeline {
 	 *
 	 * @param startFBO The original screen FBO.
 	 */
-	public abstract void renderPipeline(final FBO startFBO);
+	public abstract void renderPipeline(FBO startFBO);
 
 	/**
 	 * @return Returns the FBO containing the result.

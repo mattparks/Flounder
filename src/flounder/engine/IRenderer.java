@@ -7,7 +7,7 @@ import flounder.profiling.*;
  * Represents a sub renderer in the engine.
  */
 public abstract class IRenderer {
-	private final ProfileTimer profileTimer;
+	private ProfileTimer profileTimer;
 	private float renderTimeMs;
 
 	/**
@@ -24,7 +24,7 @@ public abstract class IRenderer {
 	 * @param clipPlane The current clip plane.
 	 * @param camera The camera to be used when rendering.
 	 */
-	public void render(final Vector4f clipPlane, final ICamera camera) {
+	public void render(Vector4f clipPlane, ICamera camera) {
 		profileTimer.startInvocation();
 		renderObjects(clipPlane, camera);
 		profileTimer.stopInvocation();
@@ -37,7 +37,7 @@ public abstract class IRenderer {
 	 * @param clipPlane The current clip plane.
 	 * @param camera The camera to be used when rendering.
 	 */
-	public abstract void renderObjects(final Vector4f clipPlane, final ICamera camera);
+	public abstract void renderObjects(Vector4f clipPlane, ICamera camera);
 
 	/**
 	 * @return The last render time (in Ms).

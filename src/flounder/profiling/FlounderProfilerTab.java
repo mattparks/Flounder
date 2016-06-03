@@ -10,13 +10,13 @@ public class FlounderProfilerTab {
 	private JPanel primaryComponent;
 	private List<FlounderProfilerLabel> labels;
 
-	protected FlounderProfilerTab(final JPanel primaryComponent) {
+	protected FlounderProfilerTab(JPanel primaryComponent) {
 		this.primaryComponent = primaryComponent;
 		this.labels = new ArrayList<>();
 	}
 
-	public <T> void addLabel(final String contentLabel, final T value) {
-		for (final FlounderProfilerLabel label : labels) {
+	public <T> void addLabel(String contentLabel, T value) {
+		for (FlounderProfilerLabel label : labels) {
 			if (label.getContentLabel().equals(contentLabel)) {
 				label.setValue(value);
 				return;
@@ -28,7 +28,7 @@ public class FlounderProfilerTab {
 		labels.add(label);
 	}
 
-	public void removeLabel(final String contentLabel) {
+	public void removeLabel(String contentLabel) {
 		for (FlounderProfilerLabel label : labels) {
 			if (label.getContentLabel().equals(contentLabel)) {
 				primaryComponent.remove(label.getDisplayObject());

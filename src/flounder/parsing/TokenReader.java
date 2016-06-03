@@ -7,7 +7,7 @@ import java.text.*;
  * Reads and tokenizes a source.
  */
 public class TokenReader implements AutoCloseable {
-	private final Reader reader;
+	private Reader reader;
 	private boolean isBackedUp;
 	private int backedUpChar;
 	private int lineNumber;
@@ -17,7 +17,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @param reader The source of tokens.
 	 */
-	public TokenReader(final Reader reader) {
+	public TokenReader(Reader reader) {
 		this.reader = new BufferedReader(reader);
 		this.isBackedUp = false;
 		this.backedUpChar = -1;
@@ -31,7 +31,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isExponent(final int c) {
+	public static boolean isExponent(int c) {
 		return c == 'e' || c == 'E';
 	}
 
@@ -42,7 +42,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isNewLine(final int c) {
+	public static boolean isNewLine(int c) {
 		return c == '\n';
 	}
 
@@ -53,7 +53,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isWhitespace(final int c) {
+	public static boolean isWhitespace(int c) {
 		return isNewLine(c) || c == '\r' || c == ' ' || c == '\t';
 	}
 
@@ -64,7 +64,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isNumber(final int c) {
+	public static boolean isNumber(int c) {
 		return isDigit(c) || c == '-' || c == '+' || c == '.';
 	}
 
@@ -75,7 +75,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isDigit(final int c) {
+	public static boolean isDigit(int c) {
 		return c >= '0' && c <= '9';
 	}
 
@@ -86,7 +86,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isAlNum(final int c) {
+	public static boolean isAlNum(int c) {
 		return isAlpha(c) || isDigit(c);
 	}
 
@@ -97,7 +97,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isQuote(final int c) {
+	public static boolean isQuote(int c) {
 		return c == '\"';
 	}
 
@@ -108,7 +108,7 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @return True if it is, false otherwise.
 	 */
-	public static boolean isAlpha(final int c) {
+	public static boolean isAlpha(int c) {
 		return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
 	}
 
@@ -141,7 +141,7 @@ public class TokenReader implements AutoCloseable {
 	 * @throws IOException If the token fails to read.
 	 */
 	public String next() throws IOException {
-		final int next = skipWhite(getChar());
+		int next = skipWhite(getChar());
 
 		if (next == -1) {
 			return null;
@@ -164,18 +164,18 @@ public class TokenReader implements AutoCloseable {
 	 *
 	 * @throws ParseException If the condition is not true.
 	 */
-	public void parseAssert(final boolean condition, final String message) throws ParseException {
+	public void parseAssert(boolean condition, String message) throws ParseException {
 		if (!condition) {
 			throw new ParseException(message + " (line " + lineNumber + ")", lineNumber);
 		}
 	}
 
-	private String getSymbol(final int next) {
+	private String getSymbol(int next) {
 		return ((char) next) + "";
 	}
 
 	private String getNumber(int next) throws IOException {
-		final StringBuilder str = new StringBuilder();
+		StringBuilder str = new StringBuilder();
 		boolean hasDecimalPlace = false;
 
 		while (isDigit(next) || (!hasDecimalPlace && next == '.')) {
@@ -193,7 +193,7 @@ public class TokenReader implements AutoCloseable {
 		return str.toString();
 	}
 
-	private int readExponent(int next, final StringBuilder str) throws IOException {
+	private int readExponent(int next, StringBuilder str) throws IOException {
 		if (!isExponent(next)) {
 			return next;
 		}

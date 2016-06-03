@@ -26,7 +26,7 @@ public class Texture {
 	 *
 	 * @return A new Texture Builder.
 	 */
-	public static TextureBuilder newTexture(final MyFile file) {
+	public static TextureBuilder newTexture(MyFile file) {
 		return new TextureBuilder(file);
 	}
 
@@ -43,7 +43,7 @@ public class Texture {
 		return textureID;
 	}
 
-	public void setTextureID(final int id) {
+	public void setTextureID(int id) {
 		textureID = id;
 		loaded = true;
 	}
@@ -52,7 +52,7 @@ public class Texture {
 		return hasTransparency;
 	}
 
-	public void setHasTransparency(final boolean hasTransparency) {
+	public void setHasTransparency(boolean hasTransparency) {
 		this.hasTransparency = hasTransparency;
 	}
 
@@ -60,7 +60,7 @@ public class Texture {
 		return numberOfRows;
 	}
 
-	public void setNumberOfRows(final int numberOfRows) {
+	public void setNumberOfRows(int numberOfRows) {
 		this.numberOfRows = numberOfRows;
 	}
 
@@ -68,7 +68,7 @@ public class Texture {
 		return file;
 	}
 
-	public void setFile(final MyFile file) {
+	public void setFile(MyFile file) {
 		this.file = file;
 	}
 

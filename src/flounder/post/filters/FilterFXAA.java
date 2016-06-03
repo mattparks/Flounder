@@ -5,7 +5,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterFXAA extends PostFilter {
-	private final UniformFloat spanMax = new UniformFloat("spanMax");
+	private UniformFloat spanMax = new UniformFloat("spanMax");
 	private float spanMaxValue;
 
 	public FilterFXAA() {
@@ -18,7 +18,7 @@ public class FilterFXAA extends PostFilter {
 		return spanMaxValue;
 	}
 
-	public void setSpanMaxValue(final float spanMaxValue) {
+	public void setSpanMaxValue(float spanMaxValue) {
 		this.spanMaxValue = spanMaxValue;
 	}
 

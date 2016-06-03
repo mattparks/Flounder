@@ -6,11 +6,11 @@ import javax.swing.*;
  * Profiler label to ensure compat
  */
 class FlounderProfilerLabel<T> {
-	private final JLabel jLabel;
+	private JLabel jLabel;
 	private String contentLabel;
 	private T value;
 
-	protected FlounderProfilerLabel(final String contentLabel, final T value) {
+	protected FlounderProfilerLabel(String contentLabel, T value) {
 		this.contentLabel = contentLabel;
 		this.value = value;
 
@@ -30,7 +30,7 @@ class FlounderProfilerLabel<T> {
 		return contentLabel;
 	}
 
-	protected void setContentLabel(final String contentLabel) {
+	protected void setContentLabel(String contentLabel) {
 		this.contentLabel = contentLabel;
 	}
 
