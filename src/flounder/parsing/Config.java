@@ -19,10 +19,6 @@ public class Config {
 	 * Loads and parses a configuration file.
 	 *
 	 * @param file The path to the configuration file.
-	 *
-	 * @throws FileNotFoundException If the file cannot be found.
-	 * @throws IOException If the file cannot be loaded.
-	 * @throws ParseException If the file cannot be properly parsed.
 	 */
 	public Config(MyFile file) {
 		this.file = file;
@@ -89,8 +85,6 @@ public class Config {
 	 * Saves a new configuration file using a provided file.
 	 *
 	 * @param map The values being written to the config.
-	 *
-	 * @throws IOException If the file cannot be written.
 	 */
 	public void write(Map<String, String> map) {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {

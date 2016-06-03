@@ -32,7 +32,7 @@ public class FlounderEngine implements Runnable {
 	private static float currentUPS;
 
 	/**
-	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #startModule(FontType)} immediately after this.
+	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #startEngine(FontType)} immediately after this.
 	 *
 	 * @param module The module for the engine to run off of.
 	 * @param displayWidth The window width in pixels.
