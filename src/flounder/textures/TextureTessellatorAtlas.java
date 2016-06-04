@@ -16,8 +16,8 @@ public class TextureTessellatorAtlas {
 		this.width = textureWidth;
 		this.height = textureHeight;
 		this.texture = texture;
-		ax = 16f / (float) width;
-		ay = 16f / (float) height;
+		ax = 16.0f / (float) width;
+		ay = 16.0f / (float) height;
 	}
 
 	public void registerTextureCoords(String name, Vector2f texcoords) {

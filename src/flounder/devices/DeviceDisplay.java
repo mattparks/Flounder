@@ -219,14 +219,14 @@ public class DeviceDisplay {
 
 		// Tries to create image.
 		try {
-			ImageIO.write(updateBufferedImage(), format, file);
+			ImageIO.write(createBufferedImage(), format, file);
 		} catch (Exception e) {
 			FlounderLogger.error("Failed to take screenshot.");
 			FlounderLogger.exception(e);
 		}
 	}
 
-	private BufferedImage updateBufferedImage() { // TODO Update a BufferedImage!
+	private BufferedImage createBufferedImage() {
 		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
 		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGB, GL_UNSIGNED_BYTE, buffer);
 		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -353,6 +353,7 @@ public class DeviceDisplay {
 		FlounderLogger.log(this.fullscreen && !fullscreen ? "Display going windowed." : !this.fullscreen && fullscreen ? "Display going fullscreen." : "");
 		this.fullscreen = fullscreen;
 		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE);
+		// TODO: MAKE FULLSCREEN WORK!!!
 	}
 
 	/**

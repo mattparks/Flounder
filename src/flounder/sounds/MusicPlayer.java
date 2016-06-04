@@ -184,6 +184,7 @@ public class MusicPlayer {
 	 * Can pause the current track.
 	 */
 	public void pauseTrack() {
+		// TODO: Fade out
 		if (source != null) {
 			source.togglePause();
 		}
@@ -195,6 +196,7 @@ public class MusicPlayer {
 	 * Skips the track that is currently playing.
 	 */
 	public void skipTrack() {
+		// TODO: Fade out
 		if (source != null) {
 			source.stop();
 		}

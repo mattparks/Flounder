@@ -230,7 +230,6 @@ public class TokenReader implements AutoCloseable {
 		str.append((char) next);
 
 		while (!isQuote((next = getChar()))) {
-			// TODO: Properly read escape sequences.
 			str.append((char) next);
 		}
 
