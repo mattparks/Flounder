@@ -129,6 +129,7 @@ public class MetaFile {
 
 		if (value == null) {
 			FlounderLogger.error("Could not font find variable: " + variable);
+			return -1;
 		}
 
 		return Integer.parseInt(value);
@@ -149,9 +150,12 @@ public class MetaFile {
 
 	private Character loadCharacter(int imageSize) {
 		int id = getValueOfVariable("id");
+		int displayWidth = FlounderDevices.getDisplay().getWidth();
+		int displayHeight = FlounderDevices.getDisplay().getHeight();
+		double displayAspect = displayWidth / displayHeight;
 
 		if (id == TextLoader.SPACE_ASCII) {
-			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize * (1.0f / FlounderDevices.getDisplay().getAspectRatio());
+			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize * (1.0 / displayAspect);
 			return null;
 		}
 
