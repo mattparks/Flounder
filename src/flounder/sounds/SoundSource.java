@@ -195,13 +195,20 @@ public class SoundSource {
 	}
 
 	/**
-	 * Toggles if the source is playing. Check if the source is playing by checking {@link #isPlaying()}.
+	 * Pauses the sound source.
 	 */
-	protected void togglePause() {
-		if (isPlaying()) {
+	protected void pause() {
+		if (active) {
 			alSourcePause(sourceID);
 			active = false;
-		} else {
+		}
+	}
+
+	/**
+	 * Unpauses the currently paused sound source.
+	 */
+	protected void unpause() {
+		if (!active) {
 			alSourcePlay(sourceID);
 			active = true;
 		}

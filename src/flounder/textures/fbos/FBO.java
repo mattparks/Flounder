@@ -173,7 +173,7 @@ public class FBO {
 	 *
 	 * @param outputFBO The other FBO to blit to.
 	 */
-	public void resolveMultisampledFBO(FBO outputFBO) {
+	public void resolveFBO(FBO outputFBO) {
 		outputFBO.updateSize();
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);

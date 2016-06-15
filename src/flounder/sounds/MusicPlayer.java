@@ -2,6 +2,7 @@ package flounder.sounds;
 
 import flounder.engine.*;
 import flounder.maths.*;
+import flounder.visual.*;
 
 import java.util.*;
 
@@ -9,24 +10,23 @@ import java.util.*;
  * The class in charge of playing background music!
  */
 public class MusicPlayer {
-	public static float FADE_TIME = 2.0f;
+	public static float FADE_TIME = 1.0f;
 	public static float SOUND_VOLUME = 1.0f;
 
 	private SoundSource source;
 	private List<Sound> musicQueue;
-	private float musicVolume;
 	private Playlist currentPlaylist;
 	private Sound currentlyPlaying;
-	private float selectedTimeout;
-	private float timoutStart;
 
-	private boolean fadeOut;
-	private float fadeFactor;
-	private float Volume;
+	private float volumeMaxMusic;
+	private ValueDriver volumeDriver;
+	private boolean skipingTrack;
 
 	private boolean shuffle;
 	private float minPlayTimeout;
 	private float maxPlayTimeout;
+	private float selectedTimeout;
+	private float timeoutStart;
 
 	private boolean paused;
 
@@ -34,27 +34,25 @@ public class MusicPlayer {
 	 * Sets up the sound source that the music player will be using to play sounds, and sets the relevant settings.
 	 */
 	public MusicPlayer() {
-		musicVolume = 0.0f;
-
 		source = new SoundSource();
+		source.pause();
 		source.loop(false);
 		source.setUndiminishing();
-
-		currentPlaylist = null;
 		musicQueue = new ArrayList<>();
+		currentPlaylist = null;
 		currentlyPlaying = null;
-		selectedTimeout = -1.0f;
-		timoutStart = 0.0f;
 
-		fadeOut = false;
-		fadeFactor = 1.0f;
-		Volume = 0.1f;
+		volumeMaxMusic = 0.0f;
+		volumeDriver = new ConstantDriver(volumeMaxMusic);
+		skipingTrack = false;
 
 		shuffle = false;
 		minPlayTimeout = 2.0f;
 		maxPlayTimeout = 7.0f;
+		selectedTimeout = -1.0f;
+		timeoutStart = 0.0f;
 
-		paused = false;
+		paused = true;
 	}
 
 	/**
@@ -63,44 +61,47 @@ public class MusicPlayer {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	public void update(float delta) {
-		if (fadeOut) {
-			updateFadeOut(delta);
-		} else {
-			source.setVolume(musicVolume * SOUND_VOLUME);
+		if (source == null) {
+			return;
 		}
 
+		// Updates the volume using a driver.
+		float volume = volumeDriver.update(delta);
+		source.setVolume(volume * SOUND_VOLUME);
+
+		// Stops music if there is no volume.
+		if (volume == 0.0f) {
+			source.pause();
+
+			// If skipping the track start to play a new source.
+			if (skipingTrack) {
+				volumeDriver = new SlideDriver(0.0f, volumeMaxMusic, FADE_TIME);
+				skipingTrack = false;
+
+				selectedTimeout = -1.0f;
+				paused = false;
+			} else {
+				paused = true;
+			}
+		}
+
+		// Select the next track after this one is finished.
 		if (!paused && !source.isPlaying() && !musicQueue.isEmpty()) {
 			source.setInactive();
 
-			if (timoutStart == 0.0f) {
-				timoutStart = FlounderEngine.getTime();
+			if (timeoutStart == 0.0f) {
+				timeoutStart = FlounderEngine.getTime();
 
 				if (selectedTimeout >= 0.0f) {
 					selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
 				}
 			}
 
-			if (FlounderEngine.getTime() - timoutStart > selectedTimeout) {
-				timoutStart = 0.0f;
+			if (FlounderEngine.getTime() - timeoutStart > selectedTimeout) {
+				timeoutStart = 0.0f;
 				selectedTimeout = 0.0f;
 				playNextTrack();
 			}
-		}
-	}
-
-	/**
-	 * Updates the fading-out process if a track is currently being faded out. Stops the source from playing the track if the volume has reached 0.
-	 *
-	 * @param delta Time in seconds since the last frame.
-	 */
-	private void updateFadeOut(float delta) {
-		fadeFactor -= delta / FADE_TIME;
-		source.setVolume(Volume * SOUND_VOLUME * fadeFactor);
-
-		if (fadeFactor <= 0) {
-			fadeOut = false;
-			fadeFactor = 1;
-			source.stop();
 		}
 	}
 
@@ -115,7 +116,7 @@ public class MusicPlayer {
 		}
 
 		currentlyPlaying = nextTrack;
-		source.setVolume(musicVolume * currentlyPlaying.getVolume());
+		source.setVolume(volumeMaxMusic * currentlyPlaying.getVolume());
 		source.playSound(currentlyPlaying);
 	}
 
@@ -147,19 +148,8 @@ public class MusicPlayer {
 		this.minPlayTimeout = minPlayTimeout;
 		this.maxPlayTimeout = maxPlayTimeout;
 		currentPlaylist = playlist;
-		fadeOutCurrentTrack();
 		musicQueue.clear();
 		fillQueue();
-	}
-
-	/**
-	 * Indicates that the current track should be faded out.
-	 */
-	private void fadeOutCurrentTrack() {
-		if (currentlyPlaying != null) {
-			fadeOut = true;
-			Volume = source.getVolume();
-		}
 	}
 
 	/**
@@ -174,41 +164,61 @@ public class MusicPlayer {
 		musicQueue.add(0, music);
 
 		if (fadeOutPrevious) {
-			fadeOutCurrentTrack();
 		} else {
 			source.stop();
 		}
 	}
 
 	/**
+	 * Gets if the current music player is paused.
+	 *
+	 * @return If the current music player is paused.
+	 */
+	public boolean isPaused() {
+		return paused;
+	}
+
+	/**
 	 * Can pause the current track.
 	 */
 	public void pauseTrack() {
-		// TODO: Fade out
-		if (source != null) {
-			source.togglePause();
+		if (source == null) {
+			return;
 		}
 
-		paused = !paused;
+		volumeDriver = new SlideDriver(source.getVolume(), 0.0f, FADE_TIME);
+	}
+
+	/**
+	 * Can unpause the currently paused track.
+	 */
+	public void unpauseTrack() {
+		if (source == null) {
+			return;
+		}
+
+		source.unpause();
+		volumeDriver = new SlideDriver(source.getVolume(), volumeMaxMusic, FADE_TIME);
+		paused = false;
 	}
 
 	/**
 	 * Skips the track that is currently playing.
 	 */
 	public void skipTrack() {
-		// TODO: Fade out
-		if (source != null) {
-			source.stop();
+		if (source == null) {
+			return;
 		}
 
-		selectedTimeout = -1.0f;
+		volumeDriver = new SlideDriver(source.getVolume(), 0.0f, FADE_TIME);
+		skipingTrack = true;
 	}
 
 	/**
 	 * @return The volume of the music player.
 	 */
 	public float getVolume() {
-		return musicVolume;
+		return volumeMaxMusic;
 	}
 
 	/**
@@ -217,24 +227,18 @@ public class MusicPlayer {
 	 * @param volume The new music volume.
 	 */
 	public void setVolume(float volume) {
-		musicVolume = volume;
-
-		if (currentlyPlaying != null) {
-			source.setVolume(musicVolume * currentlyPlaying.getVolume());
+		if (volumeMaxMusic != volume) {
+			volumeMaxMusic = volume;
+			volumeDriver = new ConstantDriver(volumeMaxMusic);
 		}
-	}
-
-	/**
-	 * @return The currently playing track.
-	 */
-	public Sound getCurrentlyPlaying() {
-		return currentlyPlaying;
 	}
 
 	/**
 	 * Deletes the source being used to play music.
 	 */
 	public void cleanUp() {
-		source.delete();
+		if (source != null) {
+			source.delete();
+		}
 	}
 }
