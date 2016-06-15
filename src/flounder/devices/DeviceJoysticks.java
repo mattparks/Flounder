@@ -34,7 +34,7 @@ public class DeviceJoysticks {
 	protected void update(float delta) {
 		// For each joystick check if connected and update.
 		for (int i = 0; i < GLFW_JOYSTICK_LAST; i++) {
-			if (glfwJoystickPresent(i) == GL_TRUE) {
+			if (glfwJoystickPresent(i)) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {
 					FlounderLogger.log("Connecting Joystick: " + i);
 					joystickAxes[i] = BufferUtils.createFloatBuffer(glfwGetJoystickAxes(i).capacity());

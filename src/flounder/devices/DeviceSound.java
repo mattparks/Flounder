@@ -6,6 +6,11 @@ import flounder.resources.*;
 import flounder.sounds.*;
 import org.lwjgl.openal.*;
 
+import java.nio.*;
+
+import static org.lwjgl.openal.AL.*;
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -17,25 +22,36 @@ public class DeviceSound {
 	private Vector3f cameraPosition;
 	private SourcePoolManager sourcePool;
 	private MusicPlayer musicPlayer;
-	private ALContext context;
 
 	/**
 	 * Initializes all the sound related things. Should be called when the game loads.
 	 */
 	protected DeviceSound() {
 		cameraPosition = new Vector3f(0.0f, 0.0f, 0.0f);
-		context = ALContext.create();
-		int alError = AL10.alGetError();
+		createOpenAL();
+		int alError = alGetError();
 
 		if (alError != GL_NO_ERROR) {
 			FlounderLogger.error("OpenAL Error: " + alError);
 		}
 
-		AL10.alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
+		alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
 		StreamManager.STREAMER.start();
 		sourcePool = new SourcePoolManager();
 		musicPlayer = new MusicPlayer();
 		musicPlayer.setVolume(MusicPlayer.SOUND_VOLUME);
+	}
+
+	/**
+	 * Generates capabilities for OpenAL.
+	 */
+	private void createOpenAL() {
+		long device = alcOpenDevice((ByteBuffer) null);
+		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+
+		long context = alcCreateContext(device, (IntBuffer) null);
+		alcMakeContextCurrent(context);
+		createCapabilities(deviceCaps);
 	}
 
 	/**
@@ -48,7 +64,7 @@ public class DeviceSound {
 
 		if (camera != null && camera.getPosition() != null) {
 			cameraPosition.set(camera.getPosition());
-			AL10.alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+			alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 			musicPlayer.update(FlounderEngine.getDelta());
 			sourcePool.update();
 		}
@@ -106,6 +122,6 @@ public class DeviceSound {
 		sourcePool.cleanUp();
 		musicPlayer.cleanUp();
 		SoundLoader.cleanUp();
-		context.destroy();
+		ALC.destroy();
 	}
 }

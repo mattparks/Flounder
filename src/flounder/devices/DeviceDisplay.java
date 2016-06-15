@@ -62,7 +62,7 @@ public class DeviceDisplay {
 		closeRequested = false;
 
 		// Initialize the library.
-		if (glfwInit() != GLFW_TRUE) {
+		if (!glfwInit()) {
 			FlounderLogger.error("Could not init GLFW!");
 			System.exit(-1);
 		}
@@ -134,8 +134,8 @@ public class DeviceDisplay {
 
 		glfwSetWindowFocusCallback(window, callbackWindowFocus = new GLFWWindowFocusCallback() {
 			@Override
-			public void invoke(long window, int focused) {
-				inFocus = focused == GL_TRUE;
+			public void invoke(long window, boolean focused) {
+				inFocus = focused;
 			}
 		});
 
@@ -381,7 +381,7 @@ public class DeviceDisplay {
 	 * @return If the GLFW display is open or if close has not been requested.
 	 */
 	public boolean isOpen() {
-		return !closeRequested && glfwWindowShouldClose(window) != GL_TRUE;
+		return !closeRequested && !glfwWindowShouldClose(window);
 	}
 
 	/**
@@ -402,11 +402,11 @@ public class DeviceDisplay {
 	 * Closes the GLFW display, do not renderObjects after calling this.
 	 */
 	protected void dispose() {
-		callbackWindowClose.release();
-		callbackWindowFocus.release();
-		callbackWindowPos.release();
-		callbackWindowSize.release();
-		callbackFramebufferSize.release();
+		callbackWindowClose.free();
+		callbackWindowFocus.free();
+		callbackWindowPos.free();
+		callbackWindowSize.free();
+		callbackFramebufferSize.free();
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}

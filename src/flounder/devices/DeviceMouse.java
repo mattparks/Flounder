@@ -6,7 +6,6 @@ import flounder.profiling.*;
 import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Manages the creation, updating and destruction of the mouse.
@@ -67,8 +66,8 @@ public class DeviceMouse {
 
 		glfwSetCursorEnterCallback(FlounderDevices.getDisplay().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
 			@Override
-			public void invoke(long window, int entered) {
-				displaySelected = entered == GL_TRUE;
+			public void invoke(long window, boolean entered) {
+				displaySelected = entered;
 			}
 		});
 
@@ -175,9 +174,9 @@ public class DeviceMouse {
 	 * Closes the GLFW mouse system, do not use the mouse after calling this.
 	 */
 	protected void dispose() {
-		callbackScroll.release();
-		callbackMouseButton.release();
-		callbackCursorPos.release();
-		callbackCursorEnter.release();
+		callbackScroll.free();
+		callbackMouseButton.free();
+		callbackCursorPos.free();
+		callbackCursorEnter.free();
 	}
 }

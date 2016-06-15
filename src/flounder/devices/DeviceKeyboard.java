@@ -58,6 +58,6 @@ public class DeviceKeyboard {
 	 * Closes the GLFW keyboard system, do not use the keyboard after calling this.
 	 */
 	protected void dispose() {
-		callbackKey.release();
+		callbackKey.free();
 	}
 }
