@@ -45,12 +45,13 @@ public class FlounderEngine implements Runnable {
 		if (!initialized) {
 			FlounderEngine.targetFPS = targetFPS;
 			FlounderProfiler.init(displayTitle + " Profiler");
+			FlounderProfiler.addTab("Engine");
 			devices = new FlounderDevices(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 
 			updateDelta = new Delta();
 			framesDelta = new Delta();
 
-			logTimer = new Timer(1000.0f);
+			logTimer = new Timer(1.0f);
 			updateTimer = new Timer(1.0f / 60.0f);
 			framesTimer = new Timer(1.0f / targetFPS);
 
@@ -101,7 +102,7 @@ public class FlounderEngine implements Runnable {
 	 */
 	public static void setTargetFPS(float targetFPS) {
 		FlounderEngine.targetFPS = targetFPS;
-		framesTimer = new Timer(1.0f / targetFPS);
+		framesTimer = new Timer((1.0f / targetFPS) * 1000.0f);
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class FlounderEngine implements Runnable {
 	 * @return The current engine time (all delta added up).
 	 */
 	public static float getTime() {
-		return Maths.roundToPlace((framesDelta.getDelta() + updateDelta.getDelta()) / 2.0f, 2);
+		return Maths.roundToPlace((framesDelta.getTime() + updateDelta.getTime()) / 2.0f, 2);
 	}
 
 	/**
@@ -153,27 +154,27 @@ public class FlounderEngine implements Runnable {
 	public void run() {
 		while (initialized && FlounderDevices.getDisplay().isOpen()) {
 			// Updates the engine.
-			if (updateTimer.pastTargetTime()) {
+			if (updateTimer.isPassedTime()) {
 				update();
-				updateTimer.addToStartTime();
+				updateTimer.resetStartTime();
 			}
 
 			// Prints out current engine update and frame stats.
-			if (logTimer.pastTargetTime()) {
+			if (logTimer.isPassedTime()) {
 				addProfileValues();
-				logTimer.addToStartTime();
+				logTimer.resetStartTime();
 			}
 
 			// Renders the engine.
-			if (framesTimer.pastTargetTime()) {
+			if (framesTimer.isPassedTime()) {
 				render();
-				framesTimer.addToStartTime();
+				framesTimer.resetStartTime();
 			}
 		}
 	}
 
 	private void addProfileValues() {
-		FlounderLogger.log(getFPS() + "ups, " + getUPS() + "fps.");
+		FlounderLogger.log(getFPS() + "fps, " + getUPS() + "ups.");
 
 		if (FlounderProfiler.isOpen()) {
 			FlounderProfiler.add("Engine", "Target FPS", targetFPS);
@@ -181,7 +182,7 @@ public class FlounderEngine implements Runnable {
 			FlounderProfiler.add("Engine", "Updates Per Second", getUPS());
 			FlounderProfiler.add("Engine", "Update Delta", updateDelta.getDelta());
 			FlounderProfiler.add("Engine", "Frames Delta", framesDelta.getDelta());
-			FlounderProfiler.add("Engine", "Time", (framesDelta.getDelta() + updateDelta.getDelta()) / 2.0f);
+			FlounderProfiler.add("Engine", "Time", getTime());
 		}
 	}
 

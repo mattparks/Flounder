@@ -5,16 +5,16 @@ package flounder.maths;
  */
 public class Timer {
 	private long startTime;
-	private float interval;
+	private long interval;
 
 	/**
 	 * Creates a new timer.
 	 *
-	 * @param interval The time between events.
+	 * @param interval The time between events (seconds).
 	 */
 	public Timer(float interval) {
 		this.startTime = System.currentTimeMillis();
-		this.interval = interval;
+		this.interval = (long) (interval * 1000.0);
 	}
 
 	/**
@@ -22,15 +22,15 @@ public class Timer {
 	 *
 	 * @return If the interval was exceeded.
 	 */
-	public boolean pastTargetTime() {
-		return System.currentTimeMillis() - startTime > interval;
+	public boolean isPassedTime() {
+		return System.currentTimeMillis() - startTime >= interval;
 	}
 
 	/**
 	 * Adds the intervals value to the start time.
 	 */
-	public void addToStartTime() {
-		startTime += (long) interval;
+	public void resetStartTime() {
+		startTime = System.currentTimeMillis();
 	}
 
 	/**
@@ -43,12 +43,12 @@ public class Timer {
 	}
 
 	/**
-	 * Gets the timers interval. (Resets timer).
+	 * Gets the timers interval. (Seconds, Resets timer).
 	 *
 	 * @param interval The new timer interval.
 	 */
 	public void setInterval(float interval) {
-		this.interval = interval;
+		this.interval = (long) (interval * 1000.0);
 		this.startTime = System.currentTimeMillis();
 	}
 }
