@@ -26,13 +26,10 @@ public class DeviceKeyboard {
 				if (key < 0 || key > GLFW_KEY_LAST) {
 					FlounderLogger.error("Invalid action attempted with key: " + key);
 				} else {
-					// Actions: GLFW_PRESS   GLFW_RELEASE   GLFW_REPEAT
 					keyboardKeys[key] = action;
 				}
 			}
 		});
-
-		update(0.0f);
 	}
 
 	/**
@@ -45,6 +42,7 @@ public class DeviceKeyboard {
 
 	/**
 	 * Gets whether or not a particular key is currently pressed.
+	 * <p>GLFW Actions: GLFW_PRESS, GLFW_RELEASE, GLFW_REPEAT</p>
 	 *
 	 * @param key The key to test.
 	 *

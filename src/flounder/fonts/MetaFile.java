@@ -128,8 +128,8 @@ public class MetaFile {
 		String value = values.get(variable);
 
 		if (value == null) {
-			FlounderLogger.error("Could not font find variable: " + variable);
-			return -1;
+			FlounderLogger.error("Could not find font variable for: " + variable, true);
+			return 0;
 		}
 
 		return Integer.parseInt(value);

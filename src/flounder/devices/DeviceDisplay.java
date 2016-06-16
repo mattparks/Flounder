@@ -31,7 +31,7 @@ public class DeviceDisplay {
 	private int width;
 	private int height;
 	private String title;
-	private boolean enableVSync;
+	private boolean vsyncEnabled;
 	private boolean antialiasing;
 	private int samples;
 	private boolean fullscreen;
@@ -42,26 +42,26 @@ public class DeviceDisplay {
 	/**
 	 * Creates a new GLFW window.
 	 *
-	 * @param displayWidth The window width in pixels.
-	 * @param displayHeight The window height in pixels.
-	 * @param displayTitle The window title.
-	 * @param displayVSync If the window will use vSync..
+	 * @param startWidth The window width in pixels.
+	 * @param startHeight The window height in pixels.
+	 * @param title The window title.
+	 * @param vsync If the window will use vSync..
 	 * @param antialiasing If OpenGL will use altialiasing.
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
-	 * @param displayFullscreen If the window will start fullscreen.
+	 * @param fullscreen If the window will start fullscreen.
 	 */
-	protected DeviceDisplay(int displayWidth, int displayHeight, String displayTitle, boolean displayVSync, boolean antialiasing, int samples, boolean displayFullscreen) {
-		this.width = displayWidth;
-		this.height = displayHeight;
-		this.title = displayTitle;
-		this.enableVSync = displayVSync;
+	protected DeviceDisplay(int startWidth, int startHeight, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+		this.width = startWidth;
+		this.height = startHeight;
+		this.title = title;
+		this.vsyncEnabled = vsync;
 		this.antialiasing = antialiasing;
-		this.fullscreen = displayFullscreen;
+		this.fullscreen = fullscreen;
 		this.samples = samples;
-		inFocus = true;
-		closeRequested = false;
+		this.inFocus = true;
+		this.closeRequested = false;
 
-		// Initialize the library.
+		// Initialize the GLFW library.
 		if (!glfwInit()) {
 			FlounderLogger.error("Could not init GLFW!");
 			System.exit(-1);
@@ -79,7 +79,7 @@ public class DeviceDisplay {
 		// Gets the resolution of the primary monitor.
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-		if (displayFullscreen) {
+		if (fullscreen) {
 			this.width = vidmode.width();
 			this.height = vidmode.height();
 		}
@@ -114,7 +114,7 @@ public class DeviceDisplay {
 		}
 
 		// Enables VSync if requested.
-		setEnableVSync(displayVSync);
+		setVsyncEnabled(vsync);
 
 		// Centers the window position.
 		if (!this.fullscreen) {
@@ -176,7 +176,7 @@ public class DeviceDisplay {
 			FlounderProfiler.add("Display", "Width", width);
 			FlounderProfiler.add("Display", "Height", height);
 			FlounderProfiler.add("Display", "Title", title);
-			FlounderProfiler.add("Display", "Enable VSync", enableVSync);
+			FlounderProfiler.add("Display", "Enable VSync", vsyncEnabled);
 			FlounderProfiler.add("Display", "Antialiasing", antialiasing);
 			FlounderProfiler.add("Display", "Samples", samples);
 			FlounderProfiler.add("Display", "Fullscreen", fullscreen);
@@ -226,11 +226,18 @@ public class DeviceDisplay {
 		}
 	}
 
+	/**
+	 * Creates a buffered image from the OpenGL pixel buffer.
+	 *
+	 * @return A new buffered image containing the displays data.
+	 */
 	private BufferedImage createBufferedImage() {
+		// Creates a new buffer and stores the displays data into it.
 		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
 		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGB, GL_UNSIGNED_BYTE, buffer);
 		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
+		// Transfers the data from the buffer into the image. This requires bit shifts to get the components data.
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int y = 0; y < image.getHeight(); y++) {
 				int i = (x + getWidth() * y) * 3;
@@ -261,8 +268,12 @@ public class DeviceDisplay {
 		return height;
 	}
 
+	/**
+	 * Sets if the operating systems cursor is hidden whilst in the display.
+	 *
+	 * @param hidden If the cursor should be hidden.
+	 */
 	public void setCursorHidden(boolean hidden) {
-		// Hides the mouse cursor.
 		glfwSetInputMode(window, GLFW_CURSOR, hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
 	}
 
@@ -290,18 +301,18 @@ public class DeviceDisplay {
 	/**
 	 * @return If the display is using vSync.
 	 */
-	public boolean isEnableVSync() {
-		return enableVSync;
+	public boolean isVsyncEnabled() {
+		return vsyncEnabled;
 	}
 
 	/**
 	 * Set the display to use VSync or not.
 	 *
-	 * @param enableVSync Weather or not to use vSync.
+	 * @param vsyncEnabled Weather or not to use vSync.
 	 */
-	public void setEnableVSync(boolean enableVSync) {
-		this.enableVSync = enableVSync;
-		glfwSwapInterval(this.enableVSync ? 1 : 0);
+	public void setVsyncEnabled(boolean vsyncEnabled) {
+		this.vsyncEnabled = vsyncEnabled;
+		glfwSwapInterval(this.vsyncEnabled ? 1 : 0);
 	}
 
 	/**

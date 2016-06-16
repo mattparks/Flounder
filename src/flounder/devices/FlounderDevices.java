@@ -9,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * Manages the GLFW devices.
+ * Manages the all GLFW devices in a separate thread.
  */
 public class FlounderDevices implements Runnable {
 	private static boolean initialized;
@@ -24,7 +24,7 @@ public class FlounderDevices implements Runnable {
 	private static float delta;
 
 	/**
-	 * Creates GLFW devices.
+	 * Creates all of the GLFW devices.
 	 *
 	 * @param displayWidth The window width in pixels.
 	 * @param displayHeight The window height in pixels.

@@ -20,7 +20,7 @@ public class MusicPlayer {
 
 	private float volumeMaxMusic;
 	private ValueDriver volumeDriver;
-	private boolean skipingTrack;
+	private boolean skippingTrack;
 
 	private boolean shuffle;
 	private float minPlayTimeout;
@@ -44,7 +44,7 @@ public class MusicPlayer {
 
 		volumeMaxMusic = 0.0f;
 		volumeDriver = new ConstantDriver(volumeMaxMusic);
-		skipingTrack = false;
+		skippingTrack = false;
 
 		shuffle = false;
 		minPlayTimeout = 2.0f;
@@ -74,9 +74,9 @@ public class MusicPlayer {
 			source.pause();
 
 			// If skipping the track start to play a new source.
-			if (skipingTrack) {
+			if (skippingTrack) {
 				volumeDriver = new SlideDriver(0.0f, volumeMaxMusic, FADE_TIME);
-				skipingTrack = false;
+				skippingTrack = false;
 
 				selectedTimeout = -1.0f;
 				paused = false;
@@ -211,7 +211,7 @@ public class MusicPlayer {
 		}
 
 		volumeDriver = new SlideDriver(source.getVolume(), 0.0f, FADE_TIME);
-		skipingTrack = true;
+		skippingTrack = true;
 	}
 
 	/**

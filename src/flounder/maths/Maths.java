@@ -164,6 +164,19 @@ public class Maths {
 	}
 
 	/**
+	 * Rounds a value to a amount of places after the decimal point.
+	 *
+	 * @param value The value to round.
+	 * @param place How many places after the decimal to round to.
+	 *
+	 * @return The rounded value.
+	 */
+	public static float roundToPlace(float value, int place) {
+		float placeMul = (float) (Math.pow(10.0f, place));
+		return (float) Math.round((value) * placeMul) / placeMul;
+	}
+
+	/**
 	 * Used to floor the value if less than the min.
 	 *
 	 * @param min The minimum value.

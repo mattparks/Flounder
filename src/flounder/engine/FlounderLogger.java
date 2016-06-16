@@ -9,7 +9,7 @@ import java.util.*;
 public class FlounderLogger {
 	public static final boolean LOG_TO_CONSOLE = true;
 	public static final boolean LOG_TO_FILE = true;
-	public static final boolean ALLOW_LOUD_LOGS = false;
+	public static final boolean ALLOW_LOUD_LOGS = FlounderLogger.class.getResource("/" + FlounderLogger.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
 
 	private static final StringBuilder SAVE_DATA = new StringBuilder();
 

@@ -4,6 +4,7 @@ import flounder.devices.*;
 import flounder.fonts.*;
 import flounder.guis.*;
 import flounder.loaders.*;
+import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
@@ -20,16 +21,12 @@ public class FlounderEngine implements Runnable {
 	private static boolean initialized;
 
 	private static float targetFPS;
-	private static float currentFrameTime;
-	private static float lastFrameTime;
-	private static long timerStart;
-	private static float frames;
-	private static float updates;
-	private static float delta;
-	private static float time;
+	private static Delta updateDelta;
+	private static Delta framesDelta;
 
-	private static float currentFPS;
-	private static float currentUPS;
+	private static Timer logTimer;
+	private static Timer updateTimer;
+	private static Timer framesTimer;
 
 	/**
 	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #startEngine(FontType)} immediately after this.
@@ -50,16 +47,12 @@ public class FlounderEngine implements Runnable {
 			FlounderProfiler.init(displayTitle + " Profiler");
 			devices = new FlounderDevices(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
 
-			currentFrameTime = 0.0f;
-			lastFrameTime = 0.0f;
-			timerStart = System.currentTimeMillis() + 1000;
-			frames = 0.0f;
-			updates = 0.0f;
-			delta = 0.0f;
-			time = 0.0f;
+			updateDelta = new Delta();
+			framesDelta = new Delta();
 
-			currentFPS = 0.0f;
-			currentUPS = 0.0f;
+			logTimer = new Timer(1000.0f);
+			updateTimer = new Timer(1.0f / 60.0f);
+			framesTimer = new Timer(1.0f / targetFPS);
 
 			FlounderEngine.module = module;
 			initialized = true;
@@ -73,6 +66,9 @@ public class FlounderEngine implements Runnable {
 		return module.getCamera();
 	}
 
+	/**
+	 * @return The modules current master renderer.
+	 */
 	public static IRendererMaster getMasterRenderer() {
 		return module.getRendererMaster();
 	}
@@ -84,32 +80,56 @@ public class FlounderEngine implements Runnable {
 		return module.getRendererMaster().getProjectionMatrix();
 	}
 
+	/**
+	 * @return If the game currently paused?
+	 */
 	public static boolean isGamePaused() {
 		return module.getGame().isGamePaused();
 	}
 
+	/**
+	 * @return How much is the screen blurred (used for pause screens).
+	 */
 	public static float getScreenBlur() {
 		return module.getGame().getScreenBlur();
 	}
 
+	/**
+	 * Sets the engines target FPS.
+	 *
+	 * @param targetFPS The new target FPS.
+	 */
 	public static void setTargetFPS(float targetFPS) {
 		FlounderEngine.targetFPS = targetFPS;
+		framesTimer = new Timer(1.0f / targetFPS);
 	}
 
+	/**
+	 * @return How many FPS the engine is currently getting.
+	 */
 	public static float getFPS() {
-		return currentFPS;
+		return Maths.roundToPlace(1.0f / framesDelta.getDelta(), 2);
 	}
 
+	/**
+	 * @return How many UPS the engine is currently getting.
+	 */
 	public static float getUPS() {
-		return currentUPS;
+		return Maths.roundToPlace(1.0f / updateDelta.getDelta(), 2);
 	}
 
+	/**
+	 * @return The delta between updates.
+	 */
 	public static float getDelta() {
-		return delta;
+		return framesDelta.getDelta();
 	}
 
+	/**
+	 * @return The current engine time (all delta added up).
+	 */
 	public static float getTime() {
-		return time;
+		return Maths.roundToPlace((framesDelta.getDelta() + updateDelta.getDelta()) / 2.0f, 2);
 	}
 
 	/**
@@ -132,42 +152,36 @@ public class FlounderEngine implements Runnable {
 	@Override
 	public void run() {
 		while (initialized && FlounderDevices.getDisplay().isOpen()) {
-			devices.run();
-
 			// Updates the engine.
-			update();
-
-			// Updates static delta and times.
-			currentFrameTime = FlounderDevices.getDisplay().getTime() / 1000.0f;
-			delta = currentFrameTime - lastFrameTime;
-			lastFrameTime = currentFrameTime;
-			time += delta;
+			if (updateTimer.pastTargetTime()) {
+				update();
+				updateTimer.addToStartTime();
+			}
 
 			// Prints out current engine update and frame stats.
-			if (System.currentTimeMillis() - timerStart > 1000) {
-				currentFPS = frames;
-				currentUPS = updates;
-				FlounderLogger.log(updates + "ups, " + frames + "fps.");
+			if (logTimer.pastTargetTime()) {
 				addProfileValues();
-				timerStart += 1000;
-				updates = 0;
-				frames = 0;
+				logTimer.addToStartTime();
 			}
 
 			// Renders the engine.
-			render();
+			if (framesTimer.pastTargetTime()) {
+				render();
+				framesTimer.addToStartTime();
+			}
 		}
 	}
 
 	private void addProfileValues() {
+		FlounderLogger.log(getFPS() + "ups, " + getUPS() + "fps.");
+
 		if (FlounderProfiler.isOpen()) {
 			FlounderProfiler.add("Engine", "Target FPS", targetFPS);
-			FlounderProfiler.add("Engine", "Current Frame Time", currentFrameTime);
-			FlounderProfiler.add("Engine", "Last Frame Time", lastFrameTime);
-			FlounderProfiler.add("Engine", "Frames Per Second", frames);
-			FlounderProfiler.add("Engine", "Updates Per Second", updates);
-			FlounderProfiler.add("Engine", "Delta", delta);
-			FlounderProfiler.add("Engine", "Time", time);
+			FlounderProfiler.add("Engine", "Frames Per Second", getFPS());
+			FlounderProfiler.add("Engine", "Updates Per Second", getUPS());
+			FlounderProfiler.add("Engine", "Update Delta", updateDelta.getDelta());
+			FlounderProfiler.add("Engine", "Frames Delta", framesDelta.getDelta());
+			FlounderProfiler.add("Engine", "Time", (framesDelta.getDelta() + updateDelta.getDelta()) / 2.0f);
 		}
 	}
 
@@ -175,19 +189,20 @@ public class FlounderEngine implements Runnable {
 	 * Updates many engine systems before every frame.
 	 */
 	private void update() {
+		updateDelta.update();
+		devices.run();
 		module.update();
 		GuiManager.updateGuis();
-		updates++;
 	}
 
 	/**
 	 * Renders the engines master renderer and carries out OpenGL request calls.
 	 */
 	private void render() {
+		framesDelta.update();
 		module.render();
 		devices.swapToDisplay();
 		GlRequestProcessor.dealWithTopRequests();
-		frames++;
 	}
 
 	/**

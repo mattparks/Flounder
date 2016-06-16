@@ -6,7 +6,6 @@ import org.lwjgl.*;
 import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Manages the creation, updating and destruction of joysticks.
@@ -23,7 +22,6 @@ public class DeviceJoysticks {
 		joystickAxes = new FloatBuffer[GLFW_JOYSTICK_LAST];
 		joystickButtons = new ByteBuffer[GLFW_JOYSTICK_LAST];
 		joystickNames = new String[GLFW_JOYSTICK_LAST];
-		update(0.0f);
 	}
 
 	/**

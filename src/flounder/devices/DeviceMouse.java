@@ -51,7 +51,6 @@ public class DeviceMouse {
 		glfwSetMouseButtonCallback(FlounderDevices.getDisplay().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
-				// Actions: GLFW_PRESS   GLFW_RELEASE   GLFW_REPEAT
 				mouseButtons[button] = action;
 			}
 		});
@@ -70,8 +69,6 @@ public class DeviceMouse {
 				displaySelected = entered;
 			}
 		});
-
-		update(0.0f);
 	}
 
 	/**
@@ -80,14 +77,17 @@ public class DeviceMouse {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	protected void update(float delta) {
+		// Updates the mouses delta.
 		mouseDeltaX = (lastMousePositionX - mousePositionX) * delta;
 		mouseDeltaY = (lastMousePositionY - mousePositionY) * delta;
 
+		// Sets the last position of the current.
 		lastMousePositionX = mousePositionX;
 		lastMousePositionY = mousePositionY;
 
+		// Updates the mouse wheel using a smooth scroll technique.
 		if (mouseWheel != 0.0f) {
-			mouseWheel -= (((mouseWheel < 0.0f) ? -1.0f : 1.0f) * FlounderEngine.getDelta());
+			mouseWheel -= (((mouseWheel < 0.0f) ? -1.0f : 1.0f) * delta);
 			mouseWheel = Maths.deadband(0.1f, mouseWheel);
 		}
 
@@ -107,6 +107,7 @@ public class DeviceMouse {
 
 	/**
 	 * Gets whether or not a particular mouse button is currently pressed.
+	 * <p>GLFW Actions: GLFW_PRESS, GLFW_RELEASE, GLFW_REPEAT</p>
 	 *
 	 * @param button The mouse button to test.
 	 *
