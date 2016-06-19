@@ -33,8 +33,8 @@ public class Config {
 			try {
 				saveDirectory.mkdir();
 			} catch (SecurityException e) {
-				FlounderEngine.getLogger().error("Filed to create " + file.getPath() + " folder.");
-				FlounderEngine.getLogger().exception(e);
+				System.out.println("Filed to create " + file.getPath() + " folder.");
+				e.printStackTrace();
 			}
 		}
 
@@ -44,8 +44,8 @@ public class Config {
 			try {
 				sameFile.createNewFile();
 			} catch (IOException e) {
-				FlounderEngine.getLogger().error("Filed to create " + file.getPath() + " file.");
-				FlounderEngine.getLogger().exception(e);
+				System.out.println("Filed to create " + file.getPath() + " file.");
+				e.printStackTrace();
 			}
 		}
 
@@ -75,9 +75,9 @@ public class Config {
 				map.put(tokens[0].trim(), tokens[1].trim());
 			}
 		} catch (IOException e) {
-			FlounderEngine.getLogger().exception(e);
+			e.printStackTrace();
 		} catch (ParseException e) {
-			FlounderEngine.getLogger().exception(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -96,7 +96,7 @@ public class Config {
 				bw.write(line);
 			}
 		} catch (IOException e) {
-			FlounderEngine.getLogger().exception(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -111,7 +111,7 @@ public class Config {
 		String result = map.get(entry);
 
 		if (result == null) {
-			FlounderEngine.getLogger().error("Config could not find string '" + entry + "' in file: " + file);
+			System.out.println("Config could not find string '" + entry + "' in file: " + file);
 		}
 
 		if (result != null && result.charAt(0) == '$') {
