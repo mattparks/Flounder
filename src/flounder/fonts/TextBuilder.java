@@ -1,7 +1,9 @@
 package flounder.fonts;
 
+import flounder.engine.*;
+
 public class TextBuilder {
-	public static FontType DEFAULT_TYPE = FontManager.COMIC_SANS;
+	public static FontType DEFAULT_TYPE = FlounderEngine.getFonts().COMIC_SANS;
 
 	private String text;
 	private boolean centered;

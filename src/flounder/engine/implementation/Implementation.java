@@ -11,6 +11,7 @@ public class Implementation implements IModule {
 	private ICamera camera;
 	private IRendererMaster renderer;
 
+	private int fpsLimit;
 	private boolean closedRequested;
 	private Delta delta;
 	private Timer timerLog;
@@ -21,8 +22,9 @@ public class Implementation implements IModule {
 	 * @param game The game to be run with the engine.
 	 * @param camera The main camera to use.
 	 * @param renderer The master renderer to render with.
+	 * @param fpsLimit The maximum FPS the engine can render at.
 	 */
-	public Implementation(IGame game, ICamera camera, IRendererMaster renderer) {
+	public Implementation(IGame game, ICamera camera, IRendererMaster renderer, int fpsLimit) {
 		this.game = game;
 		this.camera = camera;
 		this.renderer = renderer;

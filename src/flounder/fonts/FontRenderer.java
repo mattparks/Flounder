@@ -14,7 +14,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class FontRenderer extends IRenderer {
 	private FontShader shader;
 
-	private int textCount;
 	private boolean lastWireframe;
 
 	/**
@@ -22,25 +21,24 @@ public class FontRenderer extends IRenderer {
 	 */
 	public FontRenderer() {
 		shader = new FontShader();
-		textCount = 0;
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (FontManager.getTexts().keySet().size() < 1) {
+		if (FlounderEngine.getFonts().getTexts().keySet().size() < 1) {
 			return;
 		}
 
 		prepareRendering();
-		FontManager.getTexts().keySet().forEach(font -> FontManager.getTexts().get(font).forEach(this::renderText));
+		FlounderEngine.getFonts().getTexts().keySet().forEach(font -> FlounderEngine.getFonts().getTexts().get(font).forEach(this::renderText));
 		endRendering();
+	}
 
+	@Override
+	public void profile() {
 		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("Font", "Render Count", textCount);
-			FlounderEngine.getProfiler().add("Font", "Render Time", super.getRenderTimeMs());
+			FlounderEngine.getProfiler().add("Fonts", "Render Time", super.getRenderTimeMs());
 		}
-
-		textCount = 0;
 	}
 
 	private void prepareRendering() {
@@ -67,8 +65,6 @@ public class FontRenderer extends IRenderer {
 	}
 
 	private void renderText(Text text) {
-		textCount++;
-
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenGlUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		Vector2f textPosition = text.getPosition();

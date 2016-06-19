@@ -211,8 +211,8 @@ public abstract class GuiComponent {
 	 */
 	protected boolean isMouseOver() {
 		if (FlounderEngine.getDevices().getMouse().isDisplaySelected() && FlounderEngine.getDevices().getDisplay().isFocused()) {
-			if (GuiManager.getSelector().getCursorX() >= position.x && GuiManager.getSelector().getCursorX() <= position.x + scale.x) {
-				if (GuiManager.getSelector().getCursorY() >= position.y && GuiManager.getSelector().getCursorY() <= position.y + scale.y) {
+			if (FlounderEngine.getGuis().getSelector().getCursorX() >= position.x && FlounderEngine.getGuis().getSelector().getCursorX() <= position.x + scale.x) {
+				if (FlounderEngine.getGuis().getSelector().getCursorY() >= position.y && FlounderEngine.getGuis().getSelector().getCursorY() <= position.y + scale.y) {
 					return true;
 				}
 			}

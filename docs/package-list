@@ -1,12 +1,16 @@
 flounder
 flounder.devices
 flounder.engine
+flounder.engine.implementation
+flounder.exceptions
+flounder.fbos
 flounder.fonts
 flounder.guis
 flounder.helpers
 flounder.inputs
 flounder.lights
 flounder.loaders
+flounder.logger
 flounder.maths
 flounder.maths.matrices
 flounder.maths.rays
@@ -15,6 +19,7 @@ flounder.noise
 flounder.parsing
 flounder.parsing.json
 flounder.physics
+flounder.physics.renderer
 flounder.post
 flounder.post.filters
 flounder.post.piplines
@@ -26,6 +31,5 @@ flounder.shaders
 flounder.sounds
 flounder.space
 flounder.textures
-flounder.textures.fbos
 flounder.visual
 flounder.visual.interpolation

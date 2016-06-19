@@ -55,16 +55,16 @@ public class GuiTextButton extends GuiComponent {
 			mouseOver = false;
 		}
 
-		if (isMouseOver() && GuiManager.getSelector().wasLeftClick() && guiListenerLeft != null) {
+		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasLeftClick() && guiListenerLeft != null) {
 			FlounderEngine.getDevices().getSound().playSystemSound(mouseLeftClickSound);
 			guiListenerLeft.eventOccurred();
-			GuiManager.getSelector().cancelWasEvent();
+			FlounderEngine.getGuis().getSelector().cancelWasEvent();
 		}
 
-		if (isMouseOver() && GuiManager.getSelector().wasRightClick() && guiListenerRight != null) {
+		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasRightClick() && guiListenerRight != null) {
 			FlounderEngine.getDevices().getSound().playSystemSound(mouseRightClickSound);
 			guiListenerRight.eventOccurred();
-			GuiManager.getSelector().cancelWasEvent();
+			FlounderEngine.getGuis().getSelector().cancelWasEvent();
 		}
 	}
 

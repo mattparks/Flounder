@@ -1,5 +1,6 @@
 package flounder.engine.implementation;
 
+import flounder.engine.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 
@@ -29,15 +30,24 @@ public abstract class IRenderer {
 		renderObjects(clipPlane, camera);
 		profileTimer.stopInvocation();
 		renderTimeMs = profileTimer.reset();
+
+		if (FlounderEngine.getProfiler().isOpen()) {
+			profile();
+		}
 	}
 
 	/**
-	 * An internal render method for Renderers.
+	 * An internal render method for renderers.
 	 *
 	 * @param clipPlane The current clip plane.
 	 * @param camera The camera to be used when rendering.
 	 */
 	public abstract void renderObjects(Vector4f clipPlane, ICamera camera);
+
+	/**
+	 * A internal render method for profiling render times and other values.
+	 */
+	public abstract void profile();
 
 	/**
 	 * @return The last render time (in Ms).

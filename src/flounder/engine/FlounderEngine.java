@@ -24,11 +24,15 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderProcessors processors;
 	private FlounderLoader loader;
 	private FlounderTextures textures;
+	private FlounderFonts fonts;
+	private FlounderGuis guis;
 	private FlounderAABBs AABBs;
 	private FlounderLogger logger;
 	private FlounderProfiler profiler;
 
 	private Implementation implementation;
+
+	private boolean initialized;
 
 	/**
 	 * Carries out the setup for basic engine components and the engine. Call {@link #startEngine(FontType)} immediately after this.
@@ -46,12 +50,14 @@ public class FlounderEngine extends Thread implements IModule {
 		instance = this;
 
 		// Increment revision every git commit. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("3.6.3");
+		version = new Version("3.6.4");
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
 		this.loader = new FlounderLoader();
 		this.textures = new FlounderTextures();
+		this.fonts = new FlounderFonts();
+		this.guis = new FlounderGuis();
 		this.AABBs = new FlounderAABBs();
 		this.logger = new FlounderLogger();
 		this.profiler = new FlounderProfiler(title + " Profiler");
@@ -69,6 +75,8 @@ public class FlounderEngine extends Thread implements IModule {
 			TextBuilder.DEFAULT_TYPE = defaultType;
 		}
 
+		initialized = true;
+
 		start();
 	}
 
@@ -79,6 +87,8 @@ public class FlounderEngine extends Thread implements IModule {
 		devices.init();
 		processors.init();
 		textures.init();
+		fonts.init();
+		guis.init();
 		AABBs.init();
 		implementation.init();
 
@@ -110,7 +120,8 @@ public class FlounderEngine extends Thread implements IModule {
 		loader.update();
 		textures.update();
 		processors.update();
-		GuiManager.updateGuis();
+		fonts.update();
+		guis.update();
 
 		implementation.update();
 
@@ -130,6 +141,8 @@ public class FlounderEngine extends Thread implements IModule {
 			AABBs.profile();
 			loader.profile();
 			textures.profile();
+			guis.profile();
+			fonts.profile();
 			logger.profile();
 			profiler.profile();
 		}
@@ -196,6 +209,24 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static FlounderTextures getTextures() {
 		return instance.textures;
+	}
+
+	/**
+	 * Gets the engines current gui manager.
+	 *
+	 * @return The engines current gui manager.
+	 */
+	public static FlounderGuis getGuis() {
+		return instance.guis;
+	}
+
+	/**
+	 * Gets the engines current font manager.
+	 *
+	 * @return The engines current font manager.
+	 */
+	public static FlounderFonts getFonts() {
+		return instance.fonts;
 	}
 
 	/**
@@ -286,15 +317,28 @@ public class FlounderEngine extends Thread implements IModule {
 		instance.implementation.requestClose();
 	}
 
+	/**
+	 * Gets if the engine is currently initialized.
+	 *
+	 * @return Is the engine is currently initialized?
+	 */
+	public static boolean isInitialized() {
+		return instance.initialized;
+	}
+
 	@Override
 	public void dispose() {
 		processors.dispose();
 		loader.dispose();
 		AABBs.dispose();
 		textures.dispose();
+		guis.dispose();
+		fonts.dispose();
 		implementation.dispose();
 		devices.dispose();
 		profiler.dispose();
 		logger.dispose();
+
+		initialized = false;
 	}
 }

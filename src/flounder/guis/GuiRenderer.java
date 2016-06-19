@@ -13,32 +13,29 @@ public class GuiRenderer extends IRenderer {
 	private GuiShader shader;
 	private int vaoID;
 
-	private int guiCount;
 	private boolean lastWireframe;
 
 	public GuiRenderer() {
 		shader = new GuiShader();
 		vaoID = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
-
-		guiCount = 0;
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (GuiManager.getGuiTextures().size() < 1) {
+		if (FlounderEngine.getGuis().getGuiTextures().size() < 1) {
 			return;
 		}
 
 		prepareRendering();
-		GuiManager.getGuiTextures().forEach(this::renderGui);
+		FlounderEngine.getGuis().getGuiTextures().forEach(this::renderGui);
 		endRendering();
+	}
 
+	@Override
+	public void profile() {
 		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("GUI", "Render Count", guiCount);
-			FlounderEngine.getProfiler().add("GUI", "Render Time", super.getRenderTimeMs());
+			FlounderEngine.getProfiler().add("GUIs", "Render Time", super.getRenderTimeMs());
 		}
-
-		guiCount = 0;
 	}
 
 	private void prepareRendering() {
@@ -69,7 +66,6 @@ public class GuiRenderer extends IRenderer {
 			return;
 		}
 
-		guiCount++;
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
 		shader.transform.loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);

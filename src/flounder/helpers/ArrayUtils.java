@@ -21,4 +21,23 @@ public class ArrayUtils {
 
 		return array;
 	}
+
+	/**
+	 * Gets the total amount of secondary values in a hashmap.
+	 *
+	 * @param hashMap The hashmap.
+	 * @param <T> Primary value type.
+	 * @param <Y> Secondary List value type.
+	 *
+	 * @return Count of all secondary items.
+	 */
+	public static <T extends Object, Y extends Object> int totalSecondaryCount(Map<T, List<Y>> hashMap) {
+		int count = 0;
+
+		for (List<Y> list : hashMap.values()) {
+			count += list.size();
+		}
+
+		return count;
+	}
 }

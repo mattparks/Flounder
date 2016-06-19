@@ -8,16 +8,24 @@ import java.io.*;
  * The version info for Flounder.
  */
 public class Version {
-	/** The current version of The Flounder Engine. **/
+	/**
+	 * The current version of The Flounder Engine.
+	 **/
 	public final String version;
 
-	/** The current major version of The Flounder Engine. **/
+	/**
+	 * The current major version of The Flounder Engine.
+	 **/
 	public final int major;
 
-	/** The current minor version of The Flounder Engine. **/
+	/**
+	 * The current minor version of The Flounder Engine.
+	 **/
 	public final int minor;
 
-	/** The current revision version of The Flounder Engine. **/
+	/**
+	 * The current revision version of The Flounder Engine.
+	 **/
 	public final int revision;
 
 	/**

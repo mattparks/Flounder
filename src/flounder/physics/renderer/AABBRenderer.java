@@ -23,7 +23,7 @@ public class AABBRenderer extends IRenderer {
 	private int VAO;
 
 	private AABBShader shader;
-	private int aabbCount;
+
 	private boolean lastWireframe;
 
 	/**
@@ -31,7 +31,6 @@ public class AABBRenderer extends IRenderer {
 	 */
 	public AABBRenderer() {
 		shader = new AABBShader();
-		aabbCount = 0;
 		lastWireframe = false;
 
 		VAO = FlounderEngine.getLoader().createVAO();
@@ -48,12 +47,13 @@ public class AABBRenderer extends IRenderer {
 		}
 
 		endRendering();
+	}
 
+	@Override
+	public void profile() {
 		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("AABB", "Render Time", super.getRenderTimeMs());
+			FlounderEngine.getProfiler().add("Skybox", "Render Time", super.getRenderTimeMs());
 		}
-
-		aabbCount = 0;
 	}
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
@@ -95,8 +95,6 @@ public class AABBRenderer extends IRenderer {
 
 		OpenGlUtils.unbindVAO(0);
 		shader.stop();
-
-		aabbCount++;
 	}
 
 	@Override
