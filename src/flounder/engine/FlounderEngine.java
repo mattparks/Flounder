@@ -18,6 +18,8 @@ import flounder.textures.*;
 public class FlounderEngine extends Thread implements IModule {
 	private static FlounderEngine instance;
 
+	private Version version;
+
 	private FlounderDevices devices;
 	private FlounderProcessors processors;
 	private FlounderLoader loader;
@@ -42,6 +44,9 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public FlounderEngine(Implementation implementation, int width, int height, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
 		instance = this;
+
+		// Increment revision every git commit. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
+		version = new Version("3.6.3");
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
@@ -128,6 +133,15 @@ public class FlounderEngine extends Thread implements IModule {
 			logger.profile();
 			profiler.profile();
 		}
+	}
+
+	/**
+	 * Gets the engines current version.
+	 *
+	 * @return The engines current version.
+	 */
+	public static Version getVersion() {
+		return instance.version;
 	}
 
 	/**
