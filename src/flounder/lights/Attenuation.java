@@ -22,26 +22,56 @@ public class Attenuation {
 		this.exponent = exponent;
 	}
 
+	/**
+	 * Gets the constant value.
+	 *
+	 * @return The constant value.
+	 */
 	public float getConstant() {
 		return constant;
 	}
 
+	/**
+	 * Gets the constant value.
+	 *
+	 * @param constant The new constant.
+	 */
 	public void setConstant(float constant) {
 		this.constant = constant;
 	}
 
+	/**
+	 * Gets the linear value.
+	 *
+	 * @return The linear value.
+	 */
 	public float getLinear() {
 		return linear;
 	}
 
+	/**
+	 * Gets the linear value.
+	 *
+	 * @param linear The new linear.
+	 */
 	public void setLinear(float linear) {
 		this.linear = linear;
 	}
 
+	/**
+	 * Gets the exponent value.
+	 *
+	 * @return The exponent value.
+	 */
 	public float getExponent() {
 		return exponent;
 	}
 
+	/**
+	 * Gets the exponent value.
+	 *
+	 * @param exponent The new exponent.
+	 */
 	public void setExponent(float exponent) {
 		this.exponent = exponent;
 	}

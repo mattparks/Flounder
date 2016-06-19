@@ -81,8 +81,8 @@ public class MyFile {
 			InputStreamReader isr = new InputStreamReader(getInputStream());
 			return new BufferedReader(isr);
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't get reader for " + path);
-			FlounderLogger.exception(e);
+			FlounderEngine.getLogger().error("Couldn't get reader for " + path);
+			FlounderEngine.getLogger().exception(e);
 			return null;
 		}
 	}

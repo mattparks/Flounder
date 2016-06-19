@@ -606,6 +606,16 @@ public class Matrix4f {
 	/**
 	 * Calculates the determinant of a 3x3 matrix.
 	 *
+	 * @param t00 m00
+	 * @param t01 m01
+	 * @param t02 m02
+	 * @param t10 m10
+	 * @param t11 m11
+	 * @param t12 m12
+	 * @param t20 m20
+	 * @param t21 m21
+	 * @param t22 m22
+	 *
 	 * @return The determinant of the 3x3 matrix.
 	 */
 	private static float determinant3x3(float t00, float t01, float t02, float t10, float t11, float t12, float t20, float t21, float t22) {

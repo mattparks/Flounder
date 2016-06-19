@@ -1,7 +1,6 @@
 package flounder.devices;
 
 import flounder.engine.*;
-import flounder.profiling.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
@@ -18,52 +17,55 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * Manages the creation, updating and destruction of the display, as well as timing and frame times.
+ * Manages the creation, updating and destruction of the display.
  */
-public class DeviceDisplay {
+public class DeviceDisplay implements IModule {
+	private int windowWidth;
+	private int windowHeight;
+	private String title;
+	private boolean vsync;
+	private boolean antialiasing;
+	private int samples;
+	private boolean fullscreen;
+
+	private long window;
+	private boolean closed;
+	private boolean focused;
+	private int windowPosX;
+	private int windowPosY;
+
 	private GLFWWindowCloseCallback callbackWindowClose;
 	private GLFWWindowFocusCallback callbackWindowFocus;
 	private GLFWWindowPosCallback callbackWindowPos;
 	private GLFWWindowSizeCallback callbackWindowSize;
 	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
-	private long window;
-	private int width;
-	private int height;
-	private String title;
-	private boolean vsyncEnabled;
-	private boolean antialiasing;
-	private int samples;
-	private boolean fullscreen;
-	private int positionX, positionY;
-	private boolean inFocus;
-	private boolean closeRequested;
-
 	/**
-	 * Creates a new GLFW window.
+	 * Creates a new GLFW display.
 	 *
-	 * @param startWidth The window width in pixels.
-	 * @param startHeight The window height in pixels.
+	 * @param width The window width in pixels.
+	 * @param height The window height in pixels.
 	 * @param title The window title.
 	 * @param vsync If the window will use vSync..
-	 * @param antialiasing If OpenGL will use altialiasing.
+	 * @param antialiasing If OpenGL will use antialiasing.
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param fullscreen If the window will start fullscreen.
 	 */
-	protected DeviceDisplay(int startWidth, int startHeight, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
-		this.width = startWidth;
-		this.height = startHeight;
+	protected DeviceDisplay(int width, int height, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+		this.windowWidth = width;
+		this.windowHeight = height;
 		this.title = title;
-		this.vsyncEnabled = vsync;
+		this.vsync = vsync;
 		this.antialiasing = antialiasing;
-		this.fullscreen = fullscreen;
 		this.samples = samples;
-		this.inFocus = true;
-		this.closeRequested = false;
+		this.fullscreen = fullscreen;
+	}
 
+	@Override
+	public void init() {
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
-			FlounderLogger.error("Could not init GLFW!");
+			FlounderEngine.getLogger().error("Could not init GLFW!");
 			System.exit(-1);
 		}
 
@@ -72,27 +74,27 @@ public class DeviceDisplay {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
-		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
-		glfwWindowHint(GLFW_SAMPLES, this.samples);
+		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
+		glfwWindowHint(GLFW_SAMPLES, samples);
 		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE); // Only enabled in fullscreen.
 
 		// Gets the resolution of the primary monitor.
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 		if (fullscreen) {
-			this.width = vidmode.width();
-			this.height = vidmode.height();
+			windowWidth = vidmode.width();
+			windowHeight = vidmode.height();
 		}
 
 		// Create a windowed mode window and its OpenGL context.
-		window = glfwCreateWindow(this.width, this.height, this.title, this.fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+		window = glfwCreateWindow(windowWidth, windowHeight, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 
 		// Sets the display to fullscreen or windowed.
-		setFullscreen(this.fullscreen);
+		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE);
 
 		// Gets any window errors.
 		if (window == NULL) {
-			FlounderLogger.error("Could not create the window!");
+			FlounderEngine.getLogger().error("Could not create the window!");
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -107,18 +109,18 @@ public class DeviceDisplay {
 		long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
-			FlounderLogger.error("OpenGL Error: " + glError);
+			FlounderEngine.getLogger().error("OpenGL Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
 		}
 
 		// Enables VSync if requested.
-		setVsyncEnabled(vsync);
+		glfwSwapInterval(vsync ? 1 : 0);
 
 		// Centers the window position.
 		if (!this.fullscreen) {
-			glfwSetWindowPos(window, (positionX = (vidmode.width() - this.width) / 2), (positionY = (vidmode.height() - this.height) / 2));
+			glfwSetWindowPos(window, (windowPosX = (vidmode.width() - windowWidth) / 2), (windowPosY = (vidmode.height() - windowHeight) / 2));
 		}
 
 		// Shows the OpenGl window.
@@ -128,30 +130,30 @@ public class DeviceDisplay {
 		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
 			@Override
 			public void invoke(long window) {
-				closeRequested = true;
+				closed = true;
 			}
 		});
 
 		glfwSetWindowFocusCallback(window, callbackWindowFocus = new GLFWWindowFocusCallback() {
 			@Override
-			public void invoke(long window, boolean focused) {
-				inFocus = focused;
+			public void invoke(long window, boolean focus) {
+				focused = focus;
 			}
 		});
 
 		glfwSetWindowPosCallback(window, callbackWindowPos = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long window, int xpos, int ypos) {
-				positionX = xpos;
-				positionY = ypos;
+				windowPosX = xpos;
+				windowPosY = ypos;
 			}
 		});
 
 		glfwSetWindowSizeCallback(window, callbackWindowSize = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				DeviceDisplay.this.width = width;
-				DeviceDisplay.this.height = height;
+				windowWidth = width;
+				windowHeight = height;
 			}
 		});
 
@@ -163,35 +165,33 @@ public class DeviceDisplay {
 		});
 	}
 
-	/**
-	 * Polls for window events. The key callback will only be invoked during this call.
-	 */
-	protected void pollEvents() {
+	@Override
+	public void update() {
+		// Polls for window events. The key callback will only be invoked during this call.
 		glfwPollEvents();
-		addProfileValues();
-	}
-
-	private void addProfileValues() {
-		if (FlounderProfiler.isOpen()) {
-			FlounderProfiler.add("Display", "Width", width);
-			FlounderProfiler.add("Display", "Height", height);
-			FlounderProfiler.add("Display", "Title", title);
-			FlounderProfiler.add("Display", "Enable VSync", vsyncEnabled);
-			FlounderProfiler.add("Display", "Antialiasing", antialiasing);
-			FlounderProfiler.add("Display", "Samples", samples);
-			FlounderProfiler.add("Display", "Fullscreen", fullscreen);
-			FlounderProfiler.add("Display", "Position X", positionX);
-			FlounderProfiler.add("Display", "Position Y", positionY);
-			FlounderProfiler.add("Display", "In Focus", inFocus);
-			FlounderProfiler.add("Display", "Close Requested", closeRequested);
-		}
 	}
 
 	/**
-	 * Updates the display image by swaping the colour buffers.
+	 * Updates the display image by swapping the colour buffers.
 	 */
-	protected void swapBuffers() {
+	public void swapBuffers() {
 		glfwSwapBuffers(window);
+	}
+
+	@Override
+	public void profile() {
+		FlounderEngine.getProfiler().add("Display", "Width", windowWidth);
+		FlounderEngine.getProfiler().add("Display", "Height", windowHeight);
+		FlounderEngine.getProfiler().add("Display", "Title", title);
+		FlounderEngine.getProfiler().add("Display", "VSync", vsync);
+		FlounderEngine.getProfiler().add("Display", "Antialiasing", antialiasing);
+		FlounderEngine.getProfiler().add("Display", "Samples", samples);
+		FlounderEngine.getProfiler().add("Display", "Fullscreen", fullscreen);
+
+		FlounderEngine.getProfiler().add("Display", "Closed", closed);
+		FlounderEngine.getProfiler().add("Display", "Focused", focused);
+		FlounderEngine.getProfiler().add("Display", "Window Pos.X", windowPosX);
+		FlounderEngine.getProfiler().add("Display", "Window Pos.Y", windowPosY);
 	}
 
 	/**
@@ -206,8 +206,8 @@ public class DeviceDisplay {
 			try {
 				saveDirectory.mkdir();
 			} catch (SecurityException e) {
-				FlounderLogger.error("The screenshot directory could not be created.");
-				FlounderLogger.exception(e);
+				FlounderEngine.getLogger().error("The screenshot directory could not be created.");
+				FlounderEngine.getLogger().exception(e);
 				return;
 			}
 		}
@@ -215,14 +215,14 @@ public class DeviceDisplay {
 		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
 		String format = "png"; // "PNG" or "JPG".
 
-		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+		FlounderEngine.getLogger().log("Taking screenshot and outputting it to " + file.getAbsolutePath());
 
 		// Tries to create image.
 		try {
 			ImageIO.write(createBufferedImage(), format, file);
 		} catch (Exception e) {
-			FlounderLogger.error("Failed to take screenshot.");
-			FlounderLogger.exception(e);
+			FlounderEngine.getLogger().error("Failed to take screenshot.");
+			FlounderEngine.getLogger().exception(e);
 		}
 	}
 
@@ -255,20 +255,6 @@ public class DeviceDisplay {
 	}
 
 	/**
-	 * @return The width of the display in pixels.
-	 */
-	public int getWidth() {
-		return width;
-	}
-
-	/**
-	 * @return The height of the display in pixels.
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
 	 * Sets if the operating systems cursor is hidden whilst in the display.
 	 *
 	 * @param hidden If the cursor should be hidden.
@@ -278,20 +264,35 @@ public class DeviceDisplay {
 	}
 
 	/**
-	 * @return The current GLFW window.
+	 * Gets the width of the display in pixels.
+	 *
+	 * @return The width of the display.
 	 */
-	public long getWindow() {
-		return window;
+	public int getWidth() {
+		return windowWidth;
 	}
 
 	/**
-	 * @return The aspect ratio between the displays width and height.
+	 * Gets the height of the display in pixels.
+	 *
+	 * @return The height of the display.
+	 */
+	public int getHeight() {
+		return windowHeight;
+	}
+
+	/**
+	 * Gets the aspect ratio between the displays width and height.
+	 *
+	 * @return The aspect ratio.
 	 */
 	public float getAspectRatio() {
-		return ((float) width) / ((float) height);
+		return ((float) getWidth()) / ((float) getHeight());
 	}
 
 	/**
+	 * Gets the window's title.
+	 *
 	 * @return The window's title.
 	 */
 	public String getTitle() {
@@ -299,24 +300,28 @@ public class DeviceDisplay {
 	}
 
 	/**
-	 * @return If the display is using vSync.
-	 */
-	public boolean isVsyncEnabled() {
-		return vsyncEnabled;
-	}
-
-	/**
-	 * Set the display to use VSync or not.
+	 * gets if the display is using vSync.
 	 *
-	 * @param vsyncEnabled Weather or not to use vSync.
+	 * @return If VSync is enabled.
 	 */
-	public void setVsyncEnabled(boolean vsyncEnabled) {
-		this.vsyncEnabled = vsyncEnabled;
-		glfwSwapInterval(this.vsyncEnabled ? 1 : 0);
+	public boolean isVSync() {
+		return vsync;
 	}
 
 	/**
-	 * @return If the display requests antialiased images.
+	 * Sets the display to use VSync or not.
+	 *
+	 * @param vsync Weather or not to use vSync.
+	 */
+	public void setVSync(boolean vsync) {
+		this.vsync = vsync;
+		glfwSwapInterval(vsync ? 1 : 0);
+	}
+
+	/**
+	 * Gets if the display requests antialiased images.
+	 *
+	 * @return If using antialiased images.
 	 */
 	public boolean isAntialiasing() {
 		return antialiasing;
@@ -332,16 +337,18 @@ public class DeviceDisplay {
 	}
 
 	/**
-	 * @return How many MFAA samples should be done before swapping buffers.
+	 * Gets how many MFAA samples should be done before swapping buffers.
+	 *
+	 * @return Amount of MFAA samples.
 	 */
 	public int getSamples() {
 		return samples;
 	}
 
 	/**
-	 * How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
+	 * Gets how many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 *
-	 * @param samples The amount of MFSS samples to be used in the window.
+	 * @param samples The amount of MFSS samples.
 	 */
 	public void setSamples(int samples) {
 		this.samples = samples;
@@ -349,70 +356,77 @@ public class DeviceDisplay {
 	}
 
 	/**
-	 * @return Weather the display is fullscreen or not.
+	 * Gets weather the display is fullscreen or not.
+	 *
+	 * @return Fullscreen or windowed.
 	 */
 	public boolean isFullscreen() {
 		return fullscreen;
 	}
 
 	/**
-	 * Set the display to fullscreen or windowed.
+	 * Sets the display to be fullscreen or windowed.
 	 *
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
 	public void setFullscreen(boolean fullscreen) {
-		FlounderLogger.log(this.fullscreen && !fullscreen ? "Display going windowed." : !this.fullscreen && fullscreen ? "Display going fullscreen." : "");
+		if (this.fullscreen == fullscreen) {
+			return;
+		}
+
 		this.fullscreen = fullscreen;
-		glfwWindowHint(GLFW_RESIZABLE, this.fullscreen ? GL_FALSE : GL_TRUE);
+		FlounderEngine.getLogger().log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
+		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE);
 		// TODO: MAKE FULLSCREEN WORK!!!
 	}
 
 	/**
-	 * @return The x posiiton of the display in pixels.
+	 * Gets the current GLFW window.
+	 *
+	 * @return The current GLFW window.
 	 */
-	public int getXPos() {
-		return positionX;
+	public long getWindow() {
+		return window;
 	}
 
 	/**
-	 * @return The y posiiton of the display in pixels.
+	 * Gets if the GLFW display is closed.
+	 *
+	 * @return If the GLFW display is closed.
 	 */
-	public int getYPos() {
-		return positionY;
+	public boolean isClosed() {
+		return closed;
 	}
 
 	/**
+	 * Gets if the GLFW display is selected.
+	 *
 	 * @return If the GLFW display is selected.
 	 */
 	public boolean isFocused() {
-		return inFocus;
+		return focused;
 	}
 
 	/**
-	 * @return If the GLFW display is open or if close has not been requested.
+	 * Gets the windows Y position of the display in pixels.
+	 *
+	 * @return The windows x position.
 	 */
-	public boolean isOpen() {
-		return !closeRequested && !glfwWindowShouldClose(window);
+	public int getWindowXPos() {
+		return windowPosX;
 	}
 
 	/**
-	 * Indicates that the game has been requested to close. At the end of the current frame the main game loop will exit.
+	 * Gets the windows Y position of the display in pixels.
+	 *
+	 * @return The windows Y position.
 	 */
-	public void requestClose() {
-		closeRequested = true;
+	public int getWindowYPos() {
+		return windowPosY;
 	}
 
-	/**
-	 * @return The current GLFW time time in seconds (by running glfwGetTime() * 1000.0f).
-	 */
-	public float getTime() {
-		return (float) (glfwGetTime() * 1000.0f);
-	}
-
-	/**
-	 * Closes the GLFW display, do not renderObjects after calling this.
-	 */
-	protected void dispose() {
+	@Override
+	public void dispose() {
 		callbackWindowClose.free();
 		callbackWindowFocus.free();
 		callbackWindowPos.free();

@@ -29,34 +29,74 @@ public class Fog {
 		this.skyUpperLimit = skyUpperLimit;
 	}
 
+	/**
+	 * Gets the fogs colour.
+	 *
+	 * @return The fog colour.
+	 */
 	public Colour getFogColour() {
 		return fogColour;
 	}
 
+	/**
+	 * Sets the fogs colour.
+	 *
+	 * @param fogColour The new fog colour.
+	 */
 	public void setFogColour(Colour fogColour) {
 		this.fogColour.set(fogColour);
 	}
 
+	/**
+	 * Gets the fogs density.
+	 *
+	 * @return The fog density.
+	 */
 	public float getFogDensity() {
 		return fogDensity;
 	}
 
+	/**
+	 * Sets the fogs density.
+	 *
+	 * @param fogDensity The fogs new density.
+	 */
 	public void setFogDensity(float fogDensity) {
 		this.fogDensity = fogDensity;
 	}
 
+	/**
+	 * Gets the fogs gradient.
+	 *
+	 * @return The fog gradient.
+	 */
 	public float getFogGradient() {
 		return fogGradient;
 	}
 
+	/**
+	 * Sets the fogs gradient.
+	 *
+	 * @param fogGradient The fogs new gradient.
+	 */
 	public void setFogGradient(float fogGradient) {
 		this.fogGradient = fogGradient;
 	}
 
+	/**
+	 * Gets the skys lower limit.
+	 *
+	 * @return The skys lower limit.
+	 */
 	public float getSkyLowerLimit() {
 		return skyLowerLimit;
 	}
 
+	/**
+	 * Gets the skys upper limit.
+	 *
+	 * @return The skys upper limit.
+	 */
 	public float getSkyUpperLimit() {
 		return skyUpperLimit;
 	}

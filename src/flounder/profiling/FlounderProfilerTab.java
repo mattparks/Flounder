@@ -15,7 +15,7 @@ public class FlounderProfilerTab {
 		this.labels = new ArrayList<>();
 	}
 
-	public <T> void addLabel(String contentLabel, T value) {
+	protected <T> void addLabel(String contentLabel, T value) {
 		for (FlounderProfilerLabel label : labels) {
 			if (label.getContentLabel().equals(contentLabel)) {
 				label.setValue(value);
@@ -28,7 +28,7 @@ public class FlounderProfilerTab {
 		labels.add(label);
 	}
 
-	public void removeLabel(String contentLabel) {
+	protected void removeLabel(String contentLabel) {
 		for (FlounderProfilerLabel label : labels) {
 			if (label.getContentLabel().equals(contentLabel)) {
 				primaryComponent.remove(label.getDisplayObject());
@@ -43,7 +43,7 @@ public class FlounderProfilerTab {
 		return primaryComponent;
 	}
 
-	public void dispose() {
+	protected void dispose() {
 		primaryComponent = null;
 		labels = null;
 	}

@@ -36,6 +36,13 @@ public class TextureDecoder {
 	private byte[] paletteA;
 	private byte[] transPixel;
 
+	/**
+	 * Decodes a texture from a input stream.
+	 *
+	 * @param input The input stream.
+	 *
+	 * @throws IOException If the input steam could not be read.
+	 */
 	public TextureDecoder(InputStream input) throws IOException {
 		this.input = input;
 		this.crc = new CRC32();
@@ -84,12 +91,22 @@ public class TextureDecoder {
 		return true;
 	}
 
-	public int getHeight() {
-		return height;
-	}
-
+	/**
+	 * Gets the images width.
+	 *
+	 * @return The images width.
+	 */
 	public int getWidth() {
 		return width;
+	}
+
+	/**
+	 * Gets the images height.
+	 *
+	 * @return The images height.
+	 */
+	public int getHeight() {
+		return height;
 	}
 
 	/**

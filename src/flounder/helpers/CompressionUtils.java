@@ -1,22 +1,43 @@
-package flounder.resources;
+package flounder.helpers;
 
 import java.io.*;
 import java.util.zip.*;
 
+/**
+ * A utility class capable of compressing and decompressing strings with gzip.
+ */
 public class CompressionUtils {
-	public static byte[] compress(String str) throws Exception {
-		if (str == null || str.length() == 0) {
+	/**
+	 * Compresses a string into an array of bytes.
+	 *
+	 * @param string The string to compress.
+	 *
+	 * @return The compressed list of bytes.
+	 *
+	 * @throws Exception If failed to compress.
+	 */
+	public static byte[] compress(String string) throws Exception {
+		if (string == null || string.length() == 0) {
 			return null;
 		}
 
 		ByteArrayOutputStream obj = new ByteArrayOutputStream();
 		GZIPOutputStream gzip = new GZIPOutputStream(obj);
-		gzip.write(str.getBytes("UTF-8"));
+		gzip.write(string.getBytes("UTF-8"));
 		gzip.close();
 		String outStr = obj.toString("UTF-8");
 		return obj.toByteArray();
 	}
 
+	/**
+	 * Decompresses a array of bytes back into a string.
+	 *
+	 * @param bytes The compressed list of bytes.
+	 *
+	 * @return The string uncompress.
+	 *
+	 * @throws Exception If failed to uncompress.
+	 */
 	public static String decompress(byte[] bytes) throws Exception {
 		if (bytes == null || bytes.length == 0) {
 			return null;

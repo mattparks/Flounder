@@ -1,6 +1,6 @@
 package flounder.fonts;
 
-import flounder.loaders.*;
+import flounder.engine.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.visual.*;
@@ -122,7 +122,7 @@ public class Text {
 	}
 
 	public void deleteFromMemory() {
-		Loader.deleteVAOFromCache(textMesh);
+		FlounderEngine.getLoader().deleteVAOFromCache(textMesh);
 	}
 
 	public float getFontSize() {

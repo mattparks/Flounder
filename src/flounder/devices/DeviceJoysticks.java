@@ -10,7 +10,7 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * Manages the creation, updating and destruction of joysticks.
  */
-public class DeviceJoysticks {
+public class DeviceJoysticks implements IModule {
 	private FloatBuffer joystickAxes[];
 	private ByteBuffer joystickButtons[];
 	private String joystickNames[];
@@ -24,17 +24,17 @@ public class DeviceJoysticks {
 		joystickNames = new String[GLFW_JOYSTICK_LAST];
 	}
 
-	/**
-	 * Updates all connected joysticks, and finds new ones. Should be called once every frame.
-	 *
-	 * @param delta The time in seconds since the last frame.
-	 */
-	protected void update(float delta) {
+	@Override
+	public void init() {
+	}
+
+	@Override
+	public void update() {
 		// For each joystick check if connected and update.
 		for (int i = 0; i < GLFW_JOYSTICK_LAST; i++) {
 			if (glfwJoystickPresent(i)) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {
-					FlounderLogger.log("Connecting Joystick: " + i);
+					FlounderEngine.getLogger().log("Connecting Joystick: " + i);
 					joystickAxes[i] = BufferUtils.createFloatBuffer(glfwGetJoystickAxes(i).capacity());
 					joystickButtons[i] = BufferUtils.createByteBuffer(glfwGetJoystickButtons(i).capacity());
 					joystickNames[i] = glfwGetJoystickName(i);
@@ -47,7 +47,7 @@ public class DeviceJoysticks {
 				joystickButtons[i].put(glfwGetJoystickButtons(i));
 			} else {
 				if (joystickAxes[i] != null || joystickButtons[i] != null || joystickNames[i] != null) {
-					FlounderLogger.log("Disconnecting Joystick: " + i);
+					FlounderEngine.getLogger().log("Disconnecting Joystick: " + i);
 					joystickAxes[i].clear();
 					joystickAxes[i] = null;
 
@@ -59,8 +59,12 @@ public class DeviceJoysticks {
 		}
 	}
 
+	@Override
+	public void profile() {
+	}
+
 	/**
-	 * Dobermans if the GLFW joystick is connected
+	 * Determines if the GLFW joystick is connected
 	 *
 	 * @param joystick The joystick to check connection with.
 	 *
@@ -127,9 +131,7 @@ public class DeviceJoysticks {
 		return joystickButtons[joystick].capacity();
 	}
 
-	/**
-	 * Closes the GLFW joystick system, do not use joysticks after calling this.
-	 */
-	protected void dispose() {
+	@Override
+	public void dispose() {
 	}
 }

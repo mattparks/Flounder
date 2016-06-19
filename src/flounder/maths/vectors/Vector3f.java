@@ -192,7 +192,24 @@ public class Vector3f {
 	}
 
 	/**
-	 * Takes the cross product of two vectors and places the result in the destination vector..
+	 * Scales a vector by a scalar and places the result in the destination vector.
+	 *
+	 * @param source The source vector.
+	 * @param scalar The scalar value.
+	 * @param destination The destination vector or null if a new vector is to be created.
+	 *
+	 * @return The destination vector.
+	 */
+	public static Vector3f scale(Vector3f source, float scalar, Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(source.x * scalar, source.y * scalar, source.z * scalar);
+	}
+
+	/**
+	 * Takes the cross product of two vectors and places the result in the destination vector.
 	 *
 	 * @param left The left source vector.
 	 * @param right The right source vector.

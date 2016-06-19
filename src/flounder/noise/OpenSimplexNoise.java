@@ -1,8 +1,9 @@
 package flounder.noise;
 
-/*
+/**
  * OpenSimplex Noise in Java.
- * by Kurt Spencer
+ */
+/* by Kurt Spencer
  *
  * v1.1 (October 5, 2014)
  * - Added 2D and 4D implementations.

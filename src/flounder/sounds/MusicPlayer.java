@@ -75,6 +75,7 @@ public class MusicPlayer {
 
 			// If skipping the track start to play a new source.
 			if (skippingTrack) {
+				// FIXME: Fix errors when loading music after skipping.
 				volumeDriver = new SlideDriver(0.0f, volumeMaxMusic, FADE_TIME);
 				skippingTrack = false;
 
@@ -90,14 +91,14 @@ public class MusicPlayer {
 			source.setInactive();
 
 			if (timeoutStart == 0.0f) {
-				timeoutStart = FlounderEngine.getTime();
+				timeoutStart = FlounderEngine.getDeltaTime();
 
 				if (selectedTimeout >= 0.0f) {
 					selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
 				}
 			}
 
-			if (FlounderEngine.getTime() - timeoutStart > selectedTimeout) {
+			if (FlounderEngine.getDeltaTime() - timeoutStart > selectedTimeout) {
 				timeoutStart = 0.0f;
 				selectedTimeout = 0.0f;
 				playNextTrack();

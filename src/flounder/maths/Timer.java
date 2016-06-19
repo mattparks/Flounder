@@ -34,12 +34,12 @@ public class Timer {
 	}
 
 	/**
-	 * Gets what the interval is.
+	 * Gets what the interval is. (Seconds).
 	 *
 	 * @return The timers current interval.
 	 */
 	public float getInterval() {
-		return interval;
+		return interval / 1000.0f;
 	}
 
 	/**

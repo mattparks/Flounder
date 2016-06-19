@@ -2,13 +2,14 @@ package flounder.textures;
 
 import flounder.engine.*;
 import flounder.maths.*;
-import flounder.processing.*;
-import flounder.processing.glProcessing.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
 import java.util.*;
 
+/**
+ * A class capable of setting up a {@link flounder.textures.Texture}.
+ */
 public class TextureBuilder {
 	private static Map<String, SoftReference<Texture>> loadedTextures = new HashMap<>();
 
@@ -20,6 +21,11 @@ public class TextureBuilder {
 	private boolean nearest;
 	private MyFile file;
 
+	/**
+	 * Creates a class to setup a Texture.
+	 *
+	 * @param textureFile The textures source file.
+	 */
 	protected TextureBuilder(MyFile textureFile) {
 		this.clampEdges = false;
 		this.clampToBorder = false;
@@ -30,12 +36,24 @@ public class TextureBuilder {
 		this.file = textureFile;
 	}
 
+	/**
+	 * Clamps the texture to the edges.
+	 *
+	 * @return this.
+	 */
 	public TextureBuilder clampEdges() {
 		clampEdges = true;
 		clampToBorder = false;
 		return this;
 	}
 
+	/**
+	 * Clamps the texture to a coloured border.
+	 *
+	 * @param colour The coloured border.
+	 *
+	 * @return this.
+	 */
 	public TextureBuilder clampToBorder(Colour colour) {
 		clampEdges = false;
 		clampToBorder = true;
@@ -43,17 +61,32 @@ public class TextureBuilder {
 		return this;
 	}
 
+	/**
+	 * Selects nearest filtering.
+	 *
+	 * @return this.
+	 */
 	public TextureBuilder nearestFiltering() {
 		nearest = true;
 		return noMipmap();
 	}
 
+	/**
+	 * Disables mipmapping.
+	 *
+	 * @return this.
+	 */
 	public TextureBuilder noMipmap() {
 		mipmap = true;
 		anisotropic = false;
 		return this;
 	}
 
+	/**
+	 * Disables anisotropic filtering.
+	 *
+	 * @return this.
+	 */
 	public TextureBuilder noFiltering() {
 		anisotropic = false;
 		return this;
@@ -69,7 +102,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder right now!");
+			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder right now!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
@@ -91,10 +124,10 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in the background!");
+			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder in the background!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			RequestProcessor.sendRequest(new TextureLoadRequest(data, this));
+			FlounderEngine.getProcessors().sendRequest(new TextureLoadRequest(data, this));
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 
@@ -111,42 +144,77 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in separate thread!");
+			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder in separate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this);
 			request.doResourceRequest();
-			GlRequestProcessor.sendRequest(request);
+			FlounderEngine.getProcessors().sendGLRequest(request);
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;
 	}
 
+	/**
+	 * Gets if clamping to edges.
+	 *
+	 * @return If clamping to edges.
+	 */
 	public boolean isClampEdges() {
 		return clampEdges;
 	}
 
+	/**
+	 * Gets if clamping to border.
+	 *
+	 * @return If clamping to border.
+	 */
 	public boolean isClampToBorder() {
 		return clampToBorder;
 	}
 
+	/**
+	 * Gets if mipmapping.
+	 *
+	 * @return If mipmapping.
+	 */
 	public boolean isMipmap() {
 		return mipmap;
 	}
 
+	/**
+	 * Gets if anisotropic.
+	 *
+	 * @return If anisotropic.
+	 */
 	public boolean isAnisotropic() {
 		return anisotropic;
 	}
 
+	/**
+	 * Gets if nearest filtering.
+	 *
+	 * @return If nearest filtering.
+	 */
 	public boolean isNearest() {
 		return nearest;
 	}
 
+	/**
+	 * Gets the border colour.
+	 *
+	 * @return The border colour.
+	 */
 	public Colour getBorderColour() {
 		return borderColour;
 	}
 
+	/**
+	 * Gets the source file.
+	 *
+	 * @return The source file.
+	 */
 	public MyFile getFile() {
 		return file;
 	}

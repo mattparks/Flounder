@@ -1,10 +1,8 @@
 package flounder.guis;
 
-import flounder.devices.*;
 import flounder.engine.*;
 import flounder.inputs.*;
 import flounder.maths.*;
-import flounder.profiling.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -43,7 +41,7 @@ public class GuiSelector {
 	}
 
 	protected void update() {
-		if (FlounderDevices.getJoysticks().isConnected(selectedJoystick)) {
+		if (FlounderEngine.getDevices().getJoysticks().isConnected(selectedJoystick)) {
 			if (joystickAxisX != null && joystickAxisY != null) {
 				if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
 					cursorX += (joystickAxisX.getAmount()) * 0.5f * FlounderEngine.getDelta();
@@ -60,8 +58,8 @@ public class GuiSelector {
 				rightWasClick = joystickRight.wasDown();
 			}
 		} else {
-			cursorX = FlounderDevices.getMouse().getPositionX();
-			cursorY = FlounderDevices.getMouse().getPositionY();
+			cursorX = FlounderEngine.getDevices().getMouse().getPositionX();
+			cursorY = FlounderEngine.getDevices().getMouse().getPositionY();
 
 			leftClick = mouseLeft.isDown();
 			rightClick = mouseRight.isDown();
@@ -69,11 +67,11 @@ public class GuiSelector {
 			rightWasClick = mouseRight.wasDown();
 		}
 
-		if (FlounderProfiler.isOpen()) {
-			FlounderProfiler.add("GUI", "SelectorX", cursorX);
-			FlounderProfiler.add("GUI", "SelectorY", cursorY);
-			FlounderProfiler.add("GUI", "Click Left", leftClick);
-			FlounderProfiler.add("GUI", "Click Right", rightClick);
+		if (FlounderEngine.getProfiler().isOpen()) {
+			FlounderEngine.getProfiler().add("GUI", "SelectorX", cursorX);
+			FlounderEngine.getProfiler().add("GUI", "SelectorY", cursorY);
+			FlounderEngine.getProfiler().add("GUI", "Click Left", leftClick);
+			FlounderEngine.getProfiler().add("GUI", "Click Right", rightClick);
 		}
 	}
 

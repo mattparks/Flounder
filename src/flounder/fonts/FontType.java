@@ -18,10 +18,20 @@ public class FontType {
 		loader = new TextLoader(textureAtlas, fontFile);
 	}
 
+	/**
+	 * Loads the text.
+	 *
+	 * @param text The text to load.
+	 */
 	protected void loadText(Text text) {
 		loader.loadTextIntoMemory(text);
 	}
 
+	/**
+	 * Gets the texture atlas.
+	 *
+	 * @return The texture atlas.
+	 */
 	protected int getTextureAtlas() {
 		return loader.getFontTextureAtlas();
 	}

@@ -32,25 +32,29 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	/**
 	 * Returns a set of all objects in the spatial structure.
 	 *
+	 * @param result The list to store results into.
+	 *
 	 * @return The list specified by of all objects.
 	 */
-	List<T> getAll();
+	List<T> getAll(List<T> result);
 
 	/**
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
+	 * @param result The list to store results into.
 	 * @param range The frustum range of flounder.space being queried.
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInFrustum(Frustum range);
+	List<T> queryInFrustum(List<T> result, Frustum range);
 
 	/**
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
+	 * @param result The list to store results into.
 	 * @param range The aabb range of flounder.space being queried.
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInAABB(AABB range);
+	List<T> queryInAABB(List<T> result, AABB range);
 }

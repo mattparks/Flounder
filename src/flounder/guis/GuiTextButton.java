@@ -1,6 +1,6 @@
 package flounder.guis;
 
-import flounder.devices.*;
+import flounder.engine.*;
 import flounder.fonts.*;
 import flounder.sounds.*;
 import flounder.visual.*;
@@ -49,20 +49,20 @@ public class GuiTextButton extends GuiComponent {
 		if (isMouseOver() && !mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), MAX_SCALE, CHANGE_TIME));
 			mouseOver = true;
-			FlounderDevices.getSound().playSystemSound(mouseHoverOverSound);
+			FlounderEngine.getDevices().getSound().playSystemSound(mouseHoverOverSound);
 		} else if (!isMouseOver() && mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), 1.0f, CHANGE_TIME));
 			mouseOver = false;
 		}
 
 		if (isMouseOver() && GuiManager.getSelector().wasLeftClick() && guiListenerLeft != null) {
-			FlounderDevices.getSound().playSystemSound(mouseLeftClickSound);
+			FlounderEngine.getDevices().getSound().playSystemSound(mouseLeftClickSound);
 			guiListenerLeft.eventOccurred();
 			GuiManager.getSelector().cancelWasEvent();
 		}
 
 		if (isMouseOver() && GuiManager.getSelector().wasRightClick() && guiListenerRight != null) {
-			FlounderDevices.getSound().playSystemSound(mouseRightClickSound);
+			FlounderEngine.getDevices().getSound().playSystemSound(mouseRightClickSound);
 			guiListenerRight.eventOccurred();
 			GuiManager.getSelector().cancelWasEvent();
 		}

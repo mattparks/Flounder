@@ -1,8 +1,8 @@
 package flounder.post.piplines;
 
+import flounder.fbos.*;
 import flounder.post.*;
 import flounder.post.filters.*;
-import flounder.textures.fbos.*;
 
 public class PipelineGaussian extends PostPipeline {
 	private FilterBlurHorizontal filterBlurHorizontal;

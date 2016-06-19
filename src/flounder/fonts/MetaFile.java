@@ -1,6 +1,5 @@
 package flounder.fonts;
 
-import flounder.devices.*;
 import flounder.engine.*;
 import flounder.resources.*;
 
@@ -46,15 +45,23 @@ public class MetaFile {
 		close();
 	}
 
+	/**
+	 * Opens the font file for reading.
+	 *
+	 * @param file The font file to open.
+	 */
 	private void openFile(MyFile file) {
 		try {
 			reader = file.getReader();
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't read font meta file " + file.getPath());
-			FlounderLogger.exception(e);
+			FlounderEngine.getLogger().error("Couldn't read font meta file " + file.getPath());
+			FlounderEngine.getLogger().exception(e);
 		}
 	}
 
+	/**
+	 * Loads all padding data.
+	 */
 	private void loadPaddingData() {
 		processNextLine();
 		padding = getValuesOfVariable("padding");
@@ -74,8 +81,8 @@ public class MetaFile {
 		try {
 			line = reader.readLine();
 		} catch (IOException e) {
-			FlounderLogger.error("Failed to read the next line!");
-			FlounderLogger.exception(e);
+			FlounderEngine.getLogger().error("Failed to read the next line!");
+			FlounderEngine.getLogger().exception(e);
 		}
 
 		if (line == null) {
@@ -111,6 +118,9 @@ public class MetaFile {
 		return actualValues;
 	}
 
+	/**
+	 * Loads all line sizes.
+	 */
 	private void loadLineSizes() {
 		processNextLine();
 		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
@@ -128,13 +138,18 @@ public class MetaFile {
 		String value = values.get(variable);
 
 		if (value == null) {
-			FlounderLogger.error("Could not find font variable for: " + variable, true);
+			FlounderEngine.getLogger().error("Could not find font variable for: " + variable, true);
 			return 0;
 		}
 
 		return Integer.parseInt(value);
 	}
 
+	/**
+	 * Loads the character data.
+	 *
+	 * @param imageWidth The images width.
+	 */
 	private void loadCharacterData(int imageWidth) {
 		processNextLine();
 		processNextLine();
@@ -150,8 +165,8 @@ public class MetaFile {
 
 	private Character loadCharacter(int imageSize) {
 		int id = getValueOfVariable("id");
-		int displayWidth = FlounderDevices.getDisplay().getWidth();
-		int displayHeight = FlounderDevices.getDisplay().getHeight();
+		int displayWidth = FlounderEngine.getDevices().getDisplay().getWidth();
+		int displayHeight = FlounderEngine.getDevices().getDisplay().getHeight();
 		double displayAspect = displayWidth / displayHeight;
 
 		if (id == TextLoader.SPACE_ASCII) {
@@ -180,15 +195,27 @@ public class MetaFile {
 		try {
 			reader.close();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not close Font MetaFile.");
-			FlounderLogger.exception(e);
+			FlounderEngine.getLogger().error("Could not close Font MetaFile.");
+			FlounderEngine.getLogger().exception(e);
 		}
 	}
 
+	/**
+	 * Gets the character from a ascii id.
+	 *
+	 * @param ascii The ascii ID.
+	 *
+	 * @return The character.
+	 */
 	protected Character getCharacter(int ascii) {
 		return metaData.get(ascii);
 	}
 
+	/**
+	 * Gets the space width.
+	 *
+	 * @return The space width.
+	 */
 	protected double getSpaceWidth() {
 		return spaceWidth;
 	}

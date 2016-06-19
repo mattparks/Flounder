@@ -37,4 +37,11 @@ public class RequestQueue {
 	public synchronized boolean hasRequests() {
 		return !requestQueue.isEmpty();
 	}
+
+	/**
+	 * @return The number of objects in queue.
+	 */
+	public synchronized int count() {
+		return requestQueue.size();
+	}
 }

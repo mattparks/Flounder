@@ -1,8 +1,6 @@
 package flounder.sounds;
 
 import flounder.engine.*;
-import flounder.processing.*;
-import flounder.processing.glProcessing.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
@@ -50,7 +48,7 @@ public class Sound {
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the sound builder right now!");
+			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the sound builder right now!");
 			loadedSounds.remove(file.getPath());
 			data = new Sound(file, volume);
 			SoundLoader.doInitialSoundLoad(data);
@@ -73,10 +71,10 @@ public class Sound {
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the sound builder in the background!");
+			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the sound builder in the background!");
 			loadedSounds.remove(file.getPath());
 			Sound data2 = new Sound(file, volume);
-			RequestProcessor.sendRequest(() -> SoundLoader.doInitialSoundLoad(data2));
+			FlounderEngine.getProcessors().sendRequest(() -> SoundLoader.doInitialSoundLoad(data2));
 			data = data2;
 			loadedSounds.put(file.getPath(), new SoftReference<>(data));
 		}
@@ -89,7 +87,7 @@ public class Sound {
 	 */
 	public void delete() {
 		if (loaded) {
-			GlRequestProcessor.sendRequest(() -> SoundLoader.deleteBuffer(bufferID));
+			FlounderEngine.getProcessors().sendGLRequest(() -> SoundLoader.deleteBuffer(bufferID));
 			loaded = false;
 		}
 	}

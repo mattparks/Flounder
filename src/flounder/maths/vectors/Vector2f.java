@@ -179,6 +179,23 @@ public class Vector2f {
 	}
 
 	/**
+	 * Scales a vector by a scalar and places the result in the destination vector.
+	 *
+	 * @param source The source vector.
+	 * @param scalar The scalar value.
+	 * @param destination The destination vector or null if a new vector is to be created.
+	 *
+	 * @return The destination vector.
+	 */
+	public static Vector2f scale(Vector2f source, float scalar, Vector2f destination) {
+		if (destination == null) {
+			destination = new Vector2f();
+		}
+
+		return destination.set(source.x * scalar, source.y * scalar);
+	}
+
+	/**
 	 * Rotates a vector and places the result in the destination vector.
 	 *
 	 * @param source The source vector.

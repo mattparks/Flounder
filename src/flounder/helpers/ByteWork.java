@@ -1,14 +1,19 @@
-package flounder.maths;
+package flounder.helpers;
 
 import flounder.maths.vectors.*;
 
 import java.nio.*;
 
+/**
+ * A class for working with java types.
+ */
 public class ByteWork {
 	public static final int FLOAT_LENGTH = 4;
 	public static final int INT_LENGTH = 4;
 	public static final int SHORT_LENGTH = 2;
 	public static final int LONG_LENGTH = 8;
+
+	// TODO: Javadocs!
 
 	public static int encodeShortIntoArray(short naughtyShort, byte[] array, int pointer) {
 		byte[] shortInBytes = shortToBytes(naughtyShort);

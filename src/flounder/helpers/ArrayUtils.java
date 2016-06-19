@@ -2,6 +2,9 @@ package flounder.helpers;
 
 import java.util.*;
 
+/**
+ * Utility's built for helping arrays.
+ */
 public class ArrayUtils {
 	/**
 	 * Copies the contents from an array list to an array.

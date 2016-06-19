@@ -1,4 +1,4 @@
-package flounder.engine;
+package flounder.engine.implementation;
 
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -34,9 +34,9 @@ public interface ICamera extends IAudioListener {
 	 *
 	 * @param focusPosition The position of the object the camera focuses on.
 	 * @param focusRotation The rotation of the object the camera focuses on.
-	 * @param gamePaused Is the game currently paused? Used to stop inputs to camera in menus.
+	 * @param gamePaused Is the game currently paused? Used to pause inputs to camera while in menus.
 	 */
-	void moveCamera(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused);
+	void update(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused);
 
 	/**
 	 * @return The view matrix created by the current camera position and rotation.

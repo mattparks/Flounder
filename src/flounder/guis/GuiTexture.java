@@ -71,6 +71,10 @@ public class GuiTexture {
 		return scale;
 	}
 
+	public ValueDriver getAlphaDriver() {
+		return alphaDriver;
+	}
+
 	public void setAlphaDriver(ValueDriver driver) {
 		alphaDriver = driver;
 	}

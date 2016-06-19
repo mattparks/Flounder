@@ -9,23 +9,23 @@ import java.util.*;
 public class FlounderTabMenu extends JTabbedPane {
 	private HashMap<String, FlounderProfilerTab> components;
 
-	public FlounderTabMenu() {
+	protected FlounderTabMenu() {
 		super(SwingConstants.TOP, WRAP_TAB_LAYOUT);
 		this.components = new HashMap<>();
 	}
 
-	public void createCategory(String categoryName) {
+	protected void createCategory(String categoryName) {
 		JPanel primaryComponent = new JPanel();
 		super.addTab(categoryName, primaryComponent);
 		FlounderProfilerTab contentTab = new FlounderProfilerTab(primaryComponent);
 		components.put(categoryName, contentTab);
 	}
 
-	public Boolean doesCategoryExist(String categoryName) {
+	protected Boolean doesCategoryExist(String categoryName) {
 		return components.containsKey(categoryName);
 	}
 
-	public Optional<FlounderProfilerTab> getCategoryComponent(String categoryName) {
+	protected Optional<FlounderProfilerTab> getCategoryComponent(String categoryName) {
 		if (components.containsKey(categoryName)) {
 			return Optional.of(components.get(categoryName));
 		} else {
@@ -33,7 +33,7 @@ public class FlounderTabMenu extends JTabbedPane {
 		}
 	}
 
-	public void dispose() {
+	protected void dispose() {
 		Iterator disposalIterator = components.entrySet().iterator();
 
 		while (disposalIterator.hasNext()) {

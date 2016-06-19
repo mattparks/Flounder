@@ -33,16 +33,14 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public List<T> getAll() {
-		List<T> result = new ArrayList<>();
+	public List<T> getAll(List<T> result) {
 		objects.iterator().forEachRemaining(result::add);
 		return result;
 	}
 
 	@Override
-	public List<T> queryInFrustum(Frustum range) {
+	public List<T> queryInFrustum(List<T> result, Frustum range) {
 		Iterator<T> it = objects.iterator();
-		List<T> result = new ArrayList<>();
 
 		while (it.hasNext()) {
 			T current = it.next();
@@ -56,9 +54,8 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public List<T> queryInAABB(AABB range) {
+	public List<T> queryInAABB(List<T> result, AABB range) {
 		Iterator<T> it = objects.iterator();
-		List<T> result = new ArrayList<>();
 
 		while (it.hasNext()) {
 			T current = it.next();
@@ -75,10 +72,22 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		return result;
 	}
 
+	/**
+	 * Gets a object from its index.
+	 *
+	 * @param index The index to get the object from.
+	 *
+	 * @return The object found.
+	 */
 	public T get(int index) {
 		return objects.get(index);
 	}
 
+	/**
+	 * Gets the size of this structure.
+	 *
+	 * @return The structures size.
+	 */
 	public int getSize() {
 		return objects.size();
 	}

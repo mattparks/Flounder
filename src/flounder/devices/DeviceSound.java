@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.engine.implementation.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.sounds.*;
@@ -16,7 +17,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * An Sound Device implemented using OpenAL.
  */
-public class DeviceSound {
+public class DeviceSound implements IModule {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 
 	private Vector3f cameraPosition;
@@ -24,17 +25,28 @@ public class DeviceSound {
 	private MusicPlayer musicPlayer;
 
 	/**
-	 * Initializes all the sound related things. Should be called when the game loads.
+	 * Creates a new OpenGL sound manager.
 	 */
 	protected DeviceSound() {
 		cameraPosition = new Vector3f(0.0f, 0.0f, 0.0f);
-		createOpenAL();
+	}
+
+	@Override
+	public void init() {
+		// Creates the OpenAL contexts.
+		long device = alcOpenDevice((ByteBuffer) null);
+		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+		alcMakeContextCurrent(alcCreateContext(device, (IntBuffer) null));
+		createCapabilities(deviceCaps);
+
+		// Checks for errors.
 		int alError = alGetError();
 
 		if (alError != GL_NO_ERROR) {
-			FlounderLogger.error("OpenAL Error: " + alError);
+			FlounderEngine.getLogger().error("OpenAL Error " + alError);
 		}
 
+		// Creates a new model and main objects.
 		alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
 		StreamManager.STREAMER.start();
 		sourcePool = new SourcePoolManager();
@@ -42,24 +54,8 @@ public class DeviceSound {
 		musicPlayer.setVolume(MusicPlayer.SOUND_VOLUME);
 	}
 
-	/**
-	 * Generates capabilities for OpenAL.
-	 */
-	private void createOpenAL() {
-		long device = alcOpenDevice((ByteBuffer) null);
-		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
-
-		long context = alcCreateContext(device, (IntBuffer) null);
-		alcMakeContextCurrent(context);
-		createCapabilities(deviceCaps);
-	}
-
-	/**
-	 * Updates the listener's position, the music player and the source pool manager.
-	 *
-	 * @param delta The time in seconds since the last frame.
-	 */
-	protected void update(float delta) {
+	@Override
+	public void update() {
 		ICamera camera = FlounderEngine.getCamera();
 
 		if (camera != null && camera.getPosition() != null) {
@@ -70,7 +66,13 @@ public class DeviceSound {
 		}
 	}
 
+	@Override
+	public void profile() {
+	}
+
 	/**
+	 * Gets the cameras position.
+	 *
 	 * @return The cameras position.
 	 */
 	public Vector3f getCameraPosition() {
@@ -108,20 +110,20 @@ public class DeviceSound {
 	}
 
 	/**
+	 * Gets the background music player.
+	 *
 	 * @return The background music player.
 	 */
 	public MusicPlayer getMusicPlayer() {
 		return musicPlayer;
 	}
 
-	/**
-	 * Closes the OpenAL audio system, do not use sounds after calling this.
-	 */
-	protected void dispose() {
+	@Override
+	public void dispose() {
 		StreamManager.STREAMER.kill();
-		sourcePool.cleanUp();
+		sourcePool.dispose();
 		musicPlayer.cleanUp();
-		SoundLoader.cleanUp();
+		SoundLoader.dispose();
 		ALC.destroy();
 	}
 }

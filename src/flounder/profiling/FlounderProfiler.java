@@ -1,33 +1,55 @@
 package flounder.profiling;
 
+import flounder.engine.*;
+
 import javax.swing.*;
-import java.util.*;
 
-public class FlounderProfiler {
-	private static JFrame profilerJFrame;
-	private static FlounderTabMenu primaryTabMenu;
+/**
+ * A JFrame that holds profiling tabs and values.
+ */
+public class FlounderProfiler implements IModule {
+	private JFrame profilerJFrame;
+	private FlounderTabMenu primaryTabMenu;
 
-	private static boolean initialized;
-	private static boolean profilerOpen;
+	private boolean profilerOpen;
 
-	public static void init(String title) {
-		if (!initialized) {
-			profilerJFrame = new JFrame(title);
-			profilerJFrame.setSize(420, 720);
-			profilerJFrame.setResizable(true);
+	private String title;
 
-			primaryTabMenu = new FlounderTabMenu();
-			profilerJFrame.add(primaryTabMenu);
-
-			profilerOpen = false;
-			initialized = true;
-		}
+	/**
+	 * Creates the engines profiler.
+	 *
+	 * @param title The title to be created with.
+	 */
+	public FlounderProfiler(String title) {
+		this.title = title;
 	}
 
-	public static void update() {
+	@Override
+	public void init() {
+		profilerJFrame = new JFrame(title);
+		profilerJFrame.setSize(420, 720);
+		profilerJFrame.setResizable(true);
+
+		primaryTabMenu = new FlounderTabMenu();
+		profilerJFrame.add(primaryTabMenu);
+
+		profilerOpen = false;
 	}
 
-	public static void toggle(boolean open) {
+	@Override
+	public void update() {
+	}
+
+	@Override
+	public void profile() {
+	}
+
+	/**
+	 * Toggles the visibility of the JFrame.
+	 *
+	 * @param open If the JFrame should be open.
+	 */
+	public void toggle(boolean open) {
 		if (open) {
 			profilerJFrame.setVisible(true);
 			profilerOpen = true;
@@ -37,35 +59,43 @@ public class FlounderProfiler {
 		}
 	}
 
-	public static <T> void add(String tabName, String title, T value) {
-		if (primaryTabMenu.doesCategoryExist(tabName)) {
-			Optional<FlounderProfilerTab> optionalTab = primaryTabMenu.getCategoryComponent(tabName);
-			optionalTab.ifPresent(insertObject -> {
-				FlounderProfilerTab grabbedTab = optionalTab.get();
-				grabbedTab.addLabel(title, value);
-			});
-		} else {
+	/**
+	 * Adds a value to a tab.
+	 *
+	 * @param tabName The tabs name to add to.
+	 * @param title The title of the label.
+	 * @param value The value to add with the title.
+	 * @param <T> The type of value to add.
+	 */
+	public <T> void add(String tabName, String title, T value) {
+		addTab(tabName); // Forces the tab to be there.
+		FlounderProfilerTab tab = primaryTabMenu.getCategoryComponent(tabName).get();
+		tab.addLabel(title, value); // Adds the label to the tab.
+	}
+
+	/**
+	 * Adds a tab by name to the menu if it does not exist.
+	 *
+	 * @param tabName The tab name to add.
+	 */
+	public void addTab(String tabName) {
+		if (!primaryTabMenu.doesCategoryExist(tabName)) {
 			primaryTabMenu.createCategory(tabName);
-			FlounderProfiler.add(tabName, title, value);
 		}
 	}
 
-	public static void addTab(String tabName) {
-		if (primaryTabMenu.doesCategoryExist(tabName)) {
-			// NOP
-		} else {
-			primaryTabMenu.createCategory(tabName);
-		}
-	}
-
-	public static boolean isOpen() {
+	/**
+	 * Gets if the profiler is open.
+	 *
+	 * @return If the profiler is open.
+	 */
+	public boolean isOpen() {
 		return profilerOpen;
 	}
 
-	public static void dispose() {
-		if (initialized) {
-			profilerJFrame.dispose();
-			initialized = false;
-		}
+	@Override
+	public void dispose() {
+		primaryTabMenu.dispose();
+		profilerJFrame.dispose();
 	}
 }

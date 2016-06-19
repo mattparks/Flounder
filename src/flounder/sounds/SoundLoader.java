@@ -20,7 +20,7 @@ public class SoundLoader {
 	 */
 	protected static void doInitialSoundLoad(Sound sound) {
 		try {
-			FlounderLogger.log("Loading sound " + sound.getSoundFile().getPath());
+			FlounderEngine.getLogger().log("Loading sound " + sound.getSoundFile().getPath());
 			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			ByteBuffer byteBuffer = stream.loadNextData();
@@ -29,8 +29,8 @@ public class SoundLoader {
 			sound.setBuffer(bufferID, byteBuffer.limit());
 			stream.close();
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't load sound file " + sound.getSoundFile());
-			FlounderLogger.exception(e);
+			FlounderEngine.getLogger().error("Couldn't load sound file " + sound.getSoundFile());
+			FlounderEngine.getLogger().exception(e);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class SoundLoader {
 		int error = AL10.alGetError();
 
 		if (error != AL10.AL_NO_ERROR) {
-			FlounderLogger.error("Problem loading sound data into buffer. " + error);
+			FlounderEngine.getLogger().error("Problem loading sound data into buffer. " + error);
 		}
 	}
 
@@ -72,14 +72,14 @@ public class SoundLoader {
 		AL10.alDeleteBuffers(bufferID);
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			FlounderLogger.error("Problem deleting sound buffer.");
+			FlounderEngine.getLogger().error("Problem deleting sound buffer.");
 		}
 	}
 
 	/**
 	 * Deletes all the sound buffers that are currently in memory. Should be called when the application closes.
 	 */
-	public static void cleanUp() {
+	public static void dispose() {
 		buffers.forEach(buffer -> {
 			if (buffer != null) {
 				AL10.alDeleteBuffers(buffer);
@@ -87,7 +87,7 @@ public class SoundLoader {
 		});
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			FlounderLogger.error("Problem deleting sound buffers.");
+			FlounderEngine.getLogger().error("Problem deleting sound buffers.");
 		}
 	}
 }

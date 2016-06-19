@@ -1,226 +1,242 @@
 package flounder.engine;
 
 import flounder.devices.*;
-import flounder.fonts.*;
-import flounder.guis.*;
+import flounder.engine.implementation.*;
 import flounder.loaders.*;
-import flounder.maths.*;
+import flounder.logger.*;
 import flounder.maths.matrices.*;
+import flounder.physics.renderer.*;
 import flounder.processing.*;
-import flounder.processing.glProcessing.*;
 import flounder.profiling.*;
 import flounder.textures.*;
 
 /**
  * Deals with much of the initializing, updating, and cleaning up of the engine.
  */
-public class FlounderEngine implements Runnable {
-	private static FlounderDevices devices;
-	private static IModule module;
+public class FlounderEngine extends Thread implements IModule {
+	private static FlounderEngine instance;
 
-	private static boolean initialized;
+	private FlounderDevices devices;
+	private FlounderProcessors processors;
+	private FlounderLoader loader;
+	private FlounderTextures textures;
+	private FlounderAABBs AABBs;
+	private FlounderLogger logger;
+	private FlounderProfiler profiler;
 
-	private static float targetFPS;
-	private static Delta updateDelta;
-	private static Delta framesDelta;
-
-	private static Timer logTimer;
-	private static Timer updateTimer;
-	private static Timer framesTimer;
+	private Implementation implementation;
 
 	/**
-	 * Carries out initializations for basic engine components like the profiler, display and then the engine. Call {@link #startEngine(FontType)} immediately after this.
+	 * Carries out the setup for basic engine components and the engine. Call {@link #start()} immediately after this.
 	 *
-	 * @param module The module for the engine to run off of.
-	 * @param displayWidth The window width in pixels.
-	 * @param displayHeight The window height in pixels.
-	 * @param displayTitle The window title.
-	 * @param targetFPS The engines target frames per second.
-	 * @param displayVSync If the window will use vSync..
-	 * @param displayAntialiasing If OpenGL will use altialiasing.
-	 * @param displaySamples How many MFAA samples should be done before swapping display buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
-	 * @param displayFullscreen If the window will start fullscreen.
+	 * @param implementation The game implementation of the engine.
+	 * @param width The window width in pixels.
+	 * @param height The window height in pixels.
+	 * @param title The window title.
+	 * @param vsync If the window will use vSync..
+	 * @param antialiasing If OpenGL will use antialiasing.
+	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
+	 * @param fullscreen If the window will start fullscreen.
 	 */
-	public FlounderEngine(IModule module, int displayWidth, int displayHeight, String displayTitle, float targetFPS, boolean displayVSync, boolean displayAntialiasing, int displaySamples, boolean displayFullscreen) {
-		if (!initialized) {
-			FlounderEngine.targetFPS = targetFPS;
-			FlounderProfiler.init(displayTitle + " Profiler");
-			FlounderProfiler.addTab("Engine");
-			devices = new FlounderDevices(displayWidth, displayHeight, displayTitle, displayVSync, displayAntialiasing, displaySamples, displayFullscreen);
+	public FlounderEngine(Implementation implementation, int width, int height, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+		instance = this;
 
-			updateDelta = new Delta();
-			framesDelta = new Delta();
+		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
+		this.processors = new FlounderProcessors();
+		this.loader = new FlounderLoader();
+		this.textures = new FlounderTextures();
+		this.AABBs = new FlounderAABBs();
+		this.logger = new FlounderLogger();
+		this.profiler = new FlounderProfiler(title + " Profiler");
 
-			logTimer = new Timer(1.0f);
-			updateTimer = new Timer(1.0f / 60.0f);
-			framesTimer = new Timer(1.0f / targetFPS);
+		this.implementation = implementation;
+	}
 
-			FlounderEngine.module = module;
-			initialized = true;
+	@Override
+	public void init() {
+		logger.init();
+		profiler.init();
+		devices.init();
+		processors.init();
+		textures.init();
+		AABBs.init();
+		implementation.init();
+
+		// Opens the profiler if not running from jar.
+		profiler.toggle(!logger.ALLOW_LOUD_LOGS);
+	}
+
+	@Override
+	public void run() {
+		try {
+			init();
+
+			while (isRunning()) {
+				update();
+				profile();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.exception(e);
+		} finally {
+			dispose();
+		}
+	}
+
+	@Override
+	public void update() {
+		devices.update();
+		implementation.update();
+		AABBs.update();
+		processors.update();
+		loader.update();
+		textures.update();
+		logger.update();
+		profiler.update();
+
+		devices.swapBuffers();
+	}
+
+	@Override
+	public void profile() {
+		if (FlounderEngine.getProfiler().isOpen()) {
+			devices.profile();
+			processors.profile();
+			implementation.profile();
+			AABBs.profile();
+			loader.profile();
+			textures.profile();
+			logger.profile();
+			profiler.profile();
 		}
 	}
 
 	/**
+	 * Gets the engines current device manager.
+	 *
+	 * @return The engines current device manager.
+	 */
+	public static FlounderDevices getDevices() {
+		return instance.devices;
+	}
+
+	/**
+	 * Gets the engines current profiler.
+	 *
+	 * @return The engines current profiler.
+	 */
+	public static FlounderProfiler getProfiler() {
+		return instance.profiler;
+	}
+
+	/**
+	 * Gets the engines current logger.
+	 *
+	 * @return The engines current logger.
+	 */
+	public static FlounderLogger getLogger() {
+		return instance.logger;
+	}
+
+	/**
+	 * Gets the engines current OpenGL loader.
+	 *
+	 * @return The engines current OpenGL loader.
+	 */
+	public static FlounderLoader getLoader() {
+		return instance.loader;
+	}
+
+	/**
+	 * Gets the engines current request processor.
+	 *
+	 * @return The engines current request processor.
+	 */
+	public static FlounderProcessors getProcessors() {
+		return instance.processors;
+	}
+
+	/**
+	 * Gets the engines current texture manager.
+	 *
+	 * @return The engines current texture manager.
+	 */
+	public static FlounderTextures getTextures() {
+		return instance.textures;
+	}
+
+	/**
+	 * Gets the engines current AABB renderer manager.
+	 *
+	 * @return The engines current AABB renderer manager.
+	 */
+	public static FlounderAABBs getAABBs() {
+		return instance.AABBs;
+	}
+
+	/**
+	 * Gets the engines camera implementation.
+	 *
 	 * @return The engines camera implementation.
 	 */
 	public static ICamera getCamera() {
-		return module.getCamera();
+		return instance.implementation.getCamera();
 	}
 
 	/**
+	 * Gets the modules current master renderer.
+	 *
 	 * @return The modules current master renderer.
 	 */
 	public static IRendererMaster getMasterRenderer() {
-		return module.getRendererMaster();
+		return instance.implementation.getRendererMaster();
 	}
 
 	/**
+	 * Gets the projection matrix used in the current scene renderObjects.
+	 *
 	 * @return The projection matrix used in the current scene renderObjects.
 	 */
 	public static Matrix4f getProjectionMatrix() {
-		return module.getRendererMaster().getProjectionMatrix();
+		return instance.implementation.getRendererMaster().getProjectionMatrix();
 	}
 
 	/**
-	 * @return If the game currently paused?
-	 */
-	public static boolean isGamePaused() {
-		return module.getGame().isGamePaused();
-	}
-
-	/**
-	 * @return How much is the screen blurred (used for pause screens).
-	 */
-	public static float getScreenBlur() {
-		return module.getGame().getScreenBlur();
-	}
-
-	/**
-	 * Sets the engines target FPS.
+	 * Gets the delta (seconds) between updates.
 	 *
-	 * @param targetFPS The new target FPS.
-	 */
-	public static void setTargetFPS(float targetFPS) {
-		FlounderEngine.targetFPS = targetFPS;
-		framesTimer = new Timer((1.0f / targetFPS) * 1000.0f);
-	}
-
-	/**
-	 * @return How many FPS the engine is currently getting.
-	 */
-	public static float getFPS() {
-		return Maths.roundToPlace(1.0f / framesDelta.getDelta(), 2);
-	}
-
-	/**
-	 * @return How many UPS the engine is currently getting.
-	 */
-	public static float getUPS() {
-		return Maths.roundToPlace(1.0f / updateDelta.getDelta(), 2);
-	}
-
-	/**
 	 * @return The delta between updates.
 	 */
 	public static float getDelta() {
-		return framesDelta.getDelta();
+		return instance.implementation.getDelta();
 	}
 
 	/**
-	 * @return The current engine time (all delta added up).
-	 */
-	public static float getTime() {
-		return Maths.roundToPlace((framesDelta.getTime() + updateDelta.getTime()) / 2.0f, 2);
-	}
-
-	/**
-	 * Starts the engine and sets the default family to be used when creating a font. Call {@link #closeEngine()} immediately after this.
+	 * Gets the current engine time (all delta added up).
 	 *
-	 * @param defaultFontType The default font family to use when creating texts, this can be overridden with Text.setFont().
+	 * @return The current engine time.
 	 */
-	public void startEngine(FontType defaultFontType) {
-		if (defaultFontType != null) {
-			TextBuilder.DEFAULT_TYPE = defaultFontType;
-		}
-
-		module.init();
-		this.run();
+	public static float getDeltaTime() {
+		return instance.implementation.getDeltaTime();
 	}
 
 	/**
-	 * Runs the engines main game loop. Call {@link #closeEngine()} right after running to close the engine.
+	 * Gets if the engine still running?
+	 *
+	 * @return Is the engine still running?
 	 */
+	public static boolean isRunning() {
+		return instance.implementation.isRunning();
+	}
+
 	@Override
-	public void run() {
-		while (initialized && FlounderDevices.getDisplay().isOpen()) {
-			// Updates the engine.
-			if (updateTimer.isPassedTime()) {
-				update();
-				updateTimer.resetStartTime();
-			}
-
-			// Prints out current engine update and frame stats.
-			if (logTimer.isPassedTime()) {
-				addProfileValues();
-				logTimer.resetStartTime();
-			}
-
-			// Renders the engine.
-			if (framesTimer.isPassedTime()) {
-				render();
-				framesTimer.resetStartTime();
-			}
-		}
-	}
-
-	private void addProfileValues() {
-		FlounderLogger.log(getFPS() + "fps, " + getUPS() + "ups.");
-
-		if (FlounderProfiler.isOpen()) {
-			FlounderProfiler.add("Engine", "Target FPS", targetFPS);
-			FlounderProfiler.add("Engine", "Frames Per Second", getFPS());
-			FlounderProfiler.add("Engine", "Updates Per Second", getUPS());
-			FlounderProfiler.add("Engine", "Update Delta", updateDelta.getDelta());
-			FlounderProfiler.add("Engine", "Frames Delta", framesDelta.getDelta());
-			FlounderProfiler.add("Engine", "Time", getTime());
-		}
-	}
-
-	/**
-	 * Updates many engine systems before every frame.
-	 */
-	private void update() {
-		updateDelta.update();
-		devices.run();
-		module.update();
-		GuiManager.updateGuis();
-	}
-
-	/**
-	 * Renders the engines master renderer and carries out OpenGL request calls.
-	 */
-	private void render() {
-		framesDelta.update();
-		module.render();
-		devices.swapToDisplay();
-		GlRequestProcessor.dealWithTopRequests();
-	}
-
-	/**
-	 * Deals with closing down the engine and all necessary systems. Do not run OpenGL after this.
-	 */
-	public void closeEngine() {
-		if (initialized) {
-			Loader.dispose();
-			RequestProcessor.dispose();
-			GlRequestProcessor.completeAllRequests();
-			TextureManager.dispose();
-
-			module.dispose();
-			FlounderProfiler.dispose();
-			FlounderLogger.dispose();
-			devices.dispose();
-			initialized = false;
-		}
+	public void dispose() {
+		processors.dispose();
+		loader.dispose();
+		AABBs.dispose();
+		textures.dispose();
+		implementation.dispose();
+		devices.dispose();
+		profiler.dispose();
+		logger.dispose();
 	}
 }

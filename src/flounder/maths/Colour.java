@@ -230,22 +230,28 @@ public class Colour {
 		return destination.set(r, g, b, 1.0f, false);
 	}
 
+	/**
+	 * Gets a colour representing the unit value of this colour.
+	 *
+	 * @return The unit colour.
+	 */
 	public Colour getUnit() {
-		Colour colour = new Colour();
-
-		if (r == 0 && g == 0 && b == 0) {
-			return colour;
-		}
-
-		colour.set(this);
-		colour.scale(1f / length());
+		Colour colour = new Colour(this);
+		colour.scale(1.0f / length());
 		return colour;
 	}
 
-	public Colour scale(float value) {
-		r *= value;
-		g *= value;
-		b *= value;
+	/**
+	 * Scales the colour by a scalar.
+	 *
+	 * @param scalar The scaling value.
+	 *
+	 * @return this.
+	 */
+	public Colour scale(float scalar) {
+		r *= scalar;
+		g *= scalar;
+		b *= scalar;
 		return this;
 	}
 

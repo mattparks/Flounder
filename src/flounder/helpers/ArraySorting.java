@@ -1,14 +1,14 @@
-package flounder.maths;
+package flounder.helpers;
 
 import java.util.*;
 
 /**
- * Various generic sorting algorithms. Values passed must be {@code comparable}!
+ * Various generic sorting algorithms for java arrays. Value types passed must be {@code comparable}!
  * <p>
  * Watch some of these algorithms at work here: @see <a href="https://www.youtube.com/watch?v=ZZuD6iUe3Pc">'Visualization and Comparison of Sorting Algorithms'</a>
  * </p>
  */
-public class SortingAlgorithms {
+public class ArraySorting {
 	/**
 	 * First divides a large array into two smaller sub-arrays: the low elements and the high elements. Then recursively sort the sub-arrays.
 	 *

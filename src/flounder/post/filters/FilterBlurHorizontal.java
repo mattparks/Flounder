@@ -1,10 +1,10 @@
 package flounder.post.filters;
 
-import flounder.devices.*;
+import flounder.engine.*;
+import flounder.fbos.*;
 import flounder.post.*;
 import flounder.resources.*;
 import flounder.shaders.*;
-import flounder.textures.fbos.*;
 
 public class FilterBlurHorizontal extends PostFilter {
 	private UniformFloat width = new UniformFloat("width");
@@ -27,9 +27,9 @@ public class FilterBlurHorizontal extends PostFilter {
 	}
 
 	public FilterBlurHorizontal() {
-		super(new ShaderProgram("filterBlurHorizontal", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")), FBO.newFBO(FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight()).fitToScreen().create());
+		super(new ShaderProgram("filterBlurHorizontal", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen().create());
 		fitToDisplay = true;
-		init(FlounderDevices.getDisplay().getWidth());
+		init(FlounderEngine.getDevices().getDisplay().getWidth());
 	}
 
 	public void setScale(float scale) {
@@ -39,7 +39,7 @@ public class FilterBlurHorizontal extends PostFilter {
 	@Override
 	public void storeValues() {
 		if (fitToDisplay) {
-			widthValue = FlounderDevices.getDisplay().getWidth();
+			widthValue = FlounderEngine.getDevices().getDisplay().getWidth();
 		}
 
 		width.loadFloat(widthValue);

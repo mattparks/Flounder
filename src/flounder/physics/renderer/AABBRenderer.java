@@ -1,14 +1,17 @@
-package flounder.physics;
+package flounder.physics.renderer;
 
-import flounder.devices.*;
 import flounder.engine.*;
-import flounder.loaders.*;
+import flounder.engine.implementation.*;
+import flounder.helpers.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
+import flounder.physics.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * A renderer that is used to render AABB's.
+ */
 public class AABBRenderer extends IRenderer {
 	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
@@ -23,28 +26,33 @@ public class AABBRenderer extends IRenderer {
 	private int aabbCount;
 	private boolean lastWireframe;
 
+	/**
+	 * Creates a new AABB renderer.
+	 */
 	public AABBRenderer() {
 		shader = new AABBShader();
 		aabbCount = 0;
 		lastWireframe = false;
 
-		VAO = Loader.createVAO();
-		Loader.createIndicesVBO(VAO, INDICES);
-		Loader.storeDataInVBO(VAO, VERTICES, 0, 3);
+		VAO = FlounderEngine.getLoader().createVAO();
+		FlounderEngine.getLoader().createIndicesVBO(VAO, INDICES);
+		FlounderEngine.getLoader().storeDataInVBO(VAO, VERTICES, 0, 3);
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
 		prepareRendering(clipPlane, camera);
 
-		for (AABB aabb : AABBManager.getRenderAABB()) {
+		for (AABB aabb : FlounderEngine.getAABBs().getRenderAABB()) {
 			renderAABB(aabb);
 		}
 
 		endRendering();
 
-		FlounderProfiler.add("AABB", "Render Count", aabbCount);
-		FlounderProfiler.add("AABB", "Render Time", super.getRenderTimeMs());
+		if (FlounderEngine.getProfiler().isOpen()) {
+			FlounderEngine.getProfiler().add("AABB", "Render Time", super.getRenderTimeMs());
+		}
+
 		aabbCount = 0;
 	}
 
@@ -54,14 +62,14 @@ public class AABBRenderer extends IRenderer {
 		shader.viewMatrix.loadMat4(camera.getViewMatrix());
 		shader.clipPlane.loadVec4(clipPlane);
 
-		lastWireframe = OpenglUtils.isInWireframe();
+		lastWireframe = OpenGlUtils.isInWireframe();
 
-		OpenglUtils.antialias(FlounderDevices.getDisplay().isAntialiasing());
-		OpenglUtils.cullBackFaces(false);
-		OpenglUtils.goWireframe(true);
-		OpenglUtils.enableDepthTesting();
+		OpenGlUtils.antialias(FlounderEngine.getDevices().getDisplay().isAntialiasing());
+		OpenGlUtils.cullBackFaces(false);
+		OpenGlUtils.goWireframe(true);
+		OpenGlUtils.enableDepthTesting();
 
-		OpenglUtils.bindVAO(VAO, 0);
+		OpenGlUtils.bindVAO(VAO, 0);
 	}
 
 	private void renderAABB(AABB aabb) {
@@ -83,12 +91,11 @@ public class AABBRenderer extends IRenderer {
 	}
 
 	private void endRendering() {
-		OpenglUtils.goWireframe(lastWireframe);
+		OpenGlUtils.goWireframe(lastWireframe);
 
-		OpenglUtils.unbindVAO(0);
+		OpenGlUtils.unbindVAO(0);
 		shader.stop();
 
-		AABBManager.clear();
 		aabbCount++;
 	}
 

@@ -1,11 +1,10 @@
 package flounder.post;
 
-import flounder.devices.*;
 import flounder.engine.*;
-import flounder.loaders.*;
+import flounder.fbos.*;
+import flounder.helpers.*;
 import flounder.resources.*;
 import flounder.shaders.*;
-import flounder.textures.fbos.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -17,13 +16,13 @@ public abstract class PostFilter {
 	public static final MyFile VERTEX_LOCATION = new MyFile(POST_LOC, "defaultVertex.glsl");
 
 	private static float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
-	private static int VAO = Loader.createInterleavedVAO(POSITIONS, 2);
+	private static int VAO = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
 
 	public ShaderProgram shader;
 	public FBO fbo;
 
 	public PostFilter(String filterName, MyFile fragmentShader) {
-		this(new ShaderProgram(filterName, VERTEX_LOCATION, fragmentShader), FBO.newFBO(FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight()).fitToScreen().create());
+		this(new ShaderProgram(filterName, VERTEX_LOCATION, fragmentShader), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen().create());
 	}
 
 	public PostFilter(ShaderProgram shader, FBO fbo) {
@@ -46,29 +45,29 @@ public abstract class PostFilter {
 	 * @param textures A list of textures in indexed order to be bound for the shader program.
 	 */
 	public void applyFilter(int... textures) {
-		boolean lastWireframe = OpenglUtils.isInWireframe();
+		boolean lastWireframe = OpenGlUtils.isInWireframe();
 
 		fbo.bindFrameBuffer();
-		OpenglUtils.prepareNewRenderParse(1.0f, 1.0f, 1.0f);
+		OpenGlUtils.prepareNewRenderParse(1.0f, 1.0f, 1.0f);
 		shader.start();
 		storeValues();
-		OpenglUtils.antialias(false);
-		OpenglUtils.disableDepthTesting();
-		OpenglUtils.cullBackFaces(true);
-		OpenglUtils.goWireframe(false);
-		OpenglUtils.bindVAO(VAO, 0);
+		OpenGlUtils.antialias(false);
+		OpenGlUtils.disableDepthTesting();
+		OpenGlUtils.cullBackFaces(true);
+		OpenGlUtils.goWireframe(false);
+		OpenGlUtils.bindVAO(VAO, 0);
 
 		for (int i = 0; i < textures.length; i++) {
-			OpenglUtils.bindTextureToBank(textures[i], i);
+			OpenGlUtils.bindTextureToBank(textures[i], i);
 		}
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length); // Render post filter.
 
-		OpenglUtils.unbindVAO(0);
-		OpenglUtils.goWireframe(lastWireframe);
+		OpenGlUtils.unbindVAO(0);
+		OpenGlUtils.goWireframe(lastWireframe);
 		shader.stop();
-		OpenglUtils.disableBlending();
-		OpenglUtils.enableDepthTesting();
+		OpenGlUtils.disableBlending();
+		OpenGlUtils.enableDepthTesting();
 		fbo.unbindFrameBuffer();
 	}
 

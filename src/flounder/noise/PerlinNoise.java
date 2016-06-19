@@ -118,6 +118,8 @@ public class PerlinNoise {
 
 	/**
 	 * 2D-vector normalisation function.
+	 *
+	 * @param v The noise values to normalize.
 	 */
 	private void normalize2(float[] v) {
 		float s = (float) (1 / Math.sqrt(v[0] * v[0] + v[1] * v[1]));
@@ -127,6 +129,8 @@ public class PerlinNoise {
 
 	/**
 	 * 3D-vector normalisation function.
+	 *
+	 * @param v The noise values to normalize.
 	 */
 	private void normalize3(float[] v) {
 		float s = (float) (1 / Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]));

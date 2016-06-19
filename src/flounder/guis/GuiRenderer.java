@@ -1,9 +1,9 @@
 package flounder.guis;
 
 import flounder.engine.*;
-import flounder.loaders.*;
+import flounder.engine.implementation.*;
+import flounder.helpers.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -18,7 +18,7 @@ public class GuiRenderer extends IRenderer {
 
 	public GuiRenderer() {
 		shader = new GuiShader();
-		vaoID = Loader.createInterleavedVAO(POSITIONS, 2);
+		vaoID = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
 
 		guiCount = 0;
 	}
@@ -33,25 +33,28 @@ public class GuiRenderer extends IRenderer {
 		GuiManager.getGuiTextures().forEach(this::renderGui);
 		endRendering();
 
-		FlounderProfiler.add("GUI", "Render Count", guiCount);
-		FlounderProfiler.add("GUI", "Render Time", super.getRenderTimeMs());
+		if (FlounderEngine.getProfiler().isOpen()) {
+			FlounderEngine.getProfiler().add("GUI", "Render Count", guiCount);
+			FlounderEngine.getProfiler().add("GUI", "Render Time", super.getRenderTimeMs());
+		}
+
 		guiCount = 0;
 	}
 
 	private void prepareRendering() {
 		shader.start();
 
-		lastWireframe = OpenglUtils.isInWireframe();
+		lastWireframe = OpenGlUtils.isInWireframe();
 
-		OpenglUtils.antialias(false);
-		OpenglUtils.cullBackFaces(true);
-		OpenglUtils.enableAlphaBlending();
-		OpenglUtils.disableDepthTesting();
-		OpenglUtils.goWireframe(false);
+		OpenGlUtils.antialias(false);
+		OpenGlUtils.cullBackFaces(true);
+		OpenGlUtils.enableAlphaBlending();
+		OpenGlUtils.disableDepthTesting();
+		OpenGlUtils.goWireframe(false);
 	}
 
 	private void endRendering() {
-		OpenglUtils.goWireframe(lastWireframe);
+		OpenGlUtils.goWireframe(lastWireframe);
 
 		shader.stop();
 	}
@@ -67,8 +70,8 @@ public class GuiRenderer extends IRenderer {
 		}
 
 		guiCount++;
-		OpenglUtils.bindVAO(vaoID, 0);
-		OpenglUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
+		OpenGlUtils.bindVAO(vaoID, 0);
+		OpenGlUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
 		shader.transform.loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
 		shader.alpha.loadFloat(gui.getAlpha());
 		shader.flipTexture.loadBoolean(gui.isFlipTexture());
@@ -76,6 +79,6 @@ public class GuiRenderer extends IRenderer {
 		shader.atlasOffset.loadVec2(gui.getTextureOffset());
 		shader.colourOffset.loadVec3(gui.getColourOffset());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
-		OpenglUtils.unbindVAO(0);
+		OpenGlUtils.unbindVAO(0);
 	}
 }

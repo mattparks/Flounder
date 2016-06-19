@@ -30,7 +30,7 @@ public class Word {
 	 */
 	protected void addCharacter(Character character) {
 		if (character == null) {
-			FlounderLogger.error("Invalid character detected!");
+			FlounderEngine.getLogger().error("Invalid character detected!");
 			return;
 		}
 

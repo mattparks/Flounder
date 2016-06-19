@@ -1,6 +1,5 @@
-package flounder.engine;
+package flounder.helpers;
 
-import flounder.devices.*;
 import flounder.maths.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -12,33 +11,42 @@ import static org.lwjgl.opengl.GL30.*;
 /**
  * Runs basic OpenGL rendering functions.
  */
-public class OpenglUtils {
+public class OpenGlUtils {
 	private static boolean cullingBackFace = false;
 	private static boolean inWireframe = false;
 	private static boolean isAlphaBlending = false;
 	private static boolean additiveBlending = false;
 	private static boolean antialiasing = false;
 
+	/**
+	 * Prepares the screen for a new render.
+	 *
+	 * @param colour The clear colour.
+	 */
 	public static void prepareNewRenderParse(Colour colour) {
 		prepareNewRenderParse(colour.getR(), colour.getG(), colour.getB());
 	}
 
+	/**
+	 * Prepares the screen for a new render.
+	 *
+	 * @param r The r component of the clear colour.
+	 * @param g The g component of the clear colour.
+	 * @param b The b component of the clear colour.
+	 */
 	public static void prepareNewRenderParse(float r, float g, float b) {
-		glClearColor(r, g, b, 1);
+		glClearColor(r, g, b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		disableBlending();
 		cullBackFaces(true);
 		enableDepthTesting();
 	}
 
-	public static void disableBlending() {
-		if (isAlphaBlending || additiveBlending) {
-			glDisable(GL_BLEND);
-			isAlphaBlending = false;
-			additiveBlending = false;
-		}
-	}
-
+	/**
+	 * Toggles the culling of back-faces.
+	 *
+	 * @param cull Should back faces be culled.
+	 */
 	public static void cullBackFaces(boolean cull) {
 		if (cull && !cullingBackFace) {
 			glEnable(GL_CULL_FACE);
@@ -50,14 +58,32 @@ public class OpenglUtils {
 		}
 	}
 
+	/**
+	 * Enables depth testing.
+	 */
 	public static void enableDepthTesting() {
 		glEnable(GL_DEPTH_TEST);
 	}
 
+	/**
+	 * Disables depth testing.
+	 */
+	public static void disableDepthTesting() {
+		glDisable(GL_DEPTH_TEST);
+	}
+
+	/**
+	 * @return Is the display currently in wireframe mode.
+	 */
 	public static boolean isInWireframe() {
 		return inWireframe;
 	}
 
+	/**
+	 * Toggles the display to / from wireframe mode.
+	 *
+	 * @param goWireframe If the display should be in wireframe.
+	 */
 	public static void goWireframe(boolean goWireframe) {
 		if (goWireframe && !inWireframe) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -68,6 +94,9 @@ public class OpenglUtils {
 		}
 	}
 
+	/**
+	 * Enables alpha blending.
+	 */
 	public static void enableAlphaBlending() {
 		if (!isAlphaBlending) {
 			glEnable(GL_BLEND);
@@ -77,6 +106,9 @@ public class OpenglUtils {
 		}
 	}
 
+	/**
+	 * Enables additive blending.
+	 */
 	public static void enableAdditiveBlending() {
 		if (!additiveBlending) {
 			glEnable(GL_BLEND);
@@ -86,11 +118,23 @@ public class OpenglUtils {
 		}
 	}
 
-	public static void antialias(boolean enable) {
-		if (!FlounderDevices.getDisplay().isAntialiasing()) {
-			return;
+	/**
+	 * Disables alpha and additive blending.
+	 */
+	public static void disableBlending() {
+		if (isAlphaBlending || additiveBlending) {
+			glDisable(GL_BLEND);
+			isAlphaBlending = false;
+			additiveBlending = false;
 		}
+	}
 
+	/**
+	 * Toggles antialiasing for the rendered object.
+	 *
+	 * @param enable Should antialias be enabled?
+	 */
+	public static void antialias(boolean enable) {
 		if (enable && !antialiasing) {
 			glEnable(GL_MULTISAMPLE);
 			antialiasing = true;
@@ -100,10 +144,12 @@ public class OpenglUtils {
 		}
 	}
 
-	public static void disableDepthTesting() {
-		glDisable(GL_DEPTH_TEST);
-	}
-
+	/**
+	 * Binds the VAO and all attributes.
+	 *
+	 * @param vaoID The VAO to bind.
+	 * @param attributes Attributes to enable.
+	 */
 	public static void bindVAO(int vaoID, int... attributes) {
 		glBindVertexArray(vaoID);
 
@@ -112,6 +158,11 @@ public class OpenglUtils {
 		}
 	}
 
+	/**
+	 * Unbinds the current VAO and all attributes.
+	 *
+	 * @param attributes Attributes to disable.
+	 */
 	public static void unbindVAO(int... attributes) {
 		for (int i : attributes) {
 			glDisableVertexAttribArray(i);
@@ -120,11 +171,24 @@ public class OpenglUtils {
 		glBindVertexArray(0);
 	}
 
+	/**
+	 * Binds the OpenGL texture to a blank ID.
+	 *
+	 * @param textureID The texture to bind.
+	 * @param bankID The blank ID to bind to.
+	 */
 	public static void bindTextureToBank(int textureID, int bankID) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 
+	/**
+	 * Binds the OpenGL texture to a blank ID.
+	 *
+	 * @param textureID The texture to bind.
+	 * @param bankID The blank ID to bind to.
+	 * @param lodBias The LOD to load to texture at.
+	 */
 	public static void bindTextureToBank(int textureID, int bankID, int lodBias) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(GL_TEXTURE_2D, textureID);

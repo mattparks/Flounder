@@ -1,6 +1,6 @@
 package flounder.post;
 
-import flounder.textures.fbos.*;
+import flounder.fbos.*;
 
 /**
  * Represents a system of post effects.

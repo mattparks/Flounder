@@ -1,33 +1,41 @@
 package flounder.processing.glProcessing;
 
-/**
- * Class that is responsible for flounder.processing OpenGL requests.
- */
-public class GlRequestProcessor {
-	private static final float MAX_TIME_MILLIS = 8f;
+import flounder.engine.*;
 
-	private static GlRequestQueue requestQueue = new GlRequestQueue();
+/**
+ * Class that is responsible for processing OpenGL requests.
+ */
+public class GlRequestProcessor implements IModule {
+	private static final float MAX_TIME_MILLIS = 8.0f;
+
+	private GlRequestQueue requestQueue;
 
 	/**
-	 * Creates a new class for flounder.processing gl requests in a separate thread.
+	 * Creates a new class for processing OpenGL requests in a separate thread.
 	 */
 	public GlRequestProcessor() {
+		requestQueue = new GlRequestQueue();
 	}
 
-	/**
-	 * Sends a new request into queue.
-	 *
-	 * @param request The request to add.
-	 */
-	public static void sendRequest(GlRequest request) {
-		requestQueue.addRequest(request);
+	@Override
+	public void init() {
+	}
+
+	@Override
+	public void update() {
+		dealWithTopRequests();
+	}
+
+	@Override
+	public void profile() {
+		FlounderEngine.getProfiler().add("GLProcessor", "Requests", requestQueue.count());
 	}
 
 	/**
 	 * Deals with in the time slot available.
 	 */
-	public static void dealWithTopRequests() {
-		float remainingTime = MAX_TIME_MILLIS * 1000000;
+	public void dealWithTopRequests() {
+		float remainingTime = MAX_TIME_MILLIS * 1000000.0f;
 		long start = System.nanoTime();
 
 		while (requestQueue.hasRequests()) {
@@ -37,7 +45,7 @@ public class GlRequestProcessor {
 			remainingTime -= timeTaken;
 			start = end;
 
-			if (remainingTime < 0) {
+			if (remainingTime < 0.0f) {
 				break;
 			}
 		}
@@ -46,9 +54,23 @@ public class GlRequestProcessor {
 	/**
 	 * Completes all requests left in queue.
 	 */
-	public static void completeAllRequests() {
+	public void completeAllRequests() {
 		while (requestQueue.hasRequests()) {
 			requestQueue.acceptNextRequest().executeGlRequest();
 		}
+	}
+
+	/**
+	 * Adds a new request to the queue.
+	 *
+	 * @param request The resource request to add.
+	 */
+	public void addRequestToQueue(GlRequest request) {
+		requestQueue.addRequest(request);
+	}
+
+	@Override
+	public void dispose() {
+		completeAllRequests();
 	}
 }

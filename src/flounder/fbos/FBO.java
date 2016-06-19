@@ -1,6 +1,6 @@
-package flounder.textures.fbos;
+package flounder.fbos;
 
-import flounder.devices.*;
+import flounder.engine.*;
 
 import java.nio.*;
 
@@ -9,8 +9,11 @@ import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL30.*;
 
+/**
+ * A class that represents a OpenGL Frame Buffer object.
+ */
 public class FBO {
-	private FBOBuilder.DepthBufferType depthBufferType;
+	private DepthBufferType depthBufferType;
 	private boolean useColourBuffer;
 	private boolean linearFiltering;
 	private boolean clampEdge;
@@ -27,7 +30,21 @@ public class FBO {
 	private int depthBuffer;
 	private int colourBuffer;
 
-	protected FBO(int width, int height, boolean fitToScreen, FBOBuilder.DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
+	/**
+	 * A new OpenGL FBO object.
+	 *
+	 * @param width The FBO's width.
+	 * @param height The FBO's height.
+	 * @param fitToScreen If the width and height values should match the screen.
+	 * @param depthBufferType The type of depth buffer to use in the FBO.
+	 * @param useColourBuffer If a colour buffer should be created.
+	 * @param linearFiltering If linear filtering should be used.
+	 * @param clampEdge If the image should be clamped to the edges.
+	 * @param alphaChannel If alpha should be supported.
+	 * @param antialiased If the image will be antialiased.
+	 * @param samples How many MFAA samples should be used on the FBO. Zero disables multisampling.
+	 */
+	protected FBO(int width, int height, boolean fitToScreen, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
 		this.width = width;
 		this.height = height;
 		this.fitToScreen = fitToScreen;
@@ -38,10 +55,31 @@ public class FBO {
 		this.alphaChannel = alphaChannel;
 		this.antialiased = antialiased;
 		this.samples = samples;
-		initialiseFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
+		initializeFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
 	}
 
-	private void initialiseFBO(FBOBuilder.DepthBufferType type, boolean useColourBuffer, boolean linear, boolean clamp, int samples) {
+	/**
+	 * Creates a new FBO Builder.
+	 *
+	 * @param width The initial width for the new FBO.
+	 * @param height The initial height for the new FBO.
+	 *
+	 * @return A new FBO Builder.
+	 */
+	public static FBOBuilder newFBO(int width, int height) {
+		return new FBOBuilder(width, height);
+	}
+
+	/**
+	 * Initializes the FBO.
+	 *
+	 * @param type The type of depth buffer to use in the FBO.
+	 * @param useColourBuffer If a colour buffer should be created.
+	 * @param linear If linear filtering should be used.
+	 * @param clamp If the image should be clamped to the edges.
+	 * @param samples How many MFAA samples should be used on the FBO. Zero disables multisampling.
+	 */
+	private void initializeFBO(DepthBufferType type, boolean useColourBuffer, boolean linear, boolean clamp, int samples) {
 		createFBO(useColourBuffer);
 
 		if (!antialiased) {
@@ -49,9 +87,9 @@ public class FBO {
 				createTextureAttachment(linear, clamp);
 			}
 
-			if (type == FBOBuilder.DepthBufferType.RENDER_BUFFER) {
+			if (type == DepthBufferType.RENDER_BUFFER) {
 				createDepthBufferAttachment(samples);
-			} else if (type == FBOBuilder.DepthBufferType.TEXTURE) {
+			} else if (type == DepthBufferType.TEXTURE) {
 				createDepthTextureAttachment();
 			}
 		} else {
@@ -109,26 +147,6 @@ public class FBO {
 	}
 
 	/**
-	 * Unbinds the FBO so that other rendering objects can be used.
-	 */
-	public void unbindFrameBuffer() {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight());
-	}
-
-	/**
-	 * Creates a new FBO Builder.
-	 *
-	 * @param width The initial width for the new FBO.
-	 * @param height The initial height for the new FBO.
-	 *
-	 * @return A new FBO Builder.
-	 */
-	public static FBOBuilder newFBO(int width, int height) {
-		return new FBOBuilder(width, height);
-	}
-
-	/**
 	 * Binds the FBO so it can be rendered too.
 	 */
 	public void bindFrameBuffer() {
@@ -138,24 +156,12 @@ public class FBO {
 		glViewport(0, 0, width, height);
 	}
 
-	private void updateSize() {
-		if (fitToScreen && (width != FlounderDevices.getDisplay().getWidth() || height != FlounderDevices.getDisplay().getHeight())) {
-			delete();
-			width = FlounderDevices.getDisplay().getWidth();
-			height = FlounderDevices.getDisplay().getHeight();
-			initialiseFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
-		}
-	}
-
 	/**
-	 * Deletes the FBO and its attachments.
+	 * Unbinds the FBO so that other rendering objects can be used.
 	 */
-	public void delete() {
-		glDeleteFramebuffers(frameBuffer);
-		glDeleteTextures(colourTexture);
-		glDeleteTextures(depthTexture);
-		glDeleteRenderbuffers(depthBuffer);
-		glDeleteRenderbuffers(colourBuffer);
+	public void unbindFrameBuffer() {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight());
 	}
 
 	/**
@@ -165,7 +171,7 @@ public class FBO {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glDrawBuffer(GL_BACK);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDevices.getDisplay().getWidth(), FlounderDevices.getDisplay().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	/**
@@ -182,6 +188,18 @@ public class FBO {
 	}
 
 	/**
+	 * Updates the FBO size if {@code fitToScreen}.
+	 */
+	private void updateSize() {
+		if (fitToScreen && (width != FlounderEngine.getDevices().getDisplay().getWidth() || height != FlounderEngine.getDevices().getDisplay().getHeight())) {
+			delete();
+			width = FlounderEngine.getDevices().getDisplay().getWidth();
+			height = FlounderEngine.getDevices().getDisplay().getHeight();
+			initializeFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
+		}
+	}
+
+	/**
 	 * @return The OpenGL colour texture id.
 	 */
 	public int getColourTexture() {
@@ -193,5 +211,16 @@ public class FBO {
 	 */
 	public int getDepthTexture() {
 		return depthTexture;
+	}
+
+	/**
+	 * Deletes the FBO and its attachments.
+	 */
+	public void delete() {
+		glDeleteFramebuffers(frameBuffer);
+		glDeleteTextures(colourTexture);
+		glDeleteTextures(depthTexture);
+		glDeleteRenderbuffers(depthBuffer);
+		glDeleteRenderbuffers(colourBuffer);
 	}
 }

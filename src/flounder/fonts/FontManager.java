@@ -4,6 +4,9 @@ import flounder.resources.*;
 
 import java.util.*;
 
+/**
+ * A class that holds a list of available engine fonts and texts currently on the screen.
+ */
 public class FontManager {
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
@@ -19,6 +22,11 @@ public class FontManager {
 
 	private static Map<FontType, List<Text>> texts = new HashMap<>();
 
+	/**
+	 * Gets a list of the current texts.
+	 *
+	 * @return The current texts.
+	 */
 	public static Map<FontType, List<Text>> getTexts() {
 		return texts;
 	}

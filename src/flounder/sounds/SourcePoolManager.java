@@ -72,7 +72,7 @@ public class SourcePoolManager {
 	/**
 	 * Deletes all of the sound sources when the game is closed.
 	 */
-	public void cleanUp() {
+	public void dispose() {
 		sourcePool.forEach(SoundSource::delete);
 	}
 }

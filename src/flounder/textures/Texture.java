@@ -1,6 +1,6 @@
 package flounder.textures;
 
-import flounder.processing.glProcessing.*;
+import flounder.engine.*;
 import flounder.resources.*;
 
 /**
@@ -13,6 +13,9 @@ public class Texture {
 	private MyFile file;
 	private boolean loaded;
 
+	/**
+	 * A new OpenGL FBO object.
+	 */
 	protected Texture() {
 		this.hasTransparency = false;
 		this.numberOfRows = 1;
@@ -39,39 +42,84 @@ public class Texture {
 		return new Texture();
 	}
 
+	/**
+	 * Gets the textures ID.
+	 *
+	 * @return The textures ID.
+	 */
 	public int getTextureID() {
 		return textureID;
 	}
 
+	/**
+	 * Sets the texture ID (loads the texture).
+	 *
+	 * @param id The textures ID.
+	 */
 	public void setTextureID(int id) {
 		textureID = id;
 		loaded = true;
 	}
 
+	/**
+	 * Gets if the texture has transparency.
+	 *
+	 * @return If the texture has transparency.
+	 */
 	public boolean hasTransparency() {
 		return hasTransparency;
 	}
 
+	/**
+	 * Sets if the texture has transparency (should be already set from the loader).
+	 *
+	 * @param hasTransparency If the texture has transparency.
+	 */
 	public void setHasTransparency(boolean hasTransparency) {
 		this.hasTransparency = hasTransparency;
 	}
 
+	/**
+	 * Gets the number of texture rows.
+	 *
+	 * @return The number of texture rows.
+	 */
 	public int getNumberOfRows() {
 		return numberOfRows;
 	}
 
+	/**
+	 * Sets the number of rows in the texture.
+	 *
+	 * @param numberOfRows The number of rows in the texture.
+	 */
 	public void setNumberOfRows(int numberOfRows) {
 		this.numberOfRows = numberOfRows;
 	}
 
+	/**
+	 * Gets texture file this was stored in.
+	 *
+	 * @return The texture file.
+	 */
 	public MyFile getFile() {
 		return file;
 	}
 
+	/**
+	 * Sets the file this texture was loaded from.
+	 *
+	 * @param file The file this texture was loaded from.
+	 */
 	public void setFile(MyFile file) {
 		this.file = file;
 	}
 
+	/**
+	 * Gets if the texture is loaded.
+	 *
+	 * @return If the texture is loaded.
+	 */
 	public boolean isLoaded() {
 		return loaded;
 	}
@@ -81,6 +129,6 @@ public class Texture {
 	 */
 	public void delete() {
 		loaded = false;
-		GlRequestProcessor.sendRequest(new TextureDeleteRequest(textureID));
+		FlounderEngine.getProcessors().sendGLRequest(new TextureDeleteRequest(textureID));
 	}
 }

@@ -6,25 +6,28 @@ import org.lwjgl.glfw.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * Manages the creation, updating and destruction of the keyboard keyboardKeys.
+ * Manages the creation, updating and destruction of the keyboard keys.
  */
-public class DeviceKeyboard {
-	private GLFWKeyCallback callbackKey;
-
+public class DeviceKeyboard implements IModule {
 	private int keyboardKeys[];
+
+	private GLFWKeyCallback callbackKey;
 
 	/**
 	 * Creates a new GLFW keyboard.
 	 */
 	protected DeviceKeyboard() {
 		keyboardKeys = new int[GLFW_KEY_LAST + 1];
+	}
 
+	@Override
+	public void init() {
 		// Sets the keyboards callbacks.
-		glfwSetKeyCallback(FlounderDevices.getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
+		glfwSetKeyCallback(FlounderEngine.getDevices().getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (key < 0 || key > GLFW_KEY_LAST) {
-					FlounderLogger.error("Invalid action attempted with key: " + key);
+					FlounderEngine.getLogger().error("Invalid action attempted with key " + key);
 				} else {
 					keyboardKeys[key] = action;
 				}
@@ -32,12 +35,12 @@ public class DeviceKeyboard {
 		});
 	}
 
-	/**
-	 * Updates the keyboard system. Should be called once every frame.
-	 *
-	 * @param delta The time in seconds since the last frame.
-	 */
-	protected void update(float delta) {
+	@Override
+	public void update() {
+	}
+
+	@Override
+	public void profile() {
 	}
 
 	/**
@@ -52,10 +55,8 @@ public class DeviceKeyboard {
 		return keyboardKeys[key] != GLFW_RELEASE;
 	}
 
-	/**
-	 * Closes the GLFW keyboard system, do not use the keyboard after calling this.
-	 */
-	protected void dispose() {
+	@Override
+	public void dispose() {
 		callbackKey.free();
 	}
 }

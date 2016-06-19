@@ -34,26 +34,56 @@ public class Light {
 		this.attenuation = attenuation;
 	}
 
+	/**
+	 * Gets the lights colour.
+	 *
+	 * @return The lights colour.
+	 */
 	public Colour getColour() {
 		return colour;
 	}
 
+	/**
+	 * Sets the lights colour.
+	 *
+	 * @param colour The new light colour.
+	 */
 	public void setColour(Colour colour) {
 		this.colour = colour;
 	}
 
+	/**
+	 * Gets the lights position.
+	 *
+	 * @return The lights position.
+	 */
 	public Vector3f getPosition() {
 		return position;
 	}
 
+	/**
+	 * Sets the lights position.
+	 *
+	 * @param position The new light position.
+	 */
 	public void setPosition(Vector3f position) {
 		this.position = position;
 	}
 
+	/**
+	 * Gets the light attenuation.
+	 *
+	 * @return The light attenuation.
+	 */
 	public Attenuation getAttenuation() {
 		return attenuation;
 	}
 
+	/**
+	 * Sets the light attenuation.
+	 *
+	 * @param attenuation The new light attenuation.
+	 */
 	public void setAttenuation(Attenuation attenuation) {
 		this.attenuation = attenuation;
 	}
