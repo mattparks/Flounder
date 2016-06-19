@@ -91,6 +91,7 @@ public class DeviceDisplay implements IModule {
 
 		// Sets the display to fullscreen or windowed.
 		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE);
+		focused = true;
 
 		// Gets any window errors.
 		if (window == NULL) {

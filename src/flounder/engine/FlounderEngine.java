@@ -3,6 +3,7 @@ package flounder.engine;
 import flounder.devices.*;
 import flounder.engine.implementation.*;
 import flounder.fonts.*;
+import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
@@ -100,11 +101,15 @@ public class FlounderEngine extends Thread implements IModule {
 	@Override
 	public void update() {
 		devices.update();
-		implementation.update();
-		AABBs.update();
-		processors.update();
+
 		loader.update();
 		textures.update();
+		processors.update();
+		GuiManager.updateGuis();
+
+		implementation.update();
+
+		AABBs.update();
 		logger.update();
 		profiler.update();
 

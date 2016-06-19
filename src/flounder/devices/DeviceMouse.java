@@ -30,6 +30,7 @@ public class DeviceMouse implements IModule {
 	 */
 	protected DeviceMouse() {
 		mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
+		displaySelected = true;
 	}
 
 	@Override
