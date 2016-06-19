@@ -2,6 +2,7 @@ package flounder.engine;
 
 import flounder.devices.*;
 import flounder.engine.implementation.*;
+import flounder.fonts.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
@@ -27,7 +28,7 @@ public class FlounderEngine extends Thread implements IModule {
 	private Implementation implementation;
 
 	/**
-	 * Carries out the setup for basic engine components and the engine. Call {@link #start()} immediately after this.
+	 * Carries out the setup for basic engine components and the engine. Call {@link #startEngine(FontType)} immediately after this.
 	 *
 	 * @param implementation The game implementation of the engine.
 	 * @param width The window width in pixels.
@@ -50,6 +51,19 @@ public class FlounderEngine extends Thread implements IModule {
 		this.profiler = new FlounderProfiler(title + " Profiler");
 
 		this.implementation = implementation;
+	}
+
+	/**
+	 * Starts the engine!
+	 *
+	 * @param defaultType Sets the default font family (nullable).
+	 */
+	public void startEngine(FontType defaultType) {
+		if (defaultType != null) {
+			TextBuilder.DEFAULT_TYPE = defaultType;
+		}
+
+		start();
 	}
 
 	@Override
@@ -226,6 +240,31 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static boolean isRunning() {
 		return instance.implementation.isRunning();
+	}
+
+	/**
+	 * Gets the current screen blur factor.
+	 *
+	 * @return The current screen blur factor.
+	 */
+	public static float getScreenBlur() {
+		return instance.implementation.getGame().getScreenBlur();
+	}
+
+	/**
+	 * Gets if the game currently paused.
+	 *
+	 * @return Is the game currently paused?
+	 */
+	public static boolean isGamePaused() {
+		return instance.implementation.getGame().isGamePaused();
+	}
+
+	/**
+	 * Requests the gameloop to stop and the game to exit.
+	 */
+	public static void requestClose() {
+		instance.implementation.requestClose();
 	}
 
 	@Override

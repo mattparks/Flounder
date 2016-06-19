@@ -83,6 +83,13 @@ public class Implementation implements IModule {
 		return !closedRequested && !FlounderEngine.getDevices().getDisplay().isClosed();
 	}
 
+	/**
+	 * Requests the gameloop to stop and the game to exit.
+	 */
+	public void requestClose() {
+		closedRequested = true;
+	}
+
 	@Override
 	public void dispose() {
 		game.dispose();
