@@ -22,7 +22,7 @@ public abstract class PostFilter {
 	public FBO fbo;
 
 	public PostFilter(String filterName, MyFile fragmentShader) {
-		this(new ShaderProgram(filterName, VERTEX_LOCATION, fragmentShader), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen().create());
+		this(new ShaderProgram(filterName, VERTEX_LOCATION, fragmentShader), FBO.newFBO(1.0f).create());
 	}
 
 	public PostFilter(ShaderProgram shader, FBO fbo) {

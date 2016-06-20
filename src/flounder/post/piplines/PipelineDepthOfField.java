@@ -13,7 +13,7 @@ public class PipelineDepthOfField extends PostPipeline {
 	private FilterDOF filterDOF;
 
 	public PipelineDepthOfField() {
-		pipelineGaussian = new PipelineGaussian(BLUR_TEXTURE_WIDTH, BLUR_TEXTURE_HEIGHT, false);
+		pipelineGaussian = new PipelineGaussian(BLUR_TEXTURE_WIDTH, BLUR_TEXTURE_HEIGHT);
 		filterFXAA = new FilterFXAA();
 		filterDOF = new FilterDOF();
 	}

@@ -14,6 +14,7 @@ public class FBOBuilder {
 	private int width;
 	private int height;
 	private boolean fitToScreen;
+	private float sizeScalar;
 
 	/**
 	 * Creates a class to setup a FBO.
@@ -32,6 +33,7 @@ public class FBOBuilder {
 		this.width = width;
 		this.height = height;
 		this.fitToScreen = false;
+		this.sizeScalar = 1.0f;
 	}
 
 	/**
@@ -40,7 +42,7 @@ public class FBOBuilder {
 	 * @return Returns a newly created FBO off of the builders parameters.
 	 */
 	public FBO create() {
-		return new FBO(width, height, fitToScreen, depthBufferType, useColourBuffer, linearFiltering, clampEdge, alphaChannel, antialiased, samples);
+		return new FBO(width, height, fitToScreen, sizeScalar, depthBufferType, useColourBuffer, linearFiltering, clampEdge, alphaChannel, antialiased, samples);
 	}
 
 	/**
@@ -113,10 +115,13 @@ public class FBOBuilder {
 	/**
 	 * Sets if the FBO will be fit to the screen.
 	 *
+	 * @param sizeScalar A scalar factor between the FBO and the screen, enabled when {@code fitToScreen} is enabled. (1.0f disables scalar).
+	 *
 	 * @return this.
 	 */
-	public FBOBuilder fitToScreen() {
+	public FBOBuilder fitToScreen(float sizeScalar) {
 		fitToScreen = true;
+		this.sizeScalar = sizeScalar;
 		return this;
 	}
 }

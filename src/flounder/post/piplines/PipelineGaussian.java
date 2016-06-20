@@ -8,9 +8,14 @@ public class PipelineGaussian extends PostPipeline {
 	private FilterBlurHorizontal filterBlurHorizontal;
 	private FilterBlurVertical filterBlurVertical;
 
-	public PipelineGaussian(int width, int height, boolean fitToDisplay) {
-		filterBlurHorizontal = fitToDisplay ? new FilterBlurHorizontal() : new FilterBlurHorizontal(width, height);
-		filterBlurVertical = fitToDisplay ? new FilterBlurVertical() : new FilterBlurVertical(width, height);
+	public PipelineGaussian(int width, int height) {
+		filterBlurHorizontal = new FilterBlurHorizontal(width, height);
+		filterBlurVertical = new FilterBlurVertical(width, height);
+	}
+
+	public PipelineGaussian(float sizeScalar) {
+		filterBlurHorizontal = new FilterBlurHorizontal(sizeScalar);
+		filterBlurVertical = new FilterBlurVertical(sizeScalar);
 	}
 
 	@Override

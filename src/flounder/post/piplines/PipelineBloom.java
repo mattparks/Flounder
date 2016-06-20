@@ -18,7 +18,7 @@ public class PipelineBloom extends PostPipeline {
 		filterFXAA = new FilterFXAA();
 		filterTone = new FilterTone();
 		filterBloom1 = new FilterBloom1();
-		pipelineGaussian = new PipelineGaussian(BLUR_TEXTURE_WIDTH, BLUR_TEXTURE_HEIGHT, false);
+		pipelineGaussian = new PipelineGaussian(BLUR_TEXTURE_WIDTH, BLUR_TEXTURE_HEIGHT);
 		filterBloom2 = new FilterBloom2();
 	}
 

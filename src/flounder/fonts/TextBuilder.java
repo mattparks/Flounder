@@ -3,7 +3,7 @@ package flounder.fonts;
 import flounder.engine.*;
 
 public class TextBuilder {
-	public static FontType DEFAULT_TYPE = FlounderEngine.getFonts().COMIC_SANS;
+	public static FontType DEFAULT_TYPE = FlounderEngine.getFonts().comicSans;
 
 	private String text;
 	private boolean centered;

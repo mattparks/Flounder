@@ -13,10 +13,19 @@ public class FilterBlurVertical extends PostFilter {
 	private int heightValue;
 	private float scaleValue;
 	private boolean fitToDisplay;
+	private float sizeScalar;
+
+	public FilterBlurVertical(float sizeScalar) {
+		super(new ShaderProgram("filterBlurVertical", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl")), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen(1.0f).create());
+		fitToDisplay = true;
+		this.sizeScalar = sizeScalar;
+		init((int) (FlounderEngine.getDevices().getDisplay().getHeight() * sizeScalar));
+	}
 
 	public FilterBlurVertical(int widthValue, int heightValue) {
 		super(new ShaderProgram("filterBlurVertical", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl")), FBO.newFBO(widthValue, heightValue).create());
 		fitToDisplay = false;
+		this.sizeScalar = 1.0f;
 		init(heightValue);
 	}
 
@@ -26,12 +35,6 @@ public class FilterBlurVertical extends PostFilter {
 		this.scaleValue = 2.0f;
 	}
 
-	public FilterBlurVertical() {
-		super(new ShaderProgram("filterBlurVertical", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl")), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen().create());
-		fitToDisplay = true;
-		init(FlounderEngine.getDevices().getDisplay().getHeight());
-	}
-
 	public void setScale(float scale) {
 		this.scaleValue = scale;
 	}
@@ -39,7 +42,7 @@ public class FilterBlurVertical extends PostFilter {
 	@Override
 	public void storeValues() {
 		if (fitToDisplay) {
-			heightValue = FlounderEngine.getDevices().getDisplay().getHeight();
+			heightValue = (int) (FlounderEngine.getDevices().getDisplay().getHeight() * sizeScalar);
 		}
 
 		height.loadFloat(heightValue);

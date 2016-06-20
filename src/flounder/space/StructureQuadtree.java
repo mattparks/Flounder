@@ -29,6 +29,13 @@ import java.util.*;*/
  * <p>
  * Initializes a QuadTree from a source Quadtree.
  * @param source The source quadtree.
+ * <p>
+ * Initializes a QuadTree from an AABB.
+ * @param aabb Represents the 2D space inside the QuadTree.
+ * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
+ * <p>
+ * Initializes a QuadTree from a source Quadtree.
+ * @param source The source quadtree.
  */
 /*public class StructureQuadtree<T extends ISpatialObject> implements ISpatialStructure<T> {
 	private StructureQuadtree<T> nodes[];

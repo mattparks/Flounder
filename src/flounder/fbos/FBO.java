@@ -23,6 +23,7 @@ public class FBO {
 	private int width;
 	private int height;
 	private boolean fitToScreen;
+	private float sizeScalar;
 
 	private int frameBuffer;
 	private int colourTexture;
@@ -36,6 +37,7 @@ public class FBO {
 	 * @param width The FBO's width.
 	 * @param height The FBO's height.
 	 * @param fitToScreen If the width and height values should match the screen.
+	 * @param sizeScalar A scalar factor between the FBO and the screen, enabled when {@code fitToScreen} is enabled. (1.0f disables scalar).
 	 * @param depthBufferType The type of depth buffer to use in the FBO.
 	 * @param useColourBuffer If a colour buffer should be created.
 	 * @param linearFiltering If linear filtering should be used.
@@ -44,10 +46,11 @@ public class FBO {
 	 * @param antialiased If the image will be antialiased.
 	 * @param samples How many MFAA samples should be used on the FBO. Zero disables multisampling.
 	 */
-	protected FBO(int width, int height, boolean fitToScreen, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
-		this.width = width;
-		this.height = height;
+	protected FBO(int width, int height, boolean fitToScreen, float sizeScalar, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
+		this.width = (int) (width * sizeScalar);
+		this.height = (int) (height * sizeScalar);
 		this.fitToScreen = fitToScreen;
+		this.sizeScalar = sizeScalar;
 		this.depthBufferType = depthBufferType;
 		this.useColourBuffer = useColourBuffer;
 		this.linearFiltering = linearFiltering;
@@ -55,7 +58,7 @@ public class FBO {
 		this.alphaChannel = alphaChannel;
 		this.antialiased = antialiased;
 		this.samples = samples;
-		initializeFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
+		initializeFBO();
 	}
 
 	/**
@@ -71,53 +74,58 @@ public class FBO {
 	}
 
 	/**
-	 * Initializes the FBO.
+	 * Creates a new FBO Builder, fit to the screen.
 	 *
-	 * @param type The type of depth buffer to use in the FBO.
-	 * @param useColourBuffer If a colour buffer should be created.
-	 * @param linear If linear filtering should be used.
-	 * @param clamp If the image should be clamped to the edges.
-	 * @param samples How many MFAA samples should be used on the FBO. Zero disables multisampling.
+	 * @param sizeScalar A scalar factor between the FBO and the screen, enabled when {@code fitToScreen} is enabled. (1.0f disables scalar).
+	 *
+	 * @return A new FBO Builder.
 	 */
-	private void initializeFBO(DepthBufferType type, boolean useColourBuffer, boolean linear, boolean clamp, int samples) {
-		createFBO(useColourBuffer);
+	public static FBOBuilder newFBO(float sizeScalar) {
+		return new FBOBuilder(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen(sizeScalar);
+	}
+
+	/**
+	 * Initializes the FBO.
+	 */
+	private void initializeFBO() {
+		createFBO();
 
 		if (!antialiased) {
 			if (useColourBuffer) {
-				createTextureAttachment(linear, clamp);
+				createTextureAttachment();
 			}
 
-			if (type == DepthBufferType.RENDER_BUFFER) {
-				createDepthBufferAttachment(samples);
-			} else if (type == DepthBufferType.TEXTURE) {
+			if (depthBufferType == DepthBufferType.RENDER_BUFFER) {
+				createDepthBufferAttachment();
+			} else if (depthBufferType == DepthBufferType.TEXTURE) {
 				createDepthTextureAttachment();
 			}
 		} else {
-			attachMutlisampleColourBuffer(samples);
-			createDepthBufferAttachment(samples);
+			attachMutlisampleColourBuffer();
+			createDepthBufferAttachment();
 		}
 
 		unbindFrameBuffer();
 	}
 
-	private void createFBO(boolean useColourBuffer) {
+	private void createFBO() {
 		frameBuffer = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 		glDrawBuffer(useColourBuffer ? GL_COLOR_ATTACHMENT0 : GL_FALSE);
 	}
 
-	private void createTextureAttachment(boolean linear, boolean clamp) {
+	private void createTextureAttachment() {
 		colourTexture = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, colourTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, alphaChannel ? GL_RGBA : GL_RGB, width, height, 0, alphaChannel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR : GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colourTexture, 0);
 	}
 
-	private void createDepthBufferAttachment(int samples) {
+	private void createDepthBufferAttachment() {
 		depthBuffer = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 
@@ -139,7 +147,7 @@ public class FBO {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	}
 
-	private void attachMutlisampleColourBuffer(int samples) {
+	private void attachMutlisampleColourBuffer() {
 		colourBuffer = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, colourBuffer);
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, alphaChannel ? GL_RGBA8 : GL_RGB8, width, height);
@@ -183,7 +191,7 @@ public class FBO {
 		outputFBO.updateSize();
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, outputFBO.width, outputFBO.height, 16640, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, outputFBO.width, outputFBO.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 		unbindFrameBuffer();
 	}
 
@@ -191,11 +199,20 @@ public class FBO {
 	 * Updates the FBO size if {@code fitToScreen}.
 	 */
 	private void updateSize() {
-		if (fitToScreen && (width != FlounderEngine.getDevices().getDisplay().getWidth() || height != FlounderEngine.getDevices().getDisplay().getHeight())) {
-			delete();
-			width = FlounderEngine.getDevices().getDisplay().getWidth();
-			height = FlounderEngine.getDevices().getDisplay().getHeight();
-			initializeFBO(depthBufferType, useColourBuffer, linearFiltering, clampEdge, samples);
+		if (fitToScreen) {
+			int displayWidth = FlounderEngine.getDevices().getDisplay().getWidth();
+			int displayHeight = FlounderEngine.getDevices().getDisplay().getHeight();
+			int reverseWidth = (int) (displayWidth * sizeScalar);
+			int reverseHeight = (int) (displayHeight * sizeScalar);
+
+			if (width != reverseWidth || height != reverseHeight) {
+				width = (int) (displayWidth * sizeScalar);
+				height = (int) (displayHeight * sizeScalar);
+
+				delete();
+				FlounderEngine.getLogger().log("Recreating FBO; width: " + width + ", and height: " + height + ".");
+				initializeFBO();
+			}
 		}
 	}
 

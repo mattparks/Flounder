@@ -1,6 +1,5 @@
 package flounder.parsing;
 
-import flounder.engine.*;
 import flounder.resources.*;
 
 import java.io.*;
