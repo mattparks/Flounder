@@ -47,6 +47,11 @@ public class Server extends Thread {
 
 	private void parsePacket(byte[] data, InetAddress address, int port) {
 		String message = new String(data).trim();
+
+		if (message.length() < 2) {
+			return;
+		}
+
 		Packet.PacketType type = Packet.lookupPacket(message.substring(0, 2));
 
 		Packet packet;

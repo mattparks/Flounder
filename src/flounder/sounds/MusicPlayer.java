@@ -71,17 +71,15 @@ public class MusicPlayer {
 
 		// Stops music if there is no volume.
 		if (volume == 0.0f) {
-			source.pause();
-
 			// If skipping the track start to play a new source.
 			if (skippingTrack) {
-				// FIXME: Fix errors when loading music after skipping.
 				volumeDriver = new SlideDriver(0.0f, volumeMaxMusic, FADE_TIME);
 				skippingTrack = false;
 
+				source.stop();
 				selectedTimeout = -1.0f;
-				paused = false;
 			} else {
+				source.pause();
 				paused = true;
 			}
 		}

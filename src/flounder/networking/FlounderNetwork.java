@@ -97,7 +97,7 @@ public class FlounderNetwork implements IModule {
 
 	@Override
 	public void dispose() {
-		closeClient();
 		closeServer();
+		closeClient();
 	}
 }
