@@ -21,8 +21,6 @@ import static org.lwjgl.opengl.GL30.*;
 public class FlounderTextures implements IModule {
 	private List<Integer> textureCache;
 
-	// FIXME: Fix texture being loaded twice.
-
 	/**
 	 * Creates a new texture manager.
 	 */

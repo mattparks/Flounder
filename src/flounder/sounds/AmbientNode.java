@@ -71,7 +71,7 @@ public class AmbientNode {
 		fadeOutRadius.update(delta);
 
 		if (controller != null) {
-			// FIXME: Update ranges.
+			// TODO: Update ranges.
 		}
 	}
 

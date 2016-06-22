@@ -1,5 +1,6 @@
 package flounder.parsing;
 
+import flounder.engine.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -81,22 +82,15 @@ public class Config {
 	}
 
 	/**
-	 * Saves a new configuration file using a provided file.
+	 * Sets a value for a entry in the config.
 	 *
-	 * @param map The values being written to the config.
+	 * @param entry The entry to change.
+	 * @param value The value to set to.
+	 * @param <T> The generic value.
 	 */
-	public void write(Map<String, String> map) {
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
-			Iterator<Entry<String, String>> it = map.entrySet().iterator();
-
-			while (it.hasNext()) {
-				Entry<String, String> pair = it.next();
-				String line = pair.getKey() + "=" + pair.getValue() + "\n";
-				bw.write(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public<T> void setValue(String entry, T value) {
+		map.remove(entry);
+		map.put(entry, value.toString());
 	}
 
 	/**
@@ -166,8 +160,7 @@ public class Config {
 
 		if (result == null) {
 			map.put(entry, defaultEntry);
-			write(map);
-			result = getString(entry);
+			result = defaultEntry;
 		}
 
 		return result;
@@ -207,5 +200,22 @@ public class Config {
 	 */
 	public boolean getBooleanWithDefault(String entry, boolean defaultEntry) {
 		return Boolean.parseBoolean(getStringWithDefault(entry, "" + defaultEntry));
+	}
+
+	/**
+	 * Saves any changes to the configs and closes the config.
+	 */
+	public void dispose() {
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
+			Iterator<Entry<String, String>> it = map.entrySet().iterator();
+
+			while (it.hasNext()) {
+				Entry<String, String> pair = it.next();
+				String line = pair.getKey() + "=" + pair.getValue() + "\n";
+				bw.write(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

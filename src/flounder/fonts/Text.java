@@ -116,9 +116,11 @@ public class Text {
 	}
 
 	public void setText(String newText) {
-		deleteFromMemory();
-		textString = newText;
-		fontType.loadText(this);
+		if (!textString.equals(newText)) {
+			deleteFromMemory();
+			textString = newText;
+			fontType.loadText(this);
+		}
 	}
 
 	public void deleteFromMemory() {

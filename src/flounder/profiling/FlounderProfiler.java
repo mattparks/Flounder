@@ -30,6 +30,18 @@ public class FlounderProfiler implements IModule {
 		profilerJFrame.setSize(420, 720);
 		profilerJFrame.setResizable(true);
 
+		profilerJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (JOptionPane.showConfirmDialog(profilerJFrame,
+						"Are you sure to close this profiler?", "Really Closing?",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+					profilerOpen = false;
+				}
+			}
+		});
+
 		primaryTabMenu = new FlounderTabMenu();
 		profilerJFrame.add(primaryTabMenu);
 

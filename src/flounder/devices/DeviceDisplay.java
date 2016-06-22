@@ -63,8 +63,6 @@ public class DeviceDisplay implements IModule {
 
 	@Override
 	public void init() {
-		boolean recreatingDisplay = window != 0;
-
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
 			FlounderEngine.getLogger().error("Could not init GLFW!");
@@ -77,25 +75,29 @@ public class DeviceDisplay implements IModule {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
 		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
-		glfwWindowHint(GLFW_SAMPLES, samples);
-		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE); // Only enabled in fullscreen.
+		glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
+		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE); // Only enabled in windowed.
 
-		// Gets the resolution of the primary monitor.
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-		int lastWidth = windowWidth;
-		int lastHeight = windowHeight;
+		// Gets the video mode from the primary monitor.
+		long monitor = glfwGetPrimaryMonitor();
+		GLFWVidMode mode = glfwGetVideoMode(monitor);
 
 		if (fullscreen) {
-			windowWidth = vidmode.width();
-			windowHeight = vidmode.height();
+			glfwWindowHint(GLFW_RED_BITS, mode.redBits());
+			glfwWindowHint(GLFW_GREEN_BITS, mode.greenBits());
+			glfwWindowHint(GLFW_BLUE_BITS, mode.blueBits());
+			glfwWindowHint(GLFW_REFRESH_RATE, mode.refreshRate());
+		}
+
+		if (fullscreen) {
+			windowWidth = mode.width();
+			windowHeight = mode.height();
 		}
 
 		// Create a windowed mode window and its OpenGL context.
-		window = glfwCreateWindow(windowWidth, windowHeight, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+		window = glfwCreateWindow(windowWidth, windowHeight, title, fullscreen ? monitor : NULL, NULL);
 
 		// Sets the display to fullscreen or windowed.
-		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE);
 		focused = true;
 
 		// Gets any window errors.
@@ -126,11 +128,8 @@ public class DeviceDisplay implements IModule {
 
 		// Centers the window position.
 		if (!fullscreen) {
-			glfwSetWindowPos(window, (windowPosX = (vidmode.width() - windowWidth) / 2), (windowPosY = (vidmode.height() - windowHeight) / 2));
+			glfwSetWindowPos(window, (windowPosX = (mode.width() - windowWidth) / 2), (windowPosY = (mode.height() - windowHeight) / 2));
 		}
-
-		windowWidth = lastWidth;
-		windowHeight = lastHeight;
 
 		// Shows the OpenGl window.
 		glfwShowWindow(window);
@@ -385,7 +384,6 @@ public class DeviceDisplay implements IModule {
 
 		this.fullscreen = fullscreen;
 		FlounderEngine.getLogger().log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
-		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE);
 		// TODO: MAKE FULLSCREEN WORK!!!
 	}
 

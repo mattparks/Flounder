@@ -52,7 +52,7 @@ public class FlounderEngine extends Thread implements IModule {
 		instance = this;
 
 		// Increment revision every git commit. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("3.6.7");
+		version = new Version("3.6.8");
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
@@ -80,7 +80,7 @@ public class FlounderEngine extends Thread implements IModule {
 
 		initialized = true;
 
-		start();
+		run();
 	}
 
 	@Override
