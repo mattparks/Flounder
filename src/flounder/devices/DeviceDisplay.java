@@ -63,6 +63,8 @@ public class DeviceDisplay implements IModule {
 
 	@Override
 	public void init() {
+		boolean recreatingDisplay = window != 0;
+
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
 			FlounderEngine.getLogger().error("Could not init GLFW!");
@@ -80,6 +82,9 @@ public class DeviceDisplay implements IModule {
 
 		// Gets the resolution of the primary monitor.
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		int lastWidth = windowWidth;
+		int lastHeight = windowHeight;
 
 		if (fullscreen) {
 			windowWidth = vidmode.width();
@@ -104,7 +109,7 @@ public class DeviceDisplay implements IModule {
 		glfwMakeContextCurrent(window);
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
-		createCapabilities();
+		createCapabilities(true);
 
 		// Gets any OpenGL errors.
 		long glError = glGetError();
@@ -120,9 +125,12 @@ public class DeviceDisplay implements IModule {
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		// Centers the window position.
-		if (!this.fullscreen) {
+		if (!fullscreen) {
 			glfwSetWindowPos(window, (windowPosX = (vidmode.width() - windowWidth) / 2), (windowPosY = (vidmode.height() - windowHeight) / 2));
 		}
+
+		windowWidth = lastWidth;
+		windowHeight = lastHeight;
 
 		// Shows the OpenGl window.
 		glfwShowWindow(window);
@@ -433,6 +441,8 @@ public class DeviceDisplay implements IModule {
 		callbackWindowPos.free();
 		callbackWindowSize.free();
 		callbackFramebufferSize.free();
+
+		destroy();
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}

@@ -20,8 +20,11 @@ import static org.lwjgl.opengl.GL11.*;
 public class DeviceSound implements IModule {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 
+	private long device;
+
 	private Vector3f cameraPosition;
 	private SourcePoolManager sourcePool;
+	private StreamManager streamManager;
 	private MusicPlayer musicPlayer;
 
 	/**
@@ -34,7 +37,7 @@ public class DeviceSound implements IModule {
 	@Override
 	public void init() {
 		// Creates the OpenAL contexts.
-		long device = alcOpenDevice((ByteBuffer) null);
+		device = alcOpenDevice((ByteBuffer) null);
 		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
 		alcMakeContextCurrent(alcCreateContext(device, (IntBuffer) null));
 		createCapabilities(deviceCaps);
@@ -48,8 +51,9 @@ public class DeviceSound implements IModule {
 
 		// Creates a new model and main objects.
 		alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
-		StreamManager.STREAMER.start();
 		sourcePool = new SourcePoolManager();
+		streamManager = new StreamManager();
+		streamManager.start();
 		musicPlayer = new MusicPlayer();
 		musicPlayer.setVolume(MusicPlayer.SOUND_VOLUME);
 	}
@@ -110,6 +114,15 @@ public class DeviceSound implements IModule {
 	}
 
 	/**
+	 * Gets the sound stream manager.
+	 *
+	 * @return The sound stream manager.
+	 */
+	public StreamManager getStreamManager() {
+		return streamManager;
+	}
+
+	/**
 	 * Gets the background music player.
 	 *
 	 * @return The background music player.
@@ -120,10 +133,10 @@ public class DeviceSound implements IModule {
 
 	@Override
 	public void dispose() {
-		StreamManager.STREAMER.kill();
+		streamManager.kill();
 		sourcePool.dispose();
 		musicPlayer.cleanUp();
 		SoundLoader.dispose();
-		ALC.destroy();
+		alcCloseDevice(device);
 	}
 }

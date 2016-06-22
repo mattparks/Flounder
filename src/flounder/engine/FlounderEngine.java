@@ -7,6 +7,7 @@ import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
+import flounder.networking.*;
 import flounder.physics.renderer.*;
 import flounder.processing.*;
 import flounder.profiling.*;
@@ -27,6 +28,7 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderFonts fonts;
 	private FlounderGuis guis;
 	private FlounderAABBs AABBs;
+	private FlounderNetwork network;
 	private FlounderLogger logger;
 	private FlounderProfiler profiler;
 
@@ -50,7 +52,7 @@ public class FlounderEngine extends Thread implements IModule {
 		instance = this;
 
 		// Increment revision every git commit. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("3.6.6");
+		version = new Version("3.6.7");
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
@@ -59,6 +61,7 @@ public class FlounderEngine extends Thread implements IModule {
 		this.fonts = new FlounderFonts();
 		this.guis = new FlounderGuis();
 		this.AABBs = new FlounderAABBs();
+		this.network = new FlounderNetwork(1331);
 		this.logger = new FlounderLogger();
 		this.profiler = new FlounderProfiler(title + " Profiler");
 
@@ -90,6 +93,7 @@ public class FlounderEngine extends Thread implements IModule {
 		fonts.init();
 		guis.init();
 		AABBs.init();
+		network.init();
 		implementation.init();
 
 		// Opens the profiler if not running from jar.
@@ -128,6 +132,7 @@ public class FlounderEngine extends Thread implements IModule {
 		AABBs.update();
 		logger.update();
 		profiler.update();
+		network.update();
 
 		devices.swapBuffers();
 	}
@@ -139,6 +144,7 @@ public class FlounderEngine extends Thread implements IModule {
 			processors.profile();
 			implementation.profile();
 			AABBs.profile();
+			network.profile();
 			loader.profile();
 			textures.profile();
 			guis.profile();
@@ -239,6 +245,16 @@ public class FlounderEngine extends Thread implements IModule {
 	}
 
 	/**
+	 * Gets the engines current network manager.
+	 *
+	 * @return The engines current network manager.
+	 */
+
+	public static FlounderNetwork getNetwork() {
+		return instance.network;
+	}
+
+	/**
 	 * Gets the engines camera implementation.
 	 *
 	 * @return The engines camera implementation.
@@ -330,6 +346,7 @@ public class FlounderEngine extends Thread implements IModule {
 	public void dispose() {
 		processors.dispose();
 		loader.dispose();
+		network.dispose();
 		AABBs.dispose();
 		textures.dispose();
 		guis.dispose();

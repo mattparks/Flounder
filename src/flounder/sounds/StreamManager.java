@@ -11,11 +11,11 @@ import java.util.*;
 public class StreamManager extends Thread {
 	public static final int SOUND_CHUNK_MAX_SIZE = 100000;
 	public static final long SLEEP_TIME = 100;
-	public static final StreamManager STREAMER = new StreamManager();
 
 	private List<Streamer> streamers;
 	private List<Streamer> toRemove;
 	private boolean alive;
+	private boolean hasStarted;
 
 	/**
 	 * Creates a new object that updates audio streams in a separate thread.
@@ -24,6 +24,16 @@ public class StreamManager extends Thread {
 		streamers = new ArrayList<>();
 		toRemove = new ArrayList<>();
 		alive = true;
+	}
+
+	@Override
+	public synchronized void start() {
+		hasStarted = true;
+		super.start();
+	}
+
+	public boolean isHasStarted() {
+		return hasStarted;
 	}
 
 	@Override
