@@ -105,7 +105,7 @@ public class TextureBuilder {
 			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder right now!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			TextureLoadRequest request = new TextureLoadRequest(data, this);
+			TextureLoadRequest request = new TextureLoadRequest(data, this, false);
 			request.doResourceRequest();
 			request.executeGlRequest();
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
@@ -127,7 +127,7 @@ public class TextureBuilder {
 			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder in the background!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			FlounderEngine.getProcessors().sendRequest(new TextureLoadRequest(data, this));
+			FlounderEngine.getProcessors().sendRequest(new TextureLoadRequest(data, this, true));
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 
@@ -147,7 +147,7 @@ public class TextureBuilder {
 			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder in separate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			TextureLoadRequest request = new TextureLoadRequest(data, this);
+			TextureLoadRequest request = new TextureLoadRequest(data, this, true);
 			request.doResourceRequest();
 			FlounderEngine.getProcessors().sendGLRequest(request);
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
