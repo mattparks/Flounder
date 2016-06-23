@@ -3,7 +3,7 @@ package flounder.guis;
 /**
  * A advances GUI listener.
  */
-public interface GuiListenerAdvanced {
+public interface ListenerAdvanced {
 	/**
 	 * Gets if the event has occurred.
 	 *

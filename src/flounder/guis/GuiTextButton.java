@@ -13,8 +13,8 @@ public class GuiTextButton extends GuiComponent {
 
 	private Text text;
 	private boolean mouseOver;
-	private GuiListener guiListenerLeft;
-	private GuiListener guiListenerRight;
+	private ListenerBasic guiListenerLeft;
+	private ListenerBasic guiListenerRight;
 
 	private Sound mouseHoverOverSound;
 	private Sound mouseLeftClickSound;
@@ -36,11 +36,11 @@ public class GuiTextButton extends GuiComponent {
 		return text;
 	}
 
-	public void addLeftListener(GuiListener guiListener) {
+	public void addLeftListener(ListenerBasic guiListener) {
 		guiListenerLeft = guiListener;
 	}
 
-	public void addRightListener(GuiListener guiListener) {
+	public void addRightListener(ListenerBasic guiListener) {
 		guiListenerRight = guiListener;
 	}
 

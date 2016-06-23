@@ -1,6 +1,6 @@
 package flounder.parsing;
 
-import flounder.engine.*;
+import flounder.guis.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -14,6 +14,7 @@ import java.util.Map.*;
 public class Config {
 	private MyFile file;
 	private Map<String, String> map;
+	private List<ListenerAdvanced> valueChangeListeners;
 
 	/**
 	 * Loads and parses a configuration file.
@@ -22,7 +23,8 @@ public class Config {
 	 */
 	public Config(MyFile file) {
 		this.file = file;
-		map = new HashMap<>();
+		this.map = new HashMap<>();
+		this.valueChangeListeners = new ArrayList<>();
 
 		File saveDirectory = new File(file.getPath().replaceAll(file.getName(), "").substring(1));
 		File sameFile = new File(file.getPath().substring(1));
@@ -155,7 +157,24 @@ public class Config {
 	 *
 	 * @return The string assigned to the entry if found, otherwise the string assigned to the default entry.
 	 */
-	public String getStringWithDefault(String entry, String defaultEntry) {
+	public String getStringWithDefault(String entry, String defaultEntry, ConfigReference reference) {
+		valueChangeListeners.add(new ListenerAdvanced() {
+			private String value = defaultEntry;
+
+			@Override
+			public boolean hasOccurred() {
+				String newValue = reference.getReading().toString();
+				boolean changed = newValue.equals(value);
+				value = newValue;
+				return changed;
+			}
+
+			@Override
+			public void run() {
+				setValue(entry, value);
+			}
+		});
+
 		String result = getString(entry);
 
 		if (result == null) {
@@ -174,8 +193,8 @@ public class Config {
 	 *
 	 * @return The integer assigned to the entry if found, otherwise the integer assigned to the default entry.
 	 */
-	public int getIntWithDefault(String entry, int defaultEntry) {
-		return Integer.parseInt(getStringWithDefault(entry, "" + defaultEntry));
+	public int getIntWithDefault(String entry, int defaultEntry, ConfigReference reference) {
+		return Integer.parseInt(getStringWithDefault(entry, "" + defaultEntry, reference));
 	}
 
 	/**
@@ -186,8 +205,8 @@ public class Config {
 	 *
 	 * @return The double assigned to the entry if found, otherwise the double assigned to the default entry.
 	 */
-	public double getDoubleWithDefault(String entry, double defaultEntry) {
-		return Double.parseDouble(getStringWithDefault(entry, "" + defaultEntry));
+	public double getDoubleWithDefault(String entry, double defaultEntry, ConfigReference reference) {
+		return Double.parseDouble(getStringWithDefault(entry, "" + defaultEntry, reference));
 	}
 
 	/**
@@ -198,14 +217,20 @@ public class Config {
 	 *
 	 * @return The boolean assigned to the entry if found, otherwise the boolean assigned to the default entry.
 	 */
-	public boolean getBooleanWithDefault(String entry, boolean defaultEntry) {
-		return Boolean.parseBoolean(getStringWithDefault(entry, "" + defaultEntry));
+	public boolean getBooleanWithDefault(String entry, boolean defaultEntry, ConfigReference reference) {
+		return Boolean.parseBoolean(getStringWithDefault(entry, "" + defaultEntry, reference));
 	}
 
 	/**
 	 * Saves any changes to the configs and closes the config.
 	 */
 	public void dispose() {
+		valueChangeListeners.forEach(listener -> {
+			if (listener.hasOccurred()) {
+				listener.run();
+			}
+		});
+
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
 			Iterator<Entry<String, String>> it = map.entrySet().iterator();
 
@@ -217,5 +242,17 @@ public class Config {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * A reference to the value that was loaded from the config.
+	 */
+	public interface ConfigReference {
+		/**
+		 * Gets the reading from that value.
+		 *
+		 * @return The value read.
+		 */
+		String getReading();
 	}
 }

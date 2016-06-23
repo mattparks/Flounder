@@ -81,6 +81,14 @@ public class Implementation implements IModule {
 		return delta.getTime();
 	}
 
+	public int getFpsLimit() {
+		return fpsLimit;
+	}
+
+	public void setFpsLimit(int fpsLimit) {
+		this.fpsLimit = fpsLimit;
+	}
+
 	public boolean isRunning() {
 		return !closedRequested && !FlounderEngine.getDevices().getDisplay().isClosed();
 	}

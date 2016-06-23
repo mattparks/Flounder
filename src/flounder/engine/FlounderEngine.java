@@ -281,6 +281,14 @@ public class FlounderEngine extends Thread implements IModule {
 		return instance.implementation.getRendererMaster().getProjectionMatrix();
 	}
 
+	public static void setTargetFPS(int fpsLimit) {
+		instance.implementation.setFpsLimit(fpsLimit);
+	}
+
+	public static int getTargetFPS() {
+		return instance.implementation.getFpsLimit();
+	}
+
 	/**
 	 * Gets the delta (seconds) between updates.
 	 *

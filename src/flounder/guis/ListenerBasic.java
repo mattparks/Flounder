@@ -3,7 +3,7 @@ package flounder.guis;
 /**
  * A simple GUI listener.
  */
-public interface GuiListener {
+public interface ListenerBasic {
 	/**
 	 * Run when a event has occurred.
 	 */

@@ -20,7 +20,7 @@ public abstract class GuiComponent {
 	private List<GuiComponent> componentsToDelete;
 	private List<GuiComponent> componentsToRemove;
 	private List<GuiComponent> componentsToAdd;
-	private List<GuiListenerAdvanced> actionEvents;
+	private List<ListenerAdvanced> actionEvents;
 	private GuiComponent parent;
 	private boolean visible;
 	private boolean initialized;
@@ -54,7 +54,7 @@ public abstract class GuiComponent {
 	 *
 	 * @param actionListener The action listener.
 	 */
-	public void addActionListener(GuiListenerAdvanced actionListener) {
+	public void addActionListener(ListenerAdvanced actionListener) {
 		actionEvents.add(actionListener);
 	}
 
@@ -63,7 +63,7 @@ public abstract class GuiComponent {
 	 *
 	 * @param actionListener The action listener to remove.
 	 */
-	public void removeActionListener(GuiListenerAdvanced actionListener) {
+	public void removeActionListener(ListenerAdvanced actionListener) {
 		actionEvents.remove(actionListener);
 	}
 
@@ -232,7 +232,7 @@ public abstract class GuiComponent {
 			return;
 		}
 
-		for (GuiListenerAdvanced listener : actionEvents) {
+		for (ListenerAdvanced listener : actionEvents) {
 			if (listener.hasOccurred()) {
 				listener.run();
 			}
