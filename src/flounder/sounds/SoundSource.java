@@ -76,7 +76,7 @@ public class SoundSource {
 	 * @return The source's volume.
 	 */
 	protected float getVolume() {
-		return volume;
+		return alGetSourcef(sourceID, AL_GAIN);
 	}
 
 	/**

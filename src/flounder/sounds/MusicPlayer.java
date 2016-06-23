@@ -18,6 +18,7 @@ public class MusicPlayer {
 	private Playlist currentPlaylist;
 	private Sound currentlyPlaying;
 
+	private float lastSoundVolume;
 	private float volumeMaxMusic;
 	private ValueDriver volumeDriver;
 	private boolean skippingTrack;
@@ -42,8 +43,9 @@ public class MusicPlayer {
 		currentPlaylist = null;
 		currentlyPlaying = null;
 
+		lastSoundVolume = SOUND_VOLUME;
 		volumeMaxMusic = 0.0f;
-		volumeDriver = new ConstantDriver(volumeMaxMusic);
+		volumeDriver = new ConstantDriver(volumeMaxMusic * SOUND_VOLUME);
 		skippingTrack = false;
 
 		shuffle = false;
@@ -65,9 +67,14 @@ public class MusicPlayer {
 			return;
 		}
 
+		if (lastSoundVolume != SOUND_VOLUME) {
+			setVolume(volumeMaxMusic);
+			lastSoundVolume = SOUND_VOLUME;
+		}
+
 		// Updates the volume using a driver.
 		float volume = volumeDriver.update(delta);
-		source.setVolume(volume * SOUND_VOLUME);
+		source.setVolume(volume);
 
 		// Stops music if there is no volume.
 		if (volume == 0.0f) {
@@ -228,7 +235,7 @@ public class MusicPlayer {
 	public void setVolume(float volume) {
 		if (volumeMaxMusic != volume) {
 			volumeMaxMusic = volume;
-			volumeDriver = new ConstantDriver(volumeMaxMusic);
+			volumeDriver = new ConstantDriver(volumeMaxMusic * SOUND_VOLUME);
 		}
 	}
 

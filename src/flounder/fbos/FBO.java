@@ -205,12 +205,16 @@ public class FBO {
 			int reverseWidth = (int) (displayWidth * sizeScalar);
 			int reverseHeight = (int) (displayHeight * sizeScalar);
 
+			if (displayWidth == 0 || displayHeight == 0) {
+				return;
+			}
+
 			if (width != reverseWidth || height != reverseHeight) {
 				width = (int) (displayWidth * sizeScalar);
 				height = (int) (displayHeight * sizeScalar);
 
 				delete();
-				FlounderEngine.getLogger().log("Recreating FBO; width: " + width + ", and height: " + height + ".");
+				FlounderEngine.getLogger().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 				initializeFBO();
 			}
 		}

@@ -69,10 +69,6 @@ public class AmbientNode {
 	private void updateValues(float delta) {
 		innerRadius.update(delta);
 		fadeOutRadius.update(delta);
-
-		if (controller != null) {
-			// TODO: Update ranges.
-		}
 	}
 
 	/**
