@@ -4,21 +4,92 @@ import flounder.maths.vectors.*;
 
 import java.util.*;
 
+/**
+ * A 3D axis-aligned bounding box.
+ */
 public class AABB {
 	private Vector3f minExtents;
 	private Vector3f maxExtents;
 
+	/**
+	 * Creates a new blank 3D AABB.
+	 */
 	public AABB() {
 		this(new Vector3f(), new Vector3f());
 	}
 
+	/**
+	 * Creates a new mixed AABB based on it's extents.
+	 *
+	 * @param minExtents The minimum extent of the box.
+	 * @param maxExtents The minimum extent of the box.
+	 */
 	public AABB(Vector3f minExtents, Vector3f maxExtents) {
 		this.minExtents = minExtents;
 		this.maxExtents = maxExtents;
 	}
 
+	/**
+	 * Creates a new AABB from another AABB source.
+	 *
+	 * @param source The source to create off of.
+	 */
 	public AABB(AABB source) {
 		this(new Vector3f(source.getMinExtents()), new Vector3f(source.getMaxExtents()));
+	}
+
+	/**
+	 * Calculates the center of this AABB on the X axis.
+	 *
+	 * @return The center location of this AABB on the X axis.
+	 */
+	public double getCenterX() {
+		return (minExtents.getX() + maxExtents.getX()) / 2.0;
+	}
+
+	/**
+	 * Calculates the center of this AABB on the Y axis.
+	 *
+	 * @return The center location of this AABB on the Y axis.
+	 */
+	public double getCenterY() {
+		return (minExtents.getY() + maxExtents.getY()) / 2.0;
+	}
+
+	/**
+	 * Calculates the center of this AABB on the Z axis.
+	 *
+	 * @return The center location of this AABB on the Z axis.
+	 */
+	public double getCenterZ() {
+		return (minExtents.getZ() + maxExtents.getZ()) / 2.0;
+	}
+
+	/**
+	 * Gets the width of this AABB.
+	 *
+	 * @return The width of this AABB.
+	 */
+	public double getWidth() {
+		return maxExtents.getX() - minExtents.getX();
+	}
+
+	/**
+	 * Gets the height of this AABB.
+	 *
+	 * @return The height of this AABB.
+	 */
+	public double getHeight() {
+		return maxExtents.getY() - minExtents.getY();
+	}
+
+	/**
+	 * Gets the depth of this AABB.
+	 *
+	 * @return The depth of this AABB.
+	 */
+	public double getDepth() {
+		return maxExtents.getZ() - minExtents.getZ();
 	}
 
 	public Vector3f getMinExtents() {
@@ -175,6 +246,24 @@ public class AABB {
 		return new AABB(Vector3f.add(minExtents, position, null), Vector3f.add(maxExtents, position, null));
 	}
 
+	/**
+	 * Tests whether another AABB is completely contained by this one.
+	 *
+	 * @param other The AABB being tested for containment
+	 *
+	 * @return True if {@code other} is contained by this AABB, false otherwise.
+	 */
+	public boolean contains(AABB other) {
+		return minExtents.getX() <= other.minExtents.getX() && other.maxExtents.getX() <= maxExtents.getX() && minExtents.getY() <= other.minExtents.getY() && other.maxExtents.getY() <= maxExtents.getY() && minExtents.getZ() <= other.minExtents.getZ() && other.maxExtents.getZ() <= maxExtents.getZ();
+	}
+
+	/**
+	 * Tests whether another AABB is intersecting this one.
+	 *
+	 * @param other The AABB being tested for intersection
+	 *
+	 * @return True if {@code other} is intersecting this AABB, false otherwise.
+	 */
 	public IntersectData intersects(AABB other) throws IllegalArgumentException {
 		if (other == null) {
 			throw new IllegalArgumentException("Null AABB collider.");

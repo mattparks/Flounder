@@ -1,74 +1,38 @@
-/*package flounder.space;
+package flounder.space;
 
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 
-import java.util.*;*/
+import java.util.*;
 
 /**
  * Represents a 2D space that can be recursively divided into 4 equal subspaces.
- * <p>
- * Initializes a QuadTree from an AABB.
- *
- * @param aabb Represents the 2D space inside the QuadTree.
- * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
- * <p>
- * Initializes a QuadTree from a source Quadtree.
- * @param source The source quadtree.
- * <p>
- * Initializes a QuadTree from an AABB.
- * @param aabb Represents the 2D space inside the QuadTree.
- * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
- * <p>
- * Initializes a QuadTree from a source Quadtree.
- * @param source The source quadtree.
- * <p>
- * Initializes a QuadTree from an AABB.
- * @param aabb Represents the 2D space inside the QuadTree.
- * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
- * <p>
- * Initializes a QuadTree from a source Quadtree.
- * @param source The source quadtree.
- * <p>
- * Initializes a QuadTree from an AABB.
- * @param aabb Represents the 2D space inside the QuadTree.
- * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
- * <p>
- * Initializes a QuadTree from a source Quadtree.
- * @param source The source quadtree.
- * <p>
- * Initializes a QuadTree from an AABB.
- * @param aabb Represents the 2D space inside the QuadTree.
- * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
- * <p>
- * Initializes a QuadTree from a source Quadtree.
- * @param source The source quadtree.
  */
-/*public class StructureQuadtree<T extends ISpatialObject> implements ISpatialStructure<T> {
+public class StructureQuadtree<T extends ISpatialObject> implements ISpatialStructure<T> {
 	private StructureQuadtree<T> nodes[];
 	private int capacity;
 	private List<T> objects;
-	private AABB aabb;*/
+	private AABB aabb;
 
-/**
- * Initializes a QuadTree from an AABB.
- *
- * @param aabb Represents the 2D space inside the QuadTree.
- * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
- */
-/*	public StructureQuadtree(AABB aabb, int capacity) {
+	/**
+	 * Initializes a QuadTree from an AABB.
+	 *
+	 * @param aabb Represents the 2D space inside the QuadTree.
+	 * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
+	 */
+	public StructureQuadtree(AABB aabb, int capacity) {
 		this.aabb = aabb;
 		this.capacity = capacity;
 		objects = new ArrayList<>();
 		nodes = null;
-	}*/
+	}
 
-/**
- * Initializes a QuadTree from a source Quadtree.
- *
- * @param source The source quadtree.
- */
-/*	private StructureQuadtree(StructureQuadtree<T> source) {
+	/**
+	 * Initializes a QuadTree from a source Quadtree.
+	 *
+	 * @param source The source quadtree.
+	 */
+	private StructureQuadtree(StructureQuadtree<T> source) {
 		this.nodes = source.nodes;
 		this.objects = source.objects;
 		this.capacity = source.capacity;
@@ -114,11 +78,11 @@ import java.util.*;*/
 
 	@Override
 	public List<T> queryInFrustum(List<T> result, Frustum range) {
-		if (!aabb.intersects(range)) {
+		if (!range.aabbInFrustum(aabb)) {
 			return result;
 		}
 
-		if (range.contains(aabb)) {
+		if (range.aabbInFrustum(aabb)) {
 			return addAll(result);
 		}
 
@@ -143,7 +107,7 @@ import java.util.*;*/
 
 	@Override
 	public List<T> queryInAABB(List<T> result, AABB range) {
-		if (!aabb.intersects(range)) {
+		if (!aabb.intersects(range).isIntersection()) {
 			return result;
 		}
 
@@ -185,19 +149,19 @@ import java.util.*;*/
 		objects = new ArrayList<>();
 
 		if (expandX <= 0 && expandY <= 0) {
-			aabb = new AABB(new Vector2f(minX - expanseX, minY - expanseY), new Vector2f(maxX, maxY));
+			aabb = new AABB(new Vector3f(minX - expanseX, minY - expanseY, 0.0f), new Vector3f(maxX, maxY, 0.0f));
 			subdivide();
 			nodes[1] = thisAsNode;
 		} else if (expandX <= 0 && expandY > 0) {
-			aabb = new AABB(new Vector2f(minX - expanseX, minY), new Vector2f(maxX, maxY + expanseY));
+			aabb = new AABB(new Vector3f(minX - expanseX, minY, 0.0f), new Vector3f(maxX, maxY + expanseY, 0.0f));
 			subdivide();
 			nodes[3] = thisAsNode;
 		} else if (expandX > 0 && expandY > 0) {
-			aabb = new AABB(new Vector2f(minX, minY), new Vector2f(maxX + expanseX, maxY + expanseY));
+			aabb = new AABB(new Vector3f(minX, minY, 0.0f), new Vector3f(maxX + expanseX, maxY + expanseY, 0.0f));
 			subdivide();
 			nodes[2] = thisAsNode;
 		} else if (expandX > 0 && expandY <= 0) {
-			aabb = new AABB(new Vector2f(minX, minY - expanseY), new Vector2f(maxX + expanseX, maxY));
+			aabb = new AABB(new Vector3f(minX, minY - expanseY, 0.0f), new Vector3f(maxX + expanseX, maxY, 0.0f));
 			subdivide();
 			nodes[0] = thisAsNode;
 		} else {
@@ -240,19 +204,19 @@ import java.util.*;*/
 
 		minY += halfYLength;
 		maxX -= halfXLength;
-		nodes[0] = new StructureQuadtree<T>(new AABB(new Vector2f(minX, minY), new Vector2f(maxX, maxY)), capacity);
+		nodes[0] = new StructureQuadtree<T>(new AABB(new Vector3f(minX, minY, 0.0f), new Vector3f(maxX, maxY, 0.0f)), capacity);
 
 		minX += halfXLength;
 		maxX += halfXLength;
-		nodes[1] = new StructureQuadtree<T>(new AABB(new Vector2f(minX, minY), new Vector2f(maxX, maxY)), capacity);
+		nodes[1] = new StructureQuadtree<T>(new AABB(new Vector3f(minX, minY, 0.0f), new Vector3f(maxX, maxY, 0.0f)), capacity);
 
 		minY -= halfYLength;
 		maxY -= halfYLength;
-		nodes[3] = new StructureQuadtree<T>(new AABB(new Vector2f(minX, minY), new Vector2f(maxX, maxY)), capacity);
+		nodes[3] = new StructureQuadtree<T>(new AABB(new Vector3f(minX, minY, 0.0f), new Vector3f(maxX, maxY, 0.0f)), capacity);
 
 		minX -= halfXLength;
 		maxX -= halfXLength;
-		nodes[2] = new StructureQuadtree<T>(new AABB(new Vector2f(minX, minY), new Vector2f(maxX, maxY)), capacity);
+		nodes[2] = new StructureQuadtree<T>(new AABB(new Vector3f(minX, minY, 0.0f), new Vector3f(maxX, maxY, 0.0f)), capacity);
 
 		reinsertObjects();
 	}
@@ -341,4 +305,4 @@ import java.util.*;*/
 
 		return result;
 	}
-}*/
+}
