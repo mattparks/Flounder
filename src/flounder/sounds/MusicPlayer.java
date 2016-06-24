@@ -68,7 +68,7 @@ public class MusicPlayer {
 		}
 
 		if (lastSoundVolume != SOUND_VOLUME) {
-			setVolume(volumeMaxMusic);
+			volumeDriver = new ConstantDriver(volumeMaxMusic * SOUND_VOLUME);
 			lastSoundVolume = SOUND_VOLUME;
 		}
 

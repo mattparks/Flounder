@@ -29,7 +29,7 @@ public class AmbientNode {
 	/**
 	 * Creates a new ambient node at a given position in the world.
 	 *
-	 * @param position The position of the center of the node.
+	 * @param position The position of the centre of the node.
 	 * @param innerRange The inner radius, within which the ambient sound is played at full volume.
 	 * @param fadeOutRange The distance between the inner and outer radius's of the node.
 	 * @param sounds The various sounds that the node can play.
@@ -72,7 +72,7 @@ public class AmbientNode {
 	}
 
 	/**
-	 * @return the distance between the {@link IAudioListener} and the node's center.
+	 * @return the distance between the {@link IAudioListener} and the node's centre.
 	 */
 	private float getDistanceFromListener() {
 		return Vector3f.subtract(FlounderEngine.getDevices().getSound().getCameraPosition(), position, null).length();
@@ -111,7 +111,7 @@ public class AmbientNode {
 	 * the currently playing sound's {@link AudioController} is updated, and a new sound is played if the current sound has come to an end.
 	 *
 	 * @param delta The time in seconds since the last frame.
-	 * @param distance The distance of the {@link IAudioListener} from the node's center.
+	 * @param distance The distance of the {@link IAudioListener} from the node's centre.
 	 */
 	private void updateActiveNode(float delta, float distance) {
 		if (distance >= getRange() * RANGE_THRESHOLD) {
@@ -125,7 +125,7 @@ public class AmbientNode {
 	}
 
 	/**
-	 * @return The distance from the center of the node to the outer radius.
+	 * @return The distance from the centre of the node to the outer radius.
 	 */
 	public float getRange() {
 		return innerRadius.get() + fadeOutRadius.get();
@@ -134,7 +134,7 @@ public class AmbientNode {
 	/**
 	 * Set the inner and outer radiuses of the node.
 	 *
-	 * @param innerRange The distance from the center of the node to the inner radius. Within this radius the ambient sounds are played at full volume.
+	 * @param innerRange The distance from the centre of the node to the inner radius. Within this radius the ambient sounds are played at full volume.
 	 * @param fadeOutRange The distance between the inner and outer radius's.
 	 */
 	public void setRanges(float innerRange, float fadeOutRange) {

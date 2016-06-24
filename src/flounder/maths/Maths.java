@@ -1,5 +1,7 @@
 package flounder.maths;
 
+import flounder.maths.vectors.*;
+
 import java.util.*;
 
 /**
@@ -211,6 +213,25 @@ public class Maths {
 	 */
 	public static float limit(float value, float limit) {
 		return value > limit ? limit : value;
+	}
+
+	/**
+	 * Gets the height on a point off of a 3d triangle.
+	 *
+	 * @param p1 Point 1 on the triangle.
+	 * @param p2 Point 2 on the triangle.
+	 * @param p3 Point 3 on the triangle.
+	 * @param pos The XZ position of the object.
+	 *
+	 * @return Height of the triangle at the position.
+	 */
+	public static float baryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) {
+		float det = (p2.getZ() - p3.getZ()) * (p1.getX() - p3.getX()) + (p3.getX() - p2.getX()) * (p1.getZ() - p3.getZ());
+		float l1 = ((p2.getZ() - p3.getZ()) * (pos.getX() - p3.getX()) + (p3.getX() - p2.getX()) * (pos.getY() - p3.getZ())) / det;
+		float l2 = ((p3.getZ() - p1.getZ()) * (pos.getX() - p3.getX()) + (p1.getX() - p3.getX()) * (pos.getY() - p3.getZ())) / det;
+		float l3 = 1.0f - l1 - l2;
+
+		return l1 * p1.getY() + l2 * p2.getY() + l3 * p3.getY();
 	}
 
 	/**

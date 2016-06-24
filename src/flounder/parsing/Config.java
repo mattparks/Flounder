@@ -1,6 +1,8 @@
 package flounder.parsing;
 
+import flounder.engine.*;
 import flounder.guis.*;
+import flounder.helpers.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -13,8 +15,7 @@ import java.util.Map.*;
  */
 public class Config {
 	private MyFile file;
-	private Map<String, String> map;
-	private List<ListenerAdvanced> valueChangeListeners;
+	private Map<String, Pair<String, ConfigReference>> map;
 
 	/**
 	 * Loads and parses a configuration file.
@@ -24,7 +25,6 @@ public class Config {
 	public Config(MyFile file) {
 		this.file = file;
 		this.map = new HashMap<>();
-		this.valueChangeListeners = new ArrayList<>();
 
 		File saveDirectory = new File(file.getPath().replaceAll(file.getName(), "").substring(1));
 		File sameFile = new File(file.getPath().substring(1));
@@ -74,7 +74,7 @@ public class Config {
 					throw new ParseException("Only one '=' expected (line " + lineNumber + ")", lineNumber);
 				}
 
-				map.put(tokens[0].trim(), tokens[1].trim());
+				map.put(tokens[0].trim(), new Pair<>(tokens[1].trim(), null));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -88,11 +88,9 @@ public class Config {
 	 *
 	 * @param entry The entry to change.
 	 * @param value The value to set to.
-	 * @param <T> The generic value.
 	 */
-	public<T> void setValue(String entry, T value) {
-		map.remove(entry);
-		map.put(entry, value.toString());
+	public void setValue(String entry, String value) {
+		map.get(entry).setFirst(value);
 	}
 
 	/**
@@ -103,11 +101,12 @@ public class Config {
 	 * @return The string assigned to that entry.
 	 */
 	public String getString(String entry) {
-		String result = map.get(entry);
-
-		if (result == null) {
+		if (map.get(entry) == null) {
 			System.out.println("Config could not find string '" + entry + "' in file: " + file);
+			return null;
 		}
+
+		String result = map.get(entry).getFirst();
 
 		if (result != null && result.charAt(0) == '$') {
 			return getString(result.substring(1));
@@ -158,28 +157,14 @@ public class Config {
 	 * @return The string assigned to the entry if found, otherwise the string assigned to the default entry.
 	 */
 	public String getStringWithDefault(String entry, String defaultEntry, ConfigReference reference) {
-		valueChangeListeners.add(new ListenerAdvanced() {
-			private String value = defaultEntry;
-
-			@Override
-			public boolean hasOccurred() {
-				String newValue = reference.getReading().toString();
-				boolean changed = newValue.equals(value);
-				value = newValue;
-				return changed;
-			}
-
-			@Override
-			public void run() {
-				setValue(entry, value);
-			}
-		});
-
 		String result = getString(entry);
 
 		if (result == null) {
-			map.put(entry, defaultEntry);
+			map.put(entry, new Pair<>(defaultEntry, reference));
 			result = defaultEntry;
+		} else if (map.get(entry).getSecond() == null) {
+			map.remove(entry);
+			map.put(entry, new Pair<>(defaultEntry, reference));
 		}
 
 		return result;
@@ -225,18 +210,17 @@ public class Config {
 	 * Saves any changes to the configs and closes the config.
 	 */
 	public void dispose() {
-		valueChangeListeners.forEach(listener -> {
-			if (listener.hasOccurred()) {
-				listener.run();
-			}
-		});
+		for (String key : map.keySet()) {
+			Pair<String, ConfigReference> pair = map.get(key);
+			setValue(key, pair.getSecond().getReading());
+		}
 
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
-			Iterator<Entry<String, String>> it = map.entrySet().iterator();
+			Iterator<Entry<String, Pair<String, ConfigReference>>> it = map.entrySet().iterator();
 
 			while (it.hasNext()) {
-				Entry<String, String> pair = it.next();
-				String line = pair.getKey() + "=" + pair.getValue() + "\n";
+				Entry<String, Pair<String, ConfigReference>> pair = it.next();
+				String line = pair.getKey() + "=" + pair.getValue().getFirst() + "\n";
 				bw.write(line);
 			}
 		} catch (IOException e) {

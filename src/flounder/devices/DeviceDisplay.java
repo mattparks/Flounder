@@ -126,7 +126,7 @@ public class DeviceDisplay implements IModule {
 		// Enables VSync if requested.
 		glfwSwapInterval(vsync ? 1 : 0);
 
-		// Centers the window position.
+		// Centres the window position.
 		if (!fullscreen) {
 			glfwSetWindowPos(window, (windowPosX = (mode.width() - windowWidth) / 2), (windowPosY = (mode.height() - windowHeight) / 2));
 		}

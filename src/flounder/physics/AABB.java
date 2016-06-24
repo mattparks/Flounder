@@ -39,29 +39,29 @@ public class AABB {
 	}
 
 	/**
-	 * Calculates the center of this AABB on the X axis.
+	 * Calculates the centre of this AABB on the X axis.
 	 *
-	 * @return The center location of this AABB on the X axis.
+	 * @return The centre location of this AABB on the X axis.
 	 */
-	public double getCenterX() {
+	public double getCentreX() {
 		return (minExtents.getX() + maxExtents.getX()) / 2.0;
 	}
 
 	/**
-	 * Calculates the center of this AABB on the Y axis.
+	 * Calculates the centre of this AABB on the Y axis.
 	 *
-	 * @return The center location of this AABB on the Y axis.
+	 * @return The centre location of this AABB on the Y axis.
 	 */
-	public double getCenterY() {
+	public double getCentreY() {
 		return (minExtents.getY() + maxExtents.getY()) / 2.0;
 	}
 
 	/**
-	 * Calculates the center of this AABB on the Z axis.
+	 * Calculates the centre of this AABB on the Z axis.
 	 *
-	 * @return The center location of this AABB on the Z axis.
+	 * @return The centre location of this AABB on the Z axis.
 	 */
-	public double getCenterZ() {
+	public double getCentreZ() {
 		return (minExtents.getZ() + maxExtents.getZ()) / 2.0;
 	}
 
@@ -117,7 +117,7 @@ public class AABB {
 	}
 
 	/**
-	 * Creates a new AABB equivalent to this, scaled away from the center origin.
+	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
 	 *
 	 * @param scale Amount to scale up the AABB.
 	 *
@@ -128,7 +128,7 @@ public class AABB {
 	}
 
 	/**
-	 * Creates a new AABB equivalent to this, scaled away from the center origin.
+	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
 	 *
 	 * @param scaleX Amount to scale up the AABB on X.
 	 * @param scaleY Amount to scale up the AABB on Y.

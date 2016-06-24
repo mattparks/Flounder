@@ -78,7 +78,7 @@ public class TextLoader {
 		List<Float> textureCoords = new ArrayList<>();
 
 		for (Line line : lines) {
-			if (text.isCentered()) {
+			if (text.isCentred()) {
 				cursorX = (line.getMaxLength() - line.getLineLength()) / 2;
 			}
 
@@ -120,7 +120,7 @@ public class TextLoader {
 	private void setTextSettings(Text text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 
-		if (text.isCentered() || lines.size() > 1) {
+		if (text.isCentred() || lines.size() > 1) {
 			text.setOriginalWidth((float) lines.get(0).getMaxLength());
 		} else {
 			text.setOriginalWidth((float) lines.get(0).getLineLength());

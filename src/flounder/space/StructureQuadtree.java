@@ -45,8 +45,8 @@ public class StructureQuadtree<T extends ISpatialObject> implements ISpatialStru
 			return;
 		}
 
-		float dirX = (float) (object.getAABB().getCenterX() - aabb.getCenterX());
-		float dirY = (float) (object.getAABB().getCenterY() - aabb.getCenterY());
+		float dirX = (float) (object.getAABB().getCentreX() - aabb.getCentreX());
+		float dirY = (float) (object.getAABB().getCentreY() - aabb.getCentreY());
 		expand(dirX, dirY);
 		add(object);
 	}

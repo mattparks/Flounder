@@ -8,7 +8,7 @@ import flounder.visual.*;
 public class Text {
 	private float fontSize;
 	private FontType fontType;
-	private boolean centerText;
+	private boolean centreText;
 	private String textString;
 	private int textMesh;
 	private int vertexCount;
@@ -38,11 +38,11 @@ public class Text {
 
 	private boolean loaded;
 
-	protected Text(String text, FontType font, float fontSize, boolean centered) {
+	protected Text(String text, FontType font, float fontSize, boolean centred) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.fontType = font;
-		this.centerText = centered;
+		this.centreText = centred;
 
 		this.alphaDriver = new ConstantDriver(1.0f);
 		this.scaleDriver = new ConstantDriver(1.0f);
@@ -135,8 +135,8 @@ public class Text {
 		return fontType;
 	}
 
-	public boolean isCentered() {
-		return centerText;
+	public boolean isCentred() {
+		return centreText;
 	}
 
 	protected int getMesh() {
