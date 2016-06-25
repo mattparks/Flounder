@@ -36,7 +36,7 @@ public class FlounderProfiler implements IModule {
 				if (JOptionPane.showConfirmDialog(profilerJFrame,
 						"Are you sure to close this profiler?", "Really Closing?",
 						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					profilerOpen = false;
 				}
 			}

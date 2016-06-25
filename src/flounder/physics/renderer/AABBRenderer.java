@@ -40,6 +40,10 @@ public class AABBRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
+		if (!FlounderEngine.getAABBs().renders()) {
+			return;
+		}
+
 		prepareRendering(clipPlane, camera);
 
 		for (AABB aabb : FlounderEngine.getAABBs().getRenderAABB()) {

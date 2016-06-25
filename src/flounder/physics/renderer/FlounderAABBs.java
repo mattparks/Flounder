@@ -10,6 +10,7 @@ import java.util.*;
  */
 public class FlounderAABBs implements IModule {
 	private List<AABB> toRenderABBB;
+	private boolean renders;
 	private int aabbCount;
 
 	/**
@@ -17,6 +18,7 @@ public class FlounderAABBs implements IModule {
 	 */
 	public FlounderAABBs() {
 		toRenderABBB = new ArrayList<>();
+		renders = false;
 		aabbCount = 0;
 	}
 
@@ -51,6 +53,14 @@ public class FlounderAABBs implements IModule {
 	 */
 	protected List<AABB> getRenderAABB() {
 		return toRenderABBB;
+	}
+
+	public boolean renders() {
+		return renders;
+	}
+
+	public void setRenders(boolean renders) {
+		this.renders = renders;
 	}
 
 	/**

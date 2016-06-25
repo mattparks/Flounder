@@ -1,7 +1,5 @@
 package flounder.parsing;
 
-import flounder.engine.*;
-import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.resources.*;
 
@@ -212,7 +210,7 @@ public class Config {
 	public void dispose() {
 		for (String key : map.keySet()) {
 			Pair<String, ConfigReference> pair = map.get(key);
-			setValue(key, pair.getSecond().getReading());
+			setValue(key, "" + pair.getSecond().getReading());
 		}
 
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {
@@ -231,12 +229,12 @@ public class Config {
 	/**
 	 * A reference to the value that was loaded from the config.
 	 */
-	public interface ConfigReference {
+	public interface ConfigReference<T> {
 		/**
 		 * Gets the reading from that value.
 		 *
 		 * @return The value read.
 		 */
-		String getReading();
+		T getReading();
 	}
 }
