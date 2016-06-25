@@ -7,6 +7,7 @@ import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
+import flounder.models.*;
 import flounder.networking.*;
 import flounder.physics.renderer.*;
 import flounder.processing.*;
@@ -24,6 +25,7 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderDevices devices;
 	private FlounderProcessors processors;
 	private FlounderLoader loader;
+	private FlounderModels models;
 	private FlounderTextures textures;
 	private FlounderFonts fonts;
 	private FlounderGuis guis;
@@ -57,6 +59,7 @@ public class FlounderEngine extends Thread implements IModule {
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
 		this.loader = new FlounderLoader();
+		this.models = new FlounderModels();
 		this.textures = new FlounderTextures();
 		this.fonts = new FlounderFonts();
 		this.guis = new FlounderGuis();
@@ -89,6 +92,8 @@ public class FlounderEngine extends Thread implements IModule {
 		profiler.init();
 		devices.init();
 		processors.init();
+		loader.init();
+		models.init();
 		textures.init();
 		fonts.init();
 		guis.init();
@@ -122,6 +127,7 @@ public class FlounderEngine extends Thread implements IModule {
 		devices.update();
 
 		loader.update();
+		models.update();
 		textures.update();
 		processors.update();
 		fonts.update();
@@ -146,6 +152,7 @@ public class FlounderEngine extends Thread implements IModule {
 			AABBs.profile();
 			network.profile();
 			loader.profile();
+			models.profile();
 			textures.profile();
 			guis.profile();
 			fonts.profile();
@@ -197,6 +204,15 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static FlounderLoader getLoader() {
 		return instance.loader;
+	}
+
+	/**
+	 * Gets the engines current OpenGL model loader.
+	 *
+	 * @return The engines current OpenGL model loader.
+	 */
+	public static FlounderModels getModels() {
+		return instance.models;
 	}
 
 	/**
@@ -353,6 +369,7 @@ public class FlounderEngine extends Thread implements IModule {
 	@Override
 	public void dispose() {
 		processors.dispose();
+		models.dispose();
 		loader.dispose();
 		network.dispose();
 		AABBs.dispose();

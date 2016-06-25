@@ -147,7 +147,7 @@ public class TextureBuilder {
 			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder in separate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			TextureLoadRequest request = new TextureLoadRequest(data, this, true);
+			TextureLoadRequest request = new TextureLoadRequest(data, this, false);
 			request.doResourceRequest();
 			FlounderEngine.getProcessors().sendGLRequest(request);
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
