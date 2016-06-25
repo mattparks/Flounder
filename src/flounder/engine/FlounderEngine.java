@@ -53,8 +53,8 @@ public class FlounderEngine extends Thread implements IModule {
 	public FlounderEngine(Implementation implementation, int width, int height, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
 		instance = this;
 
-		// Increment revision every git commit. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("3.6.16");
+		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
+		version = new Version("1.6.0");
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
