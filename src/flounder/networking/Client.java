@@ -1,9 +1,10 @@
-package flounder.networking.client;
+package flounder.networking;
 
 import flounder.engine.*;
 import flounder.networking.packets.*;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.net.*;
 
 /**
@@ -25,9 +26,7 @@ public class Client extends Thread {
 			this.socket = new DatagramSocket();
 			this.ipAddress = InetAddress.getByName(ipAddress);
 			this.port = port;
-		} catch (SocketException e) {
-			FlounderEngine.getLogger().exception(e);
-		} catch (UnknownHostException e) {
+		} catch (SocketException | UnknownHostException e) {
 			FlounderEngine.getLogger().exception(e);
 		}
 	}
@@ -51,32 +50,27 @@ public class Client extends Thread {
 
 	private void parsePacket(byte[] data, InetAddress address, int port) {
 		String message = new String(data).trim();
-		Packet.PacketType type = Packet.lookupPacket(message.substring(0, 2));
 
-		Packet packet;
-
-		switch (type) {
-			default:
-			case INVALID:
-				packet = null;
-				break;
-			case LOGIN:
-				packet = new Packet00Login(data);
-				handleLogin((Packet00Login) packet, address, port);
-				break;
-			case DISCONNECT:
-				packet = new Packet01Disconnect(data);
-				handleDisconnect((Packet01Disconnect) packet, address, port);
-				break;
+		if (!message.contains("]:")) {
+			return;
 		}
-	}
 
-	private void handleLogin(Packet00Login packet, InetAddress address, int port) {
-		FlounderEngine.getLogger().log("[" + address.getHostAddress() + ":" + port + "] " + (packet).getUsername() + " has joined the game.");
-	}
+		String className = message.substring(1, message.length()).split("]:")[0];
+		Packet packet = null;
 
-	private void handleDisconnect(Packet01Disconnect packet, InetAddress address, int port) {
-		FlounderEngine.getLogger().log("[" + address.getHostAddress() + ":" + port + "] " + packet.getUsername() + " has quit the game.");
+		try {
+			Class<?> clazz = Class.forName(className);
+			Constructor<?> ctor = clazz.getConstructor(byte[].class);
+			Object object = ctor.newInstance(new Object[]{data});
+			packet = (Packet) object;
+		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+			FlounderEngine.getLogger().error("Client could not load packet with the class of " + className);
+			e.printStackTrace();
+		}
+
+		if (packet != null) {
+			packet.clientHandlePacket(this, address, port);
+		}
 	}
 
 	/**

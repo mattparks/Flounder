@@ -1,9 +1,7 @@
 package flounder.networking;
 
 import flounder.engine.*;
-import flounder.networking.client.*;
 import flounder.networking.packets.*;
-import flounder.networking.server.*;
 
 /**
  * A manager that manages the current network connections of the engine.
@@ -51,7 +49,7 @@ public class FlounderNetwork implements IModule {
 		socketClient = new Client("localhost", port);
 		socketClient.start();
 
-		Packet00Login loginPacket = new Packet00Login(username);
+		PacketLogin loginPacket = new PacketLogin(username);
 		loginPacket.writeData(socketClient);
 	}
 
@@ -60,7 +58,7 @@ public class FlounderNetwork implements IModule {
 	 */
 	public void closeServer() {
 		if (socketServer != null) {
-			new Packet01Disconnect("server").writeData(socketServer);
+			new PacketDisconnect("server").writeData(socketServer);
 			socketServer.dispose();
 			socketServer = null;
 		}
@@ -71,7 +69,7 @@ public class FlounderNetwork implements IModule {
 	 */
 	public void closeClient() {
 		if (socketClient != null) {
-			new Packet01Disconnect(username).writeData(socketClient);
+			new PacketDisconnect(username).writeData(socketClient);
 			socketClient.dispose();
 			socketClient = null;
 		}

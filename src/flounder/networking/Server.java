@@ -1,9 +1,10 @@
-package flounder.networking.server;
+package flounder.networking;
 
 import flounder.engine.*;
 import flounder.networking.packets.*;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
@@ -48,36 +49,36 @@ public class Server extends Thread {
 	private void parsePacket(byte[] data, InetAddress address, int port) {
 		String message = new String(data).trim();
 
-		if (message.length() < 2) {
+		if (!message.contains("]:")) {
 			return;
 		}
 
-		Packet.PacketType type = Packet.lookupPacket(message.substring(0, 2));
+		String className = message.substring(1, message.length()).split("]:")[0];
+		Packet packet = null;
 
-		Packet packet;
+		try {
+			Class<?> clazz = Class.forName(className);
+			Constructor<?> ctor = clazz.getConstructor(byte[].class);
+			Object object = ctor.newInstance(new Object[]{data});
+			packet = (Packet) object;
+		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+			FlounderEngine.getLogger().error("Server could not load packet with the class of " + className);
+			e.printStackTrace();
+		}
 
-		switch (type) {
-			default:
-			case INVALID:
-				packet = null;
-				break;
-			case LOGIN:
-				packet = new Packet00Login(data);
-				// if (address.getHostAddress().equalsIgnoreCase("127.0.0.1")) // Server = Client
-				System.out.println("[" + address.getHostAddress() + ":" + port + "] " + ((Packet00Login) (packet)).getUsername() + " has connected.");
-				ClientData player = new ClientData(((Packet00Login) packet).getUsername(), address, port);
-				addConnection(player, (Packet00Login) (packet));
-				break;
-			case DISCONNECT:
-				packet = new Packet01Disconnect(data);
-				System.out.println("[" + address.getHostAddress() + ":" + port + "] " + ((Packet01Disconnect) (packet)).getUsername() + " has disconnected.");
-				removeConnection((Packet01Disconnect) (packet));
-				break;
+		if (packet != null) {
+			packet.serverHandlePacket(this, address, port);
 		}
 	}
 
-	private void addConnection(ClientData player, Packet00Login packet) {
-		boolean alredyConnected = false;
+	/**
+	 * Adds the connection of a client.
+	 *
+	 * @param player The client data to add.
+	 * @param packet The connect packet.
+	 */
+	public void addConnection(ClientData player, PacketLogin packet) {
+		boolean alreadyConnected = false;
 
 		for (ClientData p : connected) {
 			if (player.getUsername().equalsIgnoreCase(p.getUsername())) {
@@ -89,23 +90,28 @@ public class Server extends Thread {
 					p.port = player.port;
 				}
 
-				alredyConnected = true;
+				alreadyConnected = true;
 			} else {
 				// Relay to the current connected player that there is a new player
 				sendData(packet.getData(), p.ipAddress, p.port);
 
 				// Relay to the new player that the currently connect player exists
-				packet = new Packet00Login(p.getUsername());
+				packet = new PacketLogin(p.getUsername());
 				sendData(packet.getData(), player.ipAddress, player.port);
 			}
 		}
 
-		if (!alredyConnected) {
+		if (!alreadyConnected) {
 			this.connected.add(player);
 		}
 	}
 
-	private void removeConnection(Packet01Disconnect packet) {
+	/**
+	 * Removes the connection of a client.
+	 *
+	 * @param packet The disconnect packet.
+	 */
+	public void removeConnection(PacketDisconnect packet) {
 		this.connected.remove(getPlayerMPIndex(packet.getUsername()));
 		packet.writeData(this);
 	}
