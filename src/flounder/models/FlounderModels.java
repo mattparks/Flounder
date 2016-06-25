@@ -7,6 +7,8 @@ import flounder.resources.*;
 import java.io.*;
 import java.util.*;
 
+import static org.lwjgl.opengl.GL30.*;
+
 /**
  * Class capable of loading OBJ files into Models.
  */
@@ -96,6 +98,24 @@ public class FlounderModels implements IModule {
 		}
 
 		return modelData;
+	}
+
+	/**
+	 * Loads model data into the model data structure and OpenGL memory.
+	 *
+	 * @param model The model to be loaded to.
+	 * @param data The data to be ued when loading to the model.
+	 */
+	public void loadModelToOpenGL(Model model, ModelData data) {
+		model.loadData(data);
+		model.setVaoID(FlounderEngine.getLoader().createVAO());
+		FlounderEngine.getLoader().createIndicesVBO(model.getVaoID(), model.getIndices());
+		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);
+		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getTextures(), 1, 2);
+		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getNormals(), 2, 3);
+		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getTangents(), 3, 3);
+		glBindVertexArray(0);
+		model.setVaoLength(model.getIndices().length);
 	}
 
 	private static VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices) {

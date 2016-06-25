@@ -4,8 +4,6 @@ import flounder.engine.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 
-import static org.lwjgl.opengl.GL30.*;
-
 /**
  * A class that can process a request to load a model.
  */
@@ -39,14 +37,6 @@ public class ModelLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void executeGlRequest() {
-		model.loadData(data);
-		model.setVaoID(FlounderEngine.getLoader().createVAO());
-		FlounderEngine.getLoader().createIndicesVBO(model.getVaoID(), model.getIndices());
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getTextures(), 1, 2);
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getNormals(), 2, 3);
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getTangents(), 3, 3);
-		glBindVertexArray(0);
-		model.setVaoLength(model.getIndices().length);
+		FlounderEngine.getModels().loadModelToOpenGL(model, data);
 	}
 }
