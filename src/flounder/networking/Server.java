@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class Server extends Thread {
 	private DatagramSocket socket;
-	private List<ClientData> connected;
+	private List<ClientInfo> connected;
 
 	/**
 	 * Creates a new server.
@@ -77,10 +77,10 @@ public class Server extends Thread {
 	 * @param player The client data to add.
 	 * @param packet The connect packet.
 	 */
-	public void addConnection(ClientData player, PacketLogin packet) {
+	public void addConnection(ClientInfo player, PacketLogin packet) {
 		boolean alreadyConnected = false;
 
-		for (ClientData p : connected) {
+		for (ClientInfo p : connected) {
 			if (player.getUsername().equalsIgnoreCase(p.getUsername())) {
 				if (p.ipAddress == null) {
 					p.ipAddress = player.ipAddress;
@@ -123,8 +123,8 @@ public class Server extends Thread {
 	 *
 	 * @return The clients data.
 	 */
-	public ClientData getPlayerMP(String username) {
-		for (ClientData player : connected) {
+	public ClientInfo getPlayerMP(String username) {
+		for (ClientInfo player : connected) {
 			if (player.getUsername().equals(username)) {
 				return player;
 			}
@@ -143,7 +143,7 @@ public class Server extends Thread {
 	public int getPlayerMPIndex(String username) {
 		int index = 0;
 
-		for (ClientData player : connected) {
+		for (ClientInfo player : connected) {
 			if (player.getUsername().equals(username)) {
 				break;
 			}
@@ -177,7 +177,7 @@ public class Server extends Thread {
 	 * @param data The data to send.
 	 */
 	public void sendDataToAllClients(byte[] data) {
-		for (ClientData p : connected) {
+		for (ClientInfo p : connected) {
 			sendData(data, p.ipAddress, p.port);
 		}
 	}

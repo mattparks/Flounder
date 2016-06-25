@@ -3,9 +3,9 @@ package flounder.networking;
 import java.net.*;
 
 /**
- * Data about the connected client.
+ * Data about the connected client, used primarily in the server.
  */
-public class ClientData {
+public class ClientInfo {
 	public InetAddress ipAddress;
 	public int port;
 	public String username;
@@ -17,7 +17,7 @@ public class ClientData {
 	 * @param ipAddress The clients IP address.
 	 * @param port The port the client is connected to.
 	 */
-	public ClientData(String username, InetAddress ipAddress, int port) {
+	public ClientInfo(String username, InetAddress ipAddress, int port) {
 		this.username = username;
 		this.ipAddress = ipAddress;
 		this.port = port;

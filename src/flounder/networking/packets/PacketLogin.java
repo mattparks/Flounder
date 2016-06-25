@@ -48,7 +48,7 @@ public class PacketLogin extends Packet {
 	public void serverHandlePacket(Server server, InetAddress address, int port) {
 		// if (address.getHostAddress().equalsIgnoreCase("127.0.0.1")) // Server = Client
 		System.out.println("[" + address.getHostAddress() + ":" + port + "] " + username + " has connected.");
-		ClientData player = new ClientData(username, address, port);
+		ClientInfo player = new ClientInfo(username, address, port);
 		server.addConnection(player, this);
 	}
 
