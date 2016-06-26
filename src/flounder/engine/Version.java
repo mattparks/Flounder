@@ -8,25 +8,10 @@ import java.io.*;
  * The version info for Flounder.
  */
 public class Version {
-	/**
-	 * The current version of The Flounder Engine.
-	 **/
 	public final String version;
-
-	/**
-	 * The current major version of The Flounder Engine.
-	 **/
-	public final int major;
-
-	/**
-	 * The current minor version of The Flounder Engine.
-	 **/
-	public final int minor;
-
-	/**
-	 * The current revision version of The Flounder Engine.
-	 **/
-	public final int revision;
+	private final int major;
+	private final int minor;
+	private final int revision;
 
 	/**
 	 * Creates a new version info class.
@@ -49,10 +34,17 @@ public class Version {
 			File versionFile = new File("version.txt");
 
 			if (!versionFile.exists()) {
-				versionFile.createNewFile();
+				if (!versionFile.createNewFile()) {
+					FlounderEngine.getLogger().error("Failed to create new version file!");
+				}
 			} else {
-				versionFile.delete();
-				versionFile.createNewFile();
+				if (!versionFile.delete()) {
+					FlounderEngine.getLogger().error("Failed to delete version file!");
+				}
+
+				if (!versionFile.createNewFile()) {
+					FlounderEngine.getLogger().error("Failed to create new version file!");
+				}
 			}
 
 			FileOutputStream versionOutput = new FileOutputStream(versionFile, false);
@@ -130,5 +122,32 @@ public class Version {
 		}
 
 		return this.revision <= revision;
+	}
+
+	/**
+	 * Gets the current revision version of The Flounder Engine.
+	 *
+	 * @return The current revision version.
+	 */
+	public int getRevision() {
+		return revision;
+	}
+
+	/**
+	 * Gets the current major version of The Flounder Engine.
+	 *
+	 * @return The current major version.
+	 */
+	public int getMajor() {
+		return major;
+	}
+
+	/**
+	 * Gets the current minor version of The Flounder Engine.
+	 *
+	 * @return The current minor version.
+	 */
+	public int getMinor() {
+		return minor;
 	}
 }

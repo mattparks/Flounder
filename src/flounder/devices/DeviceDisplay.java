@@ -3,6 +3,7 @@ package flounder.devices;
 import flounder.engine.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.*;
 
 import javax.imageio.*;
 import java.awt.geom.*;
@@ -212,7 +213,9 @@ public class DeviceDisplay implements IModule {
 
 		if (!saveDirectory.exists()) {
 			try {
-				saveDirectory.mkdir();
+				if (!saveDirectory.mkdir()) {
+					FlounderEngine.getLogger().error("The screenshot directory could not be created.");
+				}
 			} catch (SecurityException e) {
 				FlounderEngine.getLogger().error("The screenshot directory could not be created.");
 				FlounderEngine.getLogger().exception(e);

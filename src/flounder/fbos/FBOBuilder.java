@@ -29,7 +29,7 @@ public class FBOBuilder {
 		this.clampEdge = true;
 		this.alphaChannel = false;
 		this.antialiased = false;
-		this.samples = 1;
+		this.samples = 0;
 		this.width = width;
 		this.height = height;
 		this.fitToScreen = false;

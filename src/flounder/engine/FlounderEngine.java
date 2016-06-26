@@ -102,7 +102,7 @@ public class FlounderEngine extends Thread implements IModule {
 		implementation.init();
 
 		// Opens the profiler if not running from jar.
-		profiler.toggle(!logger.ALLOW_LOUD_LOGS);
+		profiler.toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
 	}
 
 	@Override

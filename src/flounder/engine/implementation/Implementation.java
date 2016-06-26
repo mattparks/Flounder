@@ -29,6 +29,7 @@ public class Implementation implements IModule {
 		this.camera = camera;
 		this.renderer = renderer;
 
+		this.fpsLimit = fpsLimit;
 		closedRequested = false;
 		delta = new Delta();
 		timerLog = new Timer(1.0f);
