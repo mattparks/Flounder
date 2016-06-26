@@ -4,6 +4,7 @@ import flounder.engine.*;
 import flounder.engine.implementation.*;
 import flounder.helpers.*;
 import flounder.maths.vectors.*;
+import flounder.shaders.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -68,12 +69,12 @@ public class GuiRenderer extends IRenderer {
 
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
-		shader.transform.loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
-		shader.alpha.loadFloat(gui.getAlpha());
-		shader.flipTexture.loadBoolean(gui.isFlipTexture());
-		shader.atlasRows.loadFloat(gui.getTexture().getNumberOfRows());
-		shader.atlasOffset.loadVec2(gui.getTextureOffset());
-		shader.colourOffset.loadVec3(gui.getColourOffset());
+		((UniformVec4) shader.getUniform("transform")).loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
+		((UniformFloat) shader.getUniform("alpha")).loadFloat(gui.getAlpha());
+		((UniformFloat) shader.getUniform("flipTexture")).loadBoolean(gui.isFlipTexture());
+		((UniformFloat) shader.getUniform("atlasRows")).loadFloat(gui.getTexture().getNumberOfRows());
+		((UniformVec2) shader.getUniform("atlasOffset")).loadVec2(gui.getTextureOffset());
+		((UniformVec3) shader.getUniform("colourOffset")).loadVec3(gui.getColourOffset());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
 		OpenGlUtils.unbindVAO(0);
 	}

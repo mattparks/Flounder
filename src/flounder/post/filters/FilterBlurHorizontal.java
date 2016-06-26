@@ -7,9 +7,6 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterBlurHorizontal extends PostFilter {
-	private UniformFloat width = new UniformFloat("width");
-	private UniformFloat scale = new UniformFloat("scale");
-
 	private int widthValue;
 	private float scaleValue;
 	private boolean fitToDisplay;
@@ -30,7 +27,6 @@ public class FilterBlurHorizontal extends PostFilter {
 	}
 
 	private void init(int widthValue) {
-		super.storeUniforms(width, scale);
 		this.widthValue = widthValue;
 		this.scaleValue = 2.0f;
 	}
@@ -45,7 +41,7 @@ public class FilterBlurHorizontal extends PostFilter {
 			widthValue = (int) (FlounderEngine.getDevices().getDisplay().getWidth() * sizeScalar);
 		}
 
-		width.loadFloat(widthValue);
-		scale.loadFloat(scaleValue);
+		((UniformFloat) shader.getUniform("width")).loadFloat(widthValue);
+		((UniformFloat) shader.getUniform("scale")).loadFloat(scaleValue);
 	}
 }

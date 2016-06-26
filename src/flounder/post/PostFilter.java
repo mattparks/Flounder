@@ -31,15 +31,6 @@ public abstract class PostFilter {
 	}
 
 	/**
-	 * Stores any shader uniforms into the filters shader program.
-	 *
-	 * @param uniforms The uniforms to store in the shader program.
-	 */
-	public void storeUniforms(Uniform... uniforms) {
-		shader.storeAllUniformLocations(uniforms);
-	}
-
-	/**
 	 * Renders the filter to its FBO.
 	 *
 	 * @param textures A list of textures in indexed order to be bound for the shader program.

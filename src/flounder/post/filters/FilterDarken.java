@@ -5,12 +5,10 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterDarken extends PostFilter {
-	private UniformFloat factor = new UniformFloat("factor");
 	private float factorValue;
 
 	public FilterDarken() {
 		super("filterDarken", new MyFile(PostFilter.POST_LOC, "darkenFragment.glsl"));
-		super.storeUniforms(factor);
 		factorValue = 0.45f;
 	}
 
@@ -24,6 +22,6 @@ public class FilterDarken extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		factor.loadFloat(factorValue);
+		((UniformFloat) shader.getUniform("factor")).loadFloat(factorValue);
 	}
 }

@@ -1,9 +1,11 @@
 package flounder.shaders;
 
 import flounder.engine.*;
+import flounder.helpers.*;
 import flounder.resources.*;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -15,9 +17,11 @@ import static org.lwjgl.opengl.GL20.*;
 public class ShaderProgram {
 	private List<String> layoutLocations;
 	private List<String> layoutBindings;
+	private List<Pair<Uniforms, String>> shaderUniforms;
 
 	private String shaderName;
 	private int programID;
+	private Map<String, Uniform> uniforms;
 
 	/**
 	 * Creates a new shader program with a fragment and vertex shader.
@@ -29,9 +33,14 @@ public class ShaderProgram {
 	public ShaderProgram(String shaderName, MyFile vertexFile, MyFile fragmentFile) {
 		layoutLocations = new ArrayList<>();
 		layoutBindings = new ArrayList<>();
+		shaderUniforms = new ArrayList<>();
 
 		this.shaderName = shaderName;
-		createShader(loadShader(loadFromFile(vertexFile, true, true), GL_VERTEX_SHADER), loadShader(loadFromFile(fragmentFile, false, true), GL_FRAGMENT_SHADER));
+
+		StringBuilder vertexShader = loadFromFile(vertexFile, ShaderTypes.VERTEX);
+		StringBuilder fragmentShader = loadFromFile(fragmentFile, ShaderTypes.FRAGMENT);
+
+		createShader(loadShader(vertexShader, GL_VERTEX_SHADER), loadShader(fragmentShader, GL_FRAGMENT_SHADER));
 	}
 
 	/**
@@ -46,7 +55,87 @@ public class ShaderProgram {
 		layoutBindings = new ArrayList<>();
 
 		this.shaderName = shaderName;
-		createShader(loadShader(loadFromString(vertexString, true, true), GL_VERTEX_SHADER), loadShader(loadFromString(fragmentString, false, true), GL_FRAGMENT_SHADER));
+
+		StringBuilder vertexShader = loadFromString(vertexString, ShaderTypes.VERTEX);
+		StringBuilder fragmentShader = loadFromString(fragmentString, ShaderTypes.FRAGMENT);
+
+		createShader(loadShader(vertexShader, GL_VERTEX_SHADER), loadShader(fragmentShader, GL_FRAGMENT_SHADER));
+	}
+
+	private StringBuilder loadFromFile(MyFile file, ShaderTypes shaderType) {
+		StringBuilder shaderSource = new StringBuilder();
+
+		try {
+			BufferedReader reader = file.getReader();
+			String line;
+
+			while ((line = reader.readLine()) != null) {
+				shaderSource.append(processShaderLine(line.trim(), shaderType) + "\n");
+			}
+		} catch (Exception e) {
+			FlounderEngine.getLogger().error("Could not read file " + file.getName());
+			FlounderEngine.getLogger().exception(e);
+			System.exit(-1);
+		}
+
+		return shaderSource;
+	}
+
+	private StringBuilder loadFromString(String string, ShaderTypes shaderType) {
+		StringBuilder shaderSource = new StringBuilder();
+
+		for (String line : string.split("\n")) {
+			shaderSource.append(processShaderLine(line.trim(), shaderType) + "\n");
+		}
+
+		return shaderSource;
+	}
+
+	private StringBuilder processShaderLine(String line, ShaderTypes shaderType) {
+		if (line.contains("varying")) {
+			if (shaderType == ShaderTypes.VERTEX) {
+				return new StringBuilder().append(line.replace("varying", "out"));
+			} else {
+				return new StringBuilder().append(line.replace("varying", "in"));
+			}
+		}
+
+		if (line.contains("#include")) {
+			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
+			included = included.substring("#include".length(), included.length());
+			return loadFromFile(new MyFile(included), ShaderTypes.INCLUDED);
+		} else if (line.replaceAll("\\s+", "").startsWith("layout") && shaderType != ShaderTypes.INCLUDED) {
+			if (line.contains("location")) {
+				layoutLocations.add(line);
+				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
+			} else if (line.contains("binding")) {
+				layoutBindings.add(line);
+				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
+			}
+		}
+
+		if (line.startsWith("uniform")) {
+			String uniformVarName = line.substring("uniform".length() + 1, line.length() - 1);
+			String uniform = uniformVarName.split(" ")[0].toUpperCase();
+			String name = uniformVarName.split(" ")[1];
+			shaderUniforms.add(new Pair<>(Uniforms.valueOf(uniform), name));
+		}
+
+		return new StringBuilder().append(line);
+	}
+
+	private int loadShader(StringBuilder source, int type) {
+		int shaderID = glCreateShader(type);
+		glShaderSource(shaderID, source);
+		glCompileShader(shaderID);
+
+		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
+			FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
+			FlounderEngine.getLogger().error("Could not compile shader " + shaderName);
+			System.exit(-1);
+		}
+
+		return shaderID;
 	}
 
 	private void createShader(int vertexShaderID, int fragmentShaderID) {
@@ -78,80 +167,41 @@ public class ShaderProgram {
 
 		stop();
 
+		// Creates the Uniforms.
+		uniforms = new HashMap<>();
+
+		for (Pair<Uniforms, String> pair : shaderUniforms) {
+			String uniformClass = pair.getFirst().getUniformClass();
+			Uniform uniformObject = null;
+
+			// Loads the uniform from the class name.
+			try {
+				Class<?> clazz = Class.forName(uniformClass);
+				Constructor<?> ctor = clazz.getConstructor(String.class);
+				Object object = ctor.newInstance(new Object[]{pair.getSecond()});
+				uniformObject = (Uniform) object;
+			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+				FlounderEngine.getLogger().error("Shader could not create the uniform type of " + uniformClass);
+				e.printStackTrace();
+			}
+
+			// If the uniform was loaded.
+			if (uniformObject != null) {
+				// Store uniform locations.
+				uniformObject.storeUniformLocation(programID);
+
+				// Keeps the uniform variables for later usage.
+				uniforms.put(pair.getSecond(), uniformObject);
+			}
+		}
+
+		// Validates the GLSL shader.
+		glValidateProgram(programID);
+
 		// Layouts not needed anymore.
 		layoutLocations.clear();
-		layoutLocations = null;
 		layoutBindings.clear();
-		layoutBindings = null;
-	}
-
-	private StringBuilder loadFromFile(MyFile file, boolean vertexShader, boolean addToLayouts) {
-		StringBuilder shaderSource = new StringBuilder();
-
-		try {
-			BufferedReader reader = file.getReader();
-			String line;
-
-			while ((line = reader.readLine()) != null) {
-				shaderSource.append(processShaderLine(line, vertexShader, addToLayouts) + "\n");
-			}
-		} catch (Exception e) {
-			FlounderEngine.getLogger().error("Could not read file " + file.getName());
-			FlounderEngine.getLogger().exception(e);
-			System.exit(-1);
-		}
-
-		return shaderSource;
-	}
-
-	private int loadShader(StringBuilder source, int type) {
-		int shaderID = glCreateShader(type);
-		glShaderSource(shaderID, source);
-		glCompileShader(shaderID);
-
-		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-			FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
-			FlounderEngine.getLogger().error("Could not compile shader " + shaderName);
-			System.exit(-1);
-		}
-
-		return shaderID;
-	}
-
-	private StringBuilder loadFromString(String string, boolean vertexShader, boolean addToLayouts) {
-		StringBuilder shaderSource = new StringBuilder();
-
-		for (String line : string.split("\n")) {
-			shaderSource.append(processShaderLine(line, vertexShader, addToLayouts) + "\n");
-		}
-
-		return shaderSource;
-	}
-
-	private StringBuilder processShaderLine(String line, boolean vertexShader, boolean addToLayouts) {
-		if (line.contains("varying")) {
-			if (vertexShader) {
-				return new StringBuilder().append(line.replace("varying", "out"));
-			} else {
-				return new StringBuilder().append(line.replace("varying", "in"));
-			}
-		}
-
-		if (line.contains("#include")) {
-			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
-			included = included.substring("#include".length(), included.length());
-			return loadFromFile(new MyFile(included), true, true);
-		} else if (line.replaceAll("\\s+", "").startsWith("layout") && addToLayouts) {
-			if (line.contains("location")) {
-				layoutLocations.add(line);
-				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
-			} else if (line.contains("binding")) {
-				layoutBindings.add(line);
-				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
-			}
-		}
-
-		return new StringBuilder().append(line);
+		shaderUniforms.clear();
 	}
 
 	private int findCharPos(String line, char c) {
@@ -165,16 +215,14 @@ public class ShaderProgram {
 	}
 
 	/**
-	 * Stores all uniforms locations.
+	 * Gets a uniform from a name.
 	 *
-	 * @param uniforms The uniforms to store the locations of.
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
 	 */
-	public void storeAllUniformLocations(Uniform... uniforms) {
-		for (Uniform uniform : uniforms) {
-			uniform.storeUniformLocation(programID);
-		}
-
-		glValidateProgram(programID);
+	public Uniform getUniform(String uniformName) {
+		return uniforms.get(uniformName);
 	}
 
 	/**
@@ -197,5 +245,25 @@ public class ShaderProgram {
 	public void dispose() {
 		glUseProgram(0);
 		glDeleteProgram(programID);
+	}
+
+	private enum ShaderTypes {
+		FRAGMENT, VERTEX, INCLUDED
+	}
+
+	private enum Uniforms {
+		FLOAT(UniformFloat.class.getName()), MAT2(UniformMat2.class.getName()), MAT3(UniformMat3.class.getName()),
+		MAT4(UniformMat3.class.getName()), SAMPLER2D(UniformSampler.class.getName()), VEC2(UniformVec2.class.getName()),
+		VEC3(UniformVec3.class.getName()), VEC4(UniformVec4.class.getName());
+
+		private String uniformClass;
+
+		Uniforms(String uniformClass) {
+			this.uniformClass = uniformClass;
+		}
+
+		public String getUniformClass() {
+			return uniformClass;
+		}
 	}
 }

@@ -5,12 +5,10 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterFXAA extends PostFilter {
-	private UniformFloat spanMax = new UniformFloat("spanMax");
 	private float spanMaxValue;
 
 	public FilterFXAA() {
 		super("filterFXAA", new MyFile(PostFilter.POST_LOC, "fxaaFragment.glsl"));
-		super.storeUniforms(spanMax);
 		spanMaxValue = 8.0f;
 	}
 
@@ -24,6 +22,6 @@ public class FilterFXAA extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		spanMax.loadFloat(spanMaxValue);
+		((UniformFloat) shader.getUniform("spanMax")).loadFloat(spanMaxValue);
 	}
 }

@@ -6,13 +6,10 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterCombineSlide extends PostFilter {
-	private UniformVec4 slideSpace = new UniformVec4("slideSpace"); // 0 - 1, x being width min, y width being max, z being height min, w width height max..
-
-	private Vector4f slideSpaceValue;
+	private Vector4f slideSpaceValue; // 0 - 1, x being width min, y width being max, z being height min, w width height max.
 
 	public FilterCombineSlide() {
 		super("combineSlide", new MyFile(PostFilter.POST_LOC, "combineSlideFragment.glsl"));
-		super.storeUniforms(slideSpace);
 		this.slideSpaceValue = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
 	}
 
@@ -22,6 +19,6 @@ public class FilterCombineSlide extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		slideSpace.loadVec4(slideSpaceValue);
+		((UniformVec4) shader.getUniform("slideSpace")).loadVec4(slideSpaceValue);
 	}
 }

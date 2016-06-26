@@ -3,7 +3,6 @@ package flounder.devices;
 import flounder.engine.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 
 import javax.imageio.*;
 import java.awt.geom.*;

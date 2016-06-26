@@ -2,18 +2,14 @@ package flounder.physics.renderer;
 
 import flounder.engine.*;
 import flounder.engine.implementation.*;
-import flounder.helpers.*;
-import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * A renderer that is used to render AABB's.
  */
 public class AABBRenderer extends IRenderer {
-	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
+	/*public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
 	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
@@ -24,23 +20,23 @@ public class AABBRenderer extends IRenderer {
 
 	private AABBShader shader;
 
-	private boolean lastWireframe;
+	private boolean lastWireframe;*/
 
 	/**
 	 * Creates a new AABB renderer.
 	 */
 	public AABBRenderer() {
-		shader = new AABBShader();
+	/*	shader = new AABBShader();
 		lastWireframe = false;
 
 		VAO = FlounderEngine.getLoader().createVAO();
 		FlounderEngine.getLoader().createIndicesVBO(VAO, INDICES);
-		FlounderEngine.getLoader().storeDataInVBO(VAO, VERTICES, 0, 3);
+		FlounderEngine.getLoader().storeDataInVBO(VAO, VERTICES, 0, 3);*/
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!FlounderEngine.getAABBs().renders()) {
+	/*	if (!FlounderEngine.getAABBs().renders()) {
 			return;
 		}
 
@@ -50,18 +46,18 @@ public class AABBRenderer extends IRenderer {
 			renderAABB(aabb);
 		}
 
-		endRendering();
+		endRendering();*/
 	}
 
 	@Override
 	public void profile() {
 		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("Skybox", "Render Time", super.getRenderTimeMs());
+			FlounderEngine.getProfiler().add("AABB", "Render Time", super.getRenderTimeMs());
 		}
 	}
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
-		shader.start();
+/*		shader.start();
 		shader.projectionMatrix.loadMat4(FlounderEngine.getProjectionMatrix());
 		shader.viewMatrix.loadMat4(camera.getViewMatrix());
 		shader.clipPlane.loadVec4(clipPlane);
@@ -73,11 +69,11 @@ public class AABBRenderer extends IRenderer {
 		OpenGlUtils.goWireframe(true);
 		OpenGlUtils.enableDepthTesting();
 
-		OpenGlUtils.bindVAO(VAO, 0);
+		OpenGlUtils.bindVAO(VAO, 0);*/
 	}
 
 	private void renderAABB(AABB aabb) {
-		Vector3f.add(aabb.getMaxExtents(), aabb.getMinExtents(), POSITION_REUSABLE);
+/*		Vector3f.add(aabb.getMaxExtents(), aabb.getMinExtents(), POSITION_REUSABLE);
 		POSITION_REUSABLE.set(POSITION_REUSABLE.x / 2.0f, POSITION_REUSABLE.y / 2.0f, POSITION_REUSABLE.z / 2.0f);
 
 		ROTATION_REUSABLE.set(0.0f, 0.0f, 0.0f);
@@ -91,18 +87,18 @@ public class AABBRenderer extends IRenderer {
 		shader.modelMatrix.loadMat4(MODEL_MATRIX_REUSABLE);
 		shader.colour.loadVec3(POSITION_REUSABLE.normalize());
 
-		glDrawElements(GL_TRIANGLES, INDICES.length, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, INDICES.length, GL_UNSIGNED_INT, 0);*/
 	}
 
 	private void endRendering() {
-		OpenGlUtils.goWireframe(lastWireframe);
+//		OpenGlUtils.goWireframe(lastWireframe);
 
-		OpenGlUtils.unbindVAO(0);
-		shader.stop();
+//		OpenGlUtils.unbindVAO(0);
+//		shader.stop();
 	}
 
 	@Override
 	public void dispose() {
-		shader.dispose();
+//		shader.dispose();
 	}
 }

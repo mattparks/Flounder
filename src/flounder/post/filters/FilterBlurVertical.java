@@ -7,9 +7,6 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterBlurVertical extends PostFilter {
-	private UniformFloat height = new UniformFloat("height");
-	private UniformFloat scale = new UniformFloat("scale");
-
 	private int heightValue;
 	private float scaleValue;
 	private boolean fitToDisplay;
@@ -30,7 +27,6 @@ public class FilterBlurVertical extends PostFilter {
 	}
 
 	private void init(int heightValue) {
-		super.storeUniforms(height, scale);
 		this.heightValue = heightValue;
 		this.scaleValue = 2.0f;
 	}
@@ -45,7 +41,7 @@ public class FilterBlurVertical extends PostFilter {
 			heightValue = (int) (FlounderEngine.getDevices().getDisplay().getHeight() * sizeScalar);
 		}
 
-		height.loadFloat(heightValue);
-		scale.loadFloat(scaleValue);
+		((UniformFloat) shader.getUniform("height")).loadFloat(heightValue);
+		((UniformFloat) shader.getUniform("scale")).loadFloat(scaleValue);
 	}
 }

@@ -6,17 +6,14 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 public class FilterWobble extends PostFilter {
-	private UniformFloat moveIt = new UniformFloat("moveIt");
-
 	private float wobbleAmount;
 
 	public FilterWobble() {
 		super("filterWobble", new MyFile(PostFilter.POST_LOC, "wobbleFragment.glsl"));
-		super.storeUniforms(moveIt);
 	}
 
 	@Override
 	public void storeValues() {
-		moveIt.loadFloat(wobbleAmount += 3 * FlounderEngine.getDelta());
+		((UniformFloat) shader.getUniform("moveIt")).loadFloat(wobbleAmount += 3 * FlounderEngine.getDelta());
 	}
 }

@@ -6,7 +6,6 @@ import flounder.resources.*;
 public class FilterNegative extends PostFilter {
 	public FilterNegative() {
 		super("filterNegative", new MyFile(PostFilter.POST_LOC, "negativeFragment.glsl"));
-		super.storeUniforms();
 	}
 
 	@Override

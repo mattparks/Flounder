@@ -1,12 +1,9 @@
 package flounder.physics.renderer;
 
-import flounder.resources.*;
-import flounder.shaders.*;
-
 /**
  * A shader used to render AABB's width.
  */
-public class AABBShader extends ShaderProgram {
+/*public class AABBShader extends ShaderProgram {
 	private static final MyFile VERTEX_SHADER = new MyFile("flounder/physics/renderer", "aabbVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/physics/renderer", "aabbFragment.glsl");
 
@@ -19,8 +16,8 @@ public class AABBShader extends ShaderProgram {
 	/**
 	 * Creates a AABB renderer shader.
 	 */
-	protected AABBShader() {
+	/*protected AABBShader() {
 		super("aabb", VERTEX_SHADER, FRAGMENT_SHADER);
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, clipPlane, modelMatrix, colour);
 	}
-}
+}*/

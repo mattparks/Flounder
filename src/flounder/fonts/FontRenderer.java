@@ -5,6 +5,7 @@ import flounder.engine.implementation.*;
 import flounder.helpers.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.shaders.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -69,12 +70,12 @@ public class FontRenderer extends IRenderer {
 		OpenGlUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
-		shader.aspectRatio.loadFloat(FlounderEngine.getDevices().getDisplay().getAspectRatio());
-		shader.transform.loadVec3(textPosition.x, textPosition.y, text.getScale());
-		shader.colour.loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
-		shader.borderColour.loadVec3(text.getBorderColour());
-		shader.edgeData.loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
-		shader.borderSizes.loadVec2(text.getTotalBorderSize(), text.getGlowSize());
+		((UniformFloat) shader.getUniform("aspectRatio")).loadFloat(FlounderEngine.getDevices().getDisplay().getAspectRatio());
+		((UniformVec3) shader.getUniform("transform")).loadVec3(textPosition.x, textPosition.y, text.getScale());
+		((UniformVec4) shader.getUniform("colour")).loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
+		((UniformVec3) shader.getUniform("borderColour")).loadVec3(text.getBorderColour());
+		((UniformVec2) shader.getUniform("edgeData")).loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
+		((UniformVec2) shader.getUniform("borderSizes")).loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		glDrawArrays(GL_TRIANGLES, 0, text.getVertexCount());
 		OpenGlUtils.unbindVAO(0, 1);
 	}
