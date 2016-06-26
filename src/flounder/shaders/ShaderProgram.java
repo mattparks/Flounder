@@ -221,8 +221,141 @@ public class ShaderProgram {
 	 *
 	 * @return The uniform that was found.
 	 */
-	public Uniform getUniform(String uniformName) {
-		return uniforms.get(uniformName);
+	public UniformFloat getUniformFloat(String uniformName) {
+		try {
+			return (UniformFloat) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a float for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
+	public UniformMat2 getUniformMat2(String uniformName) {
+		try {
+			return (UniformMat2) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a mat2 for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
+	public UniformMat3 getUniformMat3(String uniformName) {
+		try {
+			return (UniformMat3) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a mat3 for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
+	public UniformMat4 getUniformMat4(String uniformName) {
+		try {
+			return (UniformMat4) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a mat4 for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
+	public UniformSampler getUniformSampler(String uniformName) {
+		try {
+			return (UniformSampler) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a sampler for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
+	public UniformVec2 getUniformVec2(String uniformName) {
+		try {
+			return (UniformVec2) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a vec2 for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
+	public UniformVec3 getUniformVec3(String uniformName) {
+		try {
+			return (UniformVec3) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a vec3 for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
+	public UniformVec4 getUniformVec4(String uniformName) {
+		try {
+			return (UniformVec4) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			FlounderEngine.getLogger().error("Could not find a vec4 for " + uniformName);
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
 	}
 
 	/**
@@ -253,7 +386,7 @@ public class ShaderProgram {
 
 	private enum Uniforms {
 		FLOAT(UniformFloat.class.getName()), MAT2(UniformMat2.class.getName()), MAT3(UniformMat3.class.getName()),
-		MAT4(UniformMat3.class.getName()), SAMPLER2D(UniformSampler.class.getName()), VEC2(UniformVec2.class.getName()),
+		MAT4(UniformMat4.class.getName()), SAMPLER2D(UniformSampler.class.getName()), VEC2(UniformVec2.class.getName()),
 		VEC3(UniformVec3.class.getName()), VEC4(UniformVec4.class.getName());
 
 		private String uniformClass;

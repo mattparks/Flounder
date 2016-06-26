@@ -41,7 +41,7 @@ public class FilterBlurHorizontal extends PostFilter {
 			widthValue = (int) (FlounderEngine.getDevices().getDisplay().getWidth() * sizeScalar);
 		}
 
-		((UniformFloat) shader.getUniform("width")).loadFloat(widthValue);
-		((UniformFloat) shader.getUniform("scale")).loadFloat(scaleValue);
+		shader.getUniformFloat("width").loadFloat(widthValue);
+		shader.getUniformFloat("scale").loadFloat(scaleValue);
 	}
 }

@@ -5,6 +5,7 @@ import flounder.engine.implementation.*;
 import flounder.helpers.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.resources.*;
 import flounder.shaders.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -13,7 +14,10 @@ import static org.lwjgl.opengl.GL11.*;
  * A renderer capable of rendering fonts.
  */
 public class FontRenderer extends IRenderer {
-	private FontShader shader;
+	private static final MyFile VERTEX_SHADER = new MyFile("flounder/fonts", "fontVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/fonts", "fontFragment.glsl");
+
+	private ShaderProgram shader;
 
 	private boolean lastWireframe;
 
@@ -21,7 +25,7 @@ public class FontRenderer extends IRenderer {
 	 * Creates a new font renderer.
 	 */
 	public FontRenderer() {
-		shader = new FontShader();
+		shader = new ShaderProgram("font", VERTEX_SHADER, FRAGMENT_SHADER);
 	}
 
 	@Override
@@ -70,12 +74,12 @@ public class FontRenderer extends IRenderer {
 		OpenGlUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
-		((UniformFloat) shader.getUniform("aspectRatio")).loadFloat(FlounderEngine.getDevices().getDisplay().getAspectRatio());
-		((UniformVec3) shader.getUniform("transform")).loadVec3(textPosition.x, textPosition.y, text.getScale());
-		((UniformVec4) shader.getUniform("colour")).loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
-		((UniformVec3) shader.getUniform("borderColour")).loadVec3(text.getBorderColour());
-		((UniformVec2) shader.getUniform("edgeData")).loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
-		((UniformVec2) shader.getUniform("borderSizes")).loadVec2(text.getTotalBorderSize(), text.getGlowSize());
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderEngine.getDevices().getDisplay().getAspectRatio());
+		shader.getUniformVec3("transform").loadVec3(textPosition.x, textPosition.y, text.getScale());
+		shader.getUniformVec4("colour").loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getTransparency());
+		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());
+		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
+		shader.getUniformVec2("borderSizes").loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		glDrawArrays(GL_TRIANGLES, 0, text.getVertexCount());
 		OpenGlUtils.unbindVAO(0, 1);
 	}

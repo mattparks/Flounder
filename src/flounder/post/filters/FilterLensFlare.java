@@ -22,6 +22,6 @@ public class FilterLensFlare extends PostFilter {
 		// TODO: Move camera from 3D space to screen 2D.
 		float cameraX = 1.0f;
 		float cameraY = 0.0f;
-		((UniformVec2) shader.getUniform("cameraPosition")).loadVec2(cameraX, cameraY);
+		shader.getUniformVec2("cameraPosition").loadVec2(cameraX, cameraY);
 	}
 }

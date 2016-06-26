@@ -12,8 +12,8 @@ public class FilterDOF extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		((UniformFloat) shader.getUniform("aimDistance")).loadFloat(FlounderEngine.getCamera().getAimDistance());
-		((UniformFloat) shader.getUniform("nearPlane")).loadFloat(FlounderEngine.getCamera().getNearPlane());
-		((UniformFloat) shader.getUniform("farPlane")).loadFloat(FlounderEngine.getCamera().getFarPlane());
+		shader.getUniformFloat("aimDistance").loadFloat(FlounderEngine.getCamera().getAimDistance());
+		shader.getUniformFloat("nearPlane").loadFloat(FlounderEngine.getCamera().getNearPlane());
+		shader.getUniformFloat("farPlane").loadFloat(FlounderEngine.getCamera().getFarPlane());
 	}
 }

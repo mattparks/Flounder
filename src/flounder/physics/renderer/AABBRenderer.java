@@ -2,14 +2,23 @@ package flounder.physics.renderer;
 
 import flounder.engine.*;
 import flounder.engine.implementation.*;
+import flounder.helpers.*;
+import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
+import flounder.resources.*;
+import flounder.shaders.*;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * A renderer that is used to render AABB's.
  */
 public class AABBRenderer extends IRenderer {
-	/*public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
+	private static final MyFile VERTEX_SHADER = new MyFile("flounder/physics/renderer", "aabbVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/physics/renderer", "aabbFragment.glsl");
+
+	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
 	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
@@ -18,25 +27,25 @@ public class AABBRenderer extends IRenderer {
 	private float[] VERTICES = {1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 0.999999f, 1.0f, 1.000001f, 1.0f, -1.0f, 1.0f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f};
 	private int VAO;
 
-	private AABBShader shader;
+	private ShaderProgram shader;
 
-	private boolean lastWireframe;*/
+	private boolean lastWireframe;
 
 	/**
 	 * Creates a new AABB renderer.
 	 */
 	public AABBRenderer() {
-	/*	shader = new AABBShader();
+		shader = new ShaderProgram("aabb", VERTEX_SHADER, FRAGMENT_SHADER);
 		lastWireframe = false;
 
 		VAO = FlounderEngine.getLoader().createVAO();
 		FlounderEngine.getLoader().createIndicesVBO(VAO, INDICES);
-		FlounderEngine.getLoader().storeDataInVBO(VAO, VERTICES, 0, 3);*/
+		FlounderEngine.getLoader().storeDataInVBO(VAO, VERTICES, 0, 3);
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-	/*	if (!FlounderEngine.getAABBs().renders()) {
+		if (!FlounderEngine.getAABBs().renders()) {
 			return;
 		}
 
@@ -46,7 +55,7 @@ public class AABBRenderer extends IRenderer {
 			renderAABB(aabb);
 		}
 
-		endRendering();*/
+		endRendering();
 	}
 
 	@Override
@@ -57,10 +66,10 @@ public class AABBRenderer extends IRenderer {
 	}
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
-/*		shader.start();
-		shader.projectionMatrix.loadMat4(FlounderEngine.getProjectionMatrix());
-		shader.viewMatrix.loadMat4(camera.getViewMatrix());
-		shader.clipPlane.loadVec4(clipPlane);
+		shader.start();
+		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderEngine.getProjectionMatrix());
+		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
+		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
 		lastWireframe = OpenGlUtils.isInWireframe();
 
@@ -69,11 +78,11 @@ public class AABBRenderer extends IRenderer {
 		OpenGlUtils.goWireframe(true);
 		OpenGlUtils.enableDepthTesting();
 
-		OpenGlUtils.bindVAO(VAO, 0);*/
+		OpenGlUtils.bindVAO(VAO, 0);
 	}
 
 	private void renderAABB(AABB aabb) {
-/*		Vector3f.add(aabb.getMaxExtents(), aabb.getMinExtents(), POSITION_REUSABLE);
+		Vector3f.add(aabb.getMaxExtents(), aabb.getMinExtents(), POSITION_REUSABLE);
 		POSITION_REUSABLE.set(POSITION_REUSABLE.x / 2.0f, POSITION_REUSABLE.y / 2.0f, POSITION_REUSABLE.z / 2.0f);
 
 		ROTATION_REUSABLE.set(0.0f, 0.0f, 0.0f);
@@ -84,21 +93,21 @@ public class AABBRenderer extends IRenderer {
 		MODEL_MATRIX_REUSABLE.setIdentity();
 		Matrix4f.transformationMatrix(POSITION_REUSABLE, ROTATION_REUSABLE, SCALE_REUSABLE, MODEL_MATRIX_REUSABLE);
 
-		shader.modelMatrix.loadMat4(MODEL_MATRIX_REUSABLE);
-		shader.colour.loadVec3(POSITION_REUSABLE.normalize());
+		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
+		shader.getUniformVec3("colour").loadVec3(POSITION_REUSABLE.normalize());
 
-		glDrawElements(GL_TRIANGLES, INDICES.length, GL_UNSIGNED_INT, 0);*/
+		glDrawElements(GL_TRIANGLES, INDICES.length, GL_UNSIGNED_INT, 0);
 	}
 
 	private void endRendering() {
-//		OpenGlUtils.goWireframe(lastWireframe);
+		OpenGlUtils.goWireframe(lastWireframe);
 
-//		OpenGlUtils.unbindVAO(0);
-//		shader.stop();
+		OpenGlUtils.unbindVAO(0);
+		shader.stop();
 	}
 
 	@Override
 	public void dispose() {
-//		shader.dispose();
+		shader.dispose();
 	}
 }

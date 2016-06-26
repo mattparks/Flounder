@@ -19,6 +19,6 @@ public class FilterCombineSlide extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		((UniformVec4) shader.getUniform("slideSpace")).loadVec4(slideSpaceValue);
+		shader.getUniformVec4("slideSpace").loadVec4(slideSpaceValue);
 	}
 }

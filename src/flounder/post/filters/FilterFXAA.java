@@ -22,6 +22,6 @@ public class FilterFXAA extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		((UniformFloat) shader.getUniform("spanMax")).loadFloat(spanMaxValue);
+		shader.getUniformFloat("spanMax").loadFloat(spanMaxValue);
 	}
 }

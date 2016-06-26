@@ -22,6 +22,6 @@ public class FilterDarken extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		((UniformFloat) shader.getUniform("factor")).loadFloat(factorValue);
+		shader.getUniformFloat("factor").loadFloat(factorValue);
 	}
 }

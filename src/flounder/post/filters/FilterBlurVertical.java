@@ -41,7 +41,7 @@ public class FilterBlurVertical extends PostFilter {
 			heightValue = (int) (FlounderEngine.getDevices().getDisplay().getHeight() * sizeScalar);
 		}
 
-		((UniformFloat) shader.getUniform("height")).loadFloat(heightValue);
-		((UniformFloat) shader.getUniform("scale")).loadFloat(scaleValue);
+		shader.getUniformFloat("height").loadFloat(heightValue);
+		shader.getUniformFloat("scale").loadFloat(scaleValue);
 	}
 }
