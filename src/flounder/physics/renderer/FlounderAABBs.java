@@ -18,7 +18,7 @@ public class FlounderAABBs implements IModule {
 	 */
 	public FlounderAABBs() {
 		toRenderABBB = new ArrayList<>();
-		renders = false;
+		renders = true;
 		aabbCount = 0;
 	}
 
@@ -34,7 +34,7 @@ public class FlounderAABBs implements IModule {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("AABB's", "Renderable", aabbCount);
+		FlounderEngine.getProfiler().add("AABB", "Renderable", aabbCount);
 	}
 
 	/**

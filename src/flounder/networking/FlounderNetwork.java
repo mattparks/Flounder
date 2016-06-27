@@ -38,6 +38,7 @@ public class FlounderNetwork implements IModule {
 	 * Starts the server.
 	 */
 	public void startServer() {
+		FlounderEngine.getLogger().log("Starting server!");
 		socketServer = new Server(port);
 		socketServer.start();
 	}
@@ -46,6 +47,7 @@ public class FlounderNetwork implements IModule {
 	 * Starts the client.
 	 */
 	public void startClient() {
+		FlounderEngine.getLogger().log("Starting Client!");
 		socketClient = new Client("localhost", port);
 		socketClient.start();
 
@@ -57,6 +59,8 @@ public class FlounderNetwork implements IModule {
 	 * Closes the server.
 	 */
 	public void closeServer() {
+		FlounderEngine.getLogger().log("Closing server!");
+
 		if (socketServer != null) {
 			new PacketDisconnect("server").writeData(socketServer);
 			socketServer.dispose();
@@ -68,6 +72,8 @@ public class FlounderNetwork implements IModule {
 	 * Closes the client.
 	 */
 	public void closeClient() {
+		FlounderEngine.getLogger().log("Closing client!");
+
 		if (socketClient != null) {
 			new PacketDisconnect(username).writeData(socketClient);
 			socketClient.dispose();
@@ -91,6 +97,10 @@ public class FlounderNetwork implements IModule {
 	 */
 	public Client getSocketClient() {
 		return socketClient;
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	@Override

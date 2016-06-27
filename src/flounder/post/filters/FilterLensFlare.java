@@ -3,7 +3,6 @@ package flounder.post.filters;
 import flounder.maths.vectors.*;
 import flounder.post.*;
 import flounder.resources.*;
-import flounder.shaders.*;
 
 public class FilterLensFlare extends PostFilter {
 	private Vector3f sunPositon;

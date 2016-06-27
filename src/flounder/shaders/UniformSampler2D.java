@@ -5,10 +5,10 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Represents a texture sampler uniform type that can be loaded to the shader.
  */
-public class UniformSampler extends Uniform {
+public class UniformSampler2D extends Uniform {
 	private int currentValue;
 
-	public UniformSampler(String name) {
+	public UniformSampler2D(String name) {
 		super(name);
 	}
 

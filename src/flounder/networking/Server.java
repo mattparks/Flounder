@@ -31,7 +31,7 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		while (FlounderEngine.isRunning() && socket != null) {
+		while (FlounderEngine.isRunning()) {
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 
@@ -40,6 +40,7 @@ public class Server extends Thread {
 			} catch (IOException e) {
 				FlounderEngine.getLogger().error("Server socket could not receive data!");
 				FlounderEngine.getLogger().exception(e);
+				System.exit(-1);
 			}
 
 			parsePacket(packet.getData(), packet.getAddress(), packet.getPort());
@@ -82,22 +83,22 @@ public class Server extends Thread {
 
 		for (ClientInfo p : connected) {
 			if (player.getUsername().equalsIgnoreCase(p.getUsername())) {
-				if (p.ipAddress == null) {
-					p.ipAddress = player.ipAddress;
+				if (p.getIpAddress() == null) {
+					p.setIpAddress(player.getIpAddress());
 				}
 
-				if (p.port == -1) {
-					p.port = player.port;
+				if (p.getPort() == -1) {
+					p.setPort(player.getPort());
 				}
 
 				alreadyConnected = true;
 			} else {
 				// Relay to the current connected player that there is a new player
-				sendData(packet.getData(), p.ipAddress, p.port);
+				sendData(packet.getData(), p.getIpAddress(), p.getPort());
 
 				// Relay to the new player that the currently connect player exists
 				packet = new PacketLogin(p.getUsername());
-				sendData(packet.getData(), player.ipAddress, player.port);
+				sendData(packet.getData(), player.getIpAddress(), player.getPort());
 			}
 		}
 
@@ -112,7 +113,7 @@ public class Server extends Thread {
 	 * @param packet The disconnect packet.
 	 */
 	public void removeConnection(PacketDisconnect packet) {
-		this.connected.remove(getPlayerMPIndex(packet.getUsername()));
+		this.connected.remove(getPlayerMP(packet.getUsername()));
 		packet.writeData(this);
 	}
 
@@ -134,27 +135,6 @@ public class Server extends Thread {
 	}
 
 	/**
-	 * Gets the index the client can be found at, using username as reference.
-	 *
-	 * @param username The username to use.
-	 *
-	 * @return The index the client is found at.
-	 */
-	public int getPlayerMPIndex(String username) {
-		int index = 0;
-
-		for (ClientInfo player : connected) {
-			if (player.getUsername().equals(username)) {
-				break;
-			}
-
-			index++;
-		}
-
-		return index;
-	}
-
-	/**
 	 * Sends byes of data to a ip address on a port.
 	 *
 	 * @param data The data to send.
@@ -172,13 +152,27 @@ public class Server extends Thread {
 	}
 
 	/**
+	 * Sends bytes of data back to all clients except the one with the username.
+	 *
+	 * @param data The data to send.
+	 * @param excludedUsername The username to exclude.
+	 */
+	public void sentDataToOtherClient(byte[] data, String excludedUsername) {
+		for (ClientInfo p : connected) {
+			if (!p.getUsername().equals(excludedUsername)) {
+				sendData(data, p.getIpAddress(), p.getPort());
+			}
+		}
+	}
+
+	/**
 	 * Sends bytes of data back to all clients.
 	 *
 	 * @param data The data to send.
 	 */
 	public void sendDataToAllClients(byte[] data) {
 		for (ClientInfo p : connected) {
-			sendData(data, p.ipAddress, p.port);
+			sendData(data, p.getIpAddress(), p.getPort());
 		}
 	}
 

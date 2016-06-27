@@ -33,7 +33,7 @@ public class Client extends Thread {
 
 	@Override
 	public void run() {
-		while (FlounderEngine.isRunning() && socket != null) {
+		while (FlounderEngine.isRunning()) {
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 
@@ -42,6 +42,7 @@ public class Client extends Thread {
 			} catch (IOException e) {
 				FlounderEngine.getLogger().error("Client socket could not receive data!");
 				FlounderEngine.getLogger().exception(e);
+				System.exit(-1);
 			}
 
 			parsePacket(packet.getData(), packet.getAddress(), packet.getPort());

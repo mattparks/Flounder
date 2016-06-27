@@ -3,7 +3,6 @@ package flounder.post.filters;
 import flounder.maths.vectors.*;
 import flounder.post.*;
 import flounder.resources.*;
-import flounder.shaders.*;
 
 public class FilterCombineSlide extends PostFilter {
 	private Vector4f slideSpaceValue; // 0 - 1, x being width min, y width being max, z being height min, w width height max.

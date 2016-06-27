@@ -160,7 +160,7 @@ public class ShaderProgram {
 		for (String b : layoutBindings) {
 			String bindingName = b.substring(b.lastIndexOf(" ") + 1, b.length() - 1);
 			int bindingValue = Integer.parseInt(b.substring(findCharPos(b, '=') + 1, findCharPos(b, ')')).replaceAll("\\s+", ""));
-			UniformSampler sampler = new UniformSampler(bindingName);
+			UniformSampler2D sampler = new UniformSampler2D(bindingName);
 			sampler.storeUniformLocation(programID);
 			sampler.loadTexUnit(bindingValue);
 		}
@@ -293,9 +293,9 @@ public class ShaderProgram {
 	 *
 	 * @return The uniform that was found.
 	 */
-	public UniformSampler getUniformSampler(String uniformName) {
+	public UniformSampler2D getUniformSampler(String uniformName) {
 		try {
-			return (UniformSampler) uniforms.get(uniformName);
+			return (UniformSampler2D) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			FlounderEngine.getLogger().error("Could not find a sampler for " + uniformName);
 			FlounderEngine.getLogger().exception(e);
@@ -386,7 +386,7 @@ public class ShaderProgram {
 
 	private enum Uniforms {
 		FLOAT(UniformFloat.class.getName()), MAT2(UniformMat2.class.getName()), MAT3(UniformMat3.class.getName()),
-		MAT4(UniformMat4.class.getName()), SAMPLER2D(UniformSampler.class.getName()), VEC2(UniformVec2.class.getName()),
+		MAT4(UniformMat4.class.getName()), SAMPLER2D(UniformSampler2D.class.getName()), VEC2(UniformVec2.class.getName()),
 		VEC3(UniformVec3.class.getName()), VEC4(UniformVec4.class.getName());
 
 		private String uniformClass;

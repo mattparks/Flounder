@@ -2,7 +2,6 @@ package flounder.post.filters;
 
 import flounder.post.*;
 import flounder.resources.*;
-import flounder.shaders.*;
 
 public class FilterFXAA extends PostFilter {
 	private float spanMaxValue;

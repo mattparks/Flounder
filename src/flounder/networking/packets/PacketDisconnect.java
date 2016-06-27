@@ -36,7 +36,7 @@ public class PacketDisconnect extends Packet {
 
 	@Override
 	public void writeData(Server server) {
-		server.sendDataToAllClients(getData());
+		server.sentDataToOtherClient(getData(), username);
 	}
 
 	@Override
