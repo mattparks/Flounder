@@ -210,7 +210,7 @@ public class Config {
 	public void dispose() {
 		for (String key : map.keySet()) {
 			Pair<String, ConfigReference> pair = map.get(key);
-			setValue(key, "" + pair.getSecond().getReading());
+			setValue(key, pair.getSecond().getReading().toString());
 		}
 
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getPath().substring(1)))) {

@@ -75,7 +75,7 @@ public class GuiRenderer extends IRenderer {
 		OpenGlUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
 		shader.getUniformVec4("transform").loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
 		shader.getUniformFloat("alpha").loadFloat(gui.getAlpha());
-		shader.getUniformFloat("flipTexture").loadBoolean(gui.isFlipTexture());
+		shader.getUniformBool("flipTexture").loadBoolean(gui.isFlipTexture());
 		shader.getUniformFloat("atlasRows").loadFloat(gui.getTexture().getNumberOfRows());
 		shader.getUniformVec2("atlasOffset").loadVec2(gui.getTextureOffset());
 		shader.getUniformVec3("colourOffset").loadVec3(gui.getColourOffset());

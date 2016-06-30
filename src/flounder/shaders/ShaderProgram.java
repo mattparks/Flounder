@@ -221,11 +221,39 @@ public class ShaderProgram {
 	 *
 	 * @return The uniform that was found.
 	 */
+	public UniformBool getUniformBool(String uniformName) {
+		try {
+			return (UniformBool) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a bool!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
+			FlounderEngine.getLogger().exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
 	public UniformFloat getUniformFloat(String uniformName) {
 		try {
 			return (UniformFloat) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a float for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a float!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -243,7 +271,12 @@ public class ShaderProgram {
 		try {
 			return (UniformMat2) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a mat2 for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a mat2!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -261,7 +294,12 @@ public class ShaderProgram {
 		try {
 			return (UniformMat3) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a mat3 for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a mat3!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -279,7 +317,12 @@ public class ShaderProgram {
 		try {
 			return (UniformMat4) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a mat4 for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a mat4!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -297,7 +340,12 @@ public class ShaderProgram {
 		try {
 			return (UniformSampler2D) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a sampler for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a sampler!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -315,7 +363,12 @@ public class ShaderProgram {
 		try {
 			return (UniformVec2) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a vec2 for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a vec2!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -333,7 +386,12 @@ public class ShaderProgram {
 		try {
 			return (UniformVec3) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a vec3 for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a vec3!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -351,7 +409,12 @@ public class ShaderProgram {
 		try {
 			return (UniformVec4) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
-			FlounderEngine.getLogger().error("Could not find a vec4 for " + uniformName);
+			if (uniforms.get(uniformName) != null) {
+				FlounderEngine.getLogger().error(uniformName + " is not a vec4!");
+			} else {
+				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+			}
+
 			FlounderEngine.getLogger().exception(e);
 		}
 
@@ -385,9 +448,9 @@ public class ShaderProgram {
 	}
 
 	private enum Uniforms {
-		FLOAT(UniformFloat.class.getName()), MAT2(UniformMat2.class.getName()), MAT3(UniformMat3.class.getName()),
-		MAT4(UniformMat4.class.getName()), SAMPLER2D(UniformSampler2D.class.getName()), VEC2(UniformVec2.class.getName()),
-		VEC3(UniformVec3.class.getName()), VEC4(UniformVec4.class.getName());
+		BOOL(UniformBool.class.getName()), FLOAT(UniformFloat.class.getName()),  SAMPLER2D(UniformSampler2D.class.getName()),
+		MAT2(UniformMat2.class.getName()), MAT3(UniformMat3.class.getName()), MAT4(UniformMat4.class.getName()),
+		VEC2(UniformVec2.class.getName()), VEC3(UniformVec3.class.getName()), VEC4(UniformVec4.class.getName());
 
 		private String uniformClass;
 

@@ -23,17 +23,4 @@ public class UniformFloat extends Uniform {
 			currentValue = value;
 		}
 	}
-
-	/**
-	 * Loads a boolean to the uniform if the value already on the GPU is not the same as the new value.
-	 *
-	 * @param value The new value.
-	 */
-	public void loadBoolean(boolean value) {
-		if ((currentValue == 1.0f) != value) {
-			float loadValue = value ? 1f : 0f;
-			glUniform1f(super.getLocation(), loadValue);
-			currentValue = loadValue;
-		}
-	}
 }

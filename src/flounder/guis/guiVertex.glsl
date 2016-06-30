@@ -5,7 +5,7 @@ layout(location = 0) in vec2 in_position;
 varying vec2 pass_textureCoords;
 
 uniform vec4 transform;
-uniform float flipTexture;
+uniform bool flipTexture;
 uniform float atlasRows;
 uniform vec2 atlasOffset;
 
