@@ -42,21 +42,17 @@ public class GuiSelector {
 
 	protected void update() {
 		if (FlounderEngine.getDevices().getJoysticks().isConnected(selectedJoystick)) {
-			if (joystickAxisX != null && joystickAxisY != null) {
-				if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
-					cursorX += (joystickAxisX.getAmount()) * 0.5f * FlounderEngine.getDelta();
-					cursorY += (joystickAxisY.getAmount()) * 0.5f * FlounderEngine.getDelta();
-					cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
-					cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
-				}
+			if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
+				cursorX += (joystickAxisX.getAmount()) * 0.75f * FlounderEngine.getDelta();
+				cursorY += (-joystickAxisY.getAmount()) * 0.75f * FlounderEngine.getDelta();
+				cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
+				cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
 			}
 
-			if (joystickLeft != null && joystickRight != null) {
-				leftClick = joystickLeft.isDown();
-				rightClick = joystickRight.isDown();
-				leftWasClick = joystickLeft.wasDown();
-				rightWasClick = joystickRight.wasDown();
-			}
+			leftClick = joystickLeft.isDown();
+			rightClick = joystickRight.isDown();
+			leftWasClick = joystickLeft.wasDown();
+			rightWasClick = joystickRight.wasDown();
 		} else {
 			cursorX = FlounderEngine.getDevices().getMouse().getPositionX();
 			cursorY = FlounderEngine.getDevices().getMouse().getPositionY();
