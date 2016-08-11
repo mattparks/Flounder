@@ -22,20 +22,22 @@ public class FBO {
 	private int samples;
 	private int width;
 	private int height;
+	private int attachments;
 	private boolean fitToScreen;
 	private float sizeScalar;
 
 	private int frameBuffer;
-	private int colourTexture;
+	private int colourTexture[];
 	private int depthTexture;
 	private int depthBuffer;
-	private int colourBuffer;
+	private int colourBuffer[];
 
 	/**
 	 * A new OpenGL FBO object.
 	 *
 	 * @param width The FBO's width.
 	 * @param height The FBO's height.
+	 * @param attachments The amount of attachments to create.
 	 * @param fitToScreen If the width and height values should match the screen.
 	 * @param sizeScalar A scalar factor between the FBO and the screen, enabled when {@code fitToScreen} is enabled. (1.0f disables scalar).
 	 * @param depthBufferType The type of depth buffer to use in the FBO.
@@ -46,7 +48,7 @@ public class FBO {
 	 * @param antialiased If the image will be antialiased.
 	 * @param samples How many MFAA samples should be used on the FBO. Zero disables multisampling.
 	 */
-	protected FBO(int width, int height, boolean fitToScreen, float sizeScalar, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
+	protected FBO(int width, int height, int attachments, boolean fitToScreen, float sizeScalar, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
 		this.width = (int) (width * sizeScalar);
 		this.height = (int) (height * sizeScalar);
 		this.fitToScreen = fitToScreen;
@@ -58,6 +60,8 @@ public class FBO {
 		this.alphaChannel = alphaChannel;
 		this.antialiased = antialiased;
 		this.samples = samples;
+		this.colourTexture = new int[attachments];
+		this.colourBuffer = new int[attachments];
 		initializeFBO();
 	}
 
@@ -88,11 +92,11 @@ public class FBO {
 	 * Initializes the FBO.
 	 */
 	private void initializeFBO() {
-		createFBO();
+		createFBO(GL_COLOR_ATTACHMENT0);
 
 		if (!antialiased) {
 			if (useColourBuffer) {
-				createTextureAttachment();
+				createTextureAttachment(GL_COLOR_ATTACHMENT0);
 			}
 
 			if (depthBufferType == DepthBufferType.RENDER_BUFFER) {
@@ -101,28 +105,28 @@ public class FBO {
 				createDepthTextureAttachment();
 			}
 		} else {
-			attachMutlisampleColourBuffer();
+			attachMutlisampleColourBuffer(GL_COLOR_ATTACHMENT0);
 			createDepthBufferAttachment();
 		}
 
 		unbindFrameBuffer();
 	}
 
-	private void createFBO() {
+	private void createFBO(int attachment) {
 		frameBuffer = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-		glDrawBuffer(useColourBuffer ? GL_COLOR_ATTACHMENT0 : GL_FALSE);
+		glDrawBuffer(useColourBuffer ? attachment : GL_FALSE);
 	}
 
-	private void createTextureAttachment() {
-		colourTexture = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, colourTexture);
+	private void createTextureAttachment(int attachment) {
+		colourTexture[attachment - GL_COLOR_ATTACHMENT0] = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, colourTexture[attachment - GL_COLOR_ATTACHMENT0]);
 		glTexImage2D(GL_TEXTURE_2D, 0, alphaChannel ? GL_RGBA : GL_RGB, width, height, 0, alphaChannel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colourTexture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, colourTexture[attachment - GL_COLOR_ATTACHMENT0], 0);
 	}
 
 	private void createDepthBufferAttachment() {
@@ -147,11 +151,11 @@ public class FBO {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	}
 
-	private void attachMutlisampleColourBuffer() {
-		colourBuffer = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, colourBuffer);
+	private void attachMutlisampleColourBuffer(int attachment) {
+		colourBuffer[attachment - GL_COLOR_ATTACHMENT0] = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, colourBuffer[attachment - GL_COLOR_ATTACHMENT0]);
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, alphaChannel ? GL_RGBA8 : GL_RGB8, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colourBuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, colourBuffer[attachment - GL_COLOR_ATTACHMENT0]);
 	}
 
 	/**
@@ -221,10 +225,12 @@ public class FBO {
 	}
 
 	/**
+	 * @param attachment The colour texture to get.
+	 *
 	 * @return The OpenGL colour texture id.
 	 */
-	public int getColourTexture() {
-		return colourTexture;
+	public int getColourTexture(int attachment) {
+		return colourTexture[attachment];
 	}
 
 	/**

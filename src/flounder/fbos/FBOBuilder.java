@@ -13,6 +13,7 @@ public class FBOBuilder {
 	private int samples;
 	private int width;
 	private int height;
+	private int attachments;
 	private boolean fitToScreen;
 	private float sizeScalar;
 
@@ -32,6 +33,7 @@ public class FBOBuilder {
 		this.samples = 0;
 		this.width = width;
 		this.height = height;
+		this.attachments = 1;
 		this.fitToScreen = false;
 		this.sizeScalar = 1.0f;
 	}
@@ -42,7 +44,7 @@ public class FBOBuilder {
 	 * @return Returns a newly created FBO off of the builders parameters.
 	 */
 	public FBO create() {
-		return new FBO(width, height, fitToScreen, sizeScalar, depthBufferType, useColourBuffer, linearFiltering, clampEdge, alphaChannel, antialiased, samples);
+		return new FBO(width, height, attachments, fitToScreen, sizeScalar, depthBufferType, useColourBuffer, linearFiltering, clampEdge, alphaChannel, antialiased, samples);
 	}
 
 	/**
@@ -109,6 +111,18 @@ public class FBOBuilder {
 	public FBOBuilder antialias(int samples) {
 		antialiased = true;
 		this.samples = samples;
+		return this;
+	}
+
+	/**
+	 * Sets the amount of colour attachments to create.
+	 *
+	 * @param attachments The amount of attachments to create.
+	 *
+	 * @return this.
+	 */
+	public FBOBuilder attachments(int attachments) {
+		this.attachments = attachments;
 		return this;
 	}
 

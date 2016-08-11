@@ -20,8 +20,8 @@ public class PipelineGaussian extends PostPipeline {
 
 	@Override
 	public void renderPipeline(FBO startFBO) {
-		filterBlurHorizontal.applyFilter(startFBO.getColourTexture());
-		filterBlurVertical.applyFilter(filterBlurHorizontal.fbo.getColourTexture());
+		filterBlurHorizontal.applyFilter(startFBO.getColourTexture(0));
+		filterBlurVertical.applyFilter(filterBlurHorizontal.fbo.getColourTexture(0));
 	}
 
 	@Override

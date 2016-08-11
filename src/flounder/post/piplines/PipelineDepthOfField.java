@@ -20,10 +20,10 @@ public class PipelineDepthOfField extends PostPipeline {
 
 	@Override
 	public void renderPipeline(FBO startFBO) {
-		filterFXAA.applyFilter(startFBO.getColourTexture());
+		filterFXAA.applyFilter(startFBO.getColourTexture(0));
 		pipelineGaussian.setScale(0.5f);
 		pipelineGaussian.renderPipeline(filterFXAA.fbo);
-		filterDOF.applyFilter(filterFXAA.fbo.getColourTexture(), startFBO.getDepthTexture(), pipelineGaussian.getOutput().getColourTexture());
+		filterDOF.applyFilter(filterFXAA.fbo.getColourTexture(0), startFBO.getDepthTexture(), pipelineGaussian.getOutput().getColourTexture(0));
 	}
 
 	@Override

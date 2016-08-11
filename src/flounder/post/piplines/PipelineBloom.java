@@ -24,12 +24,12 @@ public class PipelineBloom extends PostPipeline {
 
 	@Override
 	public void renderPipeline(FBO startFBO) {
-		filterFXAA.applyFilter(startFBO.getColourTexture());
-		filterTone.applyFilter(filterFXAA.fbo.getColourTexture());
-		filterBloom1.applyFilter(filterTone.fbo.getColourTexture());
+		filterFXAA.applyFilter(startFBO.getColourTexture(0));
+		filterTone.applyFilter(filterFXAA.fbo.getColourTexture(0));
+		filterBloom1.applyFilter(filterTone.fbo.getColourTexture(0));
 		pipelineGaussian.setScale(0.5f);
 		pipelineGaussian.renderPipeline(filterBloom1.fbo);
-		filterBloom2.applyFilter(filterTone.fbo.getColourTexture(), pipelineGaussian.getOutput().getColourTexture());
+		filterBloom2.applyFilter(filterTone.fbo.getColourTexture(0), pipelineGaussian.getOutput().getColourTexture(0));
 	}
 
 	@Override
