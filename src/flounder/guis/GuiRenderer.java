@@ -10,6 +10,10 @@ import flounder.shaders.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GuiRenderer extends IRenderer {
+	public enum GuiRenderType {
+		GUI, CURSOR
+	}
+
 	private static final MyFile VERTEX_SHADER = new MyFile("flounder/guis", "guiVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/guis", "guiFragment.glsl");
 
@@ -19,27 +23,45 @@ public class GuiRenderer extends IRenderer {
 	private int vaoID;
 
 	private boolean lastWireframe;
+	private GuiRenderType type;
 
-	public GuiRenderer() {
+	public GuiRenderer(GuiRenderType type) {
 		shader = new ShaderProgram("gui", VERTEX_SHADER, FRAGMENT_SHADER);
 		vaoID = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
+		this.type = type;
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (FlounderEngine.getGuis().getGuiTextures().size() < 1) {
-			return;
+		switch (type) {
+			case GUI:
+				if (FlounderEngine.getGuis().getGuiTextures().size() < 1) {
+					return;
+				}
+				prepareRendering();
+				FlounderEngine.getGuis().getGuiTextures().forEach(this::renderGui);
+				endRendering();
+				break;
+			case CURSOR:
+				if (!FlounderEngine.getCursor().isShown()) {
+					return;
+				}
+				prepareRendering();
+				renderGui(FlounderEngine.getCursor().getCursorTexture());
+				endRendering();
+				break;
 		}
-
-		prepareRendering();
-		FlounderEngine.getGuis().getGuiTextures().forEach(this::renderGui);
-		endRendering();
 	}
 
 	@Override
 	public void profile() {
-		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("GUIs", "Render Time", super.getRenderTimeMs());
+		switch (type) {
+			case GUI:
+				FlounderEngine.getProfiler().add("GUI", "Render Time", super.getRenderTimeMs());
+				break;
+			case CURSOR:
+				FlounderEngine.getProfiler().add("Cursor", "Render Time", super.getRenderTimeMs());
+				break;
 		}
 	}
 

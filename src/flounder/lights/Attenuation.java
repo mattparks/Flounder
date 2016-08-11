@@ -75,4 +75,13 @@ public class Attenuation {
 	public void setExponent(float exponent) {
 		this.exponent = exponent;
 	}
+
+	/**
+	 * Get's the max distance the light can effect, not NaN is returned by lights with infinite influence.
+	 *
+	 * @return The lights max distance
+	 */
+	public float getDistance() {
+		return (float) Math.abs((-Math.sqrt((linear * linear) + (4 * exponent * constant)) - linear) / (2 * exponent));
+	}
 }

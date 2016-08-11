@@ -21,6 +21,7 @@ public class FlounderFonts implements IModule {
 	public FontType segoeUiBlack = new FontType(new MyFile(FONTS_LOC, "segoeUIBlack.png"), new MyFile(FONTS_LOC, "segoeUIBlack.fnt"));
 	public FontType serif = new FontType(new MyFile(FONTS_LOC, "serif.png"), new MyFile(FONTS_LOC, "serif.fnt"));
 	public FontType trebuchet = new FontType(new MyFile(FONTS_LOC, "trebuchet.png"), new MyFile(FONTS_LOC, "trebuchet.fnt"));
+	public FontType brushScript = new FontType(new MyFile(FONTS_LOC, "brushScript.png"), new MyFile(FONTS_LOC, "brushScript.fnt"));
 
 	private Map<FontType, List<Text>> texts;
 

@@ -2,8 +2,10 @@ package flounder.engine;
 
 import flounder.devices.*;
 import flounder.engine.implementation.*;
+import flounder.events.*;
 import flounder.fonts.*;
 import flounder.guis.*;
+import flounder.guis.cursor.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
@@ -24,11 +26,13 @@ public class FlounderEngine extends Thread implements IModule {
 
 	private FlounderDevices devices;
 	private FlounderProcessors processors;
+	private FlounderEvents events;
 	private FlounderLoader loader;
 	private FlounderModels models;
 	private FlounderTextures textures;
 	private FlounderFonts fonts;
 	private FlounderGuis guis;
+	private FlounderCursor cursor;
 	private FlounderAABBs AABBs;
 	private FlounderNetwork network;
 	private FlounderLogger logger;
@@ -58,11 +62,13 @@ public class FlounderEngine extends Thread implements IModule {
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
+		this.events = new FlounderEvents();
 		this.loader = new FlounderLoader();
 		this.models = new FlounderModels();
 		this.textures = new FlounderTextures();
 		this.fonts = new FlounderFonts();
 		this.guis = new FlounderGuis();
+		this.cursor = new FlounderCursor();
 		this.AABBs = new FlounderAABBs();
 		this.network = new FlounderNetwork(1331);
 		this.logger = new FlounderLogger();
@@ -82,7 +88,6 @@ public class FlounderEngine extends Thread implements IModule {
 		}
 
 		initialized = true;
-
 		run();
 	}
 
@@ -92,11 +97,13 @@ public class FlounderEngine extends Thread implements IModule {
 		profiler.init();
 		devices.init();
 		processors.init();
+		events.init();
 		loader.init();
 		models.init();
 		textures.init();
 		fonts.init();
 		guis.init();
+		cursor.init();
 		AABBs.init();
 		network.init();
 		implementation.init();
@@ -130,8 +137,10 @@ public class FlounderEngine extends Thread implements IModule {
 		models.update();
 		textures.update();
 		processors.update();
+		events.update();
 		fonts.update();
 		guis.update();
+		cursor.update();
 
 		implementation.update();
 
@@ -148,6 +157,7 @@ public class FlounderEngine extends Thread implements IModule {
 		if (FlounderEngine.getProfiler().isOpen()) {
 			devices.profile();
 			processors.profile();
+			events.profile();
 			implementation.profile();
 			AABBs.profile();
 			network.profile();
@@ -155,6 +165,7 @@ public class FlounderEngine extends Thread implements IModule {
 			models.profile();
 			textures.profile();
 			guis.profile();
+			cursor.profile();
 			fonts.profile();
 			logger.profile();
 			profiler.profile();
@@ -186,6 +197,15 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static FlounderProfiler getProfiler() {
 		return instance.profiler;
+	}
+
+	/**
+	 * Gets the engines current event manager.
+	 *
+	 * @return The engines current event manager.
+	 */
+	public static FlounderEvents getEvents() {
+		return instance.events;
 	}
 
 	/**
@@ -240,6 +260,15 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static FlounderGuis getGuis() {
 		return instance.guis;
+	}
+
+	/**
+	 * Gets the engines current cursor manager.
+	 *
+	 * @return The engines current cursor manager.
+	 */
+	public static FlounderCursor getCursor() {
+		return instance.cursor;
 	}
 
 	/**
@@ -369,11 +398,13 @@ public class FlounderEngine extends Thread implements IModule {
 	@Override
 	public void dispose() {
 		processors.dispose();
+		events.dispose();
 		models.dispose();
 		loader.dispose();
 		network.dispose();
 		AABBs.dispose();
 		textures.dispose();
+		cursor.dispose();
 		guis.dispose();
 		fonts.dispose();
 		implementation.dispose();
