@@ -1,12 +1,14 @@
 package flounder.fbos;
 
 import flounder.engine.*;
+import org.lwjgl.*;
 
 import java.nio.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
@@ -49,8 +51,6 @@ public class FBO {
 	 * @param samples How many MFAA samples should be used on the FBO. Zero disables multisampling.
 	 */
 	protected FBO(int width, int height, int attachments, boolean fitToScreen, float sizeScalar, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
-		this.width = (int) (width * sizeScalar);
-		this.height = (int) (height * sizeScalar);
 		this.fitToScreen = fitToScreen;
 		this.sizeScalar = sizeScalar;
 		this.depthBufferType = depthBufferType;
@@ -60,8 +60,13 @@ public class FBO {
 		this.alphaChannel = alphaChannel;
 		this.antialiased = antialiased;
 		this.samples = samples;
+		this.width = (int) (width * sizeScalar);
+		this.height = (int) (height * sizeScalar);
+		this.attachments = attachments;
+
 		this.colourTexture = new int[attachments];
 		this.colourBuffer = new int[attachments];
+
 		initializeFBO();
 	}
 
@@ -92,11 +97,13 @@ public class FBO {
 	 * Initializes the FBO.
 	 */
 	private void initializeFBO() {
-		createFBO(GL_COLOR_ATTACHMENT0);
+		createFBO();
 
 		if (!antialiased) {
 			if (useColourBuffer) {
-				createTextureAttachment(GL_COLOR_ATTACHMENT0);
+				for (int i = 0; i < attachments; i++) {
+					createTextureAttachment(GL_COLOR_ATTACHMENT0 + i);
+				}
 			}
 
 			if (depthBufferType == DepthBufferType.RENDER_BUFFER) {
@@ -105,17 +112,36 @@ public class FBO {
 				createDepthTextureAttachment();
 			}
 		} else {
-			attachMutlisampleColourBuffer(GL_COLOR_ATTACHMENT0);
+			for (int i = 0; i < attachments; i++) {
+				attachMultisampleColourBuffer(GL_COLOR_ATTACHMENT0 + i);
+			}
+
 			createDepthBufferAttachment();
 		}
 
 		unbindFrameBuffer();
 	}
 
-	private void createFBO(int attachment) {
+	private void createFBO() {
 		frameBuffer = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-		glDrawBuffer(useColourBuffer ? attachment : GL_FALSE);
+
+		if (useColourBuffer) {
+			determineDrawBuffers();
+		} else {
+			glDrawBuffer(GL_FALSE);
+		}
+	}
+
+	private void determineDrawBuffers() {
+		IntBuffer drawBuffers = BufferUtils.createIntBuffer(attachments);
+
+		for (int i = 0; i < attachments; i++) {
+			drawBuffers.put(GL_COLOR_ATTACHMENT0 + i);
+		}
+
+		drawBuffers.flip();
+		glDrawBuffers(drawBuffers);
 	}
 
 	private void createTextureAttachment(int attachment) {
@@ -151,7 +177,7 @@ public class FBO {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
 	}
 
-	private void attachMutlisampleColourBuffer(int attachment) {
+	private void attachMultisampleColourBuffer(int attachment) {
 		colourBuffer[attachment - GL_COLOR_ATTACHMENT0] = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, colourBuffer[attachment - GL_COLOR_ATTACHMENT0]);
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, alphaChannel ? GL_RGBA8 : GL_RGB8, width, height);
@@ -189,12 +215,14 @@ public class FBO {
 	/**
 	 * Blits this FBO to another FBO.
 	 *
+	 * @param readBuffer The colour attachment to be read from.
 	 * @param outputFBO The other FBO to blit to.
 	 */
-	public void resolveFBO(FBO outputFBO) {
+	public void resolveFBO(int readBuffer, FBO outputFBO) {
 		outputFBO.updateSize();
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + readBuffer);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, outputFBO.width, outputFBO.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 		unbindFrameBuffer();
 	}
@@ -225,15 +253,19 @@ public class FBO {
 	}
 
 	/**
-	 * @param attachment The colour texture to get.
+	 * Gets a colour buffer.
+	 *
+	 * @param readBuffer The colour attachment to be read from.
 	 *
 	 * @return The OpenGL colour texture id.
 	 */
-	public int getColourTexture(int attachment) {
-		return colourTexture[attachment];
+	public int getColourTexture(int readBuffer) {
+		return colourTexture[readBuffer];
 	}
 
 	/**
+	 * Gets the depth texture.
+	 *
 	 * @return The OpenGL depth texture id.
 	 */
 	public int getDepthTexture() {

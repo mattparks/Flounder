@@ -10,6 +10,7 @@ import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
 
 /**
  * Represents a user-defined program designed to run on the graphics processor and manages loading, starting, stopping and cleaning uo.
@@ -145,8 +146,17 @@ public class ShaderProgram {
 
 		for (String l : layoutLocations) {
 			String locationName = l.substring(l.lastIndexOf(" ") + 1, l.length() - 1);
+			String type = l.substring(0, l.lastIndexOf(" ") + 1);
+			type = type.substring(l.lastIndexOf(")") + 1, type.length());
 			int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
-			glBindAttribLocation(programID, locationValue, locationName);
+
+			if (type.contains("in")) {
+				glBindAttribLocation(programID, locationValue, locationName);
+			} else if (type.contains("out")) {
+				glBindFragDataLocation(programID, locationValue, locationName);
+			} else {
+				FlounderEngine.getLogger().error("Could not find location type of: " + type);
+			}
 		}
 
 		glLinkProgram(programID);
