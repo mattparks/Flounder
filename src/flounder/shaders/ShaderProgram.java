@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL30.*;
  * Represents a user-defined program designed to run on the graphics processor and manages loading, starting, stopping and cleaning uo.
  */
 public class ShaderProgram {
+	private List<Pair<String, String>> conatantValues;
 	private List<String> layoutLocations;
 	private List<String> layoutBindings;
 	private List<Pair<Uniforms, String>> shaderUniforms;
@@ -32,6 +33,7 @@ public class ShaderProgram {
 	 * @param fragmentFile The fragment shader file.
 	 */
 	public ShaderProgram(String shaderName, MyFile vertexFile, MyFile fragmentFile) {
+		conatantValues = new ArrayList<>();
 		layoutLocations = new ArrayList<>();
 		layoutBindings = new ArrayList<>();
 		shaderUniforms = new ArrayList<>();
@@ -115,11 +117,41 @@ public class ShaderProgram {
 			}
 		}
 
+		if (line.startsWith("const")) {
+			String uniformVarName = line.substring("const".length() + 1, line.length() - 1);
+			uniformVarName = uniformVarName.substring(findCharPos(uniformVarName, ' '), uniformVarName.length()).trim();
+			conatantValues.add(new Pair<>(uniformVarName.split("=")[0].trim(), uniformVarName.split("=")[1].trim()));
+		}
+
 		if (line.startsWith("uniform")) {
 			String uniformVarName = line.substring("uniform".length() + 1, line.length() - 1);
 			String uniform = uniformVarName.split(" ")[0].toUpperCase();
 			String name = uniformVarName.split(" ")[1];
-			shaderUniforms.add(new Pair<>(Uniforms.valueOf(uniform), name));
+
+			// Array Uniforms.
+			if (name.contains("[") && name.contains("]")) {
+				String nameArray = name.substring(0, findCharPos(name, '[')).trim();
+				String arraySize = name.substring(findCharPos(name, '[') + 1, name.length() - 1).trim();
+				int size = 0;
+
+				if (ByteWork.isInteger(arraySize)) {
+					size = Integer.parseInt(arraySize);
+				} else {
+					for (Pair<String, String> pair : conatantValues) {
+						if (pair.getFirst().equals(arraySize)) {
+							size = Integer.parseInt(pair.getSecond());
+							break;
+						}
+					}
+				}
+
+				for (int i = 0; i < size; i++) {
+					shaderUniforms.add(new Pair<>(Uniforms.valueOf(uniform), nameArray + "[" + i + "]"));
+				}
+			} else {
+				// Normal Uniforms.
+				shaderUniforms.add(new Pair<>(Uniforms.valueOf(uniform), name));
+			}
 		}
 
 		return new StringBuilder().append(line);

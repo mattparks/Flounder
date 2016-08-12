@@ -5,6 +5,7 @@ import flounder.engine.implementation.*;
 import flounder.helpers.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.models.*;
 import flounder.physics.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -23,9 +24,7 @@ public class AABBRenderer extends IRenderer {
 	public static Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
 	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
 
-	private int[] INDICES = {1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 1, 3, 19, 7, 5, 20, 4, 9, 21, 10, 12, 22, 13, 15, 23, 0, 17};
-	private float[] VERTICES = {1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 0.999999f, 1.0f, 1.000001f, 1.0f, -1.0f, 1.0f, 0.999999f, 1.0f, 1.000001f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -0.999999f};
-	private int VAO;
+	private Model aabbModel;
 
 	private ShaderProgram shader;
 
@@ -38,9 +37,7 @@ public class AABBRenderer extends IRenderer {
 		shader = new ShaderProgram("aabb", VERTEX_SHADER, FRAGMENT_SHADER);
 		lastWireframe = false;
 
-		VAO = FlounderEngine.getLoader().createVAO();
-		FlounderEngine.getLoader().createIndicesVBO(VAO, INDICES);
-		FlounderEngine.getLoader().storeDataInVBO(VAO, VERTICES, 0, 3);
+		aabbModel = Model.newModel(new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj")).createInBackground();
 	}
 
 	@Override
@@ -78,7 +75,7 @@ public class AABBRenderer extends IRenderer {
 		OpenGlUtils.goWireframe(true);
 		OpenGlUtils.enableDepthTesting();
 
-		OpenGlUtils.bindVAO(VAO, 0);
+		OpenGlUtils.bindVAO(aabbModel.getVaoID(), 0, 1, 2, 3);
 	}
 
 	private void renderAABB(AABB aabb) {
@@ -96,13 +93,12 @@ public class AABBRenderer extends IRenderer {
 		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
 		shader.getUniformVec3("colour").loadVec3(POSITION_REUSABLE.normalize());
 
-		glDrawElements(GL_TRIANGLES, INDICES.length, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, aabbModel.getVaoLength(), GL_UNSIGNED_INT, 0);
 	}
 
 	private void endRendering() {
 		OpenGlUtils.goWireframe(lastWireframe);
-
-		OpenGlUtils.unbindVAO(0);
+		OpenGlUtils.unbindVAO(0, 1, 2, 3);
 		shader.stop();
 	}
 
