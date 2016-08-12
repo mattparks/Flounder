@@ -15,7 +15,7 @@ public class FlounderNetwork implements IModule {
 	/**
 	 * Creates a new network manager.
 	 *
-	 * @param port The port for the client and server to run off of.
+	 * @param port The port for the client and server to onEvent off of.
 	 */
 	public FlounderNetwork(int port) {
 		this.port = port;

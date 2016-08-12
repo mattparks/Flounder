@@ -20,7 +20,6 @@ public abstract class GuiComponent {
 	private List<GuiComponent> componentsToDelete;
 	private List<GuiComponent> componentsToRemove;
 	private List<GuiComponent> componentsToAdd;
-	private List<ListenerAdvanced> actionEvents;
 	private GuiComponent parent;
 	private boolean visible;
 	private boolean initialized;
@@ -36,7 +35,6 @@ public abstract class GuiComponent {
 		componentsToDelete = new ArrayList<>();
 		componentsToRemove = new ArrayList<>();
 		componentsToAdd = new ArrayList<>();
-		actionEvents = new ArrayList<>();
 		initialized = false;
 	}
 
@@ -47,24 +45,6 @@ public abstract class GuiComponent {
 	 */
 	public void show(boolean visible) {
 		this.visible = visible;
-	}
-
-	/**
-	 * Adds a action listener to run when event has occurred.
-	 *
-	 * @param actionListener The action listener.
-	 */
-	public void addActionListener(ListenerAdvanced actionListener) {
-		actionEvents.add(actionListener);
-	}
-
-	/**
-	 * Removes a action listener.
-	 *
-	 * @param actionListener The action listener to remove.
-	 */
-	public void removeActionListener(ListenerAdvanced actionListener) {
-		actionEvents.remove(actionListener);
 	}
 
 	/**
@@ -230,12 +210,6 @@ public abstract class GuiComponent {
 	public void update(List<GuiTexture> guiTextures, Map<FontType, List<Text>> texts) {
 		if (!visible) {
 			return;
-		}
-
-		for (ListenerAdvanced listener : actionEvents) {
-			if (listener.hasOccurred()) {
-				listener.run();
-			}
 		}
 
 		updateSelf();

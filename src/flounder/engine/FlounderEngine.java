@@ -108,9 +108,6 @@ public class FlounderEngine extends Thread implements IModule {
 			network.init();
 			implementation.init();
 
-			// Opens the profiler if not running from jar.
-			profiler.toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
-
 			initialized = true;
 		}
 	}
@@ -134,25 +131,27 @@ public class FlounderEngine extends Thread implements IModule {
 
 	@Override
 	public void update() {
-		devices.update();
+		if (initialized) {
+			devices.update();
 
-		loader.update();
-		models.update();
-		textures.update();
-		processors.update();
-		events.update();
-		fonts.update();
-		guis.update();
-		cursor.update();
+			loader.update();
+			models.update();
+			textures.update();
+			processors.update();
+			events.update();
+			fonts.update();
+			guis.update();
+			cursor.update();
 
-		implementation.update();
+			implementation.update();
 
-		AABBs.update();
-		logger.update();
-		profiler.update();
-		network.update();
+			AABBs.update();
+			logger.update();
+			profiler.update();
+			network.update();
 
-		devices.swapBuffers();
+			devices.swapBuffers();
+		}
 	}
 
 	@Override

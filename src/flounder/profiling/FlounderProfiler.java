@@ -1,6 +1,7 @@
 package flounder.profiling;
 
 import flounder.engine.*;
+import flounder.logger.*;
 
 import javax.swing.*;
 
@@ -30,6 +31,7 @@ public class FlounderProfiler implements IModule {
 		profilerJFrame.setSize(420, 720);
 		profilerJFrame.setResizable(true);
 
+		profilerJFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		profilerJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -46,6 +48,9 @@ public class FlounderProfiler implements IModule {
 		profilerJFrame.add(primaryTabMenu);
 
 		profilerOpen = false;
+
+		// Opens the profiler if not running from jar.
+		toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
 	}
 
 	@Override
