@@ -87,29 +87,32 @@ public class FlounderEngine extends Thread implements IModule {
 			TextBuilder.DEFAULT_TYPE = defaultType;
 		}
 
-		initialized = true;
 		run();
 	}
 
 	@Override
 	public void init() {
-		logger.init();
-		profiler.init();
-		devices.init();
-		processors.init();
-		events.init();
-		loader.init();
-		models.init();
-		textures.init();
-		fonts.init();
-		guis.init();
-		cursor.init();
-		AABBs.init();
-		network.init();
-		implementation.init();
+		if (!initialized) {
+			logger.init();
+			profiler.init();
+			devices.init();
+			processors.init();
+			events.init();
+			loader.init();
+			models.init();
+			textures.init();
+			fonts.init();
+			guis.init();
+			cursor.init();
+			AABBs.init();
+			network.init();
+			implementation.init();
 
-		// Opens the profiler if not running from jar.
-		profiler.toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
+			// Opens the profiler if not running from jar.
+			profiler.toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
+
+			initialized = true;
+		}
 	}
 
 	@Override
@@ -397,21 +400,23 @@ public class FlounderEngine extends Thread implements IModule {
 
 	@Override
 	public void dispose() {
-		processors.dispose();
-		events.dispose();
-		models.dispose();
-		loader.dispose();
-		network.dispose();
-		AABBs.dispose();
-		textures.dispose();
-		cursor.dispose();
-		guis.dispose();
-		fonts.dispose();
-		implementation.dispose();
-		devices.dispose();
-		profiler.dispose();
-		logger.dispose();
+		if (initialized) {
+			processors.dispose();
+			events.dispose();
+			models.dispose();
+			loader.dispose();
+			network.dispose();
+			AABBs.dispose();
+			textures.dispose();
+			cursor.dispose();
+			guis.dispose();
+			fonts.dispose();
+			implementation.dispose();
+			devices.dispose();
+			profiler.dispose();
+			logger.dispose();
 
-		initialized = false;
+			initialized = false;
+		}
 	}
 }

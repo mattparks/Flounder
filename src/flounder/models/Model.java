@@ -15,7 +15,7 @@ public class Model {
 	private float[] tangents;
 	private int[] indices;
 
-	private MyFile file;
+	private String name;
 	private boolean loaded;
 
 	private AABB aabb;
@@ -31,21 +31,6 @@ public class Model {
 	}
 
 	/**
-	 * Manually loads values into a model.
-	 *
-	 * @param vertices The vertices to load.
-	 * @param textureCoords The texture coords to load.
-	 * @param normals The normals to load.
-	 * @param tangents The tangents to load.
-	 * @param indices The indices to load.
-	 */
-	public Model(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
-		loadData(vertices, textureCoords, normals, tangents, indices);
-		FlounderEngine.getModels().loadModelToOpenGL(this, null);
-		this.loaded = true;
-	}
-
-	/**
 	 * Creates a new Model Builder.
 	 *
 	 * @param file The model file to be loaded.
@@ -54,6 +39,17 @@ public class Model {
 	 */
 	public static ModelBuilder newModel(MyFile file) {
 		return new ModelBuilder(file);
+	}
+
+	/**
+	 * Creates a new Model Builder.
+	 *
+	 * @param loadManual The model's manual loader.
+	 *
+	 * @return A new Model Builder.
+	 */
+	public static ModelBuilder newModel(ModelBuilder.LoadManual loadManual) {
+		return new ModelBuilder(loadManual);
 	}
 
 	/**
@@ -157,21 +153,21 @@ public class Model {
 	}
 
 	/**
-	 * Gets texture file this was stored in.
+	 * Gets texture name this was stored in.
 	 *
-	 * @return The texture file.
+	 * @return The texture name.
 	 */
-	public MyFile getFile() {
-		return file;
+	public String getFile() {
+		return name;
 	}
 
 	/**
-	 * Sets the file this texture was loaded from.
+	 * Sets the name this texture was loaded from.
 	 *
-	 * @param file The file this texture was loaded from.
+	 * @param name The name this texture was loaded from.
 	 */
-	public void setFile(MyFile file) {
-		this.file = file;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**

@@ -111,6 +111,24 @@ public class FlounderModels implements IModule {
 			model.loadData(data);
 		}
 
+		loadModelToOpenGL(model);
+	}
+
+	/**
+	 * Loads model data into the model data structure and OpenGL memory.
+	 *
+	 * @param model The model to be loaded to.
+	 * @param loadManual The manual data to be ued when loading to the model.
+	 */
+	public void loadModelToOpenGL(Model model, ModelBuilder.LoadManual loadManual) {
+		if (loadManual != null) {
+			model.loadData(loadManual.getVertices(), loadManual.getTextureCoords(), loadManual.getNormals(), loadManual.getTangents(), loadManual.getIndices());
+		}
+
+		loadModelToOpenGL(model);
+	}
+
+	private void loadModelToOpenGL(Model model) {
 		model.setVaoID(FlounderEngine.getLoader().createVAO());
 		FlounderEngine.getLoader().createIndicesVBO(model.getVaoID(), model.getIndices());
 		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);
@@ -121,7 +139,7 @@ public class FlounderModels implements IModule {
 		model.setVaoLength(model.getIndices().length);
 	}
 
-	private static VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices) {
+	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices) {
 		int index = Integer.parseInt(vertex[0]) - 1;
 		VertexData currentVertexData = vertices.get(index);
 		int textureIndex = Integer.parseInt(vertex[1]) - 1;
@@ -137,7 +155,7 @@ public class FlounderModels implements IModule {
 		}
 	}
 
-	private static VertexData dealWithAlreadyProcessedDataVertex(VertexData previousVertexData, int newTextureIndex, int newNormalIndex, List<Integer> indices, List<VertexData> vertices) {
+	private VertexData dealWithAlreadyProcessedDataVertex(VertexData previousVertexData, int newTextureIndex, int newNormalIndex, List<Integer> indices, List<VertexData> vertices) {
 		if (previousVertexData.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
 			indices.add(previousVertexData.getIndex());
 			return previousVertexData;
@@ -158,7 +176,7 @@ public class FlounderModels implements IModule {
 		}
 	}
 
-	private static void calculateTangents(VertexData v0, VertexData v1, VertexData v2, List<Vector2f> textures) {
+	private void calculateTangents(VertexData v0, VertexData v1, VertexData v2, List<Vector2f> textures) {
 		Vector3f deltaPos1 = Vector3f.subtract(v1.getPosition(), v0.getPosition(), null);
 		Vector3f deltaPos2 = Vector3f.subtract(v2.getPosition(), v0.getPosition(), null);
 		Vector2f uv0 = textures.get(v0.getTextureIndex());

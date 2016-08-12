@@ -28,7 +28,9 @@ public class ModelLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void doResourceRequest() {
-		data = FlounderEngine.getModels().loadOBJ(builder.getFile());
+		if (builder.getFile() != null) {
+			data = FlounderEngine.getModels().loadOBJ(builder.getFile());
+		}
 
 		if (sendRequest) {
 			FlounderEngine.getProcessors().sendGLRequest(this);
@@ -37,7 +39,12 @@ public class ModelLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void executeGlRequest() {
-		model.setFile(builder.getFile());
-		FlounderEngine.getModels().loadModelToOpenGL(model, data);
+		if (builder.getFile() != null) {
+			model.setName(builder.getFile().getPath());
+			FlounderEngine.getModels().loadModelToOpenGL(model, data);
+		} else {
+			model.setName(builder.getLoadManual().getModelName());
+			FlounderEngine.getModels().loadModelToOpenGL(model, builder.getLoadManual());
+		}
 	}
 }
