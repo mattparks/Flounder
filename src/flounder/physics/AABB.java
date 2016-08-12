@@ -126,145 +126,184 @@ public class AABB {
 	/**
 	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
 	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param scale Amount to scale up the AABB.
 	 *
 	 * @return A new AABB, scaled by the specified amounts.
 	 */
-	public AABB scale(AABB destination, Vector3f scale) {
-		return scale(destination, scale.x, scale.y, scale.z);
+	public static AABB scale(AABB source, AABB destination, Vector3f scale) {
+		return scale(source, destination, scale.x, scale.y, scale.z);
 	}
 
 	/**
 	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
 	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param scaleX Amount to scale up the AABB on X.
 	 * @param scaleY Amount to scale up the AABB on Y.
 	 * @param scaleZ Amount to scale up the AABB on Z.
 	 *
 	 * @return A new AABB, scaled by the specified amounts.
 	 */
-	public AABB scale(AABB destination, float scaleX, float scaleY, float scaleZ) {
+	public static AABB scale(AABB source, AABB destination, float scaleX, float scaleY, float scaleZ) {
 		if (destination == null) {
 			destination = new AABB();
 		}
 
-		destination.setMinExtents(minExtents.x * scaleX, minExtents.y * scaleY, minExtents.z * scaleZ);
-		destination.setMaxExtents(maxExtents.x * scaleX, maxExtents.y * scaleY, maxExtents.z * scaleZ);
+		destination.setMinExtents(source.minExtents.x * scaleX, source.minExtents.y * scaleY, source.minExtents.z * scaleZ);
+		destination.setMaxExtents(source.maxExtents.x * scaleX, source.maxExtents.y * scaleY, source.maxExtents.z * scaleZ);
 		return destination;
 	}
 
 	/**
 	 * Creates a new AABB equivalent to this, but scaled away from the origin by a certain amount.
 	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param expand Amount to scale up the AABB.
 	 *
 	 * @return A new AABB, scaled by the specified amounts.
 	 */
-	public AABB expand(Vector3f expand) {
-		return expand(expand.x, expand.y, expand.z);
+	public static AABB expand(AABB source, AABB destination, Vector3f expand) {
+		return expand(source, destination, expand.x, expand.y, expand.z);
 	}
 
 	/**
 	 * Creates a new AABB equivalent to this, but scaled away from the origin by a certain amount.
 	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param expandX Amount to scale up the AABB on X.
 	 * @param expandY Amount to scale up the AABB on Y.
 	 * @param expandZ Amount to scale up the AABB on Z.
 	 *
 	 * @return A new AABB, scaled by the specified amounts.
 	 */
-	public AABB expand(float expandX, float expandY, float expandZ) {
-		return new AABB(new Vector3f(minExtents.x - expandX, minExtents.y - expandY, minExtents.z - expandZ), new Vector3f(maxExtents.x + expandX, maxExtents.y + expandY, maxExtents.z + expandZ));
+	public static AABB expand(AABB source, AABB destination, float expandX, float expandY, float expandZ) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		destination.minExtents.set(source.minExtents.x - expandX, source.minExtents.y - expandY, source.minExtents.z - expandZ);
+		destination.maxExtents.set(source.maxExtents.x + expandX, source.maxExtents.y + expandY, source.maxExtents.z + expandZ);
+
+		return destination;
 	}
 
 	/**
 	 * Creates an AABB that bounds both this AABB and another AABB.
 	 *
-	 * @param other The other AABB being bounded.
+	 * @param left The left source AABB.
+	 * @param right The right source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 *
 	 * @return An AABB that bounds both this AABB and {@code other}.
 	 */
-	public AABB combine(AABB other) {
-		float newMinX = Math.min(minExtents.x, other.getMinExtents().x);
-		float newMinY = Math.min(minExtents.y, other.getMinExtents().y);
-		float newMinZ = Math.min(minExtents.z, other.getMinExtents().z);
-		float newMaxX = Math.max(maxExtents.x, other.getMaxExtents().x);
-		float newMaxY = Math.max(maxExtents.y, other.getMaxExtents().y);
-		float newMaxZ = Math.max(maxExtents.z, other.getMaxExtents().z);
-		return new AABB(new Vector3f(newMinX, newMinY, newMinZ), new Vector3f(newMaxX, newMaxY, newMaxZ));
+	public static AABB combine(AABB left, AABB right, AABB destination) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		float newMinX = Math.min(left.minExtents.x, right.getMinExtents().x);
+		float newMinY = Math.min(left.minExtents.y, right.getMinExtents().y);
+		float newMinZ = Math.min(left.minExtents.z, right.getMinExtents().z);
+		float newMaxX = Math.max(left.maxExtents.x, right.getMaxExtents().x);
+		float newMaxY = Math.max(left.maxExtents.y, right.getMaxExtents().y);
+		float newMaxZ = Math.max(left.maxExtents.z, right.getMaxExtents().z);
+
+		destination.minExtents.set(newMinX, newMinY, newMinZ);
+		destination.maxExtents.set(newMaxX, newMaxY, newMaxZ);
+
+		return destination;
 	}
 
 	/**
 	 * Creates a new AABB equivalent to this, but stretched by a certain amount.
 	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param stretch The amount to stretch.
 	 *
 	 * @return A new AABB, stretched by the specified amounts.
 	 */
-	public AABB stretch(Vector3f stretch) {
-		return stretch(stretch.x, stretch.y, stretch.z);
+	public static AABB stretch(AABB source, AABB destination, Vector3f stretch) {
+		return stretch(source, destination, stretch.x, stretch.y, stretch.z);
 	}
 
 	/**
 	 * Creates a new AABB equivalent to this, but stretched by a certain amount.
 	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param stretchX The amount to stretch on the X.
 	 * @param stretchY The amount to stretch on the Y.
 	 * @param stretchZ The amount to stretch on the Z.
 	 *
 	 * @return A new AABB, stretched by the specified amounts.
 	 */
-	public AABB stretch(float stretchX, float stretchY, float stretchZ) {
+	public static AABB stretch(AABB source, AABB destination, float stretchX, float stretchY, float stretchZ) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
 		float newMinX, newMaxX, newMinY, newMaxY, newMinZ, newMaxZ;
 
 		if (stretchX < 0) {
-			newMinX = minExtents.x + stretchX;
-			newMaxX = maxExtents.x;
+			newMinX = source.minExtents.x + stretchX;
+			newMaxX = source.maxExtents.x;
 		} else {
-			newMinX = minExtents.x;
-			newMaxX = maxExtents.x + stretchX;
+			newMinX = source.minExtents.x;
+			newMaxX = source.maxExtents.x + stretchX;
 		}
 
 		if (stretchY < 0) {
-			newMinY = minExtents.y + stretchY;
-			newMaxY = maxExtents.y;
+			newMinY = source.minExtents.y + stretchY;
+			newMaxY = source.maxExtents.y;
 		} else {
-			newMinY = minExtents.y;
-			newMaxY = maxExtents.y + stretchY;
+			newMinY = source.minExtents.y;
+			newMaxY = source.maxExtents.y + stretchY;
 		}
 
 		if (stretchZ < 0) {
-			newMinZ = minExtents.z + stretchZ;
-			newMaxZ = maxExtents.z;
+			newMinZ = source.minExtents.z + stretchZ;
+			newMaxZ = source.maxExtents.z;
 		} else {
-			newMinZ = minExtents.z;
-			newMaxZ = maxExtents.z + stretchZ;
+			newMinZ = source.minExtents.z;
+			newMaxZ = source.maxExtents.z + stretchZ;
 		}
 
-		return new AABB(new Vector3f(newMinX, newMinY, newMinZ), new Vector3f(newMaxX, newMaxY, newMaxZ));
+		destination.minExtents.set(newMinX, newMinY, newMinZ);
+		destination.maxExtents.set(newMaxX, newMaxY, newMaxZ);
+
+		return destination;
 	}
 
 	/**
 	 * Creates an AABB equivalent to this, but in a new position and rotation.
 	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param position The amount to move.
 	 * @param rotation The amount to rotate.
+	 * @param scale The amount to scale the object.
 	 *
 	 * @return An AABB equivalent to this, but in a new position.
 	 */
-	public AABB recalculate(AABB destination, Vector3f position, Vector3f rotation, float scale) {
+	public static AABB recalculate(AABB source, AABB destination, Vector3f position, Vector3f rotation, float scale) {
 		if (destination == null) {
 			destination = new AABB();
 		}
 
-		destination.setMinExtents(minExtents.x * scale, minExtents.y * scale, minExtents.z * scale);
-		destination.setMaxExtents(maxExtents.x * scale, maxExtents.y * scale, maxExtents.z * scale);
-		Vector3f.add(destination.getMinExtents(), position, destination.getMinExtents());
-		Vector3f.add(destination.getMaxExtents(), position, destination.getMaxExtents());
-
 		// TODO: Fix rotate vector! That math is broken proven with: http://www.nh.cas.cz/people/lazar/celler/online_tools.php
-		// Vector3f.rotateVector(minExtents, rotation.x, rotation.y, rotation.z, null)
-		// Vector3f.rotateVector(maxExtents, rotation.x, rotation.y, rotation.z, null)
+		// Vector3f.rotateVector(source.minExtents, rotation.x, rotation.y, rotation.z, destination.minExtents)
+		// Vector3f.rotateVector(source.maxExtents, rotation.x, rotation.y, rotation.z, destination.maxExtents)
+
+		destination.setMinExtents(source.minExtents.x * scale, source.minExtents.y * scale, source.minExtents.z * scale);
+		destination.setMaxExtents(source.maxExtents.x * scale, source.maxExtents.y * scale, source.maxExtents.z * scale);
+		Vector3f.add(destination.minExtents, position, destination.minExtents);
+		Vector3f.add(destination.maxExtents, position, destination.maxExtents);
 		return destination;
 	}
 

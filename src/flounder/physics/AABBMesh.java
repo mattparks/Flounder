@@ -18,7 +18,7 @@ public class AABBMesh implements Collidable {
 		AABB[] newMesh = new AABB[mesh.length];
 
 		for (int i = 0; i < mesh.length; i++) {
-			newMesh[i] = mesh[i].recalculate(mesh[i], position, rotation, scale);
+			AABB.recalculate(mesh[i], newMesh[i], position, rotation, scale);
 		}
 
 		return new AABBMesh(newMesh);
