@@ -1,6 +1,5 @@
 package flounder.physics;
 
-import flounder.engine.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;

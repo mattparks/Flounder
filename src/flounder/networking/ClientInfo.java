@@ -49,6 +49,7 @@ public class ClientInfo {
 	public int getPort() {
 		return port;
 	}
+
 	/**
 	 * Sets the clients port
 	 *

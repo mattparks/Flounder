@@ -14,7 +14,7 @@ public class ByteWork {
 	public static final int LONG_LENGTH = 8;
 
 	public static boolean isInteger(String s) {
-		return isInteger(s,10);
+		return isInteger(s, 10);
 	}
 
 	public static boolean isInteger(String s, int radix) {

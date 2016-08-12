@@ -490,7 +490,7 @@ public class ShaderProgram {
 	}
 
 	private enum Uniforms {
-		BOOL(UniformBool.class.getName()), FLOAT(UniformFloat.class.getName()),  SAMPLER2D(UniformSampler2D.class.getName()),
+		BOOL(UniformBool.class.getName()), FLOAT(UniformFloat.class.getName()), SAMPLER2D(UniformSampler2D.class.getName()),
 		MAT2(UniformMat2.class.getName()), MAT3(UniformMat3.class.getName()), MAT4(UniformMat4.class.getName()),
 		VEC2(UniformVec2.class.getName()), VEC3(UniformVec3.class.getName()), VEC4(UniformVec4.class.getName());
 

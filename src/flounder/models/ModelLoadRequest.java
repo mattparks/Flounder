@@ -37,6 +37,7 @@ public class ModelLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void executeGlRequest() {
+		model.setFile(builder.getFile());
 		FlounderEngine.getModels().loadModelToOpenGL(model, data);
 	}
 }

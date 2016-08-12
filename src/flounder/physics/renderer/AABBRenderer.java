@@ -25,7 +25,7 @@ public class AABBRenderer extends IRenderer {
 	public static Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
 	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
 
-	public static Colour colourRed = new Colour(1,0,0,1);
+	public static Colour colourRed = new Colour(1, 0, 0, 1);
 
 	private Model aabbModel;
 

@@ -107,7 +107,10 @@ public class FlounderModels implements IModule {
 	 * @param data The data to be ued when loading to the model.
 	 */
 	public void loadModelToOpenGL(Model model, ModelData data) {
-		model.loadData(data);
+		if (data != null) {
+			model.loadData(data);
+		}
+
 		model.setVaoID(FlounderEngine.getLoader().createVAO());
 		FlounderEngine.getLoader().createIndicesVBO(model.getVaoID(), model.getIndices());
 		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);

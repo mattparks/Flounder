@@ -138,7 +138,7 @@ public class MetaFile {
 		String value = values.get(variable);
 
 		if (value == null) {
-		//	FlounderEngine.getLogger().error("Could not find font variable for: " + variable, true);
+			//	FlounderEngine.getLogger().error("Could not find font variable for: " + variable, true);
 			return 0;
 		}
 

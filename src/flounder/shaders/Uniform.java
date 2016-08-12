@@ -1,7 +1,5 @@
 package flounder.shaders;
 
-import flounder.engine.*;
-
 import static org.lwjgl.opengl.GL20.*;
 
 /**

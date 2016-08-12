@@ -15,6 +15,7 @@ public class Model {
 	private float[] tangents;
 	private int[] indices;
 
+	private MyFile file;
 	private boolean loaded;
 
 	private AABB aabb;
@@ -27,6 +28,21 @@ public class Model {
 	 */
 	protected Model() {
 		this.loaded = false;
+	}
+
+	/**
+	 * Manually loads values into a model.
+	 *
+	 * @param vertices The vertices to load.
+	 * @param textureCoords The texture coords to load.
+	 * @param normals The normals to load.
+	 * @param tangents The tangents to load.
+	 * @param indices The indices to load.
+	 */
+	public Model(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
+		loadData(vertices, textureCoords, normals, tangents, indices);
+		FlounderEngine.getModels().loadModelToOpenGL(this, null);
+		this.loaded = true;
 	}
 
 	/**
@@ -138,6 +154,24 @@ public class Model {
 
 	public void setVaoLength(int vaoLength) {
 		this.vaoLength = vaoLength;
+	}
+
+	/**
+	 * Gets texture file this was stored in.
+	 *
+	 * @return The texture file.
+	 */
+	public MyFile getFile() {
+		return file;
+	}
+
+	/**
+	 * Sets the file this texture was loaded from.
+	 *
+	 * @param file The file this texture was loaded from.
+	 */
+	public void setFile(MyFile file) {
+		this.file = file;
 	}
 
 	/**
