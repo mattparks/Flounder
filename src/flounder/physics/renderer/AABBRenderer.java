@@ -3,6 +3,7 @@ package flounder.physics.renderer;
 import flounder.engine.*;
 import flounder.engine.implementation.*;
 import flounder.helpers.*;
+import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
@@ -23,6 +24,8 @@ public class AABBRenderer extends IRenderer {
 	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
 	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
+
+	public static Colour colourRed = new Colour(1,0,0,1);
 
 	private Model aabbModel;
 
@@ -91,7 +94,7 @@ public class AABBRenderer extends IRenderer {
 		Matrix4f.transformationMatrix(POSITION_REUSABLE, ROTATION_REUSABLE, SCALE_REUSABLE, MODEL_MATRIX_REUSABLE);
 
 		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
-		shader.getUniformVec3("colour").loadVec3(POSITION_REUSABLE.normalize());
+		shader.getUniformVec3("colour").loadVec3(colourRed); // POSITION_REUSABLE.normalize()
 
 		glDrawElements(GL_TRIANGLES, aabbModel.getVaoLength(), GL_UNSIGNED_INT, 0);
 	}

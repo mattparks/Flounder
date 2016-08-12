@@ -14,11 +14,11 @@ public class AABBMesh implements Collidable {
 		}
 	}
 
-	public AABBMesh move(Vector3f position, Vector3f rotation) {
+	public AABBMesh move(Vector3f position, Vector3f rotation, float scale) {
 		AABB[] newMesh = new AABB[mesh.length];
 
 		for (int i = 0; i < mesh.length; i++) {
-			newMesh[i] = mesh[i].recalculate(position, rotation);
+			newMesh[i] = mesh[i].recalculate(mesh[i], position, rotation, scale);
 		}
 
 		return new AABBMesh(newMesh);

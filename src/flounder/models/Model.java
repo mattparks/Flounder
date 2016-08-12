@@ -1,6 +1,8 @@
 package flounder.models;
 
 import flounder.engine.*;
+import flounder.maths.vectors.*;
+import flounder.physics.*;
 import flounder.resources.*;
 
 /**
@@ -12,7 +14,10 @@ public class Model {
 	private float[] normals;
 	private float[] tangents;
 	private int[] indices;
+
 	private boolean loaded;
+
+	private AABB aabb;
 
 	private int vaoID;
 	private int vaoLength;
@@ -55,7 +60,48 @@ public class Model {
 		this.normals = normals;
 		this.tangents = tangents;
 		this.indices = indices;
-		loaded = true;
+
+		this.loaded = true;
+
+		this.aabb = createAABB();
+	}
+
+	private AABB createAABB() {
+		float minX = 0, minY = 0, minZ = 0;
+		float maxX = 0, maxY = 0, maxZ = 0;
+		int tripleCount = 0;
+
+		for (float position : vertices) {
+			if (tripleCount == 0 && position < minX) {
+				minX = position;
+			} else if (tripleCount == 0 && position > maxX) {
+				maxX = position;
+			}
+
+			if (tripleCount == 1 && position < minY) {
+				minY = position;
+			} else if (tripleCount == 1 && position > maxY) {
+				maxY = position;
+			}
+
+			if (tripleCount == 2 && position < minZ) {
+				minZ = position;
+			} else if (tripleCount == 2 && position > maxZ) {
+				maxZ = position;
+			}
+
+			if (tripleCount >= 2) {
+				tripleCount = 0;
+			} else {
+				tripleCount++;
+			}
+		}
+
+		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
+	}
+
+	public AABB getAABB() {
+		return aabb;
 	}
 
 	public float[] getVertices() {

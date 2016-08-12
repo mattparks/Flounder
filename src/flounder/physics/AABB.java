@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.engine.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
@@ -130,8 +131,8 @@ public class AABB {
 	 *
 	 * @return A new AABB, scaled by the specified amounts.
 	 */
-	public AABB scale(Vector3f scale) {
-		return scale(scale.x, scale.y, scale.z);
+	public AABB scale(AABB destination, Vector3f scale) {
+		return scale(destination, scale.x, scale.y, scale.z);
 	}
 
 	/**
@@ -143,8 +144,14 @@ public class AABB {
 	 *
 	 * @return A new AABB, scaled by the specified amounts.
 	 */
-	public AABB scale(float scaleX, float scaleY, float scaleZ) {
-		return new AABB(new Vector3f(minExtents.x * scaleX, minExtents.y * scaleY, minExtents.z * scaleZ), new Vector3f(maxExtents.x * scaleX, maxExtents.y * scaleY, maxExtents.z * scaleZ));
+	public AABB scale(AABB destination, float scaleX, float scaleY, float scaleZ) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		destination.setMinExtents(minExtents.x * scaleX, minExtents.y * scaleY, minExtents.z * scaleZ);
+		destination.setMaxExtents(maxExtents.x * scaleX, maxExtents.y * scaleY, maxExtents.z * scaleZ);
+		return destination;
 	}
 
 	/**
@@ -246,11 +253,20 @@ public class AABB {
 	 *
 	 * @return An AABB equivalent to this, but in a new position.
 	 */
-	public AABB recalculate(Vector3f position, Vector3f rotation) {
+	public AABB recalculate(AABB destination, Vector3f position, Vector3f rotation, float scale) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		destination.setMinExtents(minExtents.x * scale, minExtents.y * scale, minExtents.z * scale);
+		destination.setMaxExtents(maxExtents.x * scale, maxExtents.y * scale, maxExtents.z * scale);
+		Vector3f.add(destination.getMinExtents(), position, destination.getMinExtents());
+		Vector3f.add(destination.getMaxExtents(), position, destination.getMaxExtents());
+
 		// TODO: Fix rotate vector! That math is broken proven with: http://www.nh.cas.cz/people/lazar/celler/online_tools.php
 		// Vector3f.rotateVector(minExtents, rotation.x, rotation.y, rotation.z, null)
 		// Vector3f.rotateVector(maxExtents, rotation.x, rotation.y, rotation.z, null)
-		return new AABB(Vector3f.add(minExtents, position, null), Vector3f.add(maxExtents, position, null));
+		return destination;
 	}
 
 	/**

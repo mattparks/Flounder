@@ -188,7 +188,7 @@ public class Vector3f {
 	 * @return The length squared of the vector.
 	 */
 	public float lengthSquared() {
-		return (float) (Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+		return x * x + y * y + z * z;
 	}
 
 	/**

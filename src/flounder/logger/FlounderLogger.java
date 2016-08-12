@@ -41,6 +41,10 @@ public class FlounderLogger implements IModule {
 		FlounderEngine.getProfiler().add("Logger", "Lines Recorded", linesRecorded);
 	}
 
+	public boolean inJar() {
+		return ALLOW_LOUD_LOGS;
+	}
+
 	/**
 	 * Log logs strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
 	 *
