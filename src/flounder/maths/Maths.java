@@ -69,6 +69,52 @@ public class Maths {
 	}
 
 	/**
+	 * Gets the maximum vector size.
+	 *
+	 * @param a The first vector to get values from.
+	 * @param b The second vector to get values from.
+	 *
+	 * @return The maximum vector.
+	 */
+	public static Vector3f max(Vector3f a, Vector3f b) {
+		return new Vector3f(Math.max(a.getX(), b.getX()), Math.max(a.getY(), b.getY()), Math.max(a.getZ(), b.getZ()));
+	}
+
+	/**
+	 * Gets the maximum value in a vector.
+	 *
+	 * @param vector The value to get the maximum value from.
+	 *
+	 * @return The maximum value.
+	 */
+	public static float max(Vector3f vector) {
+		return Math.max(vector.getX(), Math.max(vector.getY(), vector.getZ()));
+	}
+
+	/**
+	 * Gets the lowest vector size.
+	 *
+	 * @param a The first vector to get values from.
+	 * @param b The second vector to get values from.
+	 *
+	 * @return The lowest vector.
+	 */
+	public static Vector3f min(Vector3f a, Vector3f b) {
+		return new Vector3f(Math.min(a.getX(), b.getX()), Math.min(a.getY(), b.getY()), Math.min(a.getZ(), b.getZ()));
+	}
+
+	/**
+	 * Gets the lowest value in a vector.
+	 *
+	 * @param vector The value to get the lowest value from.
+	 *
+	 * @return The lowest value.
+	 */
+	public static float min(Vector3f vector) {
+		return Math.min(vector.getX(), Math.min(vector.getY(), vector.getZ()));
+	}
+
+	/**
 	 * A flooring modulus operator. Works similarly to the % operator, except this rounds towards negative infinity rather than towards 0.
 	 * <p>
 	 * For example: <br>

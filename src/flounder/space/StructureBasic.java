@@ -1,5 +1,6 @@
 package flounder.space;
 
+import flounder.engine.*;
 import flounder.physics.*;
 
 import java.util.*;

@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
@@ -332,7 +333,8 @@ public class AABB {
 			return new IntersectData(true, 0);
 		}
 
-		float maxDist = Vector3f.maxComponent(Vector3f.maxVector(new Vector3f(getMinExtents().x - other.getMaxExtents().x, getMinExtents().y - other.getMaxExtents().y, getMinExtents().z - other.getMaxExtents().z), new Vector3f(other.getMinExtents().x - getMaxExtents().x, other.getMinExtents().y - getMaxExtents().y, other.getMinExtents().z - getMaxExtents().z)));
+		final float maxDist = Maths.max(Maths.max(new Vector3f(getMinExtents().getX() - other.getMaxExtents().getX(), getMinExtents().getY() - other.getMaxExtents().getY(), getMinExtents().getZ() - other.getMaxExtents().getZ()), new Vector3f(other.getMinExtents().getX() - getMaxExtents().getX(), other.getMinExtents().getY() - getMaxExtents().getY(), other.getMinExtents().getZ() - getMaxExtents().getZ())));
+
 		return new IntersectData(maxDist < 0, maxDist);
 	}
 
