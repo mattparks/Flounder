@@ -7,7 +7,7 @@ import flounder.resources.*;
 
 import java.util.*;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Y;
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * A manager that manages particles.

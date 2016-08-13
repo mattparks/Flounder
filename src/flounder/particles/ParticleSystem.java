@@ -27,6 +27,8 @@ public class ParticleSystem {
 	private float lifeError;
 	private float scaleError;
 
+	private boolean paused;
+
 	/**
 	 * Creates a new particle system.
 	 *
@@ -44,6 +46,10 @@ public class ParticleSystem {
 		this.random = new Random();
 
 		this.systemCentre = new Vector3f();
+
+		this.paused = false;
+
+		FlounderEngine.getParticles().addSystem(this);
 	}
 
 	public void randomizeRotation() {
@@ -60,10 +66,30 @@ public class ParticleSystem {
 	}
 
 	public void setSpeedError(float error) {
-		this.speedError = (error * this.averageSpeed);
+		this.speedError = error;
+	}
+
+	public void setLifeError(float error) {
+		this.lifeError = error;
+	}
+
+	public void setScaleError(float error) {
+		this.scaleError = error;
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
 	}
 
 	public void generateParticles() {
+		if (paused) {
+			return;
+		}
+
 		float delta = FlounderEngine.getDelta();
 		float particlesToCreate = this.pps * delta;
 		int count = (int) Math.floor(particlesToCreate);
@@ -90,9 +116,9 @@ public class ParticleSystem {
 		ParticleType emitType = types.get((int) Math.floor(Maths.randomInRange(0, types.size())));
 
 		velocity.normalize();
-		velocity.scale(generateValue(averageSpeed, speedError));
-		float scale = generateValue(emitType.getScale(), scaleError);
-		float lifeLength = generateValue(emitType.getLifeLength(), lifeError);
+		velocity.scale(generateValue(averageSpeed, averageSpeed * speedError));
+		float scale = generateValue(emitType.getScale(), emitType.getScale() * scaleError);
+		float lifeLength = generateValue(emitType.getLifeLength(), emitType.getLifeLength() * lifeError);
 		Vector3f spawnPos = Vector3f.add(systemCentre, spawn.getBaseSpawnPosition(), null);
 
 		new Particle(emitType, new Vector3f(spawnPos), velocity, lifeLength, generateRotation(), scale);
@@ -143,5 +169,9 @@ public class ParticleSystem {
 		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
 		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
 		return new Vector3f(x, y, z);
+	}
+
+	public void delete() {
+		FlounderEngine.getParticles().removeSystem(this);
 	}
 }
