@@ -31,6 +31,12 @@ public class FlounderProfiler implements IModule {
 		profilerJFrame.setSize(420, 720);
 		profilerJFrame.setResizable(true);
 
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+			ex.printStackTrace();
+		}
+
 		profilerJFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		profilerJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override

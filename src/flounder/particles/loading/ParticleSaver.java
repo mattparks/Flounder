@@ -39,8 +39,8 @@ public class ParticleSaver {
 			entityFileWriter.beginNewSegment("ParticleData");
 			{
 				entityFileWriter.writeSegmentData("Name: " + particle.getName() + ";", true);
-				entityFileWriter.writeSegmentData("Texture: " + particle.getTexture().getFile().getPath().substring(1, particle.getTexture().getFile().getPath().length()) + ";", true);
-				entityFileWriter.writeSegmentData("NumberOfRows: " + particle.getTexture().getNumberOfRows() + ";", true);
+				entityFileWriter.writeSegmentData("Texture: " + (particle.getTexture() == null ? "null" : particle.getTexture().getFile().getPath().substring(1, particle.getTexture().getFile().getPath().length())) + ";", true);
+				entityFileWriter.writeSegmentData("NumberOfRows: " + (particle.getTexture() == null ? "1" : particle.getTexture().getNumberOfRows()) + ";", true);
 				entityFileWriter.writeSegmentData("GravityEffect: " + particle.getGravityEffect() + ";", true);
 				entityFileWriter.writeSegmentData("LifeLength: " + particle.getLifeLength() + ";", true);
 				entityFileWriter.writeSegmentData("Scale: " + particle.getScale() + ";", true);
