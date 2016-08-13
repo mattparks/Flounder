@@ -9,12 +9,13 @@ public class SpawnPoint implements IParticleSpawn {
 		point = new Vector3f();
 	}
 
-	public Vector3f getPoint() {
-		return point;
+	public SpawnPoint(String[] template) {
+		point = new Vector3f();
 	}
 
-	public void setPoint(Vector3f point) {
-		this.point = point;
+	@Override
+	public String[] getSavableValues() {
+		return new String[]{};
 	}
 
 	@Override

@@ -14,6 +14,12 @@ public class SpawnCone implements IParticleSpawn {
 		this.spawnPosition = new Vector3f();
 	}
 
+	public SpawnCone(String[] template) {
+		this.coneDirection = new Vector3f().set(template[0]).normalize();
+		this.angle = Float.parseFloat(template[1]);
+		this.spawnPosition = new Vector3f();
+	}
+
 	public Vector3f getConeDirection() {
 		return coneDirection;
 	}
@@ -28,6 +34,11 @@ public class SpawnCone implements IParticleSpawn {
 
 	public void setAngle(float angle) {
 		this.angle = angle;
+	}
+
+	@Override
+	public String[] getSavableValues() {
+		return new String[]{coneDirection.toString(), "" + angle};
 	}
 
 	@Override

@@ -14,6 +14,12 @@ public class SpawnCircle implements IParticleSpawn {
 		this.spawnPosition = new Vector3f();
 	}
 
+	public SpawnCircle(String[] template) {
+		this.heading = new Vector3f().set(template[0]).normalize();
+		this.radius = Float.parseFloat(template[1]);
+		this.spawnPosition = new Vector3f();
+	}
+
 	public Vector3f getHeading() {
 		return heading;
 	}
@@ -28,6 +34,11 @@ public class SpawnCircle implements IParticleSpawn {
 
 	public void setRadius(float radius) {
 		this.radius = radius;
+	}
+
+	@Override
+	public String[] getSavableValues() {
+		return new String[]{heading.toString(), "" + radius};
 	}
 
 	@Override

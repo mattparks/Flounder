@@ -12,4 +12,11 @@ public interface IParticleSpawn {
 	 * @return The base spawn position.
 	 */
 	Vector3f getBaseSpawnPosition();
+
+	/**
+	 * Gets a list of saveable values.
+	 *
+	 * @return The saveable values.
+	 */
+	String[] getSavableValues();
 }

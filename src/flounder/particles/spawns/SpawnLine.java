@@ -7,11 +7,18 @@ import java.util.*;
 public class SpawnLine implements IParticleSpawn {
 	private float length;
 	private Vector3f axis;
-	private Random random = new Random();
+	private Random random;
 
 	public SpawnLine(float length, Vector3f axis) {
 		this.length = length;
 		this.axis = axis.normalize();
+		this.random = new Random();
+	}
+
+	public SpawnLine(String[] template) {
+		this.length = Float.parseFloat(template[0]);
+		this.axis = new Vector3f().set(template[1]).normalize();
+		this.random = new Random();
 	}
 
 	public float getLength() {
@@ -28,6 +35,11 @@ public class SpawnLine implements IParticleSpawn {
 
 	public void setAxis(Vector3f axis) {
 		this.axis = axis;
+	}
+
+	@Override
+	public String[] getSavableValues() {
+		return new String[]{"" + length, axis.toString()};
 	}
 
 	@Override

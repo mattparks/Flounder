@@ -12,6 +12,11 @@ public class SpawnSphere implements IParticleSpawn {
 		this.spawnPosition = new Vector3f();
 	}
 
+	public SpawnSphere(String[] template) {
+		this.radius = Float.parseFloat(template[0]);
+		this.spawnPosition = new Vector3f();
+	}
+
 	public float getRadius() {
 		return radius;
 	}
@@ -21,8 +26,13 @@ public class SpawnSphere implements IParticleSpawn {
 	}
 
 	@Override
+	public String[] getSavableValues() {
+		return new String[]{"" + radius};
+	}
+
+	@Override
 	public Vector3f getBaseSpawnPosition() {
-		 Maths.generateRandomUnitVector(spawnPosition);
+		Maths.generateRandomUnitVector(spawnPosition);
 
 		spawnPosition.scale(radius);
 		float a = Maths.RANDOM.nextFloat();

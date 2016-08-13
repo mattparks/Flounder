@@ -34,6 +34,15 @@ public class Vector3f {
 		return this;
 	}
 
+	public Vector3f set(String source) {
+		String reduced = source.replace("Vector3f(", "").replace(")", "").trim();
+		String[] split = reduced.split("\\|");
+		this.x = Float.parseFloat(split[0].substring(2, split[0].length()));
+		this.y = Float.parseFloat(split[1].substring(2, split[0].length()));
+		this.z = Float.parseFloat(split[2].substring(2, split[0].length()));
+		return this;
+	}
+
 	/**
 	 * Constructor for Vector3f.
 	 *
@@ -509,6 +518,6 @@ public class Vector3f {
 
 	@Override
 	public String toString() {
-		return "Vector3f{" + "x=" + x + ", y=" + y + ", z=" + z + "}";
+		return "Vector3f(" + "x=" + x + "| y=" + y + "| z=" + z + ")";
 	}
 }

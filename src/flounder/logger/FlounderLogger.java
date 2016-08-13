@@ -113,12 +113,9 @@ public class FlounderLogger implements IModule {
 	 * @param exception The exception added to the log file and possibly to your IDES console.
 	 */
 	public void exception(Exception exception) {
-		if (!ALLOW_LOUD_LOGS) {
-			return;
-		}
-
 		if (LOG_TO_CONSOLE) {
 			System.err.println("EXCEPTION: " + "[" + getDateString() + "]: " + exception.toString());
+			exception.printStackTrace();
 		}
 
 		if (LOG_TO_FILE) {

@@ -53,6 +53,10 @@ public class ParticleSystem {
 		FlounderEngine.getParticles().addSystem(this);
 	}
 
+	public List<ParticleTemplate> getTypes() {
+		return types;
+	}
+
 	public void addParticleType(ParticleTemplate particleTemplate) {
 		types.add(particleTemplate);
 	}

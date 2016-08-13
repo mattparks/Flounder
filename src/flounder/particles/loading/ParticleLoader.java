@@ -23,10 +23,10 @@ public class ParticleLoader {
 			loadedTypes.remove(name);
 
 			// Creates the file reader.
-			File saveFile = new File("particles/" + name + ".particle");
+			MyFile saveFile = new MyFile(MyFile.RES_FOLDER, "particles", name + ".particle");
 
 			try {
-				BufferedReader fileReader = new BufferedReader(new FileReader(saveFile));
+				BufferedReader fileReader = saveFile.getReader();
 
 				if (fileReader == null) {
 					FlounderEngine.getLogger().error("Error creating reader the particle file: " + saveFile);
