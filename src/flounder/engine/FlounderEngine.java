@@ -11,6 +11,7 @@ import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.models.*;
 import flounder.networking.*;
+import flounder.particles.*;
 import flounder.physics.renderer.*;
 import flounder.processing.*;
 import flounder.profiling.*;
@@ -33,7 +34,8 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderFonts fonts;
 	private FlounderGuis guis;
 	private FlounderCursor cursor;
-	private FlounderAABBs AABBs;
+	private FlounderParticles particles;
+	private FlounderAABBs aabbs;
 	private FlounderNetwork network;
 	private FlounderLogger logger;
 	private FlounderProfiler profiler;
@@ -69,7 +71,8 @@ public class FlounderEngine extends Thread implements IModule {
 		this.fonts = new FlounderFonts();
 		this.guis = new FlounderGuis();
 		this.cursor = new FlounderCursor();
-		this.AABBs = new FlounderAABBs();
+		this.particles = new FlounderParticles();
+		this.aabbs = new FlounderAABBs();
 		this.network = new FlounderNetwork(1331);
 		this.logger = new FlounderLogger();
 		this.profiler = new FlounderProfiler(title + " Profiler");
@@ -104,7 +107,8 @@ public class FlounderEngine extends Thread implements IModule {
 			fonts.init();
 			guis.init();
 			cursor.init();
-			AABBs.init();
+			particles.init();
+			aabbs.init();
 			network.init();
 			implementation.init();
 
@@ -145,7 +149,8 @@ public class FlounderEngine extends Thread implements IModule {
 
 			implementation.update();
 
-			AABBs.update();
+			particles.update();
+			aabbs.update();
 			logger.update();
 			profiler.update();
 			network.update();
@@ -161,7 +166,8 @@ public class FlounderEngine extends Thread implements IModule {
 			processors.profile();
 			events.profile();
 			implementation.profile();
-			AABBs.profile();
+			particles.profile();
+			aabbs.profile();
 			network.profile();
 			loader.profile();
 			models.profile();
@@ -283,12 +289,21 @@ public class FlounderEngine extends Thread implements IModule {
 	}
 
 	/**
+	 * Gets the engines current particles renderer manager.
+	 *
+	 * @return The engines current particles renderer manager.
+	 */
+	public static FlounderParticles getParticles() {
+		return instance.particles;
+	}
+
+	/**
 	 * Gets the engines current AABB renderer manager.
 	 *
 	 * @return The engines current AABB renderer manager.
 	 */
 	public static FlounderAABBs getAABBs() {
-		return instance.AABBs;
+		return instance.aabbs;
 	}
 
 	/**
@@ -405,7 +420,8 @@ public class FlounderEngine extends Thread implements IModule {
 			models.dispose();
 			loader.dispose();
 			network.dispose();
-			AABBs.dispose();
+			particles.dispose();
+			aabbs.dispose();
 			textures.dispose();
 			cursor.dispose();
 			guis.dispose();

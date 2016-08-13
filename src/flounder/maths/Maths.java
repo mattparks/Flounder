@@ -1,5 +1,6 @@
 package flounder.maths;
 
+import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
@@ -28,6 +29,101 @@ public class Maths {
 		float scaled = (float) RANDOM.nextDouble() * range;
 		float shifted = scaled + min;
 		return shifted; // == (rand.nextDouble() * (max-min)) + min;
+	}
+
+	/**
+	 * Generates a random unit vector.
+	 *
+	 * @return The random unit vector.
+	 */
+	public static Vector3f generateRandomUnitVector(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Random random = new Random();
+		float theta = (float) (random.nextFloat() * 2.0f * 3.141592653589793);
+		float z = random.nextFloat() * 2.0f - 1.0f;
+		float rootOneMinusZSquared = (float) Math.sqrt(1.0f - z * z);
+		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
+		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
+		return destination.set(x, y, z);
+	}
+
+	/**
+	 * Gets a random point from on a circle.
+	 *
+	 * @param normal The circles normal.
+	 * @param radius The circles radius.
+	 *
+	 * @return The random point.
+	 */
+	public static Vector3f randomPointOnCircle(Vector3f destination, Vector3f normal, float radius) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Random random = new Random();
+
+		do {
+			Vector3f randomVector = generateRandomUnitVector(null);
+			Vector3f.cross(randomVector, normal, destination);
+		} while (destination.length() == 0.0f);
+
+		destination.normalize();
+		destination.scale(radius);
+		float a = random.nextFloat();
+		float b = random.nextFloat();
+
+		if (a > b) {
+			float temp = a;
+			a = b;
+			b = temp;
+		}
+
+		float randX = (float) (b * Math.cos(6.283185307179586 * (a / b)));
+		float randY = (float) (b * Math.sin(6.283185307179586 * (a / b)));
+		float distance = new Vector2f(randX, randY).length();
+		destination.scale(distance);
+		return destination;
+	}
+
+	/**
+	 * Generates a random unit vector from within a cone.
+	 *
+	 * @param coneDirection The cones direction.
+	 * @param angle The cones major angle.
+	 *
+	 * @return The random unit vector.
+	 */
+	public static Vector3f generateRandomUnitVectorWithinCone(Vector3f destination, Vector3f coneDirection, float angle) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		float cosAngle = (float) Math.cos(angle);
+		Random random = new Random();
+		float theta = (float) (random.nextFloat() * 2.0f * 3.141592653589793);
+		float z = cosAngle + random.nextFloat() * (1.0f - cosAngle);
+		float rootOneMinusZSquared = (float) Math.sqrt(1.0f - z * z);
+		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
+		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
+
+		Vector4f direction = new Vector4f(x, y, z, 1.0f);
+
+		if ((coneDirection.x != 0.0F) || (coneDirection.y != 0.0F) || ((coneDirection.z != 1.0f) && (coneDirection.z != -1.0f))) {
+			Vector3f rotateAxis = Vector3f.cross(coneDirection, new Vector3f(0.0f, 0.0f, 1.0f), null);
+			rotateAxis.normalize();
+			float rotateAngle = (float) Math.acos(Vector3f.dot(coneDirection, new Vector3f(0.0f, 0.0f, 1.0f)));
+			Matrix4f rotationMatrix = new Matrix4f();
+			rotationMatrix.setIdentity();
+			Matrix4f.rotate(rotationMatrix, rotateAxis, -rotateAngle, rotationMatrix);
+			Matrix4f.transform(rotationMatrix, direction, direction);
+		} else if (coneDirection.z == -1.0f) {
+			direction.z *= -1.0f;
+		}
+
+		return destination.set(direction.x, direction.y, direction.z);
 	}
 
 	/**

@@ -1,0 +1,147 @@
+package flounder.particles;
+
+import flounder.engine.*;
+import flounder.maths.*;
+import flounder.maths.matrices.*;
+import flounder.maths.vectors.*;
+import flounder.particles.spawns.*;
+
+import java.util.*;
+
+/**
+ * A system of particles that are to be spawned.
+ */
+public class ParticleSystem {
+	private List<ParticleType> types;
+	private IParticleSpawn spawn;
+	private float pps;
+	private float averageSpeed;
+	private boolean randomRotation;
+	private Random random;
+
+	private Vector3f systemCentre;
+
+	private Vector3f direction;
+	private float directionDeviation;
+	private float speedError;
+	private float lifeError;
+	private float scaleError;
+
+	/**
+	 * Creates a new particle system.
+	 *
+	 * @param types The types of particles to spawn.
+	 * @param spawn The particle spawn types.
+	 * @param pps Particles per second.
+	 * @param speed The particle speed.
+	 */
+	public ParticleSystem(List<ParticleType> types, IParticleSpawn spawn, float pps, float speed) {
+		this.types = types;
+		this.spawn = spawn;
+		this.pps = pps;
+		this.averageSpeed = speed;
+		this.randomRotation = false;
+		this.random = new Random();
+
+		this.systemCentre = new Vector3f();
+	}
+
+	public void randomizeRotation() {
+		this.randomRotation = true;
+	}
+
+	public void setSystemCentre(Vector3f systemCentre) {
+		this.systemCentre = systemCentre;
+	}
+
+	public void setDirection(Vector3f direction, float deviation) {
+		this.direction = new Vector3f(direction);
+		this.directionDeviation = ((float) (deviation * Math.PI));
+	}
+
+	public void setSpeedError(float error) {
+		this.speedError = (error * this.averageSpeed);
+	}
+
+	public void generateParticles() {
+		float delta = FlounderEngine.getDelta();
+		float particlesToCreate = this.pps * delta;
+		int count = (int) Math.floor(particlesToCreate);
+		float partialParticle = particlesToCreate % 1.0f;
+
+		for (int i = 0; i < count; i++) {
+			emitParticle();
+		}
+
+		if (Math.random() < partialParticle) {
+			emitParticle();
+		}
+	}
+
+	private void emitParticle() {
+		Vector3f velocity;
+
+		if (this.direction != null) {
+			velocity = generateRandomUnitVectorWithinCone(direction, directionDeviation);
+		} else {
+			velocity = generateRandomUnitVector();
+		}
+
+		ParticleType emitType = types.get((int) Math.floor(Maths.randomInRange(0, types.size())));
+
+		velocity.normalize();
+		velocity.scale(generateValue(averageSpeed, speedError));
+		float scale = generateValue(emitType.getScale(), scaleError);
+		float lifeLength = generateValue(emitType.getLifeLength(), lifeError);
+		Vector3f spawnPos = Vector3f.add(systemCentre, spawn.getBaseSpawnPosition(), null);
+
+		new Particle(emitType, new Vector3f(spawnPos), velocity, lifeLength, generateRotation(), scale);
+	}
+
+	private float generateValue(float average, float errorMargin) {
+		float offset = (random.nextFloat() - 0.5f) * 2.0f * errorMargin;
+		return average + offset;
+	}
+
+	private float generateRotation() {
+		if (this.randomRotation) {
+			return this.random.nextFloat() * 360.0f;
+		}
+
+		return 0.0f;
+	}
+
+	private static Vector3f generateRandomUnitVectorWithinCone(Vector3f coneDirection, float angle) {
+		float cosAngle = (float) Math.cos(angle);
+		Random random = new Random();
+		float theta = (float) (random.nextFloat() * 2.0f * 3.141592653589793);
+		float z = cosAngle + random.nextFloat() * (1.0f - cosAngle);
+		float rootOneMinusZSquared = (float) Math.sqrt(1.0f - z * z);
+		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
+		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
+
+		Vector4f direction = new Vector4f(x, y, z, 1.0f);
+
+		if ((coneDirection.x != 0.0f) || (coneDirection.y != 0.0f) || ((coneDirection.z != 1.0f) && (coneDirection.z != -1.0f))) {
+			Vector3f rotateAxis = Vector3f.cross(coneDirection, new Vector3f(0.0f, 0.0f, 1.0f), null);
+			rotateAxis.normalize();
+			float rotateAngle = (float) Math.acos(Vector3f.dot(coneDirection, new Vector3f(0.0f, 0.0f, 1.0f)));
+			Matrix4f rotationMatrix = new Matrix4f();
+			Matrix4f.rotate(rotationMatrix, rotateAxis, -rotateAngle, rotationMatrix);
+			Matrix4f.transform(rotationMatrix, direction, direction);
+		} else if (coneDirection.z == -1.0f) {
+			direction.z *= -1.0f;
+		}
+
+		return new Vector3f(direction);
+	}
+
+	private Vector3f generateRandomUnitVector() {
+		float theta = (float) (random.nextFloat() * 2.0f * 3.141592653589793);
+		float z = random.nextFloat() * 2.0f - 1.0f;
+		float rootOneMinusZSquared = (float) Math.sqrt(1.0f - z * z);
+		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
+		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
+		return new Vector3f(x, y, z);
+	}
+}
