@@ -5,15 +5,26 @@ import flounder.maths.vectors.*;
 
 public class SpawnSphere implements IParticleSpawn {
 	private float radius;
+	private Vector3f spawnPosition;
 
 	public SpawnSphere(float radius) {
 		this.radius = radius;
+		this.spawnPosition = new Vector3f();
 	}
 
-	public Vector3f getBaseSpawnPosition() {
-		Vector3f spherePoint = Maths.generateRandomUnitVector(null);
+	public float getRadius() {
+		return radius;
+	}
 
-		spherePoint.scale(this.radius);
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+
+	@Override
+	public Vector3f getBaseSpawnPosition() {
+		 Maths.generateRandomUnitVector(spawnPosition);
+
+		spawnPosition.scale(radius);
 		float a = Maths.RANDOM.nextFloat();
 		float b = Maths.RANDOM.nextFloat();
 
@@ -26,7 +37,7 @@ public class SpawnSphere implements IParticleSpawn {
 		float randX = (float) (b * Math.cos(6.283185307179586 * (a / b)));
 		float randY = (float) (b * Math.sin(6.283185307179586 * (a / b)));
 		float distance = new Vector2f(randX, randY).length();
-		spherePoint.scale(distance);
-		return spherePoint;
+		spawnPosition.scale(distance);
+		return spawnPosition;
 	}
 }

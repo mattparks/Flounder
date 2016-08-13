@@ -52,6 +52,38 @@ public class ParticleSystem {
 		FlounderEngine.getParticles().addSystem(this);
 	}
 
+	public void addParticleType(ParticleType particleType) {
+		types.add(particleType);
+	}
+
+	public void removeParticleType(ParticleType particleType) {
+		types.remove(particleType);
+	}
+
+	public IParticleSpawn getSpawn() {
+		return spawn;
+	}
+
+	public void setSpawn(IParticleSpawn spawn) {
+		this.spawn = spawn;
+	}
+
+	public float getPps() {
+		return pps;
+	}
+
+	public void setPps(float pps) {
+		this.pps = pps;
+	}
+
+	public float getAverageSpeed() {
+		return averageSpeed;
+	}
+
+	public void setAverageSpeed(float averageSpeed) {
+		this.averageSpeed = averageSpeed;
+	}
+
 	public void randomizeRotation() {
 		this.randomRotation = true;
 	}
@@ -86,7 +118,7 @@ public class ParticleSystem {
 	}
 
 	public void generateParticles() {
-		if (paused) {
+		if (paused || spawn == null) {
 			return;
 		}
 
