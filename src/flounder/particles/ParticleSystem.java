@@ -4,6 +4,7 @@ import flounder.engine.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.particles.loading.*;
 import flounder.particles.spawns.*;
 
 import java.util.*;
@@ -12,7 +13,7 @@ import java.util.*;
  * A system of particles that are to be spawned.
  */
 public class ParticleSystem {
-	private List<ParticleType> types;
+	private List<ParticleTemplate> types;
 	private IParticleSpawn spawn;
 	private float pps;
 	private float averageSpeed;
@@ -37,7 +38,7 @@ public class ParticleSystem {
 	 * @param pps Particles per second.
 	 * @param speed The particle speed.
 	 */
-	public ParticleSystem(List<ParticleType> types, IParticleSpawn spawn, float pps, float speed) {
+	public ParticleSystem(List<ParticleTemplate> types, IParticleSpawn spawn, float pps, float speed) {
 		this.types = types;
 		this.spawn = spawn;
 		this.pps = pps;
@@ -52,12 +53,12 @@ public class ParticleSystem {
 		FlounderEngine.getParticles().addSystem(this);
 	}
 
-	public void addParticleType(ParticleType particleType) {
-		types.add(particleType);
+	public void addParticleType(ParticleTemplate particleTemplate) {
+		types.add(particleTemplate);
 	}
 
-	public void removeParticleType(ParticleType particleType) {
-		types.remove(particleType);
+	public void removeParticleType(ParticleTemplate particleTemplate) {
+		types.remove(particleTemplate);
 	}
 
 	public IParticleSpawn getSpawn() {
@@ -145,7 +146,7 @@ public class ParticleSystem {
 			velocity = generateRandomUnitVector();
 		}
 
-		ParticleType emitType = types.get((int) Math.floor(Maths.randomInRange(0, types.size())));
+		ParticleTemplate emitType = types.get((int) Math.floor(Maths.randomInRange(0, types.size())));
 
 		velocity.normalize();
 		velocity.scale(generateValue(averageSpeed, averageSpeed * speedError));

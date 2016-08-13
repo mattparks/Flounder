@@ -5,6 +5,7 @@ import flounder.engine.implementation.*;
 import flounder.helpers.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.particles.loading.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import org.lwjgl.*;
@@ -59,7 +60,7 @@ public class ParticleRenderer extends IRenderer {
 			for (final Particle particle : list) {
 				if (particle.isVisable()) {
 					if (!textureBound) {
-						prepareTexturedModel(particle.getParticleType());
+						prepareTexturedModel(particle.getParticleTemplate());
 						textureBound = true;
 					}
 
@@ -87,7 +88,7 @@ public class ParticleRenderer extends IRenderer {
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 	}
 
-	private void prepareTexturedModel(final ParticleType particleType) {
+	private void prepareTexturedModel(final ParticleTemplate particleTemplate) {
 		unbindTexturedModel();
 
 		OpenGlUtils.bindVAO(VAO, 0, 1, 2, 3, 4, 5, 6, 7);
@@ -97,8 +98,8 @@ public class ParticleRenderer extends IRenderer {
 		OpenGlUtils.enableAlphaBlending();
 		glDepthMask(false); // Stops particles from being rendered to the depth BUFFER.
 
-		shader.getUniformFloat("numberOfRows").loadFloat(particleType.getTexture().getNumberOfRows());
-		OpenGlUtils.bindTextureToBank(particleType.getTexture().getTextureID(), 0);
+		shader.getUniformFloat("numberOfRows").loadFloat(particleTemplate.getTexture().getNumberOfRows());
+		OpenGlUtils.bindTextureToBank(particleTemplate.getTexture().getTextureID(), 0);
 	}
 
 	private void unbindTexturedModel() {
@@ -108,7 +109,7 @@ public class ParticleRenderer extends IRenderer {
 	}
 
 	private void prepareInstance(final Particle particle, final ICamera camera, final float[] vboData) {
-		ParticleType particleType = particle.getParticleType();
+		ParticleTemplate particleTemplate = particle.getParticleTemplate();
 		Matrix4f viewMatrix = camera.getViewMatrix();
 		Matrix4f modelMatrix = new Matrix4f();
 		Matrix4f.translate(modelMatrix, particle.getPosition(), modelMatrix);

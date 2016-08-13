@@ -33,21 +33,23 @@ public class FlounderParticles implements IModule {
 			return;
 		}
 
-		particleSystems.forEach(ParticleSystem::generateParticles);
+		if (!FlounderEngine.getDevices().getKeyboard().getKey(GLFW_KEY_Y)) {
+			particleSystems.forEach(ParticleSystem::generateParticles);
+		}
 
 		int totalParticles = 0;
 		int visibleParticles = 0;
 
-		for (final List<Particle> list : particles) {
-			final Iterator<Particle> iterator = list.iterator();
+		for (List<Particle> list : particles) {
+			Iterator<Particle> iterator = list.iterator();
 
 			while (iterator.hasNext()) {
 				// Iterate and update the particles.
-				final Particle particle = iterator.next();
+				Particle particle = iterator.next();
 				particle.update(!FlounderEngine.getDevices().getKeyboard().getKey(GLFW_KEY_Y));
 
 				// Update particle visibility.
-				float SIZE = 0.5f * particle.getParticleType().getScale();
+				float SIZE = 0.5f * particle.getParticleTemplate().getScale();
 				reusableAABB.getMinExtents().set(particle.getPosition().getX() - SIZE, particle.getPosition().getY() - SIZE, particle.getPosition().getZ() - SIZE);
 				reusableAABB.getMaxExtents().set(particle.getPosition().getX() + SIZE, particle.getPosition().getY() + SIZE, particle.getPosition().getZ() + SIZE);
 				particle.setVisable(FlounderEngine.getCamera().getViewFrustum().aabbInFrustum(reusableAABB));
@@ -66,7 +68,7 @@ public class FlounderParticles implements IModule {
 			}
 		}
 
-		for (final List<Particle> list : particles) {
+		for (List<Particle> list : particles) {
 			// Added to engine.particles first -> last, so no initial reverse needed.
 			ArraySorting.heapSort(list); // insertionSort
 			Collections.reverse(list); // Reverse as the sorted list should be close(small) -> far(big).
@@ -124,7 +126,7 @@ public class FlounderParticles implements IModule {
 	 */
 	protected void addParticle(final Particle particle) {
 		for (List<Particle> list : particles) {
-			if (list.get(0).getParticleType().equals(particle.getParticleType())) {
+			if (list.get(0).getParticleTemplate().equals(particle.getParticleTemplate())) {
 				list.add(particle);
 				return;
 			}

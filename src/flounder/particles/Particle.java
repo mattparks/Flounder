@@ -2,12 +2,13 @@ package flounder.particles;
 
 import flounder.engine.*;
 import flounder.maths.vectors.*;
+import flounder.particles.loading.*;
 
 /**
  * A instance of a particle type.
  */
 public class Particle implements Comparable<Particle> {
-	private final ParticleType particleType;
+	private final ParticleTemplate particleTemplate;
 
 	private final Vector3f position;
 	private final Vector3f velocity;
@@ -27,8 +28,8 @@ public class Particle implements Comparable<Particle> {
 	private float textureBlendFactor;
 	private float distanceToCamera;
 
-	protected Particle(final ParticleType particleType, final Vector3f position, final Vector3f velocity, float lifeLength, float rotation, float scale) {
-		this.particleType = particleType;
+	protected Particle(final ParticleTemplate particleTemplate, final Vector3f position, final Vector3f velocity, float lifeLength, float rotation, float scale) {
+		this.particleTemplate = particleTemplate;
 		this.position = position;
 		this.velocity = velocity;
 		this.reusableChange = new Vector3f();
@@ -51,7 +52,7 @@ public class Particle implements Comparable<Particle> {
 
 	protected void update(final boolean moveParticle) {
 		if (moveParticle) {
-			velocity.y += -10.0f * particleType.getGravityEffect() * FlounderEngine.getDelta();
+			velocity.y += -10.0f * particleTemplate.getGravityEffect() * FlounderEngine.getDelta();
 			reusableChange.set(velocity);
 			reusableChange.scale(FlounderEngine.getDelta());
 
@@ -66,7 +67,7 @@ public class Particle implements Comparable<Particle> {
 		distanceToCamera = Vector3f.subtract(FlounderEngine.getCamera().getPosition(), position, null).lengthSquared();
 
 		float lifeFactor = elapsedTime / lifeLength;
-		int stageCount = (int) Math.pow(particleType.getTexture().getNumberOfRows(), 2);
+		int stageCount = (int) Math.pow(particleTemplate.getTexture().getNumberOfRows(), 2);
 		float atlasProgression = lifeFactor * stageCount;
 		int index1 = (int) Math.floor(atlasProgression);
 		int index2 = index1 < stageCount - 1 ? index1 + 1 : index1;
@@ -78,15 +79,15 @@ public class Particle implements Comparable<Particle> {
 
 	private Vector2f updateTextureOffset(final Vector2f offset, final int index) {
 		offset.set(0.0f, 0.0f);
-		int column = index % particleType.getTexture().getNumberOfRows();
-		int row = index / particleType.getTexture().getNumberOfRows();
-		offset.x = (float) column / particleType.getTexture().getNumberOfRows();
-		offset.y = (float) row / particleType.getTexture().getNumberOfRows();
+		int column = index % particleTemplate.getTexture().getNumberOfRows();
+		int row = index / particleTemplate.getTexture().getNumberOfRows();
+		offset.x = (float) column / particleTemplate.getTexture().getNumberOfRows();
+		offset.y = (float) row / particleTemplate.getTexture().getNumberOfRows();
 		return offset;
 	}
 
-	protected ParticleType getParticleType() {
-		return particleType;
+	protected ParticleTemplate getParticleTemplate() {
+		return particleTemplate;
 	}
 
 	protected Vector3f getPosition() {
