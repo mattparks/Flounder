@@ -30,10 +30,12 @@ public class ParticleRenderer extends IRenderer {
 
 	private ShaderProgram shader;
 	private int pointer;
+	private int rendered;
 
 	public ParticleRenderer() {
 		shader = new ShaderProgram("particle", VERTEX_SHADER, FRAGMENT_SHADER);
 		pointer = 0;
+		rendered = 0;
 
 		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 1, 4, INSTANCE_DATA_LENGTH, 0);
 		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 2, 4, INSTANCE_DATA_LENGTH, 4);
@@ -54,7 +56,7 @@ public class ParticleRenderer extends IRenderer {
 
 		for (final List<Particle> list : FlounderEngine.getParticles().getParticles()) {
 			pointer = 0;
-			final float[] vboData = new float[list.size() * INSTANCE_DATA_LENGTH];
+			final float[] vboData = new float[Math.min(list.size(), MAX_INSTANCES) * INSTANCE_DATA_LENGTH];
 			boolean textureBound = false;
 
 			for (final Particle particle : list) {
@@ -68,7 +70,13 @@ public class ParticleRenderer extends IRenderer {
 				}
 			}
 
-			FlounderEngine.getLoader().updateVBO(VBO, vboData, BUFFER);
+			try {
+				FlounderEngine.getLoader().updateVBO(VBO, vboData, BUFFER);
+			} catch (BufferOverflowException e) {
+				FlounderEngine.getLogger().error("Particle overflow: " + rendered);
+				FlounderEngine.getLogger().exception(e);
+				break;
+			}
 			glDrawArraysInstancedARB(GL_TRIANGLE_STRIP, 0, VERTICES.length, list.size());
 			unbindTexturedModel();
 		}
@@ -86,6 +94,8 @@ public class ParticleRenderer extends IRenderer {
 		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderEngine.getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
+
+		rendered = 0;
 	}
 
 	private void prepareTexturedModel(final ParticleTemplate particleTemplate) {
@@ -98,8 +108,10 @@ public class ParticleRenderer extends IRenderer {
 		OpenGlUtils.enableAlphaBlending();
 		glDepthMask(false); // Stops particles from being rendered to the depth BUFFER.
 
-		shader.getUniformFloat("numberOfRows").loadFloat(particleTemplate.getTexture().getNumberOfRows());
-		OpenGlUtils.bindTextureToBank(particleTemplate.getTexture().getTextureID(), 0);
+		if (particleTemplate.getTexture() != null) {
+			shader.getUniformFloat("numberOfRows").loadFloat(particleTemplate.getTexture().getNumberOfRows());
+			OpenGlUtils.bindTextureToBank(particleTemplate.getTexture().getTextureID(), 0);
+		}
 	}
 
 	private void unbindTexturedModel() {
@@ -108,8 +120,11 @@ public class ParticleRenderer extends IRenderer {
 		OpenGlUtils.unbindVAO(0, 1, 2, 3, 4, 5, 6, 7);
 	}
 
-	private void prepareInstance(final Particle particle, final ICamera camera, final float[] vboData) {
-		ParticleTemplate particleTemplate = particle.getParticleTemplate();
+	private void prepareInstance(Particle particle, ICamera camera, float[] vboData) {
+		if (rendered >= MAX_INSTANCES) {
+			return;
+		}
+
 		Matrix4f viewMatrix = camera.getViewMatrix();
 		Matrix4f modelMatrix = new Matrix4f();
 		Matrix4f.translate(modelMatrix, particle.getPosition(), modelMatrix);
@@ -147,9 +162,12 @@ public class ParticleRenderer extends IRenderer {
 		vboData[pointer++] = particle.getTextureOffset2().y;
 		vboData[pointer++] = particle.getTextureBlendFactor();
 		vboData[pointer++] = particle.getTransparency();
+
+		rendered++;
 	}
 
 	private void endRendering() {
+		unbindTexturedModel();
 		shader.stop();
 	}
 

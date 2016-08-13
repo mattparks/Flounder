@@ -67,6 +67,11 @@ public class Particle implements Comparable<Particle> {
 		distanceToCamera = Vector3f.subtract(FlounderEngine.getCamera().getPosition(), position, null).lengthSquared();
 
 		float lifeFactor = elapsedTime / lifeLength;
+
+		if (particleTemplate.getTexture() == null) {
+			return;
+		}
+
 		int stageCount = (int) Math.pow(particleTemplate.getTexture().getNumberOfRows(), 2);
 		float atlasProgression = lifeFactor * stageCount;
 		int index1 = (int) Math.floor(atlasProgression);

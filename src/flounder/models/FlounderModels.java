@@ -57,6 +57,12 @@ public class FlounderModels implements IModule {
 				}
 
 				switch (prefix) {
+					case "mtllib":
+						// TODO: Load material to model list.
+						break;
+					case "usemtl":
+						// TODO: Set current material to this.
+						break;
 					case "v":
 						String[] currentLineV = line.split(" ");
 						Vector3f vertex = new Vector3f(Float.valueOf(currentLineV[1]), Float.valueOf(currentLineV[2]), Float.valueOf(currentLineV[3]));
@@ -85,9 +91,10 @@ public class FlounderModels implements IModule {
 						VertexData v1 = processDataVertex(vertex2, modelData.vertices, modelData.indices);
 						VertexData v2 = processDataVertex(vertex3, modelData.vertices, modelData.indices);
 						calculateTangents(v0, v1, v2, modelData.textures);
+						// TODO: Take min&max vec for v0, v1, v2 for AABB Mesh.
 						break;
 					default:
-						System.err.println("[OBJ " + file.getName() + "] Unknown Line: " + line);
+						FlounderEngine.getLogger().log("[OBJ " + file.getName() + "] Unknown Line: " + line);
 						break;
 				}
 			}

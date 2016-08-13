@@ -1,6 +1,8 @@
 package flounder.physics;
 
+import flounder.engine.*;
 import flounder.maths.*;
+import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
@@ -297,12 +299,14 @@ public class AABB {
 			destination = new AABB();
 		}
 
-		// TODO: Fix rotate vector! That math is broken proven with: http://www.nh.cas.cz/people/lazar/celler/online_tools.php
-		// Vector3f.rotateVector(source.minExtents, rotation.x, rotation.y, rotation.z, destination.minExtents)
-		// Vector3f.rotateVector(source.maxExtents, rotation.x, rotation.y, rotation.z, destination.maxExtents)
+		destination.minExtents.set(source.minExtents);
+		destination.maxExtents.set(source.maxExtents);
 
-		destination.setMinExtents(source.minExtents.x * scale, source.minExtents.y * scale, source.minExtents.z * scale);
-		destination.setMaxExtents(source.maxExtents.x * scale, source.maxExtents.y * scale, source.maxExtents.z * scale);
+		Vector3f.rotate(destination.minExtents, rotation, destination.minExtents);
+		Vector3f.rotate(destination.maxExtents, rotation, destination.maxExtents);
+
+		destination.setMinExtents(destination.minExtents.x * scale, destination.minExtents.y * scale, destination.minExtents.z * scale);
+		destination.setMaxExtents(destination.maxExtents.x * scale, destination.maxExtents.y * scale, destination.maxExtents.z * scale);
 		Vector3f.add(destination.minExtents, position, destination.minExtents);
 		Vector3f.add(destination.maxExtents, position, destination.maxExtents);
 		return destination;

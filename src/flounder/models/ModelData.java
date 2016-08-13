@@ -19,6 +19,8 @@ public class ModelData {
 
 	public void createRaw(Model model) {
 		for (VertexData vertex : vertices) {
+			vertex.averageTangents();
+
 			if (!vertex.isSet()) {
 				vertex.setTextureIndex(0);
 				vertex.setNormalIndex(0);
