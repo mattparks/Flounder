@@ -10,6 +10,7 @@ varying vec2 textureCoords1;
 varying vec2 textureCoords2;
 varying float textureBlendFactor;
 varying float textureTransparency;
+varying vec4 particlePosition;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
@@ -20,6 +21,7 @@ void main(void) {
 	mat4 modelViewMatrix = viewMatrix * modelMatrix;
 	gl_ClipDistance[0] = dot(modelMatrix * vec4(position, 0.0, 1.0), clipPlane);
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 0.0, 1.0);
+	particlePosition = gl_Position;
 
 	vec2 textureCoords = position + vec2(0.5, 0.5);
 	textureCoords.y = 1.0 - textureCoords.y;
