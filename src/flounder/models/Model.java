@@ -21,7 +21,7 @@ public class Model {
 	private boolean loaded;
 
 	private AABB aabb;
-	private ConvexHull hull;
+	private QuickHull hull;
 
 	private int vaoID;
 	private int vaoLength;
@@ -116,21 +116,21 @@ public class Model {
 		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
 	}
 
-	private ConvexHull createHull() {
+	private QuickHull createHull() {
 		List<Vector3f> points = new ArrayList<>();
 
 		for (int v = 0; v < vertices.length; v += 3) {
 			points.add(new Vector3f(vertices[v], vertices[v + 1], vertices[v + 2]));
 		}
 
-		return new ConvexHull(points);
+		return new QuickHull(points);
 	}
 
 	public AABB getAABB() {
 		return aabb;
 	}
 
-	public ConvexHull getHull() {
+	public QuickHull getHull() {
 		return hull;
 	}
 
