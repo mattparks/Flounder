@@ -21,6 +21,7 @@ public class Model {
 	private boolean loaded;
 
 	private AABB aabb;
+	private ConvexHull hull;
 
 	private int vaoID;
 	private int vaoLength;
@@ -78,16 +79,13 @@ public class Model {
 		this.loaded = true;
 
 		this.aabb = createAABB();
+		this.hull = createHull();
 	}
 
 	private AABB createAABB() {
 		float minX = 0, minY = 0, minZ = 0;
 		float maxX = 0, maxY = 0, maxZ = 0;
 		int tripleCount = 0;
-
-		List<Vector3f> points = new ArrayList<>();
-
-		Vector3f currentPoint = new Vector3f();
 
 		for (float position : vertices) {
 			if (tripleCount == 0 && position < minX) {
@@ -110,28 +108,30 @@ public class Model {
 
 			if (tripleCount >= 2) {
 				tripleCount = 0;
-				points.add(currentPoint);
-				currentPoint = new Vector3f();
 			} else {
-				if (tripleCount == 0) {
-					currentPoint.x = position;
-				} else if (tripleCount == 1) {
-					currentPoint.y = position;
-				} else if (tripleCount == 2) {
-					currentPoint.z = position;
-				}
-
 				tripleCount++;
 			}
 		}
 
-		ConvexHull convexHull = new ConvexHull(points);
-
 		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
+	}
+
+	private ConvexHull createHull() {
+		List<Vector3f> points = new ArrayList<>();
+
+		for (int v = 0; v < vertices.length; v += 3) {
+			points.add(new Vector3f(vertices[v], vertices[v + 1], vertices[v + 2]));
+		}
+
+		return new ConvexHull(points);
 	}
 
 	public AABB getAABB() {
 		return aabb;
+	}
+
+	public ConvexHull getHull() {
+		return hull;
 	}
 
 	public float[] getVertices() {

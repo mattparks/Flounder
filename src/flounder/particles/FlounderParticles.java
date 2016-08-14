@@ -86,6 +86,10 @@ public class FlounderParticles implements IModule {
 		}
 	}
 
+	public void clearAllParticles() {
+		particles.clear();
+	}
+
 	@Override
 	public void profile() {
 
