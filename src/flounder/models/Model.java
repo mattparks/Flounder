@@ -5,6 +5,8 @@ import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;
 
+import java.util.*;
+
 /**
  * Class that represents a loaded model.
  */
@@ -83,6 +85,10 @@ public class Model {
 		float maxX = 0, maxY = 0, maxZ = 0;
 		int tripleCount = 0;
 
+		List<Vector3f> points = new ArrayList<>();
+
+		Vector3f currentPoint = new Vector3f();
+
 		for (float position : vertices) {
 			if (tripleCount == 0 && position < minX) {
 				minX = position;
@@ -104,10 +110,22 @@ public class Model {
 
 			if (tripleCount >= 2) {
 				tripleCount = 0;
+				points.add(currentPoint);
+				currentPoint = new Vector3f();
 			} else {
+				if (tripleCount == 0) {
+					currentPoint.x = position;
+				} else if (tripleCount == 1) {
+					currentPoint.y = position;
+				} else if (tripleCount == 2) {
+					currentPoint.z = position;
+				}
+
 				tripleCount++;
 			}
 		}
+
+		ConvexHull convexHull = new ConvexHull(points);
 
 		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
 	}

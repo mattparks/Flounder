@@ -299,16 +299,47 @@ public class AABB {
 			destination = new AABB();
 		}
 
+		// Sets the destinations values to the sources.
 		destination.minExtents.set(source.minExtents);
 		destination.maxExtents.set(source.maxExtents);
 
-		Vector3f.rotate(destination.minExtents, rotation, destination.minExtents);
-		Vector3f.rotate(destination.maxExtents, rotation, destination.maxExtents);
-
+		// Scales the dimensions for the AABB.
 		destination.setMinExtents(destination.minExtents.x * scale, destination.minExtents.y * scale, destination.minExtents.z * scale);
 		destination.setMaxExtents(destination.maxExtents.x * scale, destination.maxExtents.y * scale, destination.maxExtents.z * scale);
+
+		// Creates the 8 AABB corners and rotates them.
+		Vector3f FLL = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.minExtents.z);
+		Vector3f.rotate(FLL, rotation, FLL);
+
+		Vector3f FLR = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.minExtents.z);
+		Vector3f.rotate(FLR, rotation, FLR);
+
+		Vector3f FUL = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.minExtents.z);
+		Vector3f.rotate(FUL, rotation, FUL);
+
+		Vector3f FUR = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.minExtents.z);
+		Vector3f.rotate(FUR, rotation, FUR);
+
+		Vector3f BUR = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(BUR, rotation, BUR);
+
+		Vector3f BUL = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(BUL, rotation, BUL);
+
+		Vector3f BLR = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(BLR, rotation, BLR);
+
+		Vector3f BLL = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(BLL, rotation, BLL);
+
+		destination.minExtents = Maths.min(FLL, Maths.min(FLR, Maths.min(FUL, Maths.min(FUR, Maths.min(BUR, Maths.min(BUL, Maths.min(BLR, BLL)))))));
+		destination.maxExtents = Maths.max(FLL, Maths.max(FLR, Maths.max(FUL, Maths.max(FUR, Maths.max(BUR, Maths.max(BUL, Maths.max(BLR, BLL)))))));
+
+		// Transforms the AABB.
 		Vector3f.add(destination.minExtents, position, destination.minExtents);
 		Vector3f.add(destination.maxExtents, position, destination.maxExtents);
+
+		// Returns the final AABB.
 		return destination;
 	}
 

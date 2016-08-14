@@ -40,32 +40,36 @@ public class FlounderParticles implements IModule {
 		int totalParticles = 0;
 		int visibleParticles = 0;
 
-		for (List<Particle> list : particles) {
-			Iterator<Particle> iterator = list.iterator();
+		try {
+			for (List<Particle> list : particles) {
+				Iterator<Particle> iterator = list.iterator();
 
-			while (iterator.hasNext()) {
-				// Iterate and update the particles.
-				Particle particle = iterator.next();
-				particle.update(!FlounderEngine.getDevices().getKeyboard().getKey(GLFW_KEY_Y));
+				while (iterator.hasNext()) {
+					// Iterate and update the particles.
+					Particle particle = iterator.next();
+					particle.update(!FlounderEngine.getDevices().getKeyboard().getKey(GLFW_KEY_Y));
 
-				// Update particle visibility.
-				float SIZE = 0.5f * particle.getParticleTemplate().getScale();
-				reusableAABB.getMinExtents().set(particle.getPosition().getX() - SIZE, particle.getPosition().getY() - SIZE, particle.getPosition().getZ() - SIZE);
-				reusableAABB.getMaxExtents().set(particle.getPosition().getX() + SIZE, particle.getPosition().getY() + SIZE, particle.getPosition().getZ() + SIZE);
-				particle.setVisable(FlounderEngine.getCamera().getViewFrustum().aabbInFrustum(reusableAABB));
-				visibleParticles += particle.isVisable() ? 1 : 0;
+					// Update particle visibility.
+					float SIZE = 0.5f * particle.getParticleTemplate().getScale();
+					reusableAABB.getMinExtents().set(particle.getPosition().getX() - SIZE, particle.getPosition().getY() - SIZE, particle.getPosition().getZ() - SIZE);
+					reusableAABB.getMaxExtents().set(particle.getPosition().getX() + SIZE, particle.getPosition().getY() + SIZE, particle.getPosition().getZ() + SIZE);
+					particle.setVisable(FlounderEngine.getCamera().getViewFrustum().aabbInFrustum(reusableAABB));
+					visibleParticles += particle.isVisable() ? 1 : 0;
 
-				// Remove particles that are not alive.
-				if (!particle.isAlive()) {
-					iterator.remove();
+					// Remove particles that are not alive.
+					if (!particle.isAlive()) {
+						iterator.remove();
 
-					if (list.isEmpty()) {
-						particles.remove(list);
+						if (list.isEmpty()) {
+							particles.remove(list);
+						}
+					} else {
+						totalParticles++;
 					}
-				} else {
-					totalParticles++;
 				}
 			}
+		} catch (ConcurrentModificationException e) {
+			FlounderEngine.getLogger().exception(e);
 		}
 
 		for (List<Particle> list : particles) {
