@@ -37,7 +37,6 @@ public class ParticleLoader {
 				String particleName = "unnamed";
 				String textureFile = "/";
 				String numberOfRows = "1";
-				String gravityEffect = "0.0f";
 				String lifeLength = "1.0f";
 				String scale = "1.0f";
 
@@ -55,8 +54,6 @@ public class ParticleLoader {
 								textureFile = line.replaceAll("\\s+", "").replaceAll(";", "").substring("Texture:".length());
 							} else if (line.contains("NumberOfRows")) {
 								numberOfRows = line.replaceAll("\\s+", "").replaceAll(";", "").substring("NumberOfRows:".length());
-							} else if (line.contains("GravityEffect")) {
-								gravityEffect = line.replaceAll("\\s+", "").replaceAll(";", "").substring("GravityEffect:".length());
 							} else if (line.contains("LifeLength")) {
 								lifeLength = line.replaceAll("\\s+", "").replaceAll(";", "").substring("LifeLength:".length());
 							} else if (line.contains("Scale")) {
@@ -68,7 +65,7 @@ public class ParticleLoader {
 
 				Texture texture = Texture.newTexture(new MyFile(textureFile)).create();
 				texture.setNumberOfRows(Integer.parseInt(numberOfRows));
-				data = new ParticleTemplate(particleName, texture, Float.parseFloat(gravityEffect), Float.parseFloat(lifeLength), Float.parseFloat(scale));
+				data = new ParticleTemplate(particleName, texture, Float.parseFloat(lifeLength), Float.parseFloat(scale));
 			} catch (IOException e) {
 				FlounderEngine.getLogger().error("File reader for particle " + saveFile.getPath() + " did not execute successfully!");
 				FlounderEngine.getLogger().exception(e);

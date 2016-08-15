@@ -22,13 +22,14 @@ public class Particle implements Comparable<Particle> {
 	private float lifeLength;
 	private float rotation;
 	private float scale;
+	private float gravityEffect;
 
 	private float elapsedTime;
 	private float transparency;
 	private float textureBlendFactor;
 	private float distanceToCamera;
 
-	protected Particle(final ParticleTemplate particleTemplate, final Vector3f position, final Vector3f velocity, float lifeLength, float rotation, float scale) {
+	protected Particle(final ParticleTemplate particleTemplate, final Vector3f position, final Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		this.particleTemplate = particleTemplate;
 		this.position = position;
 		this.velocity = velocity;
@@ -42,6 +43,7 @@ public class Particle implements Comparable<Particle> {
 		this.lifeLength = lifeLength;
 		this.rotation = rotation;
 		this.scale = scale;
+		this.gravityEffect = gravityEffect;
 
 		this.elapsedTime = 0.0f;
 		this.transparency = 0.0f;
@@ -52,7 +54,7 @@ public class Particle implements Comparable<Particle> {
 
 	protected void update(final boolean moveParticle) {
 		if (moveParticle) {
-			velocity.y += -10.0f * particleTemplate.getGravityEffect() * FlounderEngine.getDelta();
+			velocity.y += -10.0f * gravityEffect * FlounderEngine.getDelta();
 			reusableChange.set(velocity);
 			reusableChange.scale(FlounderEngine.getDelta());
 

@@ -17,10 +17,12 @@ public class ParticleSystem {
 	private IParticleSpawn spawn;
 	private float pps;
 	private float averageSpeed;
+	private float gravityEffect;
 	private boolean randomRotation;
 	private Random random;
 
 	private Vector3f systemCentre;
+	private Vector3f centreVelocity;
 
 	private Vector3f direction;
 	private float directionDeviation;
@@ -37,16 +39,19 @@ public class ParticleSystem {
 	 * @param spawn The particle spawn types.
 	 * @param pps Particles per second.
 	 * @param speed The particle speed.
+	 * @param gravityEffect How much gravity will effect the particle.
 	 */
-	public ParticleSystem(List<ParticleTemplate> types, IParticleSpawn spawn, float pps, float speed) {
+	public ParticleSystem(List<ParticleTemplate> types, IParticleSpawn spawn, float pps, float speed, float gravityEffect) {
 		this.types = types;
 		this.spawn = spawn;
 		this.pps = pps;
 		this.averageSpeed = speed;
+		this.gravityEffect = gravityEffect;
 		this.randomRotation = false;
 		this.random = new Random();
 
 		this.systemCentre = new Vector3f();
+		this.centreVelocity = new Vector3f();
 
 		this.paused = false;
 
@@ -89,12 +94,32 @@ public class ParticleSystem {
 		this.averageSpeed = averageSpeed;
 	}
 
+	public float getGravityEffect() {
+		return gravityEffect;
+	}
+
+	public void setGravityEffect(float gravityEffect) {
+		this.gravityEffect = gravityEffect;
+	}
+
 	public void randomizeRotation() {
 		this.randomRotation = true;
 	}
 
+	public Vector3f getSystemCentre() {
+		return systemCentre;
+	}
+
 	public void setSystemCentre(Vector3f systemCentre) {
 		this.systemCentre = systemCentre;
+	}
+
+	public Vector3f getCentreVelocity() {
+		return centreVelocity;
+	}
+
+	public void setCentreVelocity(Vector3f centreVelocity) {
+		this.centreVelocity = centreVelocity;
 	}
 
 	public void setDirection(Vector3f direction, float deviation) {
@@ -154,11 +179,12 @@ public class ParticleSystem {
 
 		velocity.normalize();
 		velocity.scale(generateValue(averageSpeed, averageSpeed * speedError));
+		Vector3f.add(velocity, centreVelocity, velocity);
 		float scale = generateValue(emitType.getScale(), emitType.getScale() * scaleError);
 		float lifeLength = generateValue(emitType.getLifeLength(), emitType.getLifeLength() * lifeError);
 		Vector3f spawnPos = Vector3f.add(systemCentre, spawn.getBaseSpawnPosition(), null);
 
-		new Particle(emitType, new Vector3f(spawnPos), velocity, lifeLength, generateRotation(), scale);
+		new Particle(emitType, new Vector3f(spawnPos), velocity, lifeLength, generateRotation(), scale, gravityEffect);
 	}
 
 	private float generateValue(float average, float errorMargin) {

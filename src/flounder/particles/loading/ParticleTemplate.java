@@ -8,7 +8,6 @@ import flounder.textures.*;
 public class ParticleTemplate {
 	private String name;
 	private Texture texture;
-	private float gravityEffect;
 	private float lifeLength;
 	private float scale;
 
@@ -17,14 +16,12 @@ public class ParticleTemplate {
 	 *
 	 * @param name The name for the particle type.
 	 * @param texture The particles texture.
-	 * @param gravityEffect How much gravity will effect the particle.
 	 * @param lifeLength The averaged life length for the particle.
 	 * @param scale The averaged scale for the particle.
 	 */
-	public ParticleTemplate(String name, Texture texture, float gravityEffect, float lifeLength, float scale) {
+	public ParticleTemplate(String name, Texture texture, float lifeLength, float scale) {
 		this.name = name;
 		this.texture = texture;
-		this.gravityEffect = gravityEffect;
 		this.lifeLength = lifeLength;
 		this.scale = scale;
 	}
@@ -35,10 +32,6 @@ public class ParticleTemplate {
 
 	public void setTexture(Texture texture) {
 		this.texture = texture;
-	}
-
-	public void setGravityEffect(float gravityEffect) {
-		this.gravityEffect = gravityEffect;
 	}
 
 	public void setLifeLength(float lifeLength) {
@@ -55,10 +48,6 @@ public class ParticleTemplate {
 
 	public Texture getTexture() {
 		return texture;
-	}
-
-	public float getGravityEffect() {
-		return gravityEffect;
 	}
 
 	public float getLifeLength() {
