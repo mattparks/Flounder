@@ -64,7 +64,7 @@ public class SpawnLine implements IParticleSpawn {
 	@Override
 	public void addToPanel(JPanel panel) {
 		// Length Slider.
-		JSlider lengthSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
+		JSlider lengthSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, (int) length);
 		lengthSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {

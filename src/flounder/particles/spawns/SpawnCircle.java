@@ -58,7 +58,7 @@ public class SpawnCircle implements IParticleSpawn {
 	@Override
 	public void addToPanel(JPanel panel) {
 		// Radius Slider.
-		JSlider radiusSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
+		JSlider radiusSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, (int) radius);
 		radiusSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
