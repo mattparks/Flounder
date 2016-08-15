@@ -3,9 +3,17 @@ package flounder.particles.spawns;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 
+import javax.swing.*;
+import javax.swing.event.*;
+
 public class SpawnSphere implements IParticleSpawn {
 	private float radius;
 	private Vector3f spawnPosition;
+
+	public SpawnSphere() {
+		this.radius = 1.0f;
+		this.spawnPosition = new Vector3f();
+	}
 
 	public SpawnSphere(float radius) {
 		this.radius = radius;
@@ -49,5 +57,28 @@ public class SpawnSphere implements IParticleSpawn {
 		float distance = new Vector2f(randX, randY).length();
 		spawnPosition.scale(distance);
 		return spawnPosition;
+	}
+
+	@Override
+	public void addToPanel(JPanel panel) {
+		// Radius Slider.
+		JSlider radiusSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
+		radiusSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider) e.getSource();
+				int reading = source.getValue();
+
+				if (reading > 1) {
+					SpawnSphere.this.radius = reading;
+				}
+			}
+		});
+		//Turn on labels at major tick marks.
+		radiusSlider.setMajorTickSpacing(10);
+		radiusSlider.setMinorTickSpacing(2);
+		radiusSlider.setPaintTicks(true);
+		radiusSlider.setPaintLabels(true);
+		panel.add(radiusSlider);
 	}
 }
