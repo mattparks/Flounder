@@ -25,6 +25,10 @@ public abstract class PostFilter {
 		this(new ShaderProgram(filterName, VERTEX_LOCATION, fragmentShader), FBO.newFBO(1.0f).create());
 	}
 
+	public PostFilter(ShaderProgram shader) {
+		this(shader, FBO.newFBO(1.0f).create());
+	}
+
 	public PostFilter(ShaderProgram shader, FBO fbo) {
 		this.shader = shader;
 		this.fbo = fbo;
