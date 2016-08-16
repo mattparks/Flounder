@@ -50,7 +50,7 @@ public class Implementation implements IModule {
 		camera.update(game.getFocusPosition(), game.getFocusRotation(), game.isGamePaused());
 
 		if (timerLog.isPassedTime()) {
-			FlounderEngine.getLogger().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
+			//	FlounderEngine.getLogger().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
 			timerLog.resetStartTime();
 		}
 
