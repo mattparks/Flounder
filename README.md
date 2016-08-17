@@ -8,6 +8,9 @@ Then create a empty project in the workspace you created before.
 Open Modules and add the repositorys from before, then open module settings and add LWJGL as a library. 
 Flounder Engine only has LWJGL as a requirement, once you completed those steps you should have a functioning workspace.
 
+# Documentation
+https://equilibriumgames.github.io/Flounder-Engine/doc/
+
 # Creating A Testbed
 This a simple example of how The Flounder Engine can be setup within the main method.
 <pre>
