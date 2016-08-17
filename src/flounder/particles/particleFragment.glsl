@@ -1,9 +1,9 @@
 #version 130
 
 layout(location = 0) out vec4 out_colour;
-layout(location = 1) out vec4 out_position;
+layout(location = 1) out vec4 out_depth;
 layout(location = 2) out vec4 out_normal;
-layout(location = 3) out vec4 out_additonal;
+layout(location = 3) out vec4 out_specular;
 
 varying vec2 textureCoords1;
 varying vec2 textureCoords2;
@@ -19,12 +19,13 @@ void main(void) {
 
 	out_colour = mix(colour1, colour2, textureBlendFactor);
 	out_colour.a -= textureTransparency;
-	out_position = particlePosition;
-	out_normal = vec4(0.0, 1.0, 0.0, 1.0);
-	out_additonal = vec4(0.2, 0.0, 0.0, 1.0);
 
 	if (out_colour.a < 0.4) {
 	    out_colour = vec4(0.0);
 	    discard;
 	}
+
+	out_depth = particlePosition;
+	out_normal = vec4(0.0, 1.0, 0.0, 0.0);
+	out_specular = vec4(0.0, 0.0, 0.0, 0.0);
 }

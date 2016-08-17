@@ -1,5 +1,6 @@
 package flounder.models;
 
+import flounder.materials.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
 
@@ -11,6 +12,7 @@ public class ModelData {
 	public List<Vector2f> textures = new ArrayList<>();
 	public List<Vector3f> normals = new ArrayList<>();
 	public List<Integer> indices = new ArrayList<>();
+	public List<Material> materials = new ArrayList<>();
 	public boolean enableSmoothShading = true;
 
 	public ModelData(MyFile file) {
@@ -61,7 +63,14 @@ public class ModelData {
 			indicesArray[i] = indices.get(i);
 		}
 
-		model.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
+		Material[] materialsArray = new Material[materials.size()];
+
+		for (int i = 0; i < materialsArray.length; i++) {
+			materialsArray[i] = materials.get(i);
+			// TODO: Use VertexData.material to keep a material set per vertex for entity loading.
+		}
+
+		model.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, materialsArray);
 	}
 
 	public void destroy() {
@@ -69,5 +78,6 @@ public class ModelData {
 		textures = null;
 		normals = null;
 		indices = null;
+		materials = null;
 	}
 }

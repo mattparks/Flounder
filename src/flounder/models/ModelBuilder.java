@@ -1,6 +1,7 @@
 package flounder.models;
 
 import flounder.engine.*;
+import flounder.materials.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
@@ -135,5 +136,7 @@ public class ModelBuilder {
 		float[] getTangents();
 
 		int[] getIndices();
+
+		Material[] getMaterials();
 	}
 }

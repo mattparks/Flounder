@@ -1,6 +1,7 @@
 package flounder.models;
 
 import flounder.engine.*;
+import flounder.materials.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;
@@ -16,6 +17,7 @@ public class Model {
 	private float[] normals;
 	private float[] tangents;
 	private int[] indices;
+	private Material[] materials;
 
 	private String name;
 	private boolean loaded;
@@ -69,12 +71,13 @@ public class Model {
 		data.destroy();
 	}
 
-	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
+	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, Material[] materials) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;
 		this.normals = normals;
 		this.tangents = tangents;
 		this.indices = indices;
+		this.materials = materials;
 
 		this.loaded = true;
 
@@ -152,6 +155,10 @@ public class Model {
 
 	public int[] getIndices() {
 		return indices;
+	}
+
+	public Material[] getMaterials() {
+		return materials;
 	}
 
 	public int getVaoID() {

@@ -1,5 +1,6 @@
 package flounder.models;
 
+import flounder.materials.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
@@ -8,6 +9,7 @@ public class VertexData {
 	public static final int NO_INDEX = -1;
 
 	private Vector3f position;
+	private Material material;
 	private int textureIndex;
 	private int normalIndex;
 	private int index;
@@ -45,6 +47,14 @@ public class VertexData {
 
 	public Vector3f getPosition() {
 		return position;
+	}
+
+	public Material getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 	public int getTextureIndex() {

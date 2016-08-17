@@ -34,6 +34,8 @@ public class FBO {
 	private int depthBuffer;
 	private int colourBuffer[];
 
+	private boolean hasGivenResolveError;
+
 	/**
 	 * A new OpenGL FBO object.
 	 *
@@ -66,6 +68,8 @@ public class FBO {
 
 		this.colourTexture = new int[attachments];
 		this.colourBuffer = new int[attachments];
+
+		this.hasGivenResolveError = false;
 
 		initializeFBO();
 	}
@@ -213,17 +217,35 @@ public class FBO {
 	}
 
 	/**
-	 * Blits this FBO to another FBO.
+	 * Blits this FBO and all attachments to another FBO.
+	 *
+	 * @param outputFBO The other FBO to blit to.
+	 */
+	public void resolveFBO(FBO outputFBO) {
+		if (this.attachments != outputFBO.attachments && this.hasGivenResolveError != outputFBO.hasGivenResolveError) {
+			this.hasGivenResolveError = true;
+			outputFBO.hasGivenResolveError = true;
+			FlounderEngine.getLogger().log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
+		}
+
+		for (int a = 0; a < attachments; a++) {
+			resolveFBO(a, a, outputFBO);
+		}
+	}
+
+	/**
+	 * Blits this FBO attachment to another FBO attachment.
 	 *
 	 * @param readBuffer The colour attachment to be read from.
 	 * @param outputFBO The other FBO to blit to.
 	 */
-	public void resolveFBO(int readBuffer, FBO outputFBO) {
+	public void resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO) {
 		outputFBO.updateSize();
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
 
-		glReadBuffer(GL_COLOR_ATTACHMENT0);
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + readBuffer);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0 + drawBuffer);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, outputFBO.width, outputFBO.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 		unbindFrameBuffer();
@@ -252,6 +274,15 @@ public class FBO {
 				initializeFBO();
 			}
 		}
+	}
+
+	/**
+	 * Gets the number of attachments in this FBO.
+	 *
+	 * @return The number of attachments in this FBO.
+	 */
+	public int getAttachments() {
+		return attachments;
 	}
 
 	/**

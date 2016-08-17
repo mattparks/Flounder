@@ -1,6 +1,7 @@
 package flounder.models;
 
 import flounder.engine.*;
+import flounder.materials.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
 
@@ -46,6 +47,8 @@ public class FlounderModels implements IModule {
 		}
 
 		ModelData modelData = new ModelData(file);
+
+		Material currentMaterial = new Material();
 		String line;
 
 		try {
@@ -58,10 +61,16 @@ public class FlounderModels implements IModule {
 
 				switch (prefix) {
 					case "mtllib":
-						// TODO: Load material to model list.
+						String pathMTL = file.getPath().replace(file.getPath().split("/")[file.getPath().split("/").length - 1], "");
+						pathMTL = pathMTL.substring(1, pathMTL.length() - 1);
+						modelData.materials.addAll(FlounderEngine.getMaterials().loadMTL(new MyFile(pathMTL, line.split(" ")[1])));
 						break;
 					case "usemtl":
-						// TODO: Set current material to this.
+						for (Material m : modelData.materials) {
+							if (m.name.equals(line.split(" ")[1])) {
+								currentMaterial = m;
+							}
+						}
 						break;
 					case "v":
 						String[] currentLineV = line.split(" ");
@@ -87,9 +96,9 @@ public class FlounderModels implements IModule {
 						String[] vertex1 = currentLineF[1].split("/");
 						String[] vertex2 = currentLineF[2].split("/");
 						String[] vertex3 = currentLineF[3].split("/");
-						VertexData v0 = processDataVertex(vertex1, modelData.vertices, modelData.indices);
-						VertexData v1 = processDataVertex(vertex2, modelData.vertices, modelData.indices);
-						VertexData v2 = processDataVertex(vertex3, modelData.vertices, modelData.indices);
+						VertexData v0 = processDataVertex(vertex1, modelData.vertices, modelData.indices, currentMaterial);
+						VertexData v1 = processDataVertex(vertex2, modelData.vertices, modelData.indices, currentMaterial);
+						VertexData v2 = processDataVertex(vertex3, modelData.vertices, modelData.indices, currentMaterial);
 						calculateTangents(v0, v1, v2, modelData.textures);
 						// TODO: Take min&max vec for v0, v1, v2 for AABB Mesh.
 						break;
@@ -129,7 +138,7 @@ public class FlounderModels implements IModule {
 	 */
 	public void loadModelToOpenGL(Model model, ModelBuilder.LoadManual loadManual) {
 		if (loadManual != null) {
-			model.loadData(loadManual.getVertices(), loadManual.getTextureCoords(), loadManual.getNormals(), loadManual.getTangents(), loadManual.getIndices());
+			model.loadData(loadManual.getVertices(), loadManual.getTextureCoords(), loadManual.getNormals(), loadManual.getTangents(), loadManual.getIndices(), loadManual.getMaterials());
 		}
 
 		loadModelToOpenGL(model);
@@ -146,7 +155,7 @@ public class FlounderModels implements IModule {
 		model.setVaoLength(model.getIndices().length);
 	}
 
-	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices) {
+	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices, Material currentMaterial) {
 		int index = Integer.parseInt(vertex[0]) - 1;
 		VertexData currentVertexData = vertices.get(index);
 		int textureIndex = Integer.parseInt(vertex[1]) - 1;
@@ -155,14 +164,15 @@ public class FlounderModels implements IModule {
 		if (!currentVertexData.isSet()) {
 			currentVertexData.setTextureIndex(textureIndex);
 			currentVertexData.setNormalIndex(normalIndex);
+			currentVertexData.setMaterial(currentMaterial);
 			indices.add(index);
 			return currentVertexData;
 		} else {
-			return dealWithAlreadyProcessedDataVertex(currentVertexData, textureIndex, normalIndex, indices, vertices);
+			return dealWithAlreadyProcessedDataVertex(currentVertexData, textureIndex, normalIndex, indices, vertices, currentMaterial);
 		}
 	}
 
-	private VertexData dealWithAlreadyProcessedDataVertex(VertexData previousVertexData, int newTextureIndex, int newNormalIndex, List<Integer> indices, List<VertexData> vertices) {
+	private VertexData dealWithAlreadyProcessedDataVertex(VertexData previousVertexData, int newTextureIndex, int newNormalIndex, List<Integer> indices, List<VertexData> vertices, Material currentMaterial) {
 		if (previousVertexData.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
 			indices.add(previousVertexData.getIndex());
 			return previousVertexData;
@@ -170,11 +180,12 @@ public class FlounderModels implements IModule {
 			VertexData anotherVertexData = previousVertexData.getDuplicateVertex();
 
 			if (anotherVertexData != null) {
-				return dealWithAlreadyProcessedDataVertex(anotherVertexData, newTextureIndex, newNormalIndex, indices, vertices);
+				return dealWithAlreadyProcessedDataVertex(anotherVertexData, newTextureIndex, newNormalIndex, indices, vertices, currentMaterial);
 			} else {
 				VertexData duplicateVertexData = new VertexData(vertices.size(), previousVertexData.getPosition());
 				duplicateVertexData.setTextureIndex(newTextureIndex);
 				duplicateVertexData.setNormalIndex(newNormalIndex);
+				duplicateVertexData.setMaterial(currentMaterial);
 				previousVertexData.setDuplicateVertex(duplicateVertexData);
 				vertices.add(duplicateVertexData);
 				indices.add(duplicateVertexData.getIndex());

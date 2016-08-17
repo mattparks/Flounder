@@ -8,6 +8,7 @@ import flounder.guis.*;
 import flounder.guis.cursor.*;
 import flounder.loaders.*;
 import flounder.logger.*;
+import flounder.materials.*;
 import flounder.maths.matrices.*;
 import flounder.models.*;
 import flounder.networking.*;
@@ -29,6 +30,7 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderProcessors processors;
 	private FlounderEvents events;
 	private FlounderLoader loader;
+	private FlounderMaterials materials;
 	private FlounderModels models;
 	private FlounderTextures textures;
 	private FlounderFonts fonts;
@@ -66,6 +68,7 @@ public class FlounderEngine extends Thread implements IModule {
 		this.processors = new FlounderProcessors();
 		this.events = new FlounderEvents();
 		this.loader = new FlounderLoader();
+		this.materials = new FlounderMaterials();
 		this.models = new FlounderModels();
 		this.textures = new FlounderTextures();
 		this.fonts = new FlounderFonts();
@@ -102,6 +105,7 @@ public class FlounderEngine extends Thread implements IModule {
 			processors.init();
 			events.init();
 			loader.init();
+			materials.init();
 			models.init();
 			textures.init();
 			fonts.init();
@@ -139,6 +143,7 @@ public class FlounderEngine extends Thread implements IModule {
 			devices.update();
 
 			loader.update();
+			materials.update();
 			models.update();
 			textures.update();
 			processors.update();
@@ -170,6 +175,7 @@ public class FlounderEngine extends Thread implements IModule {
 			aabbs.profile();
 			network.profile();
 			loader.profile();
+			materials.profile();
 			models.profile();
 			textures.profile();
 			guis.profile();
@@ -241,6 +247,15 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static FlounderModels getModels() {
 		return instance.models;
+	}
+
+	/**
+	 * Gets the engines current MTL materials loader.
+	 *
+	 * @return The engines current MTL materials loader.
+	 */
+	public static FlounderMaterials getMaterials() {
+		return instance.materials;
 	}
 
 	/**
@@ -418,6 +433,7 @@ public class FlounderEngine extends Thread implements IModule {
 			processors.dispose();
 			events.dispose();
 			models.dispose();
+			materials.dispose();
 			loader.dispose();
 			network.dispose();
 			particles.dispose();
