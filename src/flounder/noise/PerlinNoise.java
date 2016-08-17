@@ -46,6 +46,15 @@ public class PerlinNoise {
 	 * @param seed The seed value to use.
 	 */
 	public PerlinNoise(int seed) {
+		setSeed(seed);
+	}
+
+	/**
+	 * Sets the seed to the noise generator.
+	 *
+	 * @param seed The generators seed.
+	 */
+	public void setSeed(int seed) {
 		p_imp = new int[DEFAULT_SAMPLE_SIZE << 1];
 
 		int i, j, k;
