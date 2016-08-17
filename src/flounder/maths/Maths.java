@@ -34,7 +34,9 @@ public class Maths {
 	/**
 	 * Generates a random unit vector.
 	 *
-	 * @return The random unit vector.
+	 * @param destination The destination vector or null if a new vector is to be created.
+	 *
+	 * @return The destination vector.
 	 */
 	public static Vector3f generateRandomUnitVector(Vector3f destination) {
 		if (destination == null) {
@@ -53,10 +55,11 @@ public class Maths {
 	/**
 	 * Gets a random point from on a circle.
 	 *
+	 * @param destination The destination vector or null if a new vector is to be created.
 	 * @param normal The circles normal.
 	 * @param radius The circles radius.
 	 *
-	 * @return The random point.
+	 * @return The destination vector.
 	 */
 	public static Vector3f randomPointOnCircle(Vector3f destination, Vector3f normal, float radius) {
 		if (destination == null) {
@@ -91,10 +94,11 @@ public class Maths {
 	/**
 	 * Generates a random unit vector from within a cone.
 	 *
+	 * @param destination The destination vector or null if a new vector is to be created.
 	 * @param coneDirection The cones direction.
 	 * @param angle The cones major angle.
 	 *
-	 * @return The random unit vector.
+	 * @return The destination vector.
 	 */
 	public static Vector3f generateRandomUnitVectorWithinCone(Vector3f destination, Vector3f coneDirection, float angle) {
 		if (destination == null) {
