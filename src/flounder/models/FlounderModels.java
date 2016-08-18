@@ -69,6 +69,7 @@ public class FlounderModels implements IModule {
 						for (Material m : modelData.materials) {
 							if (m.name.equals(line.split(" ")[1])) {
 								currentMaterial = m;
+								FlounderEngine.getLogger().error(m);
 							}
 						}
 						break;
@@ -100,7 +101,6 @@ public class FlounderModels implements IModule {
 						VertexData v1 = processDataVertex(vertex2, modelData.vertices, modelData.indices, currentMaterial);
 						VertexData v2 = processDataVertex(vertex3, modelData.vertices, modelData.indices, currentMaterial);
 						calculateTangents(v0, v1, v2, modelData.textures);
-						// TODO: Take min&max vec for v0, v1, v2 for AABB Mesh.
 						break;
 					default:
 						FlounderEngine.getLogger().log("[OBJ " + file.getName() + "] Unknown Line: " + line);

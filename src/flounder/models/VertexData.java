@@ -86,7 +86,11 @@ public class VertexData {
 			Vector3f.add(averagedTangent, tangent, averagedTangent);
 		}
 
-		averagedTangent.normalize();
+		if (averagedTangent.length() > 0) {
+			averagedTangent.normalize();
+		}// else {
+		//	FlounderEngine.getLogger().error(averagedTangent.toString() + " average tangents zero length vector!");
+		//}
 	}
 
 	public Vector3f getAverageTangent() {
