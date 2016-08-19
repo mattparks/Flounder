@@ -137,6 +137,7 @@ public class Maths {
 	 * @param v1 The first triangle vertex.
 	 * @param v2 The second triangle vertex
 	 * @param v3 The third triangle vertex
+	 *
 	 * @return If the point is in a triangle.
 	 */
 	public static boolean pointInTriangle(Vector2f point, Vector2f v1, Vector2f v2, Vector2f v3) {

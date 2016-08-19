@@ -14,6 +14,7 @@ flounder.inputs
 flounder.lights
 flounder.loaders
 flounder.logger
+flounder.materials
 flounder.maths
 flounder.maths.matrices
 flounder.maths.rays

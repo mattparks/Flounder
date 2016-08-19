@@ -3,7 +3,6 @@ package flounder.materials;
 import flounder.engine.*;
 import flounder.maths.*;
 import flounder.resources.*;
-import flounder.textures.*;
 
 import java.io.*;
 import java.lang.ref.*;
