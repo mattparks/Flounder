@@ -33,6 +33,7 @@ public class ModelData {
 		float[] texturesArray = new float[vertices.size() * 2];
 		float[] normalsArray = new float[vertices.size() * 3];
 		float[] tangentsArray = new float[vertices.size() * 3];
+		Material[] materialsArray = new Material[vertices.size()];
 
 		for (int i = 0; i < vertices.size(); i++) {
 			VertexData currentVertexData = vertices.get(i);
@@ -40,6 +41,9 @@ public class ModelData {
 			Vector2f textureCoord = textures.get(currentVertexData.getTextureIndex());
 			Vector3f normalVector = normals.get(currentVertexData.getNormalIndex());
 			Vector3f tangent = currentVertexData.getAverageTangent();
+			Material material = currentVertexData.getMaterial();
+
+			materialsArray[i] = material;
 
 			verticesArray[i * 3] = position.x;
 			verticesArray[i * 3 + 1] = position.y;
@@ -61,13 +65,6 @@ public class ModelData {
 
 		for (int i = 0; i < indicesArray.length; i++) {
 			indicesArray[i] = indices.get(i);
-		}
-
-		Material[] materialsArray = new Material[materials.size()];
-
-		for (int i = 0; i < materialsArray.length; i++) {
-			materialsArray[i] = materials.get(i);
-			// TODO: Use VertexData.material to keep a material set per vertex for entity loading.
 		}
 
 		model.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, materialsArray);

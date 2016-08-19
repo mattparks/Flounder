@@ -131,6 +131,26 @@ public class Maths {
 	}
 
 	/**
+	 * Gets if the pt (point) is in a triangle.
+	 *
+	 * @param point The point to check.
+	 * @param v1 The first triangle vertex.
+	 * @param v2 The second triangle vertex
+	 * @param v3 The third triangle vertex
+	 * @return If the point is in a triangle.
+	 */
+	public static boolean pointInTriangle(Vector2f point, Vector2f v1, Vector2f v2, Vector2f v3) {
+		boolean b1 = triangleSign(point, v1, v2) < 0.0f;
+		boolean b2 = triangleSign(point, v2, v3) < 0.0f;
+		boolean b3 = triangleSign(point, v3, v1) < 0.0f;
+		return ((b1 == b2) && (b2 == b3));
+	}
+
+	private static float triangleSign(Vector2f p1, Vector2f p2, Vector2f p3) {
+		return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+	}
+
+	/**
 	 * Gets the maximum value.
 	 *
 	 * @param fs The values to sort though.

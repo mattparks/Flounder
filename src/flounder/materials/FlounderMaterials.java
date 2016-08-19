@@ -101,7 +101,7 @@ public class FlounderMaterials implements IModule {
 							// FlounderEngine.getLogger().error("File Kd: " + fileNameKd);
 
 							if (!fileNameKd.isEmpty() && !fileNameKd.equals(".")) {
-								parseMaterial.texture = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", fileNameKd)).create();
+								parseMaterial.texture = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameKd)).create();
 							}
 							break;
 						case "map_Bump":
@@ -109,7 +109,7 @@ public class FlounderMaterials implements IModule {
 							// FlounderEngine.getLogger().error("File Bump: " + fileNameBump);
 
 							if (!fileNameBump.isEmpty() && !fileNameBump.equals(".")) {
-								parseMaterial.normalMap = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", fileNameBump)).create();
+								parseMaterial.normalMap = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameBump)).create();
 							}
 							break;
 						default:

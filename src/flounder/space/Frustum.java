@@ -222,7 +222,11 @@ public class Frustum {
 	 * @return True if partially contained, false if outside.
 	 */
 	public boolean aabbInFrustum(AABB aabb) {
-		return aabb != null && cubeInFrustum(aabb.getMinExtents().getX(), aabb.getMinExtents().getY(), aabb.getMinExtents().getZ(), aabb.getMaxExtents().getX(), aabb.getMaxExtents().getY(), aabb.getMaxExtents().getZ());
+		if (aabb == null) {
+			return true;
+		}
+
+		return cubeInFrustum(aabb.getMinExtents().getX(), aabb.getMinExtents().getY(), aabb.getMinExtents().getZ(), aabb.getMaxExtents().getX(), aabb.getMaxExtents().getY(), aabb.getMaxExtents().getZ());
 	}
 
 	/**
