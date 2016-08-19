@@ -100,17 +100,17 @@ public class FlounderMaterials implements IModule {
 							String fileNameKd = line.split(" ")[1].trim();
 							// FlounderEngine.getLogger().error("File Kd: " + fileNameKd);
 
-							if (!fileNameKd.isEmpty() && !fileNameKd.equals(".")) {
-								parseMaterial.texture = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameKd)).create();
-							}
+							//	if (!fileNameKd.isEmpty() && !fileNameKd.equals(".")) {
+							//		parseMaterial.texture = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameKd)).create();
+							//	}
 							break;
 						case "map_Bump":
 							String fileNameBump = line.split(" ")[1].trim();
 							// FlounderEngine.getLogger().error("File Bump: " + fileNameBump);
 
-							if (!fileNameBump.isEmpty() && !fileNameBump.equals(".")) {
-								parseMaterial.normalMap = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameBump)).create();
-							}
+							//	if (!fileNameBump.isEmpty() && !fileNameBump.equals(".")) {
+							//		parseMaterial.normalMap = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameBump)).create();
+							//	}
 							break;
 						default:
 							FlounderEngine.getLogger().log("[MTL " + file.getName() + "] Unknown Line: " + line);
