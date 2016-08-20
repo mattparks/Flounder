@@ -19,7 +19,6 @@ public class ParticleSystem {
 	private float averageSpeed;
 	private float gravityEffect;
 	private boolean randomRotation;
-	private Random random;
 
 	private Vector3f systemCentre;
 	private Vector3f centreVelocity;
@@ -48,7 +47,6 @@ public class ParticleSystem {
 		this.averageSpeed = speed;
 		this.gravityEffect = gravityEffect;
 		this.randomRotation = false;
-		this.random = new Random();
 
 		this.systemCentre = new Vector3f();
 		this.centreVelocity = new Vector3f();
@@ -188,13 +186,13 @@ public class ParticleSystem {
 	}
 
 	private float generateValue(float average, float errorMargin) {
-		float offset = (random.nextFloat() - 0.5f) * 2.0f * errorMargin;
+		float offset = (Maths.RANDOM.nextFloat() - 0.5f) * 2.0f * errorMargin;
 		return average + offset;
 	}
 
 	private float generateRotation() {
 		if (this.randomRotation) {
-			return this.random.nextFloat() * 360.0f;
+			return Maths.RANDOM.nextFloat() * 360.0f;
 		}
 
 		return 0.0f;
@@ -226,8 +224,8 @@ public class ParticleSystem {
 	}
 
 	private Vector3f generateRandomUnitVector() {
-		float theta = (float) (random.nextFloat() * 2.0f * 3.141592653589793);
-		float z = random.nextFloat() * 2.0f - 1.0f;
+		float theta = (float) (Maths.RANDOM.nextFloat() * 2.0f * 3.141592653589793);
+		float z = Maths.RANDOM.nextFloat() * 2.0f - 1.0f;
 		float rootOneMinusZSquared = (float) Math.sqrt(1.0f - z * z);
 		float x = (float) (rootOneMinusZSquared * Math.cos(theta));
 		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
