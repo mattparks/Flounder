@@ -68,11 +68,11 @@ public class FlounderLogger implements IModule {
 		}
 
 		if (LOG_TO_CONSOLE) {
-			System.out.println("LOG: " + "[" + getDateString() + "]: " + value.toString());
+			System.out.println("LOG: " + "[" + getDateString() + "]: " + getString(value));
 		}
 
 		if (LOG_TO_FILE) {
-			saveData.append("LOG: " + "[" + getDateString() + "]: " + value.toString() + "\n");
+			saveData.append("LOG: " + "[" + getDateString() + "]: " + getString(value) + "\n");
 			linesRecorded++;
 		}
 	}
@@ -99,12 +99,20 @@ public class FlounderLogger implements IModule {
 			return;
 		}
 
-		System.err.println("ERROR: " + "[" + getDateString() + "]: " + value.toString());
+		System.err.println("ERROR: " + "[" + getDateString() + "]: " + getString(value));
 
 		if (LOG_TO_FILE) {
-			saveData.append("ERROR: " + "[" + getDateString() + "]: " + value.toString() + "\n");
+			saveData.append("ERROR: " + "[" + getDateString() + "]: " + getString(value) + "\n");
 			linesRecorded++;
 		}
+	}
+
+	private <T> String getString(T value) {
+		if (value == null) {
+			return "NULL";
+		}
+
+		return value.toString();
 	}
 
 	/**

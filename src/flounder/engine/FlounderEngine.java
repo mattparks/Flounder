@@ -103,7 +103,6 @@ public class FlounderEngine extends Thread implements IModule {
 			profiler.init();
 			devices.init();
 			processors.init();
-			events.init();
 			loader.init();
 			materials.init();
 			models.init();
@@ -114,6 +113,7 @@ public class FlounderEngine extends Thread implements IModule {
 			particles.init();
 			aabbs.init();
 			network.init();
+			events.init();
 			implementation.init();
 
 			initialized = true;
@@ -147,10 +147,10 @@ public class FlounderEngine extends Thread implements IModule {
 			models.update();
 			textures.update();
 			processors.update();
-			events.update();
 			fonts.update();
 			guis.update();
 			cursor.update();
+			events.update();
 
 			implementation.update();
 

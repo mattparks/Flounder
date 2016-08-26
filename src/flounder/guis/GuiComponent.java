@@ -285,8 +285,10 @@ public abstract class GuiComponent {
 	}
 
 	public void setRelativeX(float x) {
-		relativePosition.x = x;
-		updateScreenSpacePosition();
+		if (relativePosition.x != x) {
+			relativePosition.x = x;
+			updateScreenSpacePosition();
+		}
 	}
 
 	/**
@@ -297,8 +299,10 @@ public abstract class GuiComponent {
 	}
 
 	public void setRelativeY(float y) {
-		relativePosition.y = y;
-		updateScreenSpacePosition();
+		if (relativePosition.y != y) {
+			relativePosition.y = y;
+			updateScreenSpacePosition();
+		}
 	}
 
 	/**

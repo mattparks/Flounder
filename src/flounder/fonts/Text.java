@@ -16,6 +16,8 @@ public class Text {
 	private int numberOfLines;
 	private float originalWidth;
 
+	private String newText;
+
 	private ValueDriver positionXDriver;
 	private ValueDriver positionYDriver;
 	private ValueDriver alphaDriver;
@@ -77,6 +79,13 @@ public class Text {
 	}
 
 	public void update(float delta) {
+		if (loaded && newText != null) {
+			deleteFromMemory();
+			textString = newText;
+			fontType.loadText(this);
+			newText = null;
+		}
+
 		currentScale = scaleDriver.update(delta);
 		currentX = positionXDriver.update(delta);
 		currentY = positionYDriver.update(delta);
@@ -117,9 +126,7 @@ public class Text {
 
 	public void setText(String newText) {
 		if (!textString.equals(newText)) {
-			deleteFromMemory();
-			textString = newText;
-			fontType.loadText(this);
+			this.newText = newText;
 		}
 	}
 
