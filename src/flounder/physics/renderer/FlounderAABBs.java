@@ -18,7 +18,7 @@ public class FlounderAABBs implements IModule {
 	 */
 	public FlounderAABBs() {
 		toRenderABBB = new ArrayList<>();
-		renders = true;
+		renders = false;
 		aabbCount = 0;
 	}
 

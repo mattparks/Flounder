@@ -65,7 +65,7 @@ public class Text {
 		return new TextBuilder(text);
 	}
 
-	public void initialize(float absX, float absY, float maxXLength) {
+	public void init(float absX, float absY, float maxXLength) {
 		positionXDriver = new ConstantDriver(absX);
 		positionYDriver = new ConstantDriver(absY);
 		lineMaxSize = maxXLength;
@@ -178,6 +178,10 @@ public class Text {
 
 	public void setBorderColour(float r, float g, float b) {
 		borderColour.set(r, g, b);
+	}
+
+	public void setBorderColour(Colour borderColour) {
+		this.borderColour.set(borderColour);
 	}
 
 	public void setScaleDriver(ValueDriver scaleDriver) {

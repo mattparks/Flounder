@@ -211,8 +211,7 @@ public class Testing1 {
 
 			}
 
-			@Override
-			public boolean isMenuOpen() {
+			public boolean isMenuIsOpen() {
 				return false;
 			}
 
@@ -224,11 +223,6 @@ public class Testing1 {
 			@Override
 			public float getBlurFactor() {
 				return 0;
-			}
-
-			@Override
-			public boolean isStartingGame() {
-				return false;
 			}
 		}, -1);
 		FlounderEngine engine = new FlounderEngine(implementation, 1080, 720, "Testing", false, true, 0, false);

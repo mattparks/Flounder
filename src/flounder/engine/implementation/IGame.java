@@ -59,7 +59,7 @@ public abstract class IGame {
 	public void update(Vector3f focusPosition, Vector3f focusRotation) {
 		this.focusPosition.set(focusPosition);
 		this.focusRotation.set(focusRotation);
-		this.gamePaused = FlounderEngine.getManagerGUI().isMenuOpen();
+		this.gamePaused = FlounderEngine.getManagerGUI().isMenuIsOpen();
 		this.screenBlur = FlounderEngine.getManagerGUI().getBlurFactor();
 	}
 

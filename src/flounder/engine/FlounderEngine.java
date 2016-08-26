@@ -332,6 +332,15 @@ public class FlounderEngine extends Thread implements IModule {
 	}
 
 	/**
+	 * Gets the modules current game manager.
+	 *
+	 * @return The modules current game manager.
+	 */
+	public static IGame getGame() {
+		return instance.implementation.getGame();
+	}
+
+	/**
 	 * Gets the engines camera implementation.
 	 *
 	 * @return The engines camera implementation.

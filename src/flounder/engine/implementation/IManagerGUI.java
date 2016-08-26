@@ -14,7 +14,7 @@ public abstract class IManagerGUI {
 	/**
 	 * @return If the main menu is open.
 	 */
-	public abstract boolean isMenuOpen();
+	public abstract boolean isMenuIsOpen();
 
 	/**
 	 * Forces the main GUI to open.
@@ -25,9 +25,4 @@ public abstract class IManagerGUI {
 	 * @return If the main menu's blur factor.
 	 */
 	public abstract float getBlurFactor();
-
-	/**
-	 * @return If the GUI manager is starting the game.
-	 */
-	public abstract boolean isStartingGame();
 }

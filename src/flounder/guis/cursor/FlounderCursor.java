@@ -39,12 +39,10 @@ public class FlounderCursor implements IModule {
 	@Override
 	public void update() {
 		if (isShown) {
-			if (FlounderEngine.getDevices().getMouse().isDisplaySelected()) {
-				cursorTexture.setColourOffset(FlounderEngine.getGuis().getSelector().isLeftClick() ? clickLeftColour : FlounderEngine.getGuis().getSelector().isRightClick() ? clickRightColour : inactiveColour);
-				float averageArea = (FlounderEngine.getDevices().getDisplay().getWidth() + FlounderEngine.getDevices().getDisplay().getHeight()) / 2.0f;
-				cursorTexture.setPosition(FlounderEngine.getGuis().getSelector().getCursorX(), FlounderEngine.getGuis().getSelector().getCursorY(), (33.75f / averageArea), (33.75f / averageArea) * FlounderEngine.getDevices().getDisplay().getAspectRatio());
-			}
+			float averageArea = (FlounderEngine.getDevices().getDisplay().getWidth() + FlounderEngine.getDevices().getDisplay().getHeight()) / 2.0f;
 
+			cursorTexture.setColourOffset(FlounderEngine.getGuis().getSelector().isLeftClick() ? clickLeftColour : FlounderEngine.getGuis().getSelector().isRightClick() ? clickRightColour : inactiveColour);
+			cursorTexture.setPosition(FlounderEngine.getGuis().getSelector().getCursorX(), FlounderEngine.getGuis().getSelector().getCursorY(), (33.75f / averageArea), (33.75f / averageArea) * FlounderEngine.getDevices().getDisplay().getAspectRatio());
 			cursorTexture.update();
 		}
 	}
