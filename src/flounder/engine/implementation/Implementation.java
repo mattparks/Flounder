@@ -10,6 +10,7 @@ public class Implementation implements IModule {
 	private IGame game;
 	private ICamera camera;
 	private IRendererMaster renderer;
+	private IManagerGUI managerGUI;
 
 	private int fpsLimit;
 	private boolean closedRequested;
@@ -24,10 +25,11 @@ public class Implementation implements IModule {
 	 * @param renderer The master renderer to render with.
 	 * @param fpsLimit The maximum FPS the engine can render at.
 	 */
-	public Implementation(IGame game, ICamera camera, IRendererMaster renderer, int fpsLimit) {
+	public Implementation(IGame game, ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI, int fpsLimit) {
 		this.game = game;
 		this.camera = camera;
 		this.renderer = renderer;
+		this.managerGUI = managerGUI;
 
 		this.fpsLimit = fpsLimit;
 		closedRequested = false;
@@ -37,6 +39,7 @@ public class Implementation implements IModule {
 
 	@Override
 	public void init() {
+		managerGUI.init();
 		renderer.init();
 		camera.init();
 		game.init();
@@ -55,6 +58,7 @@ public class Implementation implements IModule {
 		}
 
 		renderer.render();
+		managerGUI.update();
 	}
 
 	@Override
@@ -72,6 +76,10 @@ public class Implementation implements IModule {
 
 	public IRendererMaster getRendererMaster() {
 		return renderer;
+	}
+
+	public IManagerGUI getManagerGUI() {
+		return managerGUI;
 	}
 
 	public float getDelta() {

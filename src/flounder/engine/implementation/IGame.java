@@ -1,5 +1,6 @@
 package flounder.engine.implementation;
 
+import flounder.engine.*;
 import flounder.maths.vectors.*;
 
 /**
@@ -54,14 +55,12 @@ public abstract class IGame {
 	 *
 	 * @param focusPosition The position of the object the camera focuses on.
 	 * @param focusRotation The rotation of the object the camera focuses on.
-	 * @param gamePaused If game paused. Used to stop inputs to camera in menus.
-	 * @param screenBlur The factor (-1 to 1) by where the screen will be blurred from on the paused screen.
 	 */
-	public void update(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused, float screenBlur) {
+	public void update(Vector3f focusPosition, Vector3f focusRotation) {
 		this.focusPosition.set(focusPosition);
 		this.focusRotation.set(focusRotation);
-		this.gamePaused = gamePaused;
-		this.screenBlur = screenBlur;
+		this.gamePaused = FlounderEngine.getManagerGUI().isMenuOpen();
+		this.screenBlur = FlounderEngine.getManagerGUI().getBlurFactor();
 	}
 
 	/**
@@ -70,7 +69,7 @@ public abstract class IGame {
 	public abstract void init();
 
 	/**
-	 * Used to update internal game objects and values. (call the {@link #update(Vector3f, Vector3f, boolean, float) updateGame} method at the end of the function.
+	 * Used to update internal game objects and values. (call the {@link #update(Vector3f, Vector3f) updateGame} method at the end of the function.
 	 */
 	public abstract void update();
 

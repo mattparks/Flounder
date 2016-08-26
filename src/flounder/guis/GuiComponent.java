@@ -39,6 +39,13 @@ public abstract class GuiComponent {
 	}
 
 	/**
+	 * @return {@code true} if this component isn't currently hidden.
+	 */
+	public boolean isShown() {
+		return visible;
+	}
+
+	/**
 	 * Determines whether the component (and all subtract-components) should be visible or not. Non-visible components are not updated.
 	 *
 	 * @param visible Whether the component should be visible or not.
@@ -108,13 +115,6 @@ public abstract class GuiComponent {
 	}
 
 	/**
-	 * @return {@code true} if this component isn't currently hidden.
-	 */
-	public boolean isShown() {
-		return visible;
-	}
-
-	/**
 	 * Removes some text from the component and deletes the text.
 	 *
 	 * @param text The text currently in the component that needs to be removed.
@@ -135,6 +135,18 @@ public abstract class GuiComponent {
 
 	public void setRelativeX(float x) {
 		relativePosition.x = x;
+		updateScreenSpacePosition();
+	}
+
+	/**
+	 * @return The y position of the top-left corner of the component, relative to the parent component.
+	 */
+	public float getRelativeY() {
+		return relativePosition.x;
+	}
+
+	public void setRelativeY(float y) {
+		relativePosition.y = y;
 		updateScreenSpacePosition();
 	}
 

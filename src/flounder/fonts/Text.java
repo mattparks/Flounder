@@ -237,8 +237,20 @@ public class Text {
 		return 0.1f / size;
 	}
 
-	protected float getCurrentWidth() {
+	public float getOriginalWidth() {
+		return originalWidth;
+	}
+
+	public float getCurrentWidth() {
 		return originalWidth * currentScale;
+	}
+
+	public float getCurrentX() {
+		return currentX;
+	}
+
+	public float getCurrentY() {
+		return currentY;
 	}
 
 	protected float getTransparency() {

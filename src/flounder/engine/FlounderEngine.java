@@ -350,6 +350,15 @@ public class FlounderEngine extends Thread implements IModule {
 	}
 
 	/**
+	 * Gets the modules current GUI manager.
+	 *
+	 * @return The modules current GUI manager.
+	 */
+	public static IManagerGUI getManagerGUI() {
+		return instance.implementation.getManagerGUI();
+	}
+
+	/**
 	 * Gets the projection matrix used in the current scene renderObjects.
 	 *
 	 * @return The projection matrix used in the current scene renderObjects.

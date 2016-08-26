@@ -52,7 +52,7 @@ public class Testing1 {
 				velocity.z = FRONT_SPEED * FlounderEngine.getDelta() * Maths.deadband(0.05f, inputForward.getAmount());
 				Vector3f.rotate(velocity, rotation, velocity);
 				Vector3f.add(focusPosition, velocity, focusPosition);
-				update(focusPosition, focusRotation, false, 0.0f);
+				update(focusPosition, focusRotation);
 			}
 
 			@Override
@@ -199,6 +199,36 @@ public class Testing1 {
 				fontRenderer.dispose();
 				guiRenderer.dispose();
 				aabbRenderer.dispose();
+			}
+		}, new IManagerGUI() {
+			@Override
+			public void init() {
+
+			}
+
+			@Override
+			public void update() {
+
+			}
+
+			@Override
+			public boolean isMenuOpen() {
+				return false;
+			}
+
+			@Override
+			public void openMenu() {
+
+			}
+
+			@Override
+			public float getBlurFactor() {
+				return 0;
+			}
+
+			@Override
+			public boolean isStartingGame() {
+				return false;
 			}
 		}, -1);
 		FlounderEngine engine = new FlounderEngine(implementation, 1080, 720, "Testing", false, true, 0, false);

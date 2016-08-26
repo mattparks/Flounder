@@ -22,7 +22,7 @@ public class GuiTextButton extends GuiComponent {
 
 	public GuiTextButton(Text text) {
 		this.text = text;
-		mouseOver = false;
+		this.mouseOver = false;
 		super.addText(text, 0.0f, 0.0f, 1.0f);
 	}
 
