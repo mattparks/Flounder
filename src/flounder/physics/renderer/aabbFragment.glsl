@@ -2,8 +2,8 @@
 
 layout(location = 0) out vec4 out_colour;
 
-varying vec4 positionRelativeToCam;
-varying vec3 surfaceNormal;
+varying vec4 pass_positionRelativeToCam;
+varying vec3 pass_surfaceNormal;
 
 uniform vec3 colour;
 

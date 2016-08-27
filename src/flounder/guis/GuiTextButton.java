@@ -65,7 +65,7 @@ public class GuiTextButton extends GuiComponent {
 
 		float width = 0.3f * text.getScale();
 		float height = 0.096f * text.getScale();
-		background.setPosition(getPosition().x - (0.05f * text.getScale()), getPosition().y - (0.018f * text.getScale()), width, height);
+		background.setPosition(text.getCurrentX() - (0.05f * text.getScale()), text.getCurrentY() - (0.018f * text.getScale()), width, height);
 		background.getColourOffset().set(isMouseOver() ? HOVER_COLOUR : DEFAULT_COLOUR);
 		background.update();
 
