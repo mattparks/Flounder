@@ -1,8 +1,10 @@
 package flounder.guis;
 
 import flounder.engine.*;
+import flounder.events.*;
 import flounder.fonts.*;
 import flounder.maths.*;
+import flounder.maths.Timer;
 import flounder.resources.*;
 import flounder.sounds.*;
 import flounder.textures.*;
@@ -13,8 +15,8 @@ import java.util.*;
 public class GuiTextButton extends GuiComponent {
 	private static final float CHANGE_TIME = 0.15f;
 	private static final float MAX_SCALE = 1.1f;
-	private static final Colour DEFAULT_COLOUR = new Colour(0.2f, 0.2f, 0.2f);
-	private static final Colour HOVER_COLOUR = new Colour(56, 182, 52, true);
+	public static final Colour DEFAULT_COLOUR = new Colour(0.2f, 0.2f, 0.2f);
+	public static final Colour HOVER_COLOUR = new Colour(56, 182, 52, true);
 
 	private Text text;
 	private GuiTexture background;
@@ -25,6 +27,24 @@ public class GuiTextButton extends GuiComponent {
 	private Sound mouseHoverOverSound;
 	private Sound mouseLeftClickSound;
 	private Sound mouseRightClickSound;
+
+	// A static method that is used to create a easy colour event.
+	static {
+		FlounderEngine.getEvents().addEvent(new IEvent() {
+			private SinWaveDriver titleColourX = new SinWaveDriver(0.0f, 1.0f, 40.0f);
+			private SinWaveDriver titleColourY = new SinWaveDriver(0.0f, 1.0f, 20.0f);
+
+			@Override
+			public boolean eventTriggered() {
+				return true;
+			}
+
+			@Override
+			public void onEvent() {
+				HOVER_COLOUR.set(titleColourX.update(FlounderEngine.getDelta()), titleColourY.update(FlounderEngine.getDelta()), 0.3f);
+			}
+		});
+	}
 
 	public GuiTextButton(Text text) {
 		this.text = text;
@@ -63,7 +83,7 @@ public class GuiTextButton extends GuiComponent {
 			mouseOver = false;
 		}
 
-		float width = 0.3f * text.getScale();
+		float width = (0.725f / FlounderEngine.getDevices().getDisplay().getAspectRatio()) * text.getScale();
 		float height = 0.096f * text.getScale();
 		background.setPosition(text.getCurrentX() - (0.05f * text.getScale()), text.getCurrentY() - (0.018f * text.getScale()), width, height);
 		background.getColourOffset().set(isMouseOver() ? HOVER_COLOUR : DEFAULT_COLOUR);
