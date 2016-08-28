@@ -6,24 +6,19 @@ public class TextBuilder {
 	public static FontType DEFAULT_TYPE = FlounderEngine.getFonts().comicSans;
 
 	private String text;
-	private boolean centred;
+	private TextAlign textAlign;
 	private float textSize;
 	private FontType font;
 
-	protected TextBuilder(String text) {
+	protected TextBuilder(String text, TextAlign textAlign) {
 		this.text = text;
-		this.centred = false;
+		this.textAlign = textAlign;
 		this.textSize = 1.0f;
 		this.font = DEFAULT_TYPE;
 	}
 
 	public Text create() {
-		return new Text(text, font, textSize, centred);
-	}
-
-	public TextBuilder centre() {
-		centred = true;
-		return this;
+		return new Text(text, font, textSize, textAlign);
 	}
 
 	public TextBuilder setFontSize(float size) {

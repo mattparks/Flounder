@@ -8,13 +8,14 @@ import flounder.visual.*;
 public class Text {
 	private float fontSize;
 	private FontType fontType;
-	private boolean centreText;
+	private TextAlign textAlign;
 	private String textString;
 	private int textMesh;
 	private int vertexCount;
 	private float lineMaxSize;
 	private int numberOfLines;
 	private float originalWidth;
+	private float originalHeight;
 
 	private String newText;
 
@@ -40,11 +41,11 @@ public class Text {
 
 	private boolean loaded;
 
-	protected Text(String text, FontType font, float fontSize, boolean centred) {
+	protected Text(String text, FontType font, float fontSize, TextAlign textAlign) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.fontType = font;
-		this.centreText = centred;
+		this.textAlign = textAlign;
 
 		this.alphaDriver = new ConstantDriver(1.0f);
 		this.scaleDriver = new ConstantDriver(1.0f);
@@ -63,8 +64,8 @@ public class Text {
 		this.loaded = false;
 	}
 
-	public static TextBuilder newText(String text) {
-		return new TextBuilder(text);
+	public static TextBuilder newText(String text, TextAlign textAlign) {
+		return new TextBuilder(text, textAlign);
 	}
 
 	public void init(float absX, float absY, float maxXLength) {
@@ -97,7 +98,7 @@ public class Text {
 	protected Vector2f getPosition() {
 		float scaleFactor = (currentScale - 1.0f) / 2.0f;
 		float xChange = scaleFactor * originalWidth;
-		float yChange = scaleFactor * (float) TextLoader.LINE_HEIGHT * fontSize * numberOfLines * 1.0f;
+		float yChange = scaleFactor * originalHeight;
 		return position.set(currentX - xChange, currentY - yChange);
 	}
 
@@ -142,11 +143,11 @@ public class Text {
 		return fontType;
 	}
 
-	public boolean isCentred() {
-		return centreText;
+	public TextAlign getTextAlign() {
+		return textAlign;
 	}
 
-	protected int getMesh() {
+	public int getMesh() {
 		return textMesh;
 	}
 
@@ -155,16 +156,20 @@ public class Text {
 		vertexCount = verticesCount;
 	}
 
-	protected int getVertexCount() {
+	public int getVertexCount() {
 		return vertexCount;
 	}
 
-	protected float getMaxLineSize() {
+	public float getMaxLineSize() {
 		return lineMaxSize;
 	}
 
 	protected void setOriginalWidth(float width) {
 		originalWidth = width;
+	}
+
+	protected void setOriginalHeight(float height) {
+		originalHeight = height;
 	}
 
 	public Colour getColour() {
@@ -179,7 +184,7 @@ public class Text {
 		this.colour.set(r, g, b);
 	}
 
-	protected Colour getBorderColour() {
+	public Colour getBorderColour() {
 		return borderColour;
 	}
 
@@ -254,6 +259,14 @@ public class Text {
 
 	public float getCurrentWidth() {
 		return originalWidth * currentScale;
+	}
+
+	public float getOriginalHeight() {
+		return originalHeight;
+	}
+
+	public float getCurrentHeight() {
+		return originalHeight * currentScale;
 	}
 
 	public float getCurrentX() {

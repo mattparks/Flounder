@@ -83,6 +83,14 @@ public class GuiTexture {
 		return alpha;
 	}
 
+	public boolean isFlipTexture() {
+		return flipTexture;
+	}
+
+	public void setFlipTexture(boolean flipTexture) {
+		this.flipTexture = flipTexture;
+	}
+
 	public int getSelectedRow() {
 		return selectedRow;
 	}
@@ -100,10 +108,6 @@ public class GuiTexture {
 		int column = selectedRow % texture.getNumberOfRows();
 		int row = selectedRow / texture.getNumberOfRows();
 		return textureOffset.set((float) column / texture.getNumberOfRows(), (float) row / texture.getNumberOfRows());
-	}
-
-	public boolean isFlipTexture() {
-		return flipTexture;
 	}
 
 	@Override

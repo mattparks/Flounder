@@ -72,14 +72,22 @@ public class TextLoader {
 
 	private void loadStructureToOpenGL(Text text, List<Line> lines) {
 		setTextSettings(text, lines);
-		double cursorX = 0f;
-		double cursorY = 0f;
+		double cursorX = 0.0;
+		double cursorY = 0.0;
 		List<Float> vertices = new ArrayList<>();
 		List<Float> textureCoords = new ArrayList<>();
 
 		for (Line line : lines) {
-			if (text.isCentred()) {
-				cursorX = (line.getMaxLength() - line.getLineLength()) / 2;
+			switch(text.getTextAlign()) {
+				case LEFT:
+					cursorX = 0.0;
+					break;
+				case CENTRE:
+					cursorX = (line.getMaxLength() - line.getLineLength()) / 2.0;
+					break;
+				case RIGHT:
+					cursorX = 0.0;
+					break;
 			}
 
 			for (Word word : line.getWords()) {
@@ -92,7 +100,7 @@ public class TextLoader {
 				cursorX += metaData.getSpaceWidth() * text.getFontSize();
 			}
 
-			cursorX = 0;
+			cursorX = 0.0;
 			cursorY += LINE_HEIGHT * text.getFontSize();
 		}
 
@@ -120,11 +128,13 @@ public class TextLoader {
 	private void setTextSettings(Text text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 
-		if (text.isCentred() || lines.size() > 1) {
+		if (text.getTextAlign().equals(TextAlign.CENTRE) || lines.size() > 1.0f) {
 			text.setOriginalWidth((float) lines.get(0).getMaxLength());
 		} else {
 			text.setOriginalWidth((float) lines.get(0).getLineLength());
 		}
+
+		text.setOriginalHeight((float) TextLoader.LINE_HEIGHT * text.getFontSize() * lines.size() * 1.0f);
 	}
 
 	private void addVerticesForCharacter(double cursorX, double cursorY, Character character, double fontSize, List<Float> vertices) {

@@ -4,7 +4,6 @@ import flounder.engine.*;
 import flounder.events.*;
 import flounder.fonts.*;
 import flounder.maths.*;
-import flounder.maths.Timer;
 import flounder.resources.*;
 import flounder.sounds.*;
 import flounder.textures.*;
@@ -18,11 +17,16 @@ public class GuiTextButton extends GuiComponent {
 	public static final Colour DEFAULT_COLOUR = new Colour(0.2f, 0.2f, 0.2f);
 	public static final Colour HOVER_COLOUR = new Colour(56, 182, 52, true);
 
+	public static final float BACKGROUND_PADDING = 0.018f;
+
 	private Text text;
 	private GuiTexture background;
 	private boolean mouseOver;
 	private ListenerBasic guiListenerLeft;
 	private ListenerBasic guiListenerRight;
+
+	private TextAlign textAlign;
+	private float leftMarginX;
 
 	private Sound mouseHoverOverSound;
 	private Sound mouseLeftClickSound;
@@ -46,12 +50,15 @@ public class GuiTextButton extends GuiComponent {
 		});
 	}
 
-	public GuiTextButton(Text text) {
+	public GuiTextButton(Text text, TextAlign textAlign, float leftMarginX) {
 		this.text = text;
 		this.background = new GuiTexture(Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "button.png")).clampEdges().create());
 		this.mouseOver = false;
 
-		addText(text, 0.0f, 0.0f, 1.0f);
+		this.textAlign = textAlign;
+		this.leftMarginX = leftMarginX;
+
+		addText(text, leftMarginX, 0.0f, 1.0f);
 	}
 
 	public void setSounds(Sound mouseHoverOverSound, Sound mouseLeftClickSound, Sound mouseRightClickSound) {
@@ -74,6 +81,31 @@ public class GuiTextButton extends GuiComponent {
 
 	@Override
 	protected void updateSelf() {
+		// Background image updates.
+		float width = ((text.getMaxLineSize() * 2.0f) / FlounderEngine.getDevices().getDisplay().getAspectRatio()) * text.getScale();
+		float height = text.getCurrentHeight();
+		float marginX;
+
+		switch (textAlign) {
+			case LEFT:
+				marginX = leftMarginX;
+				background.getPosition().x = text.getCurrentX() - (marginX * text.getScale());
+				background.getPosition().y = text.getCurrentY() - (BACKGROUND_PADDING * text.getScale());
+				background.setFlipTexture(false);
+				background.getScale().set(width, height + (BACKGROUND_PADDING * 2.0f));
+				break;
+			case CENTRE:
+				// TODO
+				break;
+			case RIGHT:
+				// TODO
+				break;
+		}
+
+		background.getColourOffset().set(isMouseOver() ? HOVER_COLOUR : DEFAULT_COLOUR);
+		background.update();
+
+		// Mouse over updates.
 		if (isMouseOver() && !mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), MAX_SCALE, CHANGE_TIME));
 			mouseOver = true;
@@ -83,12 +115,7 @@ public class GuiTextButton extends GuiComponent {
 			mouseOver = false;
 		}
 
-		float width = (0.725f / FlounderEngine.getDevices().getDisplay().getAspectRatio()) * text.getScale();
-		float height = 0.096f * text.getScale();
-		background.setPosition(text.getCurrentX() - (0.05f * text.getScale()), text.getCurrentY() - (0.018f * text.getScale()), width, height);
-		background.getColourOffset().set(isMouseOver() ? HOVER_COLOUR : DEFAULT_COLOUR);
-		background.update();
-
+		// Click updates.
 		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasLeftClick() && guiListenerLeft != null) {
 			FlounderEngine.getDevices().getSound().playSystemSound(mouseLeftClickSound);
 			guiListenerLeft.eventOccurred();
