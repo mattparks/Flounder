@@ -84,23 +84,27 @@ public class GuiTextButton extends GuiComponent {
 		// Background image updates.
 		float width = ((text.getMaxLineSize() * 2.0f) / FlounderEngine.getDevices().getDisplay().getAspectRatio()) * text.getScale();
 		float height = text.getCurrentHeight();
-		float marginX;
+		float positionX;
 
 		switch (textAlign) {
 			case LEFT:
-				marginX = leftMarginX;
-				background.getPosition().x = text.getCurrentX() - (marginX * text.getScale());
-				background.getPosition().y = text.getCurrentY() - (BACKGROUND_PADDING * text.getScale());
-				background.setFlipTexture(false);
-				background.getScale().set(width, height + (BACKGROUND_PADDING * 2.0f));
+				positionX = text.getCurrentX() - (leftMarginX * text.getScale());
 				break;
 			case CENTRE:
-				// TODO
+				positionX = text.getCurrentX() - (leftMarginX * text.getScale());
 				break;
 			case RIGHT:
-				// TODO
+				positionX = text.getCurrentX() - width;
+				break;
+			default:
+				positionX = 0.0f;
 				break;
 		}
+
+		background.getPosition().x = positionX;
+		background.getPosition().y = text.getCurrentY() - (BACKGROUND_PADDING * text.getScale());
+		background.setFlipTexture(textAlign.equals(TextAlign.RIGHT));
+		background.getScale().set(width, height + ((BACKGROUND_PADDING * 2.0f) / text.getScale()));
 
 		background.getColourOffset().set(isMouseOver() ? HOVER_COLOUR : DEFAULT_COLOUR);
 		background.update();

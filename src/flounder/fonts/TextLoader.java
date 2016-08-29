@@ -86,7 +86,7 @@ public class TextLoader {
 					cursorX = (line.getMaxLength() - line.getLineLength()) / 2.0;
 					break;
 				case RIGHT:
-					cursorX = 0.0;
+					cursorX = line.getMaxLength() - line.getLineLength();
 					break;
 			}
 

@@ -93,6 +93,15 @@ public class Text {
 		currentAlpha = alphaDriver.update(delta);
 		glowSize = glowDriver.update(delta);
 		borderSize = borderDriver.update(delta);
+
+		switch(textAlign) {
+			case LEFT:
+				break;
+			case CENTRE:
+				break;
+			case RIGHT:
+				break;
+		}
 	}
 
 	protected Vector2f getPosition() {
