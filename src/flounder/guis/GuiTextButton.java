@@ -14,6 +14,7 @@ import java.util.*;
 public class GuiTextButton extends GuiComponent {
 	private static final float CHANGE_TIME = 0.15f;
 	private static final float MAX_SCALE = 1.1f;
+	private static final float WIDTH_MULTIPLIER = 1.5f;
 	public static final Colour DEFAULT_COLOUR = new Colour(0.2f, 0.2f, 0.2f);
 	public static final Colour HOVER_COLOUR = new Colour(56, 182, 52, true);
 
@@ -58,7 +59,17 @@ public class GuiTextButton extends GuiComponent {
 		this.textAlign = textAlign;
 		this.leftMarginX = leftMarginX;
 
-		addText(text, leftMarginX, 0.0f, 1.0f);
+		switch (textAlign) {
+			case LEFT:
+				addText(text, leftMarginX, 0.0f, 1.0f);
+				break;
+			case CENTRE:
+				addText(text, leftMarginX, 0.0f, 1.0f);
+				break;
+			case RIGHT:
+				addText(text, 1.0f - leftMarginX, 0.0f, 1.0f);
+				break;
+		}
 	}
 
 	public void setSounds(Sound mouseHoverOverSound, Sound mouseLeftClickSound, Sound mouseRightClickSound) {
@@ -82,19 +93,19 @@ public class GuiTextButton extends GuiComponent {
 	@Override
 	protected void updateSelf() {
 		// Background image updates.
-		float width = ((text.getMaxLineSize() * 2.0f) / FlounderEngine.getDevices().getDisplay().getAspectRatio()) * text.getScale();
+		float width = ((text.getMaxLineSize() * WIDTH_MULTIPLIER) / FlounderEngine.getDevices().getDisplay().getAspectRatio()) * text.getScale();
 		float height = text.getCurrentHeight();
 		float positionX;
 
 		switch (textAlign) {
 			case LEFT:
-				positionX = text.getCurrentX() - (leftMarginX * text.getScale());
+				positionX = super.getPosition().x - (leftMarginX * text.getScale());
 				break;
 			case CENTRE:
-				positionX = text.getCurrentX() - (leftMarginX * text.getScale());
+				positionX = super.getPosition().x - (leftMarginX * text.getScale());
 				break;
 			case RIGHT:
-				positionX = text.getCurrentX() - width;
+				positionX = super.getPosition().x + (leftMarginX * text.getScale());
 				break;
 			default:
 				positionX = 0.0f;
@@ -102,7 +113,7 @@ public class GuiTextButton extends GuiComponent {
 		}
 
 		background.getPosition().x = positionX;
-		background.getPosition().y = text.getCurrentY() - (BACKGROUND_PADDING * text.getScale());
+		background.getPosition().y = super.getPosition().y - (BACKGROUND_PADDING * text.getScale());
 		background.setFlipTexture(textAlign.equals(TextAlign.RIGHT));
 		background.getScale().set(width, height + ((BACKGROUND_PADDING * 2.0f) / text.getScale()));
 

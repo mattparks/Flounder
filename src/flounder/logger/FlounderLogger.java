@@ -26,7 +26,6 @@ public class FlounderLogger implements IModule {
 
 	@Override
 	public void init() {
-		log("Flounder Engine Version: " + FlounderEngine.getVersion().version);
 	}
 
 	@Override

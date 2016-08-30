@@ -3,6 +3,7 @@ package flounder.devices;
 import flounder.engine.*;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Manages the all GLFW devices in a separate thread.
@@ -40,6 +41,22 @@ public class FlounderDevices implements IModule {
 		keyboard.init();
 		mouse.init();
 		sound.init();
+
+
+		FlounderEngine.getLogger().log("===== This is not an error message, it is a system log. =====");
+		FlounderEngine.getLogger().log("Flounder Engine Version: " + FlounderEngine.getVersion().version);
+
+		FlounderEngine.getLogger().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));    /* Total number of processors or cores available to the JVM */
+
+		FlounderEngine.getLogger().log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
+
+		FlounderEngine.getLogger().log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
+
+		long maxMemory = Runtime.getRuntime().maxMemory();
+		FlounderEngine.getLogger().log("Flounder Maximum Memory (bytes): " + (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory));
+
+		FlounderEngine.getLogger().log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
+		FlounderEngine.getLogger().log("===== End of system log. =====\n");
 	}
 
 	@Override

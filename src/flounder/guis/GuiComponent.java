@@ -236,7 +236,7 @@ public abstract class GuiComponent {
 	 * @return {@code true} if the mouse cursor is currently over this component.
 	 */
 	protected boolean isMouseOver() {
-		float positionX = position.x / FlounderEngine.getDevices().getDisplay().getAspectRatio();
+		float positionX = position.x; // / FlounderEngine.getDevices().getDisplay().getAspectRatio();
 		float positionY = position.y;
 
 		if (FlounderEngine.getDevices().getMouse().isDisplaySelected() && FlounderEngine.getDevices().getDisplay().isFocused()) {

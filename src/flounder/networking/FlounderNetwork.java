@@ -59,9 +59,9 @@ public class FlounderNetwork implements IModule {
 	 * Closes the server.
 	 */
 	public void closeServer() {
-		FlounderEngine.getLogger().log("Closing server!");
-
 		if (socketServer != null) {
+			FlounderEngine.getLogger().log("Closing server!");
+
 			new PacketDisconnect("server").writeData(socketServer);
 			socketServer.dispose();
 			socketServer = null;
@@ -72,9 +72,9 @@ public class FlounderNetwork implements IModule {
 	 * Closes the client.
 	 */
 	public void closeClient() {
-		FlounderEngine.getLogger().log("Closing client!");
-
 		if (socketClient != null) {
+			FlounderEngine.getLogger().log("Closing client!");
+
 			new PacketDisconnect(username).writeData(socketClient);
 			socketClient.dispose();
 			socketClient = null;
