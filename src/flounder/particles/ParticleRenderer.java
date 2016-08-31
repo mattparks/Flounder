@@ -17,8 +17,8 @@ import static org.lwjgl.opengl.ARBDrawInstanced.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class ParticleRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile("flounder/particles", "particleVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/particles", "particleFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "particles", "particleVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "particles", "particleFragment.glsl");
 
 	private static final float[] VERTICES = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
 	private static final int MAX_INSTANCES = 10000;

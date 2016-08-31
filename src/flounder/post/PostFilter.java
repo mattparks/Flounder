@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.*;
  * Represents a post effect shader and on application saves the result into a FBO.
  */
 public abstract class PostFilter {
-	public static final MyFile POST_LOC = new MyFile("flounder/post/filters");
+	public static final MyFile POST_LOC = new MyFile(ShaderProgram.SHADERS_LOC, "filters");
 	public static final MyFile VERTEX_LOCATION = new MyFile(POST_LOC, "defaultVertex.glsl");
 
 	private static float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
