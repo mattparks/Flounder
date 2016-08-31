@@ -17,8 +17,8 @@ import static org.lwjgl.opengl.GL11.*;
  * A renderer that is used to render AABB's.
  */
 public class AABBRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile("flounder/physics/renderer", "aabbVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/physics/renderer", "aabbFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "aabbs", "aabbVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "aabbs", "aabbFragment.glsl");
 
 	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
@@ -37,7 +37,7 @@ public class AABBRenderer extends IRenderer {
 	 * Creates a new AABB renderer.
 	 */
 	public AABBRenderer() {
-		shader = new ShaderProgram("aabb", VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = new ShaderProgram("aabbs", VERTEX_SHADER, FRAGMENT_SHADER);
 		lastWireframe = false;
 
 		aabbModel = Model.newModel(new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj")).createInBackground();
@@ -61,7 +61,7 @@ public class AABBRenderer extends IRenderer {
 	@Override
 	public void profile() {
 		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("AABB", "Render Time", super.getRenderTimeMs());
+			FlounderEngine.getProfiler().add("AABBs", "Render Time", super.getRenderTimeMs());
 		}
 	}
 

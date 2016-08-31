@@ -16,6 +16,8 @@ import static org.lwjgl.opengl.GL30.*;
  * Represents a user-defined program designed to run on the graphics processor and manages loading, starting, stopping and cleaning uo.
  */
 public class ShaderProgram {
+	public static final MyFile SHADERS_LOC = new MyFile(MyFile.RES_FOLDER, "shaders");
+
 	private List<Pair<String, String>> conatantValues;
 	private List<String> layoutLocations;
 	private List<String> layoutBindings;
@@ -106,7 +108,7 @@ public class ShaderProgram {
 		if (line.contains("#include")) {
 			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
 			included = included.substring("#include".length(), included.length());
-			return loadFromFile(new MyFile(included), ShaderTypes.INCLUDED);
+			return loadFromFile(new MyFile(ShaderProgram.SHADERS_LOC, included), ShaderTypes.INCLUDED);
 		} else if (line.replaceAll("\\s+", "").startsWith("layout") && shaderType != ShaderTypes.INCLUDED) {
 			if (line.contains("location")) {
 				layoutLocations.add(line);

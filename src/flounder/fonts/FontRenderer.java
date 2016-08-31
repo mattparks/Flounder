@@ -14,8 +14,8 @@ import static org.lwjgl.opengl.GL11.*;
  * A renderer capable of rendering fonts.
  */
 public class FontRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile("flounder/fonts", "fontVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/fonts", "fontFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "fonts", "fontVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "fonts", "fontFragment.glsl");
 
 	private ShaderProgram shader;
 

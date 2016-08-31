@@ -14,8 +14,8 @@ public class GuiRenderer extends IRenderer {
 		GUI, CURSOR
 	}
 
-	private static final MyFile VERTEX_SHADER = new MyFile("flounder/guis", "guiVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile("flounder/guis", "guiFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "guis", "guiVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "guis", "guiFragment.glsl");
 
 	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
 

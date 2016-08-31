@@ -1,5 +1,6 @@
 package flounder.guis;
 
+import flounder.devices.*;
 import flounder.engine.*;
 import flounder.events.*;
 import flounder.fonts.*;
@@ -12,26 +13,28 @@ import flounder.visual.*;
 import java.util.*;
 
 public class GuiTextButton extends GuiComponent {
-	private static final float CHANGE_TIME = 0.15f;
-	private static final float MAX_SCALE = 1.1f;
-	private static final float WIDTH_MULTIPLIER = 1.5f;
+	public static final float CHANGE_TIME = 0.15f;
+	public static final float MAX_SCALE = 1.1f;
+	public static final float WIDTH_MULTIPLIER = 1.5f;
+
 	public static final Colour DEFAULT_COLOUR = new Colour(0.2f, 0.2f, 0.2f);
 	public static final Colour HOVER_COLOUR = new Colour(56, 182, 52, true);
+
+	public static final Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button1.wav"), 0.8f);
+	public static final Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button2.wav"), 0.8f);
+	public static final Sound SOUND_MOUSE_RIGHT = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button3.wav"), 0.8f);
 
 	public static final float BACKGROUND_PADDING = 0.018f;
 
 	private Text text;
 	private GuiTexture background;
 	private boolean mouseOver;
+
 	private ListenerBasic guiListenerLeft;
 	private ListenerBasic guiListenerRight;
 
 	private TextAlign textAlign;
 	private float leftMarginX;
-
-	private Sound mouseHoverOverSound;
-	private Sound mouseLeftClickSound;
-	private Sound mouseRightClickSound;
 
 	// A static method that is used to create a easy colour event.
 	static {
@@ -70,12 +73,6 @@ public class GuiTextButton extends GuiComponent {
 				addText(text, 1.0f - leftMarginX, 0.0f, 1.0f);
 				break;
 		}
-	}
-
-	public void setSounds(Sound mouseHoverOverSound, Sound mouseLeftClickSound, Sound mouseRightClickSound) {
-		this.mouseHoverOverSound = mouseHoverOverSound;
-		this.mouseLeftClickSound = mouseLeftClickSound;
-		this.mouseRightClickSound = mouseRightClickSound;
 	}
 
 	public Text getText() {
@@ -124,22 +121,30 @@ public class GuiTextButton extends GuiComponent {
 		if (isMouseOver() && !mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), MAX_SCALE, CHANGE_TIME));
 			mouseOver = true;
-			FlounderEngine.getDevices().getSound().playSystemSound(mouseHoverOverSound);
+			FlounderEngine.getDevices().getSound().playSystemSound(GuiTextButton.SOUND_MOUSE_HOVER);
 		} else if (!isMouseOver() && mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), 1.0f, CHANGE_TIME));
 			mouseOver = false;
 		}
 
 		// Click updates.
-		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasLeftClick() && guiListenerLeft != null) {
-			FlounderEngine.getDevices().getSound().playSystemSound(mouseLeftClickSound);
-			guiListenerLeft.eventOccurred();
+		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasLeftClick()) {
+			FlounderEngine.getDevices().getSound().playSystemSound(GuiTextButton.SOUND_MOUSE_LEFT);
+
+			if (guiListenerLeft != null) {
+				guiListenerLeft.eventOccurred();
+			}
+
 			FlounderEngine.getGuis().getSelector().cancelWasEvent();
 		}
 
-		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasRightClick() && guiListenerRight != null) {
-			FlounderEngine.getDevices().getSound().playSystemSound(mouseRightClickSound);
-			guiListenerRight.eventOccurred();
+		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasRightClick()) {
+			FlounderEngine.getDevices().getSound().playSystemSound(GuiTextButton.SOUND_MOUSE_RIGHT);
+
+			if (guiListenerRight != null) {
+				guiListenerRight.eventOccurred();
+			}
+
 			FlounderEngine.getGuis().getSelector().cancelWasEvent();
 		}
 	}

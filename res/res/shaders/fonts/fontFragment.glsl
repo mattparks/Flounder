@@ -1,6 +1,6 @@
 #version 130
 
-#include "flounder/shaders/maths.glsl"
+#include "maths.glsl"
 
 varying vec2 pass_textureCoords;
 
