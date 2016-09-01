@@ -17,8 +17,8 @@ import static org.lwjgl.opengl.ARBDrawInstanced.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class ParticleRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "particles", "particleVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "particles", "particleFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "particles", "particleVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "particles", "particleFragment.glsl");
 
 	private static final float[] VERTICES = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
 	private static final int MAX_INSTANCES = 10000;
@@ -28,12 +28,12 @@ public class ParticleRenderer extends IRenderer {
 	private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH);
 	private static final int VBO = FlounderEngine.getLoader().createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
 
-	private ShaderProgram shader;
+	private Shader shader;
 	private int pointer;
 	private int rendered;
 
 	public ParticleRenderer() {
-		shader = new ShaderProgram("particle", VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = Shader.newShader("particles").setVertex(VERTEX_SHADER).setFragment(FRAGMENT_SHADER).createInSecondThread();
 		pointer = 0;
 		rendered = 0;
 
@@ -48,7 +48,7 @@ public class ParticleRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
-		if (FlounderEngine.getParticles().getParticles().size() < 1) {
+		if (!shader.isLoaded() || FlounderEngine.getParticles().getParticles().size() < 1) {
 			return;
 		}
 
@@ -73,10 +73,11 @@ public class ParticleRenderer extends IRenderer {
 			try {
 				FlounderEngine.getLoader().updateVBO(VBO, vboData, BUFFER);
 			} catch (BufferOverflowException e) {
-				FlounderEngine.getLogger().error("Particle overflow: " + rendered);
+				FlounderEngine.getLogger().error("Particles overflow: " + rendered);
 				FlounderEngine.getLogger().exception(e);
 				break;
 			}
+
 			glDrawArraysInstancedARB(GL_TRIANGLE_STRIP, 0, VERTICES.length, list.size());
 			unbindTexturedModel();
 		}

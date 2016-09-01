@@ -19,17 +19,14 @@ public class FlounderMaterials implements IModule {
 
 	@Override
 	public void init() {
-
 	}
 
 	@Override
 	public void update() {
-
 	}
 
 	@Override
 	public void profile() {
-
 	}
 
 	/**

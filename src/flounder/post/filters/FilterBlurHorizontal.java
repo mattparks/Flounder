@@ -13,14 +13,14 @@ public class FilterBlurHorizontal extends PostFilter {
 	private float sizeScalar;
 
 	public FilterBlurHorizontal(float sizeScalar) {
-		super(new ShaderProgram("filterBlurHorizontal", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")), FBO.newFBO(sizeScalar).create());
+		super(Shader.newShader("filterBlurHorizontal").setVertex(VERTEX_LOCATION).setFragment(new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")).createInSecondThread(), FBO.newFBO(sizeScalar).create());
 		fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
 		init((int) (FlounderEngine.getDevices().getDisplay().getWidth() * sizeScalar));
 	}
 
 	public FilterBlurHorizontal(int widthValue, int heightValue) {
-		super(new ShaderProgram("filterBlurHorizontal", VERTEX_LOCATION, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")), FBO.newFBO(widthValue, heightValue).create());
+		super(Shader.newShader("filterBlurHorizontal").setVertex(VERTEX_LOCATION).setFragment(new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl")).createInSecondThread(), FBO.newFBO(widthValue, heightValue).create());
 		fitToDisplay = false;
 		this.sizeScalar = 1.0f;
 		init(widthValue);

@@ -17,8 +17,8 @@ import static org.lwjgl.opengl.GL11.*;
  * A renderer that is used to render AABB's.
  */
 public class AABBRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "aabbs", "aabbVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "aabbs", "aabbFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "aabbs", "aabbVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "aabbs", "aabbFragment.glsl");
 
 	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
 	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
@@ -29,7 +29,7 @@ public class AABBRenderer extends IRenderer {
 
 	private Model aabbModel;
 
-	private ShaderProgram shader;
+	private Shader shader;
 
 	private boolean lastWireframe;
 
@@ -37,7 +37,7 @@ public class AABBRenderer extends IRenderer {
 	 * Creates a new AABB renderer.
 	 */
 	public AABBRenderer() {
-		shader = new ShaderProgram("aabbs", VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = Shader.newShader("aabbs").setVertex(VERTEX_SHADER).setFragment(FRAGMENT_SHADER).createInSecondThread();
 		lastWireframe = false;
 
 		aabbModel = Model.newModel(new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj")).createInBackground();
@@ -45,7 +45,7 @@ public class AABBRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!FlounderEngine.getAABBs().renders()) {
+		if (!shader.isLoaded() || !FlounderEngine.getAABBs().renders()) {
 			return;
 		}
 

@@ -12,24 +12,24 @@ import static org.lwjgl.opengl.GL11.*;
  * Represents a post effect shader and on application saves the result into a FBO.
  */
 public abstract class PostFilter {
-	public static final MyFile POST_LOC = new MyFile(ShaderProgram.SHADERS_LOC, "filters");
+	public static final MyFile POST_LOC = new MyFile(Shader.SHADERS_LOC, "filters");
 	public static final MyFile VERTEX_LOCATION = new MyFile(POST_LOC, "defaultVertex.glsl");
 
 	private static float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
 	private static int VAO = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
 
-	public ShaderProgram shader;
+	public Shader shader;
 	public FBO fbo;
 
 	public PostFilter(String filterName, MyFile fragmentShader) {
-		this(new ShaderProgram(filterName, VERTEX_LOCATION, fragmentShader), FBO.newFBO(1.0f).create());
+		this(Shader.newShader(filterName).setVertex(VERTEX_LOCATION).setFragment(fragmentShader).createInSecondThread(), FBO.newFBO(1.0f).create());
 	}
 
-	public PostFilter(ShaderProgram shader) {
+	public PostFilter(Shader shader) {
 		this(shader, FBO.newFBO(1.0f).create());
 	}
 
-	public PostFilter(ShaderProgram shader, FBO fbo) {
+	public PostFilter(Shader shader, FBO fbo) {
 		this.shader = shader;
 		this.fbo = fbo;
 	}
@@ -40,6 +40,10 @@ public abstract class PostFilter {
 	 * @param textures A list of textures in indexed order to be bound for the shader program.
 	 */
 	public void applyFilter(int... textures) {
+		if (!shader.isLoaded()) {
+			return;
+		}
+
 		boolean lastWireframe = OpenGlUtils.isInWireframe();
 
 		fbo.bindFrameBuffer();

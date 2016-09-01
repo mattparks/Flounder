@@ -57,7 +57,7 @@ public class ModelBuilder {
 	}
 
 	/**
-	 * Creates a new model and sends it to be loadedModels by the loader thread.
+	 * Creates a new model and sends it to be loaded by the loader thread.
 	 *
 	 * @return The model.
 	 */

@@ -1,0 +1,300 @@
+package flounder.shaders;
+
+import flounder.engine.*;
+import flounder.helpers.*;
+import flounder.resources.*;
+
+import java.io.*;
+import java.lang.reflect.*;
+import java.util.*;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
+
+/**
+ * Class capable of loading OBJ files into Shaders.
+ */
+public class FlounderShaders implements IModule {
+	public FlounderShaders() {
+	}
+
+	@Override
+	public void init() {
+	}
+
+	@Override
+	public void update() {
+	}
+
+	@Override
+	public void profile() {
+	}
+
+	public void loadShaderToOpenGL(Shader shader, ShaderData data, ShaderBuilder builder) {
+		int programID = glCreateProgram();
+		int shaderVertexID = -1;
+		int shaderGeometryID = -1;
+		int shaderFragmentID = -1;
+		shader.setShaderName(builder.getShaderName());
+
+		if (builder.getVertex() != null) {
+			shader.setFileVertex(builder.getVertex());
+			shaderVertexID = FlounderEngine.getShaders().loadShaderToOpenGL(data.builderVertex, builder.getShaderName(), ShaderData.ShaderTypes.VERTEX);
+		}
+
+		if (builder.getGeometry() != null) {
+			shader.setFileVertex(builder.getGeometry());
+			shaderGeometryID = FlounderEngine.getShaders().loadShaderToOpenGL(data.builderGeometry, builder.getShaderName(), ShaderData.ShaderTypes.GEOMETRY);
+		}
+
+		if (builder.getFragment() != null) {
+			shader.setFileVertex(builder.getFragment());
+			shaderFragmentID = FlounderEngine.getShaders().loadShaderToOpenGL(data.builderFragment, builder.getShaderName(), ShaderData.ShaderTypes.FRAGMENT);
+		}
+
+		attachShaders(programID, shaderVertexID, shaderGeometryID, shaderFragmentID);
+		loadLocations(programID, data);
+		glLinkProgram(programID);
+		detachShaders(programID, shaderVertexID, shaderGeometryID, shaderFragmentID);
+		deleteShaders(shaderVertexID, shaderGeometryID, shaderFragmentID);
+		shader.loadData(createUniforms(programID, data), programID);
+		data.destroy();
+	}
+
+	private void attachShaders(int programID, int shaderVertexID, int shaderGeometryID, int shaderFragmentID) {
+		if (shaderVertexID != -1) {
+			glAttachShader(programID, shaderVertexID);
+		}
+
+		if (shaderGeometryID != -1) {
+			glAttachShader(programID, shaderGeometryID);
+		}
+
+		if (shaderFragmentID != -1) {
+			glAttachShader(programID, shaderFragmentID);
+		}
+	}
+
+	private void detachShaders(int programID, int shaderVertexID, int shaderGeometryID, int shaderFragmentID) {
+		if (shaderVertexID != -1) {
+			glDetachShader(programID, shaderVertexID);
+		}
+
+		if (shaderGeometryID != -1) {
+			glDetachShader(programID, shaderGeometryID);
+		}
+
+		if (shaderFragmentID != -1) {
+			glDetachShader(programID, shaderFragmentID);
+		}
+	}
+
+	private void deleteShaders(int shaderVertexID, int shaderGeometryID, int shaderFragmentID) {
+		if (shaderVertexID != -1) {
+			glDeleteShader(shaderVertexID);
+		}
+
+		if (shaderGeometryID != -1) {
+			glDeleteShader(shaderGeometryID);
+		}
+
+		if (shaderFragmentID != -1) {
+			glDeleteShader(shaderFragmentID);
+		}
+	}
+
+	public int loadShaderToOpenGL(StringBuilder source, String shaderName, ShaderData.ShaderTypes shaderTypes) {
+		int shaderID = glCreateShader(shaderTypes.getType());
+		glShaderSource(shaderID, source);
+		glCompileShader(shaderID);
+
+		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
+			FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
+			FlounderEngine.getLogger().error("Could not compile shader " + shaderName);
+			System.exit(-1);
+		}
+
+		return shaderID;
+	}
+
+	public ShaderData loadShader(ShaderBuilder builder) {
+		ShaderData data = new ShaderData();
+
+		if (builder.getVertex() != null) {
+			data.builderVertex = loadFromFile(builder.getVertex(), data, ShaderData.ShaderTypes.VERTEX);
+		} else if (builder.getStringVertex() != null) {
+			data.builderVertex = loadFromString(builder.getStringVertex(), data, ShaderData.ShaderTypes.VERTEX);
+		}
+
+		if (builder.getGeometry() != null) {
+			data.builderGeometry = loadFromFile(builder.getGeometry(), data, ShaderData.ShaderTypes.GEOMETRY);
+		} else if (builder.getStringGeometry() != null) {
+			data.builderGeometry = loadFromString(builder.getStringGeometry(), data, ShaderData.ShaderTypes.GEOMETRY);
+		}
+
+		if (builder.getFragment() != null) {
+			data.builderFragment = loadFromFile(builder.getFragment(), data, ShaderData.ShaderTypes.FRAGMENT);
+		} else if (builder.getStringFragment() != null) {
+			data.builderFragment = loadFromString(builder.getStringFragment(), data, ShaderData.ShaderTypes.FRAGMENT);
+		}
+
+		return data;
+	}
+
+	private StringBuilder loadFromFile(MyFile file, ShaderData data, ShaderData.ShaderTypes shaderType) {
+		StringBuilder shaderSource = new StringBuilder();
+
+		if (file != null) {
+			try {
+				BufferedReader reader = file.getReader();
+				String line;
+
+				while ((line = reader.readLine()) != null) {
+					shaderSource.append(processShaderLine(line.trim(), data, shaderType) + "\n");
+				}
+			} catch (Exception e) {
+				FlounderEngine.getLogger().error("Could not read file " + file.getName());
+				FlounderEngine.getLogger().exception(e);
+				System.exit(-1);
+			}
+		}
+
+		return shaderSource;
+	}
+
+	private StringBuilder loadFromString(String string, ShaderData data, ShaderData.ShaderTypes shaderType) {
+		StringBuilder shaderSource = new StringBuilder();
+
+		for (String line : string.split("\n")) {
+			shaderSource.append(processShaderLine(line.trim(), data, shaderType) + "\n");
+		}
+
+		return shaderSource;
+	}
+
+	private StringBuilder processShaderLine(String line, ShaderData data, ShaderData.ShaderTypes shaderType) {
+		if (line.contains("varying")) {
+			if (shaderType == ShaderData.ShaderTypes.VERTEX) {
+				return new StringBuilder().append(line.replace("varying", "out"));
+			} else {
+				return new StringBuilder().append(line.replace("varying", "in"));
+			}
+		}
+
+		if (line.contains("#include")) {
+			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
+			included = included.substring("#include".length(), included.length());
+			return loadFromFile(new MyFile(Shader.SHADERS_LOC, included), data, ShaderData.ShaderTypes.INCLUDED);
+		} else if (line.replaceAll("\\s+", "").startsWith("layout") && shaderType != ShaderData.ShaderTypes.INCLUDED) {
+			if (line.contains("location")) {
+				data.layoutLocations.add(line);
+				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
+			} else if (line.contains("binding")) {
+				data.layoutBindings.add(line);
+				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));
+			}
+		}
+
+		if (line.startsWith("const")) {
+			String uniformVarName = line.substring("const".length() + 1, line.length() - 1);
+			uniformVarName = uniformVarName.substring(findCharPos(uniformVarName, ' '), uniformVarName.length()).trim();
+			data.conatantValues.add(new Pair<>(uniformVarName.split("=")[0].trim(), uniformVarName.split("=")[1].trim()));
+		}
+
+		if (line.startsWith("uniform")) {
+			String uniformVarName = line.substring("uniform".length() + 1, line.length() - 1);
+			String uniform = uniformVarName.split(" ")[0].toUpperCase();
+			String name = uniformVarName.split(" ")[1];
+
+			// Array Uniforms.
+			if (name.contains("[") && name.contains("]")) {
+				String nameArray = name.substring(0, findCharPos(name, '[')).trim();
+				String arraySize = name.substring(findCharPos(name, '[') + 1, name.length() - 1).trim();
+				int size = 0;
+
+				if (ByteWork.isInteger(arraySize)) {
+					size = Integer.parseInt(arraySize);
+				} else {
+					for (Pair<String, String> pair : data.conatantValues) {
+						if (pair.getFirst().equals(arraySize)) {
+							size = Integer.parseInt(pair.getSecond());
+							break;
+						}
+					}
+				}
+
+				for (int i = 0; i < size; i++) {
+					data.shaderUniforms.add(new Pair<>(ShaderData.Uniforms.valueOf(uniform), nameArray + "[" + i + "]"));
+				}
+			} else {
+				// Normal Uniforms.
+				data.shaderUniforms.add(new Pair<>(ShaderData.Uniforms.valueOf(uniform), name));
+			}
+		}
+
+		return new StringBuilder().append(line);
+	}
+
+	private void loadLocations(int programID, ShaderData data) {
+		for (String l : data.layoutLocations) {
+			String locationName = l.substring(l.lastIndexOf(" ") + 1, l.length() - 1);
+			String type = l.substring(0, l.lastIndexOf(" ") + 1);
+			type = type.substring(l.lastIndexOf(")") + 1, type.length());
+			int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
+
+			if (type.contains("in")) {
+				glBindAttribLocation(programID, locationValue, locationName);
+			} else if (type.contains("out")) {
+				glBindFragDataLocation(programID, locationValue, locationName);
+			} else {
+				FlounderEngine.getLogger().error("Could not find location type of: " + type);
+			}
+		}
+	}
+
+	private Map<String, Uniform> createUniforms(int programID, ShaderData data) {
+		Map<String, Uniform> uniforms = new HashMap<>();
+
+		for (Pair<ShaderData.Uniforms, String> pair : data.shaderUniforms) {
+			String uniformClass = pair.getFirst().getUniformClass();
+			Uniform uniformObject = null;
+
+			// Loads the uniform from the class name.
+			try {
+				Class<?> clazz = Class.forName(uniformClass);
+				Constructor<?> ctor = clazz.getConstructor(String.class);
+				Object object = ctor.newInstance(new Object[]{pair.getSecond()});
+				uniformObject = (Uniform) object;
+			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+				FlounderEngine.getLogger().error("Shader could not create the uniform type of " + uniformClass);
+				e.printStackTrace();
+			}
+
+			// If the uniform was loaded.
+			if (uniformObject != null) {
+				// Store uniform locations.
+				uniformObject.storeUniformLocation(programID);
+
+				// Keeps the uniform variables for later usage.
+				uniforms.put(pair.getSecond(), uniformObject);
+			}
+		}
+
+		return uniforms;
+	}
+
+	private int findCharPos(String line, char c) {
+		for (int i = 0; i < line.length(); i++) {
+			if (line.charAt(i) == c) {
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+	@Override
+	public void dispose() {
+	}
+}

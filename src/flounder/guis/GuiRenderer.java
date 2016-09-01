@@ -14,19 +14,19 @@ public class GuiRenderer extends IRenderer {
 		GUI, CURSOR
 	}
 
-	private static final MyFile VERTEX_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "guis", "guiVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile(ShaderProgram.SHADERS_LOC, "guis", "guiFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "guis", "guiVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "guis", "guiFragment.glsl");
 
 	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
 
-	private ShaderProgram shader;
+	private Shader shader;
 	private int vaoID;
 
 	private boolean lastWireframe;
 	private GuiRenderType type;
 
 	public GuiRenderer(GuiRenderType type) {
-		shader = new ShaderProgram("gui", VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = Shader.newShader("guis").setVertex(VERTEX_SHADER).setFragment(FRAGMENT_SHADER).createInSecondThread();
 		vaoID = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
 		this.type = type;
 	}
@@ -35,17 +35,19 @@ public class GuiRenderer extends IRenderer {
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
 		switch (type) {
 			case GUI:
-				if (FlounderEngine.getGuis().getGuiTextures().size() < 1) {
+				if (!shader.isLoaded() || FlounderEngine.getGuis().getGuiTextures().size() < 1) {
 					return;
 				}
+
 				prepareRendering();
 				FlounderEngine.getGuis().getGuiTextures().forEach(this::renderGui);
 				endRendering();
 				break;
 			case CURSOR:
-				if (!FlounderEngine.getCursor().isShown()) {
+				if (!shader.isLoaded() || !FlounderEngine.getCursor().isShown()) {
 					return;
 				}
+
 				prepareRendering();
 				renderGui(FlounderEngine.getCursor().getCursorTexture());
 				endRendering();
@@ -57,7 +59,7 @@ public class GuiRenderer extends IRenderer {
 	public void profile() {
 		switch (type) {
 			case GUI:
-				FlounderEngine.getProfiler().add("GUI", "Render Time", super.getRenderTimeMs());
+				FlounderEngine.getProfiler().add("GUIs", "Render Time", super.getRenderTimeMs());
 				break;
 			case CURSOR:
 				FlounderEngine.getProfiler().add("Cursor", "Render Time", super.getRenderTimeMs());
