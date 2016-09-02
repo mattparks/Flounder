@@ -1,14 +1,9 @@
 package flounder.shaders;
 
 import flounder.engine.*;
-import flounder.resources.*;
 
 import java.lang.ref.*;
 import java.util.*;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL32.*;
 
 /**
  * A class capable of setting up a {@link flounder.shaders.Shader}.
@@ -17,12 +12,7 @@ public class ShaderBuilder {
 	private static Map<String, SoftReference<Shader>> loadedModels = new HashMap<>();
 
 	private String shaderName;
-	private MyFile fileVertex;
-	private String stringVertex;
-	private MyFile fileGeometry;
-	private String stringGeometry;
-	private MyFile fileFragment;
-	private String stringFragment;
+	private ShaderType[] shaderTypes;
 
 	/**
 	 * Creates a class to setup a Shader.
@@ -34,53 +24,14 @@ public class ShaderBuilder {
 	}
 
 	/**
-	 * Sets the source vertex shader file.
+	 * Sets the source shader file.
 	 *
-	 * @param fileVertex The source vertex shader file.
-	 *
-	 * @return this.
-	 */
-	public ShaderBuilder setVertex(MyFile fileVertex) {
-		this.fileVertex = fileVertex;
-		return this;
-	}
-
-	public ShaderBuilder setVertex(String stringVertex) {
-		this.stringVertex = stringVertex;
-		return this;
-	}
-
-	/**
-	 * Sets the source geometry shader file.
-	 *
-	 * @param fileGeometry The source geometry shader file.
+	 * @param shaderTypes The list of source shader file.
 	 *
 	 * @return this.
 	 */
-	public ShaderBuilder setGeometry(MyFile fileGeometry) {
-		this.fileGeometry = fileGeometry;
-		return this;
-	}
-
-	public ShaderBuilder setGeometry(String stringGeometry) {
-		this.stringGeometry = stringGeometry;
-		return this;
-	}
-
-	/**
-	 * Sets the source fragment shader file.
-	 *
-	 * @param fileFragment The source fragment shader file.
-	 *
-	 * @return this.
-	 */
-	public ShaderBuilder setFragment(MyFile fileFragment) {
-		this.fileFragment = fileFragment;
-		return this;
-	}
-
-	public ShaderBuilder setFragment(String stringFragment) {
-		this.stringFragment = stringFragment;
+	public ShaderBuilder setShaderTypes(ShaderType... shaderTypes) {
+		this.shaderTypes = shaderTypes;
 		return this;
 	}
 
@@ -158,52 +109,11 @@ public class ShaderBuilder {
 	}
 
 	/**
-	 * Gets the source vertex shader file.
+	 * Gets the array of shader types.
 	 *
-	 * @return The source vertex shader file.
+	 * @return The array of shader types.
 	 */
-	public MyFile getVertex() {
-		return fileVertex;
-	}
-
-	public String getStringVertex() {
-		return stringVertex;
-	}
-
-	/**
-	 * Gets the source geometry shader file.
-	 *
-	 * @return The source geometry shader file.
-	 */
-	public MyFile getGeometry() {
-		return fileGeometry;
-	}
-
-	public String getStringGeometry() {
-		return stringGeometry;
-	}
-
-	/**
-	 * Gets the source fragment shader file.
-	 *
-	 * @return The source fragment shader file.
-	 */
-	public MyFile getFragment() {
-		return fileFragment;
-	}
-
-	public String getStringFragment() {
-		return stringFragment;
-	}
-
-	public static class ShaderType {
-		private int typeOpenGL;
-		private Optional<MyFile> shaderFile;
-		private Optional<String> shaderString;
-
-		public ShaderType(int typeOpenGL, Optional<MyFile> shaderFile) {
-			this.typeOpenGL = typeOpenGL;
-			this.shaderFile = shaderFile;
-		}
+	public ShaderType[] getShaderTypes() {
+		return shaderTypes;
 	}
 }

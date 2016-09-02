@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * Class capable of loading OBJ files into Shaders.
+ * Class capable of loading OBJ files into shaders.
  */
 public class FlounderShaders implements IModule {
 	public FlounderShaders() {
@@ -31,151 +31,85 @@ public class FlounderShaders implements IModule {
 	public void profile() {
 	}
 
+	/**
+	 * Loads shader data, and builder data, into a shader.
+	 *
+	 * @param shader The shader to load into.
+	 * @param data The data to use when creating the shader.
+	 * @param builder The builder configured for the shader.
+	 */
 	public void loadShaderToOpenGL(Shader shader, ShaderData data, ShaderBuilder builder) {
 		int programID = glCreateProgram();
-		int shaderVertexID = -1;
-		int shaderGeometryID = -1;
-		int shaderFragmentID = -1;
-		shader.setShaderName(builder.getShaderName());
 
-		if (builder.getVertex() != null) {
-			shader.setFileVertex(builder.getVertex());
-			shaderVertexID = FlounderEngine.getShaders().loadShaderToOpenGL(data.builderVertex, builder.getShaderName(), ShaderData.ShaderTypes.VERTEX);
+		for (ShaderType shaderType : builder.getShaderTypes()) {
+			int shaderID = glCreateShader(shaderType.getShaderType());
+			glShaderSource(shaderID, shaderType.getShaderBuilder());
+			glCompileShader(shaderID);
+
+			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
+				FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
+				FlounderEngine.getLogger().error("Could not compile shader " + builder.getShaderName());
+				System.exit(-1);
+			}
+
+			shaderType.setShaderProgramID(shaderID);
+			glAttachShader(programID, shaderID);
 		}
 
-		if (builder.getGeometry() != null) {
-			shader.setFileVertex(builder.getGeometry());
-			shaderGeometryID = FlounderEngine.getShaders().loadShaderToOpenGL(data.builderGeometry, builder.getShaderName(), ShaderData.ShaderTypes.GEOMETRY);
-		}
-
-		if (builder.getFragment() != null) {
-			shader.setFileVertex(builder.getFragment());
-			shaderFragmentID = FlounderEngine.getShaders().loadShaderToOpenGL(data.builderFragment, builder.getShaderName(), ShaderData.ShaderTypes.FRAGMENT);
-		}
-
-		attachShaders(programID, shaderVertexID, shaderGeometryID, shaderFragmentID);
 		loadLocations(programID, data);
 		glLinkProgram(programID);
-		detachShaders(programID, shaderVertexID, shaderGeometryID, shaderFragmentID);
-		deleteShaders(shaderVertexID, shaderGeometryID, shaderFragmentID);
-		shader.loadData(createUniforms(programID, data), programID);
+
+		for (ShaderType shaderType : builder.getShaderTypes()) {
+			glDetachShader(programID, shaderType.getShaderProgramID());
+			glDeleteShader(shaderType.getShaderProgramID());
+			shaderType.setShaderProgramID(-1);
+		}
+
+		shader.loadData(programID, builder.getShaderName(), createUniforms(programID, data));
 		data.destroy();
 	}
 
-	private void attachShaders(int programID, int shaderVertexID, int shaderGeometryID, int shaderFragmentID) {
-		if (shaderVertexID != -1) {
-			glAttachShader(programID, shaderVertexID);
-		}
-
-		if (shaderGeometryID != -1) {
-			glAttachShader(programID, shaderGeometryID);
-		}
-
-		if (shaderFragmentID != -1) {
-			glAttachShader(programID, shaderFragmentID);
-		}
-	}
-
-	private void detachShaders(int programID, int shaderVertexID, int shaderGeometryID, int shaderFragmentID) {
-		if (shaderVertexID != -1) {
-			glDetachShader(programID, shaderVertexID);
-		}
-
-		if (shaderGeometryID != -1) {
-			glDetachShader(programID, shaderGeometryID);
-		}
-
-		if (shaderFragmentID != -1) {
-			glDetachShader(programID, shaderFragmentID);
-		}
-	}
-
-	private void deleteShaders(int shaderVertexID, int shaderGeometryID, int shaderFragmentID) {
-		if (shaderVertexID != -1) {
-			glDeleteShader(shaderVertexID);
-		}
-
-		if (shaderGeometryID != -1) {
-			glDeleteShader(shaderGeometryID);
-		}
-
-		if (shaderFragmentID != -1) {
-			glDeleteShader(shaderFragmentID);
-		}
-	}
-
-	public int loadShaderToOpenGL(StringBuilder source, String shaderName, ShaderData.ShaderTypes shaderTypes) {
-		int shaderID = glCreateShader(shaderTypes.getType());
-		glShaderSource(shaderID, source);
-		glCompileShader(shaderID);
-
-		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-			FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
-			FlounderEngine.getLogger().error("Could not compile shader " + shaderName);
-			System.exit(-1);
-		}
-
-		return shaderID;
-	}
-
+	/**
+	 * Creates the shader data using builder configs.
+	 *
+	 * @param builder The builder configs.
+	 *
+	 * @return The shader data.
+	 */
 	public ShaderData loadShader(ShaderBuilder builder) {
 		ShaderData data = new ShaderData();
 
-		if (builder.getVertex() != null) {
-			data.builderVertex = loadFromFile(builder.getVertex(), data, ShaderData.ShaderTypes.VERTEX);
-		} else if (builder.getStringVertex() != null) {
-			data.builderVertex = loadFromString(builder.getStringVertex(), data, ShaderData.ShaderTypes.VERTEX);
-		}
+		for (ShaderType shaderType : builder.getShaderTypes()) {
+			if (shaderType.getShaderFile().isPresent()) {
+				MyFile file = shaderType.getShaderFile().get();
 
-		if (builder.getGeometry() != null) {
-			data.builderGeometry = loadFromFile(builder.getGeometry(), data, ShaderData.ShaderTypes.GEOMETRY);
-		} else if (builder.getStringGeometry() != null) {
-			data.builderGeometry = loadFromString(builder.getStringGeometry(), data, ShaderData.ShaderTypes.GEOMETRY);
-		}
+				try {
+					BufferedReader reader = file.getReader();
+					String line;
 
-		if (builder.getFragment() != null) {
-			data.builderFragment = loadFromFile(builder.getFragment(), data, ShaderData.ShaderTypes.FRAGMENT);
-		} else if (builder.getStringFragment() != null) {
-			data.builderFragment = loadFromString(builder.getStringFragment(), data, ShaderData.ShaderTypes.FRAGMENT);
+					while ((line = reader.readLine()) != null) {
+						shaderType.getShaderBuilder().append(processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
+					}
+				} catch (Exception e) {
+					FlounderEngine.getLogger().error("Could not read file " + file.getName());
+					FlounderEngine.getLogger().exception(e);
+					System.exit(-1);
+				}
+			} else if (shaderType.getShaderString().isPresent()) {
+				String string = shaderType.getShaderString().get();
+
+				for (String line : string.split("\n")) {
+					shaderType.getShaderBuilder().append(processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
+				}
+			}
 		}
 
 		return data;
 	}
 
-	private StringBuilder loadFromFile(MyFile file, ShaderData data, ShaderData.ShaderTypes shaderType) {
-		StringBuilder shaderSource = new StringBuilder();
-
-		if (file != null) {
-			try {
-				BufferedReader reader = file.getReader();
-				String line;
-
-				while ((line = reader.readLine()) != null) {
-					shaderSource.append(processShaderLine(line.trim(), data, shaderType) + "\n");
-				}
-			} catch (Exception e) {
-				FlounderEngine.getLogger().error("Could not read file " + file.getName());
-				FlounderEngine.getLogger().exception(e);
-				System.exit(-1);
-			}
-		}
-
-		return shaderSource;
-	}
-
-	private StringBuilder loadFromString(String string, ShaderData data, ShaderData.ShaderTypes shaderType) {
-		StringBuilder shaderSource = new StringBuilder();
-
-		for (String line : string.split("\n")) {
-			shaderSource.append(processShaderLine(line.trim(), data, shaderType) + "\n");
-		}
-
-		return shaderSource;
-	}
-
-	private StringBuilder processShaderLine(String line, ShaderData data, ShaderData.ShaderTypes shaderType) {
+	private StringBuilder processShaderLine(String line, ShaderData data, int shaderType) {
 		if (line.contains("varying")) {
-			if (shaderType == ShaderData.ShaderTypes.VERTEX) {
+			if (shaderType == GL_VERTEX_SHADER) {
 				return new StringBuilder().append(line.replace("varying", "out"));
 			} else {
 				return new StringBuilder().append(line.replace("varying", "in"));
@@ -185,8 +119,24 @@ public class FlounderShaders implements IModule {
 		if (line.contains("#include")) {
 			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
 			included = included.substring("#include".length(), included.length());
-			return loadFromFile(new MyFile(Shader.SHADERS_LOC, included), data, ShaderData.ShaderTypes.INCLUDED);
-		} else if (line.replaceAll("\\s+", "").startsWith("layout") && shaderType != ShaderData.ShaderTypes.INCLUDED) {
+			MyFile includeFile = new MyFile(Shader.SHADERS_LOC, included);
+			StringBuilder includeSource = new StringBuilder();
+
+			try {
+				BufferedReader reader = includeFile.getReader();
+				String includeLine;
+
+				while ((includeLine = reader.readLine()) != null) {
+					includeSource.append(processShaderLine(includeLine.trim(), data, shaderType) + "\n");
+				}
+			} catch (Exception e) {
+				FlounderEngine.getLogger().error("Could not read file " + includeFile.getName());
+				FlounderEngine.getLogger().exception(e);
+				System.exit(-1);
+			}
+
+			return includeSource;
+		} else if (line.replaceAll("\\s+", "").startsWith("layout") && shaderType != -1) {
 			if (line.contains("location")) {
 				data.layoutLocations.add(line);
 				return new StringBuilder().append(line.substring(findCharPos(line, ')') + 1, line.length()));

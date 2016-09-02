@@ -6,6 +6,8 @@ import flounder.post.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
+import static org.lwjgl.opengl.GL20.*;
+
 public class FilterBlurVertical extends PostFilter {
 	private int heightValue;
 	private float scaleValue;
@@ -13,14 +15,20 @@ public class FilterBlurVertical extends PostFilter {
 	private float sizeScalar;
 
 	public FilterBlurVertical(float sizeScalar) {
-		super(Shader.newShader("filterBlurVertical").setVertex(VERTEX_LOCATION).setFragment(new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl")).createInSecondThread(), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen(1.0f).create());
+		super(Shader.newShader("filterBlurVertical").setShaderTypes(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
+				new ShaderType(GL_FRAGMENT_SHADER, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl"))
+		).createInSecondThread(), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen(1.0f).create());
 		fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
 		init((int) (FlounderEngine.getDevices().getDisplay().getHeight() * sizeScalar));
 	}
 
 	public FilterBlurVertical(int widthValue, int heightValue) {
-		super(Shader.newShader("filterBlurVertical").setVertex(VERTEX_LOCATION).setFragment(new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl")).createInSecondThread(), FBO.newFBO(widthValue, heightValue).create());
+		super(Shader.newShader("filterBlurVertical").setShaderTypes(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
+				new ShaderType(GL_FRAGMENT_SHADER, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl"))
+		).createInSecondThread(), FBO.newFBO(widthValue, heightValue).create());
 		fitToDisplay = false;
 		this.sizeScalar = 1.0f;
 		init(heightValue);

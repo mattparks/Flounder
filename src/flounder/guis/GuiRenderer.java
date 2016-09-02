@@ -8,6 +8,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 public class GuiRenderer extends IRenderer {
 	public enum GuiRenderType {
@@ -26,7 +27,10 @@ public class GuiRenderer extends IRenderer {
 	private GuiRenderType type;
 
 	public GuiRenderer(GuiRenderType type) {
-		shader = Shader.newShader("guis").setVertex(VERTEX_SHADER).setFragment(FRAGMENT_SHADER).createInSecondThread();
+		shader = Shader.newShader("guis").setShaderTypes(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
+				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
+		).createInSecondThread();
 		vaoID = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
 		this.type = type;
 	}

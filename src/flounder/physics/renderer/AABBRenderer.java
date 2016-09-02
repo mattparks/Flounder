@@ -12,6 +12,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 /**
  * A renderer that is used to render AABB's.
@@ -37,7 +38,11 @@ public class AABBRenderer extends IRenderer {
 	 * Creates a new AABB renderer.
 	 */
 	public AABBRenderer() {
-		shader = Shader.newShader("aabbs").setVertex(VERTEX_SHADER).setFragment(FRAGMENT_SHADER).createInSecondThread();
+		shader = Shader.newShader("aabbs").setShaderTypes(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
+				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
+		).createInSecondThread();
+
 		lastWireframe = false;
 
 		aabbModel = Model.newModel(new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj")).createInBackground();

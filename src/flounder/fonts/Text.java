@@ -94,7 +94,7 @@ public class Text {
 		glowSize = glowDriver.update(delta);
 		borderSize = borderDriver.update(delta);
 
-		switch(textAlign) {
+		switch (textAlign) {
 			case LEFT:
 				break;
 			case CENTRE:

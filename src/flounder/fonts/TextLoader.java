@@ -78,7 +78,7 @@ public class TextLoader {
 		List<Float> textureCoords = new ArrayList<>();
 
 		for (Line line : lines) {
-			switch(text.getTextAlign()) {
+			switch (text.getTextAlign()) {
 				case LEFT:
 					cursorX = 0.0;
 					break;

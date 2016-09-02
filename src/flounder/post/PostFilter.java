@@ -7,6 +7,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 /**
  * Represents a post effect shader and on application saves the result into a FBO.
@@ -22,7 +23,10 @@ public abstract class PostFilter {
 	public FBO fbo;
 
 	public PostFilter(String filterName, MyFile fragmentShader) {
-		this(Shader.newShader(filterName).setVertex(VERTEX_LOCATION).setFragment(fragmentShader).createInSecondThread(), FBO.newFBO(1.0f).create());
+		this(Shader.newShader(filterName).setShaderTypes(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
+				new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)
+		).createInSecondThread(), FBO.newFBO(1.0f).create());
 	}
 
 	public PostFilter(Shader shader) {

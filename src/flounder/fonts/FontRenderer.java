@@ -9,6 +9,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 /**
  * A renderer capable of rendering fonts.
@@ -25,7 +26,10 @@ public class FontRenderer extends IRenderer {
 	 * Creates a new font renderer.
 	 */
 	public FontRenderer() {
-		shader = Shader.newShader("fonts").setVertex(VERTEX_SHADER).setFragment(FRAGMENT_SHADER).createInSecondThread();
+		shader = Shader.newShader("fonts").setShaderTypes(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
+				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
+		).createInSecondThread();
 	}
 
 	@Override

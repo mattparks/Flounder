@@ -15,6 +15,7 @@ import java.util.*;
 
 import static org.lwjgl.opengl.ARBDrawInstanced.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 public class ParticleRenderer extends IRenderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "particles", "particleVertex.glsl");
@@ -33,7 +34,11 @@ public class ParticleRenderer extends IRenderer {
 	private int rendered;
 
 	public ParticleRenderer() {
-		shader = Shader.newShader("particles").setVertex(VERTEX_SHADER).setFragment(FRAGMENT_SHADER).createInSecondThread();
+		shader = Shader.newShader("particles").setShaderTypes(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
+				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
+		).createInSecondThread();
+
 		pointer = 0;
 		rendered = 0;
 

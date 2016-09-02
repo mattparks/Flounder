@@ -1,16 +1,10 @@
 package flounder.shaders;
 
-import flounder.engine.*;
 import flounder.helpers.*;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 public class ShaderData {
-	public StringBuilder builderVertex;
-	public StringBuilder builderGeometry;
-	public StringBuilder builderFragment;
-
 	public List<Pair<String, String>> conatantValues;
 	public List<String> layoutLocations;
 	public List<String> layoutBindings;
@@ -25,13 +19,15 @@ public class ShaderData {
 
 	public void destroy() {
 		conatantValues.clear();
-		layoutLocations.clear();
-		layoutBindings.clear();
-		shaderUniforms.clear();
-
 		conatantValues = null;
+
+		layoutLocations.clear();
 		layoutLocations = null;
+
+		layoutBindings.clear();
 		layoutBindings = null;
+
+		shaderUniforms.clear();
 		shaderUniforms = null;
 	}
 

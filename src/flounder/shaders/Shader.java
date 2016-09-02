@@ -14,10 +14,6 @@ public class Shader {
 	public static final MyFile SHADERS_LOC = new MyFile(MyFile.RES_FOLDER, "shaders");
 
 	private String shaderName;
-	private MyFile fileVertex;
-	private MyFile fileGeometry;
-	private MyFile fileFragment;
-
 	private boolean loaded;
 
 	private Map<String, Uniform> uniforms;
@@ -50,27 +46,18 @@ public class Shader {
 		return new Shader();
 	}
 
-	public void setShaderName(String shaderName) {
-		this.shaderName = shaderName;
-	}
-
-	public void setFileVertex(MyFile fileVertex) {
-		this.fileVertex = fileVertex;
-	}
-
-	public void setFileGeometry(MyFile fileGeometry) {
-		this.fileGeometry = fileGeometry;
-	}
-
-	public void setFileFragment(MyFile fileFragment) {
-		this.fileFragment = fileFragment;
-	}
-
-	protected void loadData(Map<String, Uniform> uniforms, int programID) {
-		this.loaded = true;
-
-		this.uniforms = uniforms;
+	/**
+	 * Loads data into this shader program.
+	 *
+	 * @param programID The shader programs OpenGL ID.
+	 * @param shaderName The shaders name.
+	 * @param uniforms The uniforms loaded from the shaders.
+	 */
+	protected void loadData(int programID, String shaderName, Map<String, Uniform> uniforms) {
 		this.programID = programID;
+		this.shaderName = shaderName;
+		this.uniforms = uniforms;
+		this.loaded = true;
 	}
 
 	/**
@@ -307,8 +294,7 @@ public class Shader {
 	 * Deletes the shader, do not start after calling this.
 	 */
 	public void dispose() {
+		FlounderEngine.getProcessors().sendGLRequest(new ShaderDeleteRequest(programID));
 		loaded = false;
-		glUseProgram(0);
-		glDeleteProgram(programID);
 	}
 }
