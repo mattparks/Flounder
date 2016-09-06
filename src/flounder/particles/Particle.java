@@ -3,21 +3,22 @@ package flounder.particles;
 import flounder.engine.*;
 import flounder.maths.vectors.*;
 import flounder.particles.loading.*;
+import flounder.physics.*;
+import flounder.space.*;
 
 /**
  * A instance of a particle type.
  */
-public class Particle implements Comparable<Particle> {
-	private final ParticleTemplate particleTemplate;
+public class Particle implements ISpatialObject, Comparable<Particle> {
+	private ParticleTemplate particleTemplate;
 
-	private final Vector3f position;
-	private final Vector3f velocity;
-	private final Vector3f reusableChange;
+	private Vector3f position;
+	private Vector3f velocity;
+	private Vector3f change;
+	private AABB aabb;
 
-	private final Vector2f textureOffset1;
-	private final Vector2f textureOffset2;
-
-	private boolean visable;
+	private Vector2f textureOffset1;
+	private Vector2f textureOffset2;
 
 	private float lifeLength;
 	private float rotation;
@@ -29,16 +30,19 @@ public class Particle implements Comparable<Particle> {
 	private float textureBlendFactor;
 	private float distanceToCamera;
 
-	protected Particle(final ParticleTemplate particleTemplate, final Vector3f position, final Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
+	protected Particle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
+		set(particleTemplate, position, velocity, lifeLength, rotation, scale, gravityEffect);
+	}
+
+	protected Particle set(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		this.particleTemplate = particleTemplate;
 		this.position = position;
 		this.velocity = velocity;
-		this.reusableChange = new Vector3f();
+		this.change = new Vector3f();
+		this.aabb = new AABB();
 
 		this.textureOffset1 = new Vector2f();
 		this.textureOffset2 = new Vector2f();
-
-		this.visable = true;
 
 		this.lifeLength = lifeLength;
 		this.rotation = rotation;
@@ -49,24 +53,31 @@ public class Particle implements Comparable<Particle> {
 		this.transparency = 0.0f;
 		this.textureBlendFactor = 0.0f;
 		this.distanceToCamera = 0.0f;
-		FlounderEngine.getParticles().addParticle(this);
+
+		return this;
 	}
 
-	protected void update(final boolean moveParticle) {
-		if (moveParticle) {
-			velocity.y += -10.0f * gravityEffect * FlounderEngine.getDelta();
-			reusableChange.set(velocity);
-			reusableChange.scale(FlounderEngine.getDelta());
+	protected void update() {
+		velocity.y += -10.0f * gravityEffect * FlounderEngine.getDelta();
+		change.set(velocity);
+		change.scale(FlounderEngine.getDelta());
 
-			Vector3f.add(reusableChange, position, position);
-			elapsedTime += FlounderEngine.getDelta();
+		Vector3f.add(change, position, position);
+		elapsedTime += FlounderEngine.getDelta();
 
-			if (elapsedTime > lifeLength) {
-				transparency += 1.0f * FlounderEngine.getDelta();
-			}
+		if (elapsedTime > lifeLength) {
+			transparency += 1.0f * FlounderEngine.getDelta();
+		}
+
+		if (!isAlive()) {
+			return;
 		}
 
 		distanceToCamera = Vector3f.subtract(FlounderEngine.getCamera().getPosition(), position, null).lengthSquared();
+
+		float size = 0.5f * particleTemplate.getScale();
+		aabb.getMinExtents().set(position.getX() - size, position.getY() - size, position.getZ() - size);
+		aabb.getMaxExtents().set(position.getX() + size, position.getY() + size, position.getZ() + size);
 
 		float lifeFactor = elapsedTime / lifeLength;
 
@@ -84,7 +95,7 @@ public class Particle implements Comparable<Particle> {
 		updateTextureOffset(this.textureOffset2, index2);
 	}
 
-	private Vector2f updateTextureOffset(final Vector2f offset, final int index) {
+	private Vector2f updateTextureOffset(Vector2f offset, int index) {
 		offset.set(0.0f, 0.0f);
 		int column = index % particleTemplate.getTexture().getNumberOfRows();
 		int row = index / particleTemplate.getTexture().getNumberOfRows();
@@ -117,14 +128,6 @@ public class Particle implements Comparable<Particle> {
 		return textureOffset2;
 	}
 
-	protected boolean isVisable() {
-		return visable;
-	}
-
-	protected void setVisable(final boolean visable) {
-		this.visable = visable;
-	}
-
 	public float getRotation() {
 		return rotation;
 	}
@@ -137,12 +140,25 @@ public class Particle implements Comparable<Particle> {
 		return textureBlendFactor;
 	}
 
+	protected float getElapsedTime() {
+		return elapsedTime;
+	}
+
 	protected float getDistance() {
 		return distanceToCamera;
 	}
 
 	@Override
-	public int compareTo(final Particle other) {
-		return ((Float) distanceToCamera).compareTo(other.getDistance());
+	public AABB getAABB() {
+		return aabb;
+	}
+
+	@Override
+	public int compareTo(Particle other) {
+		if (!isAlive()) {
+			return ((Float) elapsedTime).compareTo(other.elapsedTime);
+		} else {
+			return ((Float) distanceToCamera).compareTo(other.getDistance());
+		}
 	}
 }

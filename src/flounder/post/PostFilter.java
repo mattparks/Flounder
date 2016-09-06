@@ -16,7 +16,7 @@ public abstract class PostFilter {
 	public static final MyFile POST_LOC = new MyFile(Shader.SHADERS_LOC, "filters");
 	public static final MyFile VERTEX_LOCATION = new MyFile(POST_LOC, "defaultVertex.glsl");
 
-	private static float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
+	private static float[] POSITIONS = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
 	private static int VAO = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
 
 	public Shader shader;

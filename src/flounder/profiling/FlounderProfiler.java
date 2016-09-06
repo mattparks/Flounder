@@ -61,10 +61,14 @@ public class FlounderProfiler implements IModule {
 
 	@Override
 	public void update() {
+		if (profilerJFrame.isVisible() != profilerOpen) {
+			profilerJFrame.setVisible(profilerOpen);
+		}
 	}
 
 	@Override
 	public void profile() {
+		FlounderEngine.getProfiler().add("Profiler", "Is Open", profilerOpen);
 	}
 
 	/**
@@ -73,13 +77,7 @@ public class FlounderProfiler implements IModule {
 	 * @param open If the JFrame should be open.
 	 */
 	public void toggle(boolean open) {
-		if (open) {
-			profilerJFrame.setVisible(true);
-			profilerOpen = true;
-		} else {
-			profilerJFrame.setVisible(false);
-			profilerOpen = false;
-		}
+		profilerOpen = open;
 	}
 
 	/**

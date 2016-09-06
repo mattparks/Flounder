@@ -16,6 +16,7 @@ public class Shader {
 	private String shaderName;
 	private boolean loaded;
 
+	private ShaderType[] shaderTypes;
 	private Map<String, Uniform> uniforms;
 	private int programID;
 
@@ -51,11 +52,13 @@ public class Shader {
 	 *
 	 * @param programID The shader programs OpenGL ID.
 	 * @param shaderName The shaders name.
+	 * @param shaderTypes The list of shader types.
 	 * @param uniforms The uniforms loaded from the shaders.
 	 */
-	protected void loadData(int programID, String shaderName, Map<String, Uniform> uniforms) {
+	protected void loadData(int programID, String shaderName, ShaderType[] shaderTypes, Map<String, Uniform> uniforms) {
 		this.programID = programID;
 		this.shaderName = shaderName;
+		this.shaderTypes = shaderTypes;
 		this.uniforms = uniforms;
 		this.loaded = true;
 	}

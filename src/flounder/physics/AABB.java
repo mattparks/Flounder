@@ -12,8 +12,6 @@ public class AABB {
 	private Vector3f minExtents;
 	private Vector3f maxExtents;
 
-	private Vector3f rotation;
-
 	/**
 	 * Creates a new blank 3D AABB.
 	 */
@@ -30,7 +28,6 @@ public class AABB {
 	public AABB(Vector3f minExtents, Vector3f maxExtents) {
 		this.minExtents = minExtents;
 		this.maxExtents = maxExtents;
-		this.rotation = new Vector3f();
 	}
 
 	/**
@@ -118,10 +115,6 @@ public class AABB {
 
 	public void setMaxExtents(float maxX, float maxY, float maxZ) {
 		this.maxExtents.set(maxX, maxY, maxZ);
-	}
-
-	public Vector3f getRotation() {
-		return rotation;
 	}
 
 	/**

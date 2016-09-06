@@ -1,6 +1,7 @@
 package flounder.particles.loading;
 
 import flounder.engine.*;
+import flounder.particles.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
@@ -23,7 +24,7 @@ public class ParticleLoader {
 			loadedTypes.remove(name);
 
 			// Creates the file reader.
-			MyFile saveFile = new MyFile(MyFile.RES_FOLDER, "particles", name + ".particle");
+			MyFile saveFile = new MyFile(FlounderParticles.PARTICLES_LOC, name + ".particle");
 
 			try {
 				BufferedReader fileReader = saveFile.getReader();

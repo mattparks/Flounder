@@ -90,7 +90,7 @@ public class AABBRenderer extends IRenderer {
 		Vector3f.add(aabb.getMaxExtents(), aabb.getMinExtents(), POSITION_REUSABLE);
 		POSITION_REUSABLE.set(POSITION_REUSABLE.x / 2.0f, POSITION_REUSABLE.y / 2.0f, POSITION_REUSABLE.z / 2.0f);
 
-		ROTATION_REUSABLE.set(aabb.getRotation());
+		ROTATION_REUSABLE.set(0.0f, 0.0f, 0.0f);
 
 		Vector3f.subtract(aabb.getMaxExtents(), aabb.getMinExtents(), SCALE_REUSABLE);
 		SCALE_REUSABLE.set(SCALE_REUSABLE.x / 2.0f, SCALE_REUSABLE.y / 2.0f, SCALE_REUSABLE.z / 2.0f);

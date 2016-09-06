@@ -69,7 +69,6 @@ public class FlounderModels implements IModule {
 						for (Material m : modelData.materials) {
 							if (m.name.equals(line.split(" ")[1])) {
 								currentMaterial = m;
-								FlounderEngine.getLogger().error(m);
 							}
 						}
 						break;
@@ -103,7 +102,7 @@ public class FlounderModels implements IModule {
 						calculateTangents(v0, v1, v2, modelData.textures);
 						break;
 					default:
-						FlounderEngine.getLogger().log("[OBJ " + file.getName() + "] Unknown Line: " + line);
+						FlounderEngine.getLogger().warning("[OBJ " + file.getName() + "] Unknown Line: " + line);
 						break;
 				}
 			}

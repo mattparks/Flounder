@@ -8,6 +8,7 @@ import flounder.maths.vectors.*;
 import flounder.particles.loading.*;
 import flounder.resources.*;
 import flounder.shaders.*;
+import flounder.space.*;
 import org.lwjgl.*;
 
 import java.nio.*;
@@ -22,7 +23,7 @@ public class ParticleRenderer extends IRenderer {
 	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "particles", "particleFragment.glsl");
 
 	private static final float[] VERTICES = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
-	private static final int MAX_INSTANCES = 10000;
+	private static final int MAX_INSTANCES = 27500;
 	private static final int INSTANCE_DATA_LENGTH = 22;
 
 	private static final int VAO = FlounderEngine.getLoader().createInterleavedVAO(VERTICES, 2);
@@ -59,13 +60,21 @@ public class ParticleRenderer extends IRenderer {
 
 		prepareRendering(clipPlane, camera);
 
-		for (final List<Particle> list : FlounderEngine.getParticles().getParticles()) {
-			pointer = 0;
-			final float[] vboData = new float[Math.min(list.size(), MAX_INSTANCES) * INSTANCE_DATA_LENGTH];
-			boolean textureBound = false;
+		for (StructureBasic<Particle> list : FlounderEngine.getParticles().getParticles()) {
+			List<Particle> particles = list.queryInFrustum(new ArrayList<>(), camera.getViewFrustum());
 
-			for (final Particle particle : list) {
-				if (particle.isVisable()) {
+			if (particles.size() > 0) {
+				// Added to particles first -> last, so no initial reverse needed.
+				ArraySorting.heapSort(particles); // Sorts the list big to small.
+				Collections.reverse(particles); // Reverse as the sorted list should be close(small) -> far(big).
+
+				// Creates the data to be used when rendering.
+				final float[] vboData = new float[Math.min(particles.size(), MAX_INSTANCES) * INSTANCE_DATA_LENGTH];
+				boolean textureBound = false;
+				pointer = 0;
+
+				// Prepares each particle instance, and add them to the list.
+				for (Particle particle : particles) {
 					if (!textureBound) {
 						prepareTexturedModel(particle.getParticleTemplate());
 						textureBound = true;
@@ -73,18 +82,12 @@ public class ParticleRenderer extends IRenderer {
 
 					prepareInstance(particle, camera, vboData);
 				}
-			}
 
-			try {
+				// Renders the particles list.
 				FlounderEngine.getLoader().updateVBO(VBO, vboData, BUFFER);
-			} catch (BufferOverflowException e) {
-				FlounderEngine.getLogger().error("Particles overflow: " + rendered);
-				FlounderEngine.getLogger().exception(e);
-				break;
+				glDrawArraysInstancedARB(GL_TRIANGLE_STRIP, 0, VERTICES.length, particles.size());
+				unbindTexturedModel();
 			}
-
-			glDrawArraysInstancedARB(GL_TRIANGLE_STRIP, 0, VERTICES.length, list.size());
-			unbindTexturedModel();
 		}
 
 		endRendering();
@@ -128,6 +131,7 @@ public class ParticleRenderer extends IRenderer {
 
 	private void prepareInstance(Particle particle, ICamera camera, float[] vboData) {
 		if (rendered >= MAX_INSTANCES) {
+			FlounderEngine.getLogger().error("Particles overflow: " + rendered);
 			return;
 		}
 

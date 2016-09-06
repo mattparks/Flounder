@@ -26,7 +26,7 @@ public class GuiCheckbox extends GuiComponent {
 
 	public GuiCheckbox(Text text, TextAlign textAlign, float leftMarginX, boolean selected) {
 		this.text = text;
-		this.texture = new GuiTexture(Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "checkbox.png")).create());
+		this.texture = new GuiTexture(Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "checkbox.png")).createInSecondThread());
 		this.texture.getTexture().setNumberOfRows(2);
 		this.mouseOver = false;
 		this.selected = selected;

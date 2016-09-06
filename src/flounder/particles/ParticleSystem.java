@@ -182,7 +182,7 @@ public class ParticleSystem {
 		float lifeLength = generateValue(emitType.getLifeLength(), emitType.getLifeLength() * lifeError);
 		Vector3f spawnPos = Vector3f.add(systemCentre, spawn.getBaseSpawnPosition(), null);
 
-		new Particle(emitType, new Vector3f(spawnPos), velocity, lifeLength, generateRotation(), scale, gravityEffect);
+		FlounderEngine.getParticles().addParticle(emitType, spawnPos, velocity, lifeLength, generateRotation(), scale, gravityEffect);
 	}
 
 	private float generateValue(float average, float errorMargin) {

@@ -67,11 +67,41 @@ public class FlounderLogger implements IModule {
 		}
 
 		if (LOG_TO_CONSOLE) {
-			System.out.println("LOG: " + "[" + getDateString() + "]: " + getString(value));
+			System.out.println("LOG [" + getDateString() + "]: " + getString(value));
 		}
 
 		if (LOG_TO_FILE) {
-			saveData.append("LOG: " + "[" + getDateString() + "]: " + getString(value) + "\n");
+			saveData.append("LOG [" + getDateString() + "]: " + getString(value) + "\n");
+			linesRecorded++;
+		}
+	}
+
+	/**
+	 * Warning logs strings sent into javas console, and if {@code LOG_TO_FILE} is enabled it will also be logged to a log file.
+	 *
+	 * @param value Warnings being added to the log file and possibly to your IDES console.
+	 * @param <T> The object type to be logged.
+	 */
+	public <T> void warning(T value) {
+		warning(value, false);
+	}
+
+	/**
+	 * Warning logs strings sent into javas console, and if {@code LOG_TO_FILE} is enabled it will also be logged to a log file.
+	 *
+	 * @param value Warnings being added to the log file and possibly to your IDES console.
+	 * @param loud If the logged value is not useful, it may or may not be logged because of this.
+	 * @param <T> The object type to be logged.
+	 */
+	public <T> void warning(T value, boolean loud) {
+		if (loud && !ALLOW_LOUD_LOGS) {
+			return;
+		}
+
+		System.err.println("WARNING [" + getDateString() + "]: " + getString(value));
+
+		if (LOG_TO_FILE) {
+			saveData.append("WARNING [" + getDateString() + "]: " + getString(value) + "\n");
 			linesRecorded++;
 		}
 	}
@@ -98,10 +128,10 @@ public class FlounderLogger implements IModule {
 			return;
 		}
 
-		System.err.println("ERROR: " + "[" + getDateString() + "]: " + getString(value));
+		System.err.println("ERROR [" + getDateString() + "]: " + getString(value));
 
 		if (LOG_TO_FILE) {
-			saveData.append("ERROR: " + "[" + getDateString() + "]: " + getString(value) + "\n");
+			saveData.append("ERROR [" + getDateString() + "]: " + getString(value) + "\n");
 			linesRecorded++;
 		}
 	}
@@ -121,12 +151,12 @@ public class FlounderLogger implements IModule {
 	 */
 	public void exception(Exception exception) {
 		if (LOG_TO_CONSOLE) {
-			System.err.println("EXCEPTION: " + "[" + getDateString() + "]: " + exception.toString());
+			System.err.println("EXCEPTION [" + getDateString() + "]: " + exception.toString());
 			exception.printStackTrace();
 		}
 
 		if (LOG_TO_FILE) {
-			saveData.append("EXCEPTION: " + "[" + getDateString() + "]: " + exception.toString() + "\n");
+			saveData.append("EXCEPTION [" + getDateString() + "]: " + exception.toString() + "\n");
 			linesRecorded += exception.toString().split("\n").length;
 		}
 	}
@@ -135,7 +165,10 @@ public class FlounderLogger implements IModule {
 	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
 	 */
 	public String getDateString() {
-		return Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
+		int hour = Calendar.getInstance().get(Calendar.HOUR);
+		int minute = Calendar.getInstance().get(Calendar.MINUTE);
+		int second = Calendar.getInstance().get(Calendar.SECOND) + 1;
+		return hour + "." + minute + "." + second;
 	}
 
 	/**

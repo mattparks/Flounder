@@ -109,7 +109,7 @@ public class FlounderMaterials implements IModule {
 							//	}
 							break;
 						default:
-							FlounderEngine.getLogger().log("[MTL " + file.getName() + "] Unknown Line: " + line);
+							FlounderEngine.getLogger().warning("[MTL " + file.getName() + "] Unknown Line: " + line);
 							break;
 					}
 				}

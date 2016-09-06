@@ -2,29 +2,29 @@ package flounder.particles;
 
 import flounder.engine.*;
 import flounder.helpers.*;
-import flounder.physics.*;
+import flounder.maths.vectors.*;
+import flounder.particles.loading.*;
 import flounder.resources.*;
+import flounder.space.*;
 
 import java.util.*;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * A manager that manages particles.
  */
 public class FlounderParticles implements IModule {
 	public static final MyFile PARTICLES_LOC = new MyFile(MyFile.RES_FOLDER, "particles");
+	public static final float MAX_ELAPED_TIME = 5.0f;
 
 	private List<ParticleSystem> particleSystems;
-
-	private List<List<Particle>> particles;
-	private AABB reusableAABB;
+	private List<StructureBasic<Particle>> particles;
+	private List<Particle> deadParticles;
 
 	@Override
 	public void init() {
 		particleSystems = new ArrayList<>();
 		particles = new ArrayList<>();
-		reusableAABB = new AABB();
+		deadParticles = new ArrayList<>();
 	}
 
 	@Override
@@ -33,57 +33,33 @@ public class FlounderParticles implements IModule {
 			return;
 		}
 
-		if (!FlounderEngine.getDevices().getKeyboard().getKey(GLFW_KEY_Y)) {
-			particleSystems.forEach(ParticleSystem::generateParticles);
-		}
+		particleSystems.forEach(ParticleSystem::generateParticles);
 
-		int totalParticles = 0;
-		int visibleParticles = 0;
+		for (StructureBasic<Particle> list : particles) {
+			List<Particle> particles = list.getAll(new ArrayList<>());
 
-		try {
-			for (List<Particle> list : particles) {
-				Iterator<Particle> iterator = list.iterator();
+			for (Particle particle : particles) {
+				particle.update();
 
-				while (iterator.hasNext()) {
-					// Iterate and update the particles.
-					Particle particle = iterator.next();
-					particle.update(!FlounderEngine.getDevices().getKeyboard().getKey(GLFW_KEY_Y));
-
-					// Update particle visibility.
-					float SIZE = 0.5f * particle.getParticleTemplate().getScale();
-					reusableAABB.getMinExtents().set(particle.getPosition().getX() - SIZE, particle.getPosition().getY() - SIZE, particle.getPosition().getZ() - SIZE);
-					reusableAABB.getMaxExtents().set(particle.getPosition().getX() + SIZE, particle.getPosition().getY() + SIZE, particle.getPosition().getZ() + SIZE);
-					particle.setVisable(FlounderEngine.getCamera().getViewFrustum().aabbInFrustum(reusableAABB));
-					visibleParticles += particle.isVisable() ? 1 : 0;
-
-					// Remove particles that are not alive.
-					if (!particle.isAlive()) {
-						iterator.remove();
-
-						if (list.isEmpty()) {
-							particles.remove(list);
-						}
-					} else {
-						totalParticles++;
-					}
+				if (!particle.isAlive()) {
+					list.remove(particle);
+					deadParticles.add(particle);
 				}
 			}
-		} catch (ConcurrentModificationException e) {
-			FlounderEngine.getLogger().exception(e);
 		}
 
-		for (List<Particle> list : particles) {
-			// Added to engine.particles first -> last, so no initial reverse needed.
-			ArraySorting.heapSort(list); // insertionSort
-			Collections.reverse(list); // Reverse as the sorted list should be close(small) -> far(big).
+		Iterator<Particle> deadIterator = deadParticles.iterator();
+
+		while (deadIterator.hasNext()) {
+			Particle particle = deadIterator.next();
+			particle.update();
+
+			if (particle.getElapsedTime() > MAX_ELAPED_TIME) {
+				deadIterator.remove();
+			}
 		}
 
-		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("Particles", "Systems", particleSystems.size());
-			FlounderEngine.getProfiler().add("Particles", "Types", particles.size());
-			FlounderEngine.getProfiler().add("Particles", "Particles", totalParticles);
-			FlounderEngine.getProfiler().add("Particles", "Visible", visibleParticles);
-		}
+		ArraySorting.heapSort(deadParticles); // Sorts the list old to new.
 	}
 
 	public void clearAllParticles() {
@@ -92,12 +68,9 @@ public class FlounderParticles implements IModule {
 
 	@Override
 	public void profile() {
-
-	}
-
-	@Override
-	public void dispose() {
-
+		FlounderEngine.getProfiler().add("Particles", "Systems", particleSystems.size());
+		FlounderEngine.getProfiler().add("Particles", "Types", particles.size());
+		FlounderEngine.getProfiler().add("Particles", "Dead Particles", deadParticles.size());
 	}
 
 	/**
@@ -123,25 +96,44 @@ public class FlounderParticles implements IModule {
 	 *
 	 * @return All particles.
 	 */
-	protected List<List<Particle>> getParticles() {
+	protected List<StructureBasic<Particle>> getParticles() {
 		return particles;
 	}
 
 	/**
 	 * Adds a particle to the update loop.
 	 *
-	 * @param particle The particle to add.
+	 * @param particleTemplate
+	 * @param position
+	 * @param velocity
+	 * @param lifeLength
+	 * @param rotation
+	 * @param scale
+	 * @param gravityEffect
 	 */
-	protected void addParticle(final Particle particle) {
-		for (List<Particle> list : particles) {
-			if (list.get(0).getParticleTemplate().equals(particle.getParticleTemplate())) {
+	protected void addParticle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
+		Particle particle;
+
+		if (deadParticles.size() > 0) {
+			particle = deadParticles.get(0).set(particleTemplate, position, velocity, lifeLength, rotation, scale, gravityEffect);
+			deadParticles.remove(0);
+		} else {
+			particle = new Particle(particleTemplate, position, velocity, lifeLength, rotation, scale, gravityEffect);
+		}
+
+		for (StructureBasic<Particle> list : particles) {
+			if (list.getSize() > 0 && list.get(0).getParticleTemplate().equals(particle.getParticleTemplate())) {
 				list.add(particle);
 				return;
 			}
 		}
 
-		List<Particle> list = new ArrayList<>();
+		StructureBasic<Particle> list = new StructureBasic<>();
 		list.add(particle);
 		particles.add(list);
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

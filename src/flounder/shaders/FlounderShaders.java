@@ -65,7 +65,7 @@ public class FlounderShaders implements IModule {
 			shaderType.setShaderProgramID(-1);
 		}
 
-		shader.loadData(programID, builder.getShaderName(), createUniforms(programID, data));
+		shader.loadData(programID, builder.getShaderName(), builder.getShaderTypes(), createUniforms(programID, data));
 		data.destroy();
 	}
 
