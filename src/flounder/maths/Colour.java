@@ -18,6 +18,50 @@ public class Colour {
 	}
 
 	/**
+	 * Constructor for Colour.
+	 *
+	 * @param source Creates this colour out of a existing one.
+	 */
+	public Colour(Colour source) {
+		set(source);
+	}
+
+	/**
+	 * Constructor for Colour.
+	 *
+	 * @param r The new R value.
+	 * @param g The new G value.
+	 * @param b The new B value.
+	 */
+	public Colour(float r, float g, float b) {
+		set(r, g, b, 1.0f);
+	}
+
+	/**
+	 * Constructor for Colour.
+	 *
+	 * @param r The new R value.
+	 * @param g The new G value.
+	 * @param b The new B value.
+	 * @param a The new A value.
+	 */
+	public Colour(float r, float g, float b, float a) {
+		set(r, g, b, a);
+	}
+
+	/**
+	 * Constructor for Colour.
+	 *
+	 * @param r The new R value.
+	 * @param g The new G value.
+	 * @param b The new B value.
+	 * @param convert Converts the colours from 0-255 to 0-1.
+	 */
+	public Colour(float r, float g, float b, boolean convert) {
+		set(r, g, b, convert);
+	}
+
+	/**
 	 * Sets values in the colour.
 	 *
 	 * @param r The new R value.
@@ -59,15 +103,6 @@ public class Colour {
 	}
 
 	/**
-	 * Constructor for Colour.
-	 *
-	 * @param source Creates this colour out of a existing one.
-	 */
-	public Colour(Colour source) {
-		set(source);
-	}
-
-	/**
 	 * Sets values in the colour.
 	 *
 	 * @param source The source colour.
@@ -76,41 +111,6 @@ public class Colour {
 	 */
 	public Colour set(Colour source) {
 		return set(source.r, source.g, source.b, source.a, false);
-	}
-
-	/**
-	 * Constructor for Colour.
-	 *
-	 * @param r The new R value.
-	 * @param g The new G value.
-	 * @param b The new B value.
-	 */
-	public Colour(float r, float g, float b) {
-		set(r, g, b, 1.0f);
-	}
-
-	/**
-	 * Constructor for Colour.
-	 *
-	 * @param r The new R value.
-	 * @param g The new G value.
-	 * @param b The new B value.
-	 * @param a The new A value.
-	 */
-	public Colour(float r, float g, float b, float a) {
-		set(r, g, b, a);
-	}
-
-	/**
-	 * Constructor for Colour.
-	 *
-	 * @param r The new R value.
-	 * @param g The new G value.
-	 * @param b The new B value.
-	 * @param convert Converts the colours from 0-255 to 0-1.
-	 */
-	public Colour(float r, float g, float b, boolean convert) {
-		set(r, g, b, convert);
 	}
 
 	/**
