@@ -26,9 +26,24 @@ public class Maths {
 	 */
 	public static float randomInRange(float min, float max) {
 		float range = max - min;
-		float scaled = (float) RANDOM.nextDouble() * range;
+		float scaled = RANDOM.nextFloat() * range;
 		float shifted = scaled + min;
 		return shifted; // == (rand.nextDouble() * (max-min)) + min;
+	}
+
+	/**
+	 * Generates a random value from between a range.
+	 *
+	 * @param min The min value.
+	 * @param max The max value.
+	 *
+	 * @return The randomly selected value within the range.
+	 */
+	public static double randomInRange(double min, double max) {
+		double range = max - min;
+		double scaled = RANDOM.nextDouble() * range;
+		double shifted = scaled + min;
+		return shifted;
 	}
 
 	/**
