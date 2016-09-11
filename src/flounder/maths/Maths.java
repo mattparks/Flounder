@@ -386,8 +386,8 @@ public class Maths {
 	 * @return The rounded value.
 	 */
 	public static double roundToPlace(double value, int place) {
-		float placeMul = (float) (Math.pow(10.0f, place));
-		return (float) Math.round((value) * placeMul) / placeMul;
+		double placeMul = Math.pow(10.0, place);
+		return Math.round((value) * placeMul) / placeMul;
 	}
 
 	/**
