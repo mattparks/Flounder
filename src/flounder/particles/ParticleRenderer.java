@@ -53,7 +53,7 @@ public class ParticleRenderer extends IRenderer {
 	}
 
 	@Override
-	public void renderObjects(final Vector4f clipPlane, final ICamera camera) {
+	public void renderObjects(Vector4f clipPlane, ICamera camera) {
 		if (!shader.isLoaded() || FlounderEngine.getParticles().getParticles().size() < 1) {
 			return;
 		}
@@ -69,7 +69,7 @@ public class ParticleRenderer extends IRenderer {
 				Collections.reverse(particles); // Reverse as the sorted list should be close(small) -> far(big).
 
 				// Creates the data to be used when rendering.
-				final float[] vboData = new float[Math.min(particles.size(), MAX_INSTANCES) * INSTANCE_DATA_LENGTH];
+				float[] vboData = new float[Math.min(particles.size(), MAX_INSTANCES) * INSTANCE_DATA_LENGTH];
 				boolean textureBound = false;
 				pointer = 0;
 
@@ -98,7 +98,7 @@ public class ParticleRenderer extends IRenderer {
 		FlounderEngine.getProfiler().add("Particles", "Render Time", super.getRenderTimeMs());
 	}
 
-	private void prepareRendering(final Vector4f clipPlane, final ICamera camera) {
+	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
 		shader.start();
 		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderEngine.getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
@@ -107,7 +107,7 @@ public class ParticleRenderer extends IRenderer {
 		rendered = 0;
 	}
 
-	private void prepareTexturedModel(final ParticleTemplate particleTemplate) {
+	private void prepareTexturedModel(ParticleTemplate particleTemplate) {
 		unbindTexturedModel();
 
 		OpenGlUtils.bindVAO(VAO, 0, 1, 2, 3, 4, 5, 6, 7);
