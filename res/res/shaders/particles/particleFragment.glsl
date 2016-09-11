@@ -20,7 +20,7 @@ void main(void) {
 	out_colour = mix(colour1, colour2, textureBlendFactor);
 	out_colour.a -= textureTransparency;
 
-	if (out_colour.a < 0.4) {
+	if (out_colour.a <= 0.0) {
 	    out_colour = vec4(0.0);
 	    discard;
 	}

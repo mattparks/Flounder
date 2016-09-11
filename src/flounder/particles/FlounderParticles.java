@@ -111,7 +111,7 @@ public class FlounderParticles implements IModule {
 	 * @param scale
 	 * @param gravityEffect
 	 */
-	protected void addParticle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
+	public void addParticle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		Particle particle;
 
 		if (deadParticles.size() > 0) {

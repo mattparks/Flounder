@@ -497,4 +497,24 @@ public class Maths {
 		float f = (float) ((1.0f - Math.cos(ft)) * 0.5f);
 		return a * (1.0f - f) + b * f;
 	}
+
+	/**
+	 * Generates a single value from a normal distribution, using Box-Muller.
+	 * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+	 *
+	 * @param standardDeviation The standard deviation of the distribution.
+	 * @param mean The mean of the distribution.
+	 *
+	 * @return A normally distributed value.
+	 */
+	public static float normallyDistributedSingle(float standardDeviation, float mean) {
+		// Intentionally duplicated to avoid IEnumerable overhead.
+		double u1 = Maths.RANDOM.nextDouble(); // These are uniform(0,1) random doubles.
+		double u2 = Maths.RANDOM.nextDouble();
+
+		double x1 = Math.sqrt(-2.0 * Math.log(u1));
+		double x2 = 2.0 * Math.PI * u2;
+		double z1 = x1 * Math.sin(x2); // Random normal(0,1)
+		return (float) (z1 * standardDeviation + mean);
+	}
 }
