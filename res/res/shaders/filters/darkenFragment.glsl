@@ -2,10 +2,9 @@
 
 in vec2 pass_textureCoords;
 
-out vec4 out_colour;
+layout(location = 0) out vec4 out_colour;
 
 layout(binding = 0) uniform sampler2D originalTexture;
-
 uniform float factor;
 
 void main(void) {

@@ -19,7 +19,7 @@ public class FilterBlurHorizontal extends PostFilter {
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
 				new ShaderType(GL_FRAGMENT_SHADER, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl"))
 		).createInSecondThread(), FBO.newFBO(sizeScalar).create());
-		fitToDisplay = true;
+		this.fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
 		init((int) (FlounderEngine.getDevices().getDisplay().getWidth() * sizeScalar));
 	}
@@ -29,7 +29,7 @@ public class FilterBlurHorizontal extends PostFilter {
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
 				new ShaderType(GL_FRAGMENT_SHADER, new MyFile(PostFilter.POST_LOC, "blurHorizontalFragment.glsl"))
 		).createInSecondThread(), FBO.newFBO(widthValue, heightValue).create());
-		fitToDisplay = false;
+		this.fitToDisplay = false;
 		this.sizeScalar = 1.0f;
 		init(widthValue);
 	}

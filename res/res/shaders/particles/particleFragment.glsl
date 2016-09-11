@@ -1,15 +1,15 @@
 #version 130
 
+in vec2 textureCoords1;
+in vec2 textureCoords2;
+in float textureBlendFactor;
+in float textureTransparency;
+in vec4 particlePosition;
+
 layout(location = 0) out vec4 out_colour;
 layout(location = 1) out vec4 out_depth;
 layout(location = 2) out vec4 out_normal;
 layout(location = 3) out vec4 out_specular;
-
-varying vec2 textureCoords1;
-varying vec2 textureCoords2;
-varying float textureBlendFactor;
-varying float textureTransparency;
-varying vec4 particlePosition;
 
 layout(binding = 0) uniform sampler2D particleTexture;
 

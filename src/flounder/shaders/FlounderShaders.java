@@ -32,44 +32,6 @@ public class FlounderShaders implements IModule {
 	}
 
 	/**
-	 * Loads shader data, and builder data, into a shader.
-	 *
-	 * @param shader The shader to load into.
-	 * @param data The data to use when creating the shader.
-	 * @param builder The builder configured for the shader.
-	 */
-	public void loadShaderToOpenGL(Shader shader, ShaderData data, ShaderBuilder builder) {
-		int programID = glCreateProgram();
-
-		for (ShaderType shaderType : builder.getShaderTypes()) {
-			int shaderID = glCreateShader(shaderType.getShaderType());
-			glShaderSource(shaderID, shaderType.getShaderBuilder());
-			glCompileShader(shaderID);
-
-			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-				FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
-				FlounderEngine.getLogger().error("Could not compile shader " + builder.getShaderName());
-				System.exit(-1);
-			}
-
-			shaderType.setShaderProgramID(shaderID);
-			glAttachShader(programID, shaderID);
-		}
-
-		loadLocations(programID, data);
-		glLinkProgram(programID);
-
-		for (ShaderType shaderType : builder.getShaderTypes()) {
-			glDetachShader(programID, shaderType.getShaderProgramID());
-			glDeleteShader(shaderType.getShaderProgramID());
-			shaderType.setShaderProgramID(-1);
-		}
-
-		shader.loadData(programID, builder.getShaderName(), builder.getShaderTypes(), createUniforms(programID, data));
-		data.destroy();
-	}
-
-	/**
 	 * Creates the shader data using builder configs.
 	 *
 	 * @param builder The builder configs.
@@ -108,14 +70,6 @@ public class FlounderShaders implements IModule {
 	}
 
 	private StringBuilder processShaderLine(String line, ShaderData data, int shaderType) {
-		if (line.contains("varying")) {
-			if (shaderType == GL_VERTEX_SHADER) {
-				return new StringBuilder().append(line.replace("varying", "out"));
-			} else {
-				return new StringBuilder().append(line.replace("varying", "in"));
-			}
-		}
-
 		if (line.contains("#include")) {
 			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
 			included = included.substring("#include".length(), included.length());
@@ -186,11 +140,51 @@ public class FlounderShaders implements IModule {
 		return new StringBuilder().append(line);
 	}
 
+	/**
+	 * Loads shader data, and builder data, into a shader.
+	 *
+	 * @param shader The shader to load into.
+	 * @param data The data to use when creating the shader.
+	 * @param builder The builder configured for the shader.
+	 */
+	public void loadShaderToOpenGL(Shader shader, ShaderData data, ShaderBuilder builder) {
+		int programID = glCreateProgram();
+
+		for (ShaderType shaderType : builder.getShaderTypes()) {
+			int shaderID = glCreateShader(shaderType.getShaderType());
+			glShaderSource(shaderID, shaderType.getShaderBuilder());
+			glCompileShader(shaderID);
+
+			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
+				FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
+				FlounderEngine.getLogger().error("Could not compile shader " + builder.getShaderName());
+				System.exit(-1);
+			}
+
+			shaderType.setShaderProgramID(shaderID);
+			glAttachShader(programID, shaderID);
+		}
+
+		loadLocations(programID, data);
+		glLinkProgram(programID);
+
+		for (ShaderType shaderType : builder.getShaderTypes()) {
+			glDetachShader(programID, shaderType.getShaderProgramID());
+			glDeleteShader(shaderType.getShaderProgramID());
+			shaderType.setShaderProgramID(-1);
+		}
+
+		loadBindings(programID, data);
+
+		shader.loadData(programID, builder.getShaderName(), builder.getShaderTypes(), createUniforms(programID, data));
+		data.destroy();
+	}
+
 	private void loadLocations(int programID, ShaderData data) {
 		for (String l : data.layoutLocations) {
 			String locationName = l.substring(l.lastIndexOf(" ") + 1, l.length() - 1);
 			String type = l.substring(0, l.lastIndexOf(" ") + 1);
-			type = type.substring(l.lastIndexOf(")") + 1, type.length());
+			type = type.substring(l.lastIndexOf(")") + 1, type.length()).trim();
 			int locationValue = Integer.parseInt(l.substring(findCharPos(l, '=') + 1, findCharPos(l, ')')).replaceAll("\\s+", ""));
 
 			if (type.contains("in")) {
@@ -201,6 +195,20 @@ public class FlounderShaders implements IModule {
 				FlounderEngine.getLogger().error("Could not find location type of: " + type);
 			}
 		}
+	}
+
+	private void loadBindings(int programID, ShaderData data) {
+		glUseProgram(programID);
+
+		for (String b : data.layoutBindings) {
+			String bindingName = b.substring(b.lastIndexOf(" ") + 1, b.length() - 1);
+			int bindingValue = Integer.parseInt(b.substring(findCharPos(b, '=') + 1, findCharPos(b, ')')).replaceAll("\\s+", ""));
+			UniformSampler2D sampler = new UniformSampler2D(bindingName);
+			sampler.storeUniformLocation(programID);
+			sampler.loadTexUnit(bindingValue);
+		}
+
+		glUseProgram(0);
 	}
 
 	private Map<String, Uniform> createUniforms(int programID, ShaderData data) {
@@ -234,7 +242,7 @@ public class FlounderShaders implements IModule {
 		return uniforms;
 	}
 
-	private int findCharPos(String line, char c) {
+	private static int findCharPos(String line, char c) {
 		for (int i = 0; i < line.length(); i++) {
 			if (line.charAt(i) == c) {
 				return i;

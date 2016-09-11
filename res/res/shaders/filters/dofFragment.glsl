@@ -4,12 +4,11 @@
 
 in vec2 pass_textureCoords;
 
-out vec4 out_colour;
+layout(location = 0) out vec4 out_colour;
 
 layout(binding = 0) uniform sampler2D originalTexture;
 layout(binding = 1) uniform sampler2D depthTexture;
 layout(binding = 2) uniform sampler2D blurredTexture;
-
 uniform float aimDistance;
 uniform float nearPlane;
 uniform float farPlane;

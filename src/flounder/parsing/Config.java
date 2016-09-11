@@ -151,6 +151,7 @@ public class Config {
 	 *
 	 * @param entry The name of the configuration entry.
 	 * @param defaultEntry The the default configuration entry.
+	 * @param reference The reference to the value, used when saving.
 	 *
 	 * @return The string assigned to the entry if found, otherwise the string assigned to the default entry.
 	 */
@@ -173,6 +174,7 @@ public class Config {
 	 *
 	 * @param entry The name of the configuration entry.
 	 * @param defaultEntry The the default configuration entry.
+	 * @param reference The reference to the value, used when saving.
 	 *
 	 * @return The integer assigned to the entry if found, otherwise the integer assigned to the default entry.
 	 */
@@ -185,6 +187,7 @@ public class Config {
 	 *
 	 * @param entry The name of the configuration entry.
 	 * @param defaultEntry The the default configuration entry.
+	 * @param reference The reference to the value, used when saving.
 	 *
 	 * @return The double assigned to the entry if found, otherwise the double assigned to the default entry.
 	 */
@@ -197,6 +200,7 @@ public class Config {
 	 *
 	 * @param entry The name of the configuration entry.
 	 * @param defaultEntry The the default configuration entry.
+	 * @param reference The reference to the value, used when saving.
 	 *
 	 * @return The boolean assigned to the entry if found, otherwise the boolean assigned to the default entry.
 	 */

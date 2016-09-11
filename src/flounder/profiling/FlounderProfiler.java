@@ -1,7 +1,6 @@
 package flounder.profiling;
 
 import flounder.engine.*;
-import flounder.logger.*;
 
 import javax.swing.*;
 
@@ -56,7 +55,7 @@ public class FlounderProfiler implements IModule {
 		profilerOpen = false;
 
 		// Opens the profiler if not running from jar.
-		toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
+		//	toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
 	}
 
 	@Override

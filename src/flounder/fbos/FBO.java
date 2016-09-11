@@ -237,6 +237,7 @@ public class FBO {
 	 * Blits this FBO attachment to another FBO attachment.
 	 *
 	 * @param readBuffer The colour attachment to be read from.
+	 * @param drawBuffer The colour draw buffer to be written to.
 	 * @param outputFBO The other FBO to blit to.
 	 */
 	public void resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO) {

@@ -64,10 +64,10 @@ public class GuiSelector {
 		}
 
 		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("GUI", "SelectorX", cursorX);
-			FlounderEngine.getProfiler().add("GUI", "SelectorY", cursorY);
-			FlounderEngine.getProfiler().add("GUI", "Click Left", leftClick);
-			FlounderEngine.getProfiler().add("GUI", "Click Right", rightClick);
+			FlounderEngine.getProfiler().add("GUIs", "SelectorX", cursorX);
+			FlounderEngine.getProfiler().add("GUIs", "SelectorY", cursorY);
+			FlounderEngine.getProfiler().add("GUIs", "Click Left", leftClick);
+			FlounderEngine.getProfiler().add("GUIs", "Click Right", rightClick);
 		}
 	}
 

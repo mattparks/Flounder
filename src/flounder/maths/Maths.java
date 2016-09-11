@@ -509,12 +509,36 @@ public class Maths {
 	 */
 	public static float normallyDistributedSingle(float standardDeviation, float mean) {
 		// Intentionally duplicated to avoid IEnumerable overhead.
-		double u1 = Maths.RANDOM.nextDouble(); // These are uniform(0,1) random doubles.
-		double u2 = Maths.RANDOM.nextDouble();
+		double u1 = RANDOM.nextDouble(); // These are uniform(0,1) random doubles.
+		double u2 = RANDOM.nextDouble();
 
 		double x1 = Math.sqrt(-2.0 * Math.log(u1));
 		double x2 = 2.0 * Math.PI * u2;
 		double z1 = x1 * Math.sin(x2); // Random normal(0,1)
 		return (float) (z1 * standardDeviation + mean);
+	}
+
+	/**
+	 * Creates a number between two numbers, logarithmic.
+	 *
+	 * @param lowerLimit The lower number.
+	 * @param upperLimit The upper number.
+	 *
+	 * @return The final random number.
+	 */
+	public static double logRandom(double lowerLimit, double upperLimit) {
+		double logLower = Math.log(lowerLimit);
+		double logUpper = Math.log(upperLimit);
+
+		double raw = RANDOM.nextDouble();
+		double result = Math.exp(raw * (logUpper - logLower) + logLower);
+
+		if (result < lowerLimit) {
+			result = lowerLimit;
+		} else if (result > upperLimit) {
+			result = upperLimit;
+		}
+
+		return result;
 	}
 }

@@ -1,9 +1,9 @@
 #version 130
 
-layout(location = 0) out vec4 out_colour;
+in vec4 pass_positionRelativeToCam;
+in vec3 pass_surfaceNormal;
 
-varying vec4 pass_positionRelativeToCam;
-varying vec3 pass_surfaceNormal;
+layout(location = 0) out vec4 out_colour;
 
 uniform vec3 colour;
 

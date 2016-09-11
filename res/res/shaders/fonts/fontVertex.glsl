@@ -3,7 +3,7 @@
 layout(location = 0) in vec2 in_position;
 layout(location = 1) in vec2 in_textureCoords;
 
-varying vec2 pass_textureCoords;
+out vec2 pass_textureCoords;
 
 uniform vec3 transform;
 uniform float aspectRatio;

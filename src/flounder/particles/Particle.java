@@ -30,10 +30,34 @@ public class Particle implements ISpatialObject, Comparable<Particle> {
 	private float textureBlendFactor;
 	private float distanceToCamera;
 
+	/**
+	 * Creates a new particle object.
+	 *
+	 * @param particleTemplate The particle template to build from.
+	 * @param position The particles initial position.
+	 * @param velocity The particles initial velocity.
+	 * @param lifeLength The particles life length.
+	 * @param rotation The particles rotation.
+	 * @param scale The particles scale.
+	 * @param gravityEffect The particles gravity effect.
+	 */
 	protected Particle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		set(particleTemplate, position, velocity, lifeLength, rotation, scale, gravityEffect);
 	}
 
+	/**
+	 * Sets this particle to a new particle object.
+	 *
+	 * @param particleTemplate The particle template to build from.
+	 * @param position The particles initial position.
+	 * @param velocity The particles initial velocity.
+	 * @param lifeLength The particles life length.
+	 * @param rotation The particles rotation.
+	 * @param scale The particles scale.
+	 * @param gravityEffect The particles gravity effect.
+	 *
+	 * @return this.
+	 */
 	protected Particle set(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		this.particleTemplate = particleTemplate;
 		this.position = position;
@@ -57,6 +81,9 @@ public class Particle implements ISpatialObject, Comparable<Particle> {
 		return this;
 	}
 
+	/**
+	 * Updates the particle.
+	 */
 	protected void update() {
 		velocity.y += -10.0f * gravityEffect * FlounderEngine.getDelta();
 		change.set(velocity);
@@ -154,11 +181,11 @@ public class Particle implements ISpatialObject, Comparable<Particle> {
 	}
 
 	@Override
-	public int compareTo(Particle other) {
+	public int compareTo(Particle o) {
 		if (!isAlive()) {
-			return ((Float) elapsedTime).compareTo(other.elapsedTime);
+			return ((Float) elapsedTime).compareTo(o.elapsedTime);
 		} else {
-			return ((Float) distanceToCamera).compareTo(other.getDistance());
+			return ((Float) distanceToCamera).compareTo(o.distanceToCamera);
 		}
 	}
 }

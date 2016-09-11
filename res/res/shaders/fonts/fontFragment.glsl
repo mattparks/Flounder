@@ -2,12 +2,11 @@
 
 #include "maths.glsl"
 
-varying vec2 pass_textureCoords;
+in vec2 pass_textureCoords;
 
 layout(location = 0) out vec4 out_colour;
 
 layout(binding = 0) uniform sampler2D fontTexture;
-
 uniform vec4 colour;
 uniform vec3 borderColour;
 uniform vec2 borderSizes;

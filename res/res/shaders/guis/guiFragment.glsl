@@ -1,11 +1,10 @@
 #version 130
 
+in vec2 pass_textureCoords;
+
 layout(location = 0) out vec4 out_colour;
 
-varying vec2 pass_textureCoords;
-
 layout(binding = 0) uniform sampler2D guiTexture;
-
 uniform float alpha;
 uniform vec3 colourOffset;
 

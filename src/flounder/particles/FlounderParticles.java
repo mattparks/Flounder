@@ -103,13 +103,13 @@ public class FlounderParticles implements IModule {
 	/**
 	 * Adds a particle to the update loop.
 	 *
-	 * @param particleTemplate
-	 * @param position
-	 * @param velocity
-	 * @param lifeLength
-	 * @param rotation
-	 * @param scale
-	 * @param gravityEffect
+	 * @param particleTemplate The particle template to build from.
+	 * @param position The particles initial position.
+	 * @param velocity The particles initial velocity.
+	 * @param lifeLength The particles life length.
+	 * @param rotation The particles rotation.
+	 * @param scale The particles scale.
+	 * @param gravityEffect The particles gravity effect.
 	 */
 	public void addParticle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		Particle particle;

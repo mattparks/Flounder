@@ -2,7 +2,7 @@
 
 layout(location = 0) in vec2 in_position;
 
-varying vec2 pass_textureCoords;
+out vec2 pass_textureCoords;
 
 uniform vec4 transform;
 uniform bool flipTexture;

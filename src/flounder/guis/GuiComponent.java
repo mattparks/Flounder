@@ -203,7 +203,10 @@ public abstract class GuiComponent {
 		setScreenSpacePosition(x, y, width, height);
 
 		childComponents.forEach(GuiComponent::updateScreenSpacePosition);
-		componentTexts.keySet().forEach(text -> setTextScreenSpacePosition(text, componentTexts.get(text)));
+
+		for (Text text : componentTexts.keySet()) {
+			setTextScreenSpacePosition(text, componentTexts.get(text));
+		}
 	}
 
 	/**
@@ -239,13 +242,13 @@ public abstract class GuiComponent {
 		float positionX = position.x; // / FlounderEngine.getDevices().getDisplay().getAspectRatio();
 		float positionY = position.y;
 
-		if (FlounderEngine.getDevices().getMouse().isDisplaySelected() && FlounderEngine.getDevices().getDisplay().isFocused()) {
-			if (FlounderEngine.getGuis().getSelector().getCursorX() >= positionX && FlounderEngine.getGuis().getSelector().getCursorX() <= positionX + scale.x) {
-				if (FlounderEngine.getGuis().getSelector().getCursorY() >= positionY && FlounderEngine.getGuis().getSelector().getCursorY() <= positionY + scale.y) {
-					return true;
-				}
+		//	if (FlounderEngine.getDevices().getMouse().isDisplaySelected() && FlounderEngine.getDevices().getDisplay().isFocused()) {
+		if (FlounderEngine.getGuis().getSelector().getCursorX() >= positionX && FlounderEngine.getGuis().getSelector().getCursorX() <= positionX + scale.x) {
+			if (FlounderEngine.getGuis().getSelector().getCursorY() >= positionY && FlounderEngine.getGuis().getSelector().getCursorY() <= positionY + scale.y) {
+				return true;
 			}
 		}
+		//	}
 
 		return false;
 	}

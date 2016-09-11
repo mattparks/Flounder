@@ -6,11 +6,11 @@ layout(location = 5) in vec4 textureOffsets;
 layout(location = 6) in float blendFactor;
 layout(location = 7) in float transparency;
 
-varying vec2 textureCoords1;
-varying vec2 textureCoords2;
-varying float textureBlendFactor;
-varying float textureTransparency;
-varying vec4 particlePosition;
+out vec2 textureCoords1;
+out vec2 textureCoords2;
+out float textureBlendFactor;
+out float textureTransparency;
+out vec4 particlePosition;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;

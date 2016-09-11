@@ -5,8 +5,8 @@ layout(location = 1) in vec2 in_textureCoords;
 layout(location = 1) in vec3 in_normal;
 layout(location = 3) in vec3 in_tangent;
 
-varying vec4 pass_positionRelativeToCam;
-varying vec3 pass_surfaceNormal;
+out vec4 pass_positionRelativeToCam;
+out vec3 pass_surfaceNormal;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;

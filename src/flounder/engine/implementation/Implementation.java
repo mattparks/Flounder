@@ -23,6 +23,7 @@ public class Implementation implements IModule {
 	 * @param game The game to be run with the engine.
 	 * @param camera The main camera to use.
 	 * @param renderer The master renderer to render with.
+	 * @param managerGUI The manager for the implementation for GUIs.
 	 * @param fpsLimit The maximum FPS the engine can render at.
 	 */
 	public Implementation(IGame game, ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI, int fpsLimit) {

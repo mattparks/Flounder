@@ -78,6 +78,15 @@ public class Shader {
 	}
 
 	/**
+	 * Gets the shaders name.
+	 *
+	 * @return The shaders name.
+	 */
+	public String getShaderName() {
+		return shaderName;
+	}
+
+	/**
 	 * Gets if the texture is loaded.
 	 *
 	 * @return If the texture is loaded.
