@@ -21,21 +21,21 @@ public class StructureQuadtree<T extends ISpatialObject> implements ISpatialStru
 	 * @param capacity The number of objects that can be added to the QuadTree before it subdivides.
 	 */
 	public StructureQuadtree(AABB aabb, int capacity) {
-		this.aabb = aabb;
+		this.nodes = null;
 		this.capacity = capacity;
-		objects = new ArrayList<>();
-		nodes = null;
+		this.objects = new ArrayList<>();
+		this.aabb = aabb;
 	}
 
 	/**
 	 * Initializes a QuadTree from a source Quadtree.
 	 *
-	 * @param source The source quadtree.
+	 * @param source The source QuadTree.
 	 */
 	private StructureQuadtree(StructureQuadtree<T> source) {
 		this.nodes = source.nodes;
-		this.objects = source.objects;
 		this.capacity = source.capacity;
+		this.objects = source.objects;
 		this.aabb = source.aabb;
 	}
 

@@ -75,6 +75,11 @@ public class Implementation implements IModule {
 		return camera;
 	}
 
+	public void setCamera(ICamera camera) {
+		this.camera = camera;
+		this.camera.init();
+	}
+
 	public IRendererMaster getRendererMaster() {
 		return renderer;
 	}

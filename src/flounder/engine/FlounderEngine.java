@@ -364,6 +364,10 @@ public class FlounderEngine extends Thread implements IModule {
 		return instance.implementation.getCamera();
 	}
 
+	public static void setCamera(ICamera camera) {
+		instance.implementation.setCamera(camera);
+	}
+
 	/**
 	 * Gets the modules current master renderer.
 	 *
