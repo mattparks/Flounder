@@ -86,6 +86,15 @@ public interface ICamera extends IAudioListener {
 	float getRoll();
 
 	/**
+	 * Sets the rotation of the camera.
+	 *
+	 * @param pitch The cameras new pitch.
+	 * @param yaw The cameras new yaw,
+	 * @param roll The cameras new roll.
+	 */
+	void setRotation(float pitch, float yaw, float roll);
+
+	/**
 	 * @return The cameras aim distance at the terrain.
 	 */
 	float getAimDistance();

@@ -149,6 +149,13 @@ public class Testing1 {
 			}
 
 			@Override
+			public void setRotation(float pitch, float yaw, float roll) {
+				this.rotation.x = pitch;
+				this.rotation.y = yaw;
+				this.rotation.z = roll;
+			}
+
+			@Override
 			public float getAimDistance() {
 				throw new NotImplementedException();
 			}

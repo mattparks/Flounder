@@ -172,7 +172,7 @@ public class OpenGlUtils {
 	}
 
 	/**
-	 * Binds the OpenGL texture to a blank ID.
+	 * Binds a OpenGL texture to a blank ID.
 	 *
 	 * @param textureID The texture to bind.
 	 * @param bankID The blank ID to bind to.
@@ -180,6 +180,17 @@ public class OpenGlUtils {
 	public static void bindTextureToBank(int textureID, int bankID) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+
+	/**
+	 * Binds a OpenGL cubemap to a blank ID.
+	 *
+	 * @param cubemapID The cubemap to bind.
+	 * @param bankID The blank ID to bind to.
+	 */
+	public static void bindCubemapToBank(int cubemapID, int bankID) {
+		glActiveTexture(GL_TEXTURE0 + bankID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapID);
 	}
 
 	/**
