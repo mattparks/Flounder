@@ -1,15 +1,20 @@
 #version 130
 
+//---------IN------------
 in vec2 pass_textureCoords;
 
-layout(location = 0) out vec4 out_colour;
-
+//---------UNIFORM------------
 layout(binding = 0) uniform sampler2D originalTexture;
 uniform float spanMax;
 
+//---------OUT------------
+layout(location = 0) out vec4 out_colour;
+
+//---------CONSTANT------------
 const float FXAA_REDUCE_MIN = (1.0 / 128.0);
 const float FXAA_REDUCE_MUL = (1.0 / 8.0);
 
+//---------APPLY FXAA------------
 vec4 applyFXAA(sampler2D texture, vec2 fragCoord, vec2 resolution) {
 	vec2 inverseResolution = vec2(1.0 / resolution.x, 1.0 / resolution.y);
 	vec3 rgbNW = texture2D(texture, fragCoord + vec2(-1.0, -1.0) * inverseResolution).xyz;
@@ -49,6 +54,7 @@ vec4 applyFXAA(sampler2D texture, vec2 fragCoord, vec2 resolution) {
 	}
 }
 
+//---------MAIN------------
 void main(void) {
 	ivec2 originalSize = textureSize(originalTexture, 0);
 	out_colour = applyFXAA(originalTexture, pass_textureCoords, vec2(originalSize.x, originalSize.y));

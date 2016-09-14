@@ -1,13 +1,17 @@
 #version 130
 
+//---------IN------------
 in vec2 pass_textureCoords;
 
-layout(location = 0) out vec4 out_colour;
-
+//---------UNIFORM------------
 layout(binding = 0) uniform sampler2D originalTexture;
 uniform float height;
 uniform float scale;
 
+//---------OUT------------
+layout(location = 0) out vec4 out_colour;
+
+//---------MAIN------------
 void main(void) {
 	out_colour = vec4(0.0);
 

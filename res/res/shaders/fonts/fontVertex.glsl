@@ -1,13 +1,17 @@
 #version 130
 
+//---------IN------------
 layout(location = 0) in vec2 in_position;
 layout(location = 1) in vec2 in_textureCoords;
 
-out vec2 pass_textureCoords;
-
+//---------UNIFORM------------
 uniform vec3 transform;
 uniform float aspectRatio;
 
+//---------OUT------------
+out vec2 pass_textureCoords;
+
+//---------MAIN------------
 void main(void) {
 	vec2 screenPosition = in_position * transform.z + transform.xy;
 	screenPosition.x = (screenPosition.x / aspectRatio) * 2.0 - 1.0;

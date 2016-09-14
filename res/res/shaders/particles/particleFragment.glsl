@@ -1,18 +1,22 @@
 #version 130
 
+//---------IN------------
 in vec2 textureCoords1;
 in vec2 textureCoords2;
 in float textureBlendFactor;
 in float textureTransparency;
 in vec4 particlePosition;
 
+//---------UNIFORM------------
+layout(binding = 0) uniform sampler2D particleTexture;
+
+//---------OUT------------
 layout(location = 0) out vec4 out_colour;
 layout(location = 1) out vec4 out_depth;
 layout(location = 2) out vec4 out_normal;
 layout(location = 3) out vec4 out_specular;
 
-layout(binding = 0) uniform sampler2D particleTexture;
-
+//---------MAIN------------
 void main(void) {
     vec4 colour1 = texture(particleTexture, textureCoords1);
     vec4 colour2 = texture(particleTexture, textureCoords2);

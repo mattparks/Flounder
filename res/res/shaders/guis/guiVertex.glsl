@@ -1,14 +1,18 @@
 #version 130
 
+//---------IN------------
 layout(location = 0) in vec2 in_position;
 
-out vec2 pass_textureCoords;
-
+//---------UNIFORM------------
 uniform vec4 transform;
 uniform bool flipTexture;
 uniform float atlasRows;
 uniform vec2 atlasOffset;
 
+//---------OUT------------
+out vec2 pass_textureCoords;
+
+//---------MAIN------------
 void main(void) {
 	pass_textureCoords = in_position;
 	pass_textureCoords = (pass_textureCoords / atlasRows) + atlasOffset;

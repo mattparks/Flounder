@@ -2,16 +2,20 @@
 
 #include "maths.glsl"
 
+//---------IN------------
 in vec2 pass_textureCoords;
 
-layout(location = 0) out vec4 out_colour;
-
+//---------UNIFORM------------
 layout(binding = 0) uniform sampler2D fontTexture;
 uniform vec4 colour;
 uniform vec3 borderColour;
 uniform vec2 borderSizes;
 uniform vec2 edgeData;
 
+//---------OUT------------
+layout(location = 0) out vec4 out_colour;
+
+//---------MAIN------------
 void main(void) {
     float dist = texture(fontTexture, pass_textureCoords).a;
     float alpha = smoothlyStep((1.0 - edgeData.x) - edgeData.y, 1.0 - edgeData.x, dist);

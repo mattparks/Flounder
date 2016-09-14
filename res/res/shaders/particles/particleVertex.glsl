@@ -1,22 +1,26 @@
 #version 130
 
+//---------IN------------
 layout(location = 0) in vec2 position;
 layout(location = 1) in mat4 modelMatrix;
 layout(location = 5) in vec4 textureOffsets;
 layout(location = 6) in float blendFactor;
 layout(location = 7) in float transparency;
 
+//---------UNIFORM------------
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 clipPlane;
+uniform float numberOfRows;
+
+//---------OUT------------
 out vec2 textureCoords1;
 out vec2 textureCoords2;
 out float textureBlendFactor;
 out float textureTransparency;
 out vec4 particlePosition;
 
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
-uniform vec4 clipPlane;
-uniform float numberOfRows;
-
+//---------MAIN------------
 void main(void) {
 	mat4 modelViewMatrix = viewMatrix * modelMatrix;
 	gl_ClipDistance[0] = dot(modelMatrix * vec4(position, 0.0, 1.0), clipPlane);

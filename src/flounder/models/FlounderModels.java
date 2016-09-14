@@ -151,7 +151,7 @@ public class FlounderModels implements IModule {
 		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getNormals(), 2, 3);
 		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getTangents(), 3, 3);
 		glBindVertexArray(0);
-		model.setVaoLength(model.getIndices().length);
+		model.setVaoLength(model.getIndices() != null ? model.getIndices().length : (model.getVertices().length / 3));
 	}
 
 	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices, Material currentMaterial) {

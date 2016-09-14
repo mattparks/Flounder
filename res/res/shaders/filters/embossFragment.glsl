@@ -1,14 +1,19 @@
 #version 130
 
+//---------IN------------
 in vec2 pass_textureCoords;
 
-layout(location = 0) out vec4 out_colour;
-
+//---------UNIFORM------------
 layout(binding = 0) uniform sampler2D originalTexture;
 
+//---------OUT------------
+layout(location = 0) out vec4 out_colour;
+
+//---------CONSTANT------------
 const vec4 lumcoeff = vec4(0.299, 0.587, 0.114, 0);
 const float v = 0.001;
 
+//---------MAIN------------
 void main(void) {
 	vec4 sampler[6];
 	vec2 tc_offset[6];
