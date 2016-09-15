@@ -64,7 +64,7 @@ public class FlounderEngine extends Thread implements IModule {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.09.13");
+		version = new Version("1.09.14");
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();

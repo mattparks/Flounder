@@ -1,6 +1,8 @@
 package flounder.physics;
 
 import flounder.maths.*;
+import flounder.maths.Timer;
+import flounder.maths.rays.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
@@ -299,32 +301,32 @@ public class AABB {
 		destination.setMaxExtents(destination.maxExtents.x * scale, destination.maxExtents.y * scale, destination.maxExtents.z * scale);
 
 		// Creates the 8 AABB corners and rotates them.
-		Vector3f FLL = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.minExtents.z);
-		Vector3f.rotate(FLL, rotation, FLL);
+		Vector3f fll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.minExtents.z);
+		Vector3f.rotate(fll, rotation, fll);
 
-		Vector3f FLR = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.minExtents.z);
-		Vector3f.rotate(FLR, rotation, FLR);
+		Vector3f flr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.minExtents.z);
+		Vector3f.rotate(flr, rotation, flr);
 
-		Vector3f FUL = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.minExtents.z);
-		Vector3f.rotate(FUL, rotation, FUL);
+		Vector3f ful = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.minExtents.z);
+		Vector3f.rotate(ful, rotation, ful);
 
-		Vector3f FUR = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.minExtents.z);
-		Vector3f.rotate(FUR, rotation, FUR);
+		Vector3f fur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.minExtents.z);
+		Vector3f.rotate(fur, rotation, fur);
 
-		Vector3f BUR = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(BUR, rotation, BUR);
+		Vector3f bur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(bur, rotation, bur);
 
-		Vector3f BUL = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(BUL, rotation, BUL);
+		Vector3f bul = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(bul, rotation, bul);
 
-		Vector3f BLR = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(BLR, rotation, BLR);
+		Vector3f blr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(blr, rotation, blr);
 
-		Vector3f BLL = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(BLL, rotation, BLL);
+		Vector3f bll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.maxExtents.z);
+		Vector3f.rotate(bll, rotation, bll);
 
-		destination.minExtents = Maths.min(FLL, Maths.min(FLR, Maths.min(FUL, Maths.min(FUR, Maths.min(BUR, Maths.min(BUL, Maths.min(BLR, BLL)))))));
-		destination.maxExtents = Maths.max(FLL, Maths.max(FLR, Maths.max(FUL, Maths.max(FUR, Maths.max(BUR, Maths.max(BUL, Maths.max(BLR, BLL)))))));
+		destination.minExtents = Maths.min(fll, Maths.min(flr, Maths.min(ful, Maths.min(fur, Maths.min(bur, Maths.min(bul, Maths.min(blr, bll)))))));
+		destination.maxExtents = Maths.max(fll, Maths.max(flr, Maths.max(ful, Maths.max(fur, Maths.max(bur, Maths.max(bul, Maths.max(blr, bll)))))));
 
 		// Transforms the AABB.
 		Vector3f.add(destination.minExtents, position, destination.minExtents);
@@ -362,6 +364,113 @@ public class AABB {
 		final float maxDist = Maths.max(Maths.max(new Vector3f(getMinExtents().getX() - other.getMaxExtents().getX(), getMinExtents().getY() - other.getMaxExtents().getY(), getMinExtents().getZ() - other.getMaxExtents().getZ()), new Vector3f(other.getMinExtents().getX() - getMaxExtents().getX(), other.getMinExtents().getY() - getMaxExtents().getY(), other.getMinExtents().getZ() - getMaxExtents().getZ())));
 
 		return new IntersectData(maxDist < 0, maxDist);
+	}
+
+	/**
+	 * Tests if a sphere intersects this AABB.
+	 *
+	 * @param position The spheres position.
+	 * @param radius The spheres radius.
+	 *
+	 * @return If the sphere intersects this AABB.
+	 */
+	public boolean intersectsSphere(Vector3f position, float radius) {
+		float distanceSquared = radius * radius;
+
+		if (position.x < minExtents.x) {
+			distanceSquared -= Math.pow(position.x - minExtents.x, 2);
+		} else if (position.x > maxExtents.x) {
+			distanceSquared -= Math.pow(position.x - maxExtents.x, 2);
+		}
+
+		if (position.y < minExtents.x) {
+			distanceSquared -= Math.pow(position.y - minExtents.y, 2);
+		} else if (position.x > maxExtents.x) {
+			distanceSquared -= Math.pow(position.y - maxExtents.y, 2);
+		}
+
+		if (position.z < minExtents.x) {
+			distanceSquared -= Math.pow(position.z - minExtents.z, 2);
+		} else if (position.z > maxExtents.x) {
+			distanceSquared -= Math.pow(position.z - maxExtents.z, 2);
+		}
+
+		return distanceSquared > 0.0f;
+	}
+
+	private final static Timer timer = new Timer(1.0f);
+
+	/**
+	 * Calculates intersection with the given ray between a certain distance interval.
+	 * <p>
+	 * Ray-box intersection is using IEEE numerical properties to ensure the test is both robust and efficient, as described in:
+	 * <br>
+	 * <code>Amy Williams, Steve Barrus, R. Keith Morley, and Peter Shirley: "An Efficient and Robust Ray-Box Intersection Algorithm"
+	 * Journal of graphics tools, 10(1):49-54, 2005</code>
+	 *
+	 * @param ray incident ray
+	 * @param minDistance
+	 * @param maxDistance
+	 *
+	 * @return intersection point on the bounding box (only the first is returned) or null if no intersection.
+	 */
+	public Vector3f intersectsRay(Ray ray, float minDistance, float maxDistance) {
+		Vector3f point1 = ray.getPointOnRay(0.0f);
+		Vector3f point2 = ray.getPointOnRay(1.0f);
+		Vector3f distance = Vector3f.getVectorDistance(point1, point2).normalize();
+		if (timer.isPassedTime()) {
+		//	FlounderEngine.getLogger().error(point1 + "/" + point2 + " = " + distance);
+			timer.resetStartTime();
+		}
+		Vector3f invDir = new Vector3f(1.0f / distance.x, 1.0f / distance.y, 1.0f / distance.z);
+
+		boolean signDirX = invDir.x < 0.0f;
+		boolean signDirY = invDir.y < 0.0f;
+		boolean signDirZ = invDir.z < 0.0f;
+
+		Vector3f bbox = signDirX ? maxExtents : minExtents;
+		float tmin = (bbox.x - ray.getCameraPosition().x) * invDir.x;
+		bbox = signDirX ? minExtents : maxExtents;
+		float tmax = (bbox.x - ray.getCameraPosition().x) * invDir.x;
+		bbox = signDirY ? maxExtents : minExtents;
+		float tymin = (bbox.y - ray.getCameraPosition().y) * invDir.y;
+		bbox = signDirY ? minExtents : maxExtents;
+		float tymax = (bbox.y - ray.getCameraPosition().y) * invDir.y;
+
+		if ((tmin > tymax) || (tymin > tmax)) {
+			return null;
+		}
+
+		if (tymin > tmin) {
+			tmin = tymin;
+		}
+
+		if (tymax < tmax) {
+			tmax = tymax;
+		}
+
+		bbox = signDirZ ? maxExtents : minExtents;
+		float tzmin = (bbox.z - ray.getCameraPosition().z) * invDir.z;
+		bbox = signDirZ ? minExtents : maxExtents;
+		float tzmax = (bbox.z - ray.getCameraPosition().z) * invDir.z;
+
+		if ((tmin > tzmax) || (tzmin > tmax)) {
+			return null;
+		}
+
+		if (tzmin > tmin) {
+			tmin = tzmin;
+		}
+
+		if (tzmax < tmax) {
+			tmax = tzmax;
+		}
+
+		//if ((tmin < maxDistance) && (tmax > minDistance)) {
+			return ray.getPointOnRay(tmin);
+		//}
+
+		//return null;
 	}
 
 	public boolean contains(Vector3f point) {
