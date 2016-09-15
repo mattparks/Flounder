@@ -401,44 +401,35 @@ public class AABB {
 	private final static Timer timer = new Timer(1.0f);
 
 	/**
-	 * Calculates intersection with the given ray between a certain distance interval.
-	 * <p>
-	 * Ray-box intersection is using IEEE numerical properties to ensure the test is both robust and efficient, as described in:
-	 * <br>
-	 * <code>Amy Williams, Steve Barrus, R. Keith Morley, and Peter Shirley: "An Efficient and Robust Ray-Box Intersection Algorithm"
-	 * Journal of graphics tools, 10(1):49-54, 2005</code>
+	 * Calculates intersection between this AABB and a ray.
 	 *
-	 * @param ray incident ray
-	 * @param minDistance
-	 * @param maxDistance
+	 * @param ray The ray to test if there is an intersection with.
 	 *
-	 * @return intersection point on the bounding box (only the first is returned) or null if no intersection.
+	 * @return If there is a intersection between this AABB and a ray.
 	 */
-	public Vector3f intersectsRay(Ray ray, float minDistance, float maxDistance) {
-		Vector3f point1 = ray.getPointOnRay(0.0f);
-		Vector3f point2 = ray.getPointOnRay(1.0f);
-		Vector3f distance = Vector3f.getVectorDistance(point1, point2).normalize();
-		if (timer.isPassedTime()) {
-		//	FlounderEngine.getLogger().error(point1 + "/" + point2 + " = " + distance);
-			timer.resetStartTime();
+	public boolean intersectsRay(Ray ray) {
+		/*double tmin = (minExtents.x - ray.getOrigin().x) / ray.getCurrentRay().x;
+		double tmax = (maxExtents.x - ray.getOrigin().x) / ray.getCurrentRay().x;
+
+		if (tmin > tmax) {
+			double temp = tmax;
+			tmax = tmin;
+			tmin = temp;
+			//	swap(tmin, tmax);
 		}
-		Vector3f invDir = new Vector3f(1.0f / distance.x, 1.0f / distance.y, 1.0f / distance.z);
 
-		boolean signDirX = invDir.x < 0.0f;
-		boolean signDirY = invDir.y < 0.0f;
-		boolean signDirZ = invDir.z < 0.0f;
+		float tymin = (minExtents.y - ray.getOrigin().y) / ray.getCurrentRay().y;
+		float tymax = (maxExtents.y - ray.getOrigin().y) / ray.getCurrentRay().y;
 
-		Vector3f bbox = signDirX ? maxExtents : minExtents;
-		float tmin = (bbox.x - ray.getCameraPosition().x) * invDir.x;
-		bbox = signDirX ? minExtents : maxExtents;
-		float tmax = (bbox.x - ray.getCameraPosition().x) * invDir.x;
-		bbox = signDirY ? maxExtents : minExtents;
-		float tymin = (bbox.y - ray.getCameraPosition().y) * invDir.y;
-		bbox = signDirY ? minExtents : maxExtents;
-		float tymax = (bbox.y - ray.getCameraPosition().y) * invDir.y;
+		if (tymin > tymax) {
+			float temp = tymax;
+			tymax = tymin;
+			tymin = temp;
+			//	swap(tymin, tymax);
+		}
 
 		if ((tmin > tymax) || (tymin > tmax)) {
-			return null;
+			return false;
 		}
 
 		if (tymin > tmin) {
@@ -449,13 +440,18 @@ public class AABB {
 			tmax = tymax;
 		}
 
-		bbox = signDirZ ? maxExtents : minExtents;
-		float tzmin = (bbox.z - ray.getCameraPosition().z) * invDir.z;
-		bbox = signDirZ ? minExtents : maxExtents;
-		float tzmax = (bbox.z - ray.getCameraPosition().z) * invDir.z;
+		float tzmin = (minExtents.z - ray.getOrigin().z) / ray.getCurrentRay().z;
+		float tzmax = (maxExtents.z - ray.getOrigin().z) / ray.getCurrentRay().z;
+
+		if (tzmin > tzmax) {
+			float temp = tzmax;
+			tzmax = tzmin;
+			tzmin = temp;
+			//	swap(tzmin, tzmax);
+		}
 
 		if ((tmin > tzmax) || (tzmin > tmax)) {
-			return null;
+			return false;
 		}
 
 		if (tzmin > tmin) {
@@ -466,11 +462,85 @@ public class AABB {
 			tmax = tzmax;
 		}
 
-		//if ((tmin < maxDistance) && (tmax > minDistance)) {
-			return ray.getPointOnRay(tmin);
-		//}
+		return true;*/
 
-		//return null;
+		return CheckLineBox(minExtents, maxExtents, ray.getPointOnRay(0, null), ray.getPointOnRay(1024.0f, null), new Vector3f());
+	}
+
+	// returns true if line (L1, L2) intersects with the box (B1, B2)
+// returns intersection point in Hit
+	private boolean CheckLineBox( Vector3f B1, Vector3f B2, Vector3f L1, Vector3f L2, Vector3f Hit)
+	{
+		if (L2.x < B1.x && L1.x < B1.x) {
+			return false;
+		}
+
+		if (L2.x > B2.x && L1.x > B2.x) {
+			return false;
+		}
+
+		if (L2.y < B1.y && L1.y < B1.y) {
+			return false;
+		}
+
+		if (L2.y > B2.y && L1.y > B2.y) {
+			return false;
+		}
+
+		if (L2.z < B1.z && L1.z < B1.z) {
+			return false;
+		}
+
+		if (L2.z > B2.z && L1.z > B2.z) {
+			return false;
+		}
+
+		if (L1.x > B1.x && L1.x < B2.x &&
+				L1.y > B1.y && L1.y < B2.y &&
+				L1.z > B1.z && L1.z < B2.z) {
+			Hit = L1;
+			return true;
+		}
+
+		if ( (GetIntersection( L1.x-B1.x, L2.x-B1.x, L1, L2, Hit) && InBox( Hit, B1, B2, 1 ))
+				|| (GetIntersection( L1.y-B1.y, L2.y-B1.y, L1, L2, Hit) && InBox( Hit, B1, B2, 2 ))
+				|| (GetIntersection( L1.z-B1.z, L2.z-B1.z, L1, L2, Hit) && InBox( Hit, B1, B2, 3 ))
+				|| (GetIntersection( L1.x-B2.x, L2.x-B2.x, L1, L2, Hit) && InBox( Hit, B1, B2, 1 ))
+				|| (GetIntersection( L1.y-B2.y, L2.y-B2.y, L1, L2, Hit) && InBox( Hit, B1, B2, 2 ))
+				|| (GetIntersection( L1.z-B2.z, L2.z-B2.z, L1, L2, Hit) && InBox( Hit, B1, B2, 3 )))
+			return true;
+
+		return false;
+	}
+
+	private boolean GetIntersection(float fDst1, float fDst2, Vector3f P1, Vector3f P2, Vector3f Hit) {
+		if ((fDst1 * fDst2) >= 0.0f) {
+			return false;
+		}
+
+		if (fDst1 == fDst2) {
+			return false;
+		}
+
+		// Hit = P1 + (P2-P1) * ( -fDst1/(fDst2-fDst1) );
+		Vector3f.scale(Vector3f.add(P1, Vector3f.subtract(P2, P1, Hit), Hit), -fDst1 / (fDst2 - fDst1), Hit);
+		return true;
+	}
+
+	private boolean InBox(Vector3f Hit, Vector3f B1, Vector3f B2, int Axis) {
+		if (Axis == 1 && Hit.z > B1.z && Hit.z < B2.z && Hit.y > B1.y && Hit.y < B2.y) {
+			return true;
+		}
+
+		if (Axis == 2 && Hit.z > B1.z && Hit.z < B2.z && Hit.x > B1.x && Hit.x < B2.x) {
+			return true;
+		}
+
+		if (Axis == 3 && Hit.x > B1.x && Hit.x < B2.x && Hit.y > B1.y && Hit.y < B2.y) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean contains(Vector3f point) {

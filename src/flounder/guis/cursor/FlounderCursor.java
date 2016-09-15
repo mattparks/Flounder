@@ -94,7 +94,7 @@ public class FlounderCursor implements IModule {
 	}
 
 	public void setAlphaDriver(ValueDriver alphaDriver) {
-		cursorTexture.setAlphaDriver(alphaDriver);
+		//cursorTexture.setAlphaDriver(alphaDriver);
 	}
 
 	@Override

@@ -13,77 +13,98 @@ public class Ray {
 	private static final float RAY_SECTION = 2.0f;
 
 	private boolean useMouse;
-	private Vector2f rayStart;
+	private Vector2f screenStart;
 
-	private Vector3f cameraPosition;
+	private Vector3f origin;
 	private Vector3f currentRay;
+
+	private Vector2f normalizedCoords;
+	private Vector4f clipCoords;
+	private Vector4f eyeCoords;
+
+	private Matrix4f invertedProjection;
+	private Matrix4f invertedView;
+	private Vector4f rayWorld;
 
 	/**
 	 * Creates a new 3D ray.
 	 *
-	 * @param useMouse If the ray will use the mouse coords or to start from rayStart.
-	 * @param rayStart If useMouse is false then this will be used as the rays start.
+	 * @param useMouse If the ray will use the mouse coords or to start from screenStart.
+	 * @param screenStart If useMouse is false then this will be used as the rays start.
 	 */
-	public Ray(boolean useMouse, Vector2f rayStart) {
+	public Ray(boolean useMouse, Vector2f screenStart) {
 		this.useMouse = useMouse;
-		this.rayStart = rayStart;
+		this.screenStart = screenStart;
 
-		this.cameraPosition = new Vector3f();
+		this.origin = new Vector3f();
 		this.currentRay = new Vector3f();
+
+		this.normalizedCoords = new Vector2f();
+		this.clipCoords = new Vector4f();
+		this.eyeCoords = new Vector4f();
+
+		this.invertedProjection = new Matrix4f();
+		this.invertedView = new Matrix4f();
+		this.rayWorld = new Vector4f();
 	}
 
 	public void update(Vector3f currentPosition) {
-		this.cameraPosition.set(currentPosition);
-		currentRay = calculateMouseRay();
-	}
+		origin.set(currentPosition);
 
-	private Vector3f calculateMouseRay() {
-		Vector2f normalizedCoords;
-
-		if (!useMouse && rayStart != null) {
-			float mouseX = FlounderEngine.getGuis().getSelector().getCursorX();
-			float mouseY = FlounderEngine.getGuis().getSelector().getCursorY();
-			normalizedCoords = getNormalisedDeviceCoordinates(mouseX, mouseY);
+		if (useMouse) {
+			float mouseX = FlounderEngine.getDevices().getMouse().getPositionX();
+			float mouseY = FlounderEngine.getDevices().getMouse().getPositionY();
+			updateNormalisedDeviceCoordinates(mouseX, mouseY);
 		} else {
-			normalizedCoords = new Vector2f(0.0f, 0.0f);
+			if (screenStart != null) {
+				normalizedCoords.set(screenStart);
+			} else {
+				normalizedCoords.set(0.0f, 0.0f);
+			}
 		}
 
-		Vector4f clipCoords = new Vector4f(normalizedCoords.x, normalizedCoords.y, -1.0f, 1.0f);
-		Vector4f eyeCoords = toEyeCoords(clipCoords);
-		Vector3f worldRay = toWorldCoords(eyeCoords);
-		return worldRay;
+		clipCoords.set(normalizedCoords.x, normalizedCoords.y, -1.0f, 1.0f);
+		updateEyeCoords(clipCoords);
+		updateWorldCoords(eyeCoords);
 	}
 
-	private Vector2f getNormalisedDeviceCoordinates(float mouseX, float mouseY) {
+	private void updateNormalisedDeviceCoordinates(float mouseX, float mouseY) {
 		float x = (2.0f * mouseX) / FlounderEngine.getDevices().getDisplay().getWidth() - 1.0f;
 		float y = (2.0f * mouseY) / FlounderEngine.getDevices().getDisplay().getHeight() - 1.0f;
-		return new Vector2f(x, y);
+		normalizedCoords.set(x, y);
 	}
 
-	private Vector4f toEyeCoords(Vector4f clipCoords) {
-		Matrix4f invertedProjection = Matrix4f.invert(FlounderEngine.getProjectionMatrix(), null);
-		Vector4f eyeCoords = Matrix4f.transform(invertedProjection, clipCoords, null);
-		return new Vector4f(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
+	private void updateEyeCoords(Vector4f clipCoords) {
+		invertedProjection = Matrix4f.invert(FlounderEngine.getProjectionMatrix(), invertedProjection);
+		Matrix4f.transform(invertedProjection, clipCoords, eyeCoords);
+		eyeCoords.set(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
 	}
 
-	private Vector3f toWorldCoords(Vector4f eyeCoords) {
-		Matrix4f invertedView = Matrix4f.invert(FlounderEngine.getCamera().getViewMatrix(), null);
-		Vector4f rayWorld = Matrix4f.transform(invertedView, eyeCoords, null);
-		Vector3f mouseRay = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z);
-		mouseRay.normalize();
-		return mouseRay;
+	private void updateWorldCoords(Vector4f eyeCoords) {
+		Matrix4f.invert(FlounderEngine.getCamera().getViewMatrix(), invertedView);
+		Matrix4f.transform(invertedView, eyeCoords, rayWorld);
+		currentRay.set(rayWorld.x, rayWorld.y, rayWorld.z);
+	//	currentRay.normalize();
 	}
 
-	public Vector3f getCameraPosition() {
-		return cameraPosition;
+	public Vector3f getOrigin() {
+		return origin;
 	}
 
 	public Vector3f getCurrentRay() {
 		return currentRay;
 	}
 
-	public Vector3f getPointOnRay(float distance) {
-		Vector3f scaledRay = new Vector3f(currentRay.x * distance, currentRay.y * distance, currentRay.z * distance); // new Vector3f(currentRay).scale(distance);
-		return Vector3f.add(cameraPosition, scaledRay, null);
+	public Vector3f getPointOnRay(float distance, Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return Vector3f.add(origin, destination.set(currentRay).scale(distance), destination);
+	}
+
+	@Override
+	public String toString() {
+		return "Ray{ origin=" + origin + ", currentRay=" + currentRay + " }";
 	}
 }
