@@ -61,6 +61,7 @@ public abstract class IGame {
 		this.focusRotation.set(focusRotation);
 		this.gamePaused = FlounderEngine.getManagerGUI().isMenuIsOpen();
 		this.screenBlur = FlounderEngine.getManagerGUI().getBlurFactor();
+		FlounderEngine.getCamera().update(focusPosition, focusRotation, gamePaused);
 	}
 
 	/**
@@ -69,7 +70,7 @@ public abstract class IGame {
 	public abstract void init();
 
 	/**
-	 * Used to update internal game objects and values. (call the {@link #update(Vector3f, Vector3f) updateGame} method at the end of the function.
+	 * Used to update internal game objects and values. (call the {@link #update(Vector3f, Vector3f) updateGame} method before the end of the function.
 	 */
 	public abstract void update();
 

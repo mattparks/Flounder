@@ -60,6 +60,10 @@ public class Vector3f {
 	 * @return This.
 	 */
 	public Vector3f set(Vector3f source) {
+		if (source == null) {
+			return this;
+		}
+
 		this.x = source.x;
 		this.y = source.y;
 		this.z = source.z;

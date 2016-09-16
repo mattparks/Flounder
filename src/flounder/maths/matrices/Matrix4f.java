@@ -152,6 +152,27 @@ public class Matrix4f {
 	}
 
 	/**
+	 * Multiplies a matrix and a vector together and places the result in the destination vector.
+	 *
+	 * @param left The left source matrix.
+	 * @param right The right source vector.
+	 * @param destination The destination vector or null if a new vector is to be created.
+	 *
+	 * @return The destination vector.
+	 */
+	public static Vector4f multiply(Matrix4f left, Vector4f right, Vector4f destination) {
+		if (destination == null) {
+			destination = new Vector4f();
+		}
+
+		float x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z + left.m30 * right.w;
+		float y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z + left.m31 * right.w;
+		float z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z + left.m32 * right.w;
+		float w = left.m03 * right.x + left.m13 * right.y + left.m23 * right.z + left.m33 * right.w;
+		return destination.set(x, y, z, w);
+	}
+
+	/**
 	 * Multiplies two matrices together and places the result in the destination matrix.
 	 *
 	 * @param left The left source matrix.

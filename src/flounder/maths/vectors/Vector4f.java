@@ -50,6 +50,10 @@ public class Vector4f {
 	 * @return This.
 	 */
 	public Vector4f set(Vector4f source) {
+		if (source == null) {
+			return this;
+		}
+
 		this.x = source.x;
 		this.y = source.y;
 		this.z = source.z;

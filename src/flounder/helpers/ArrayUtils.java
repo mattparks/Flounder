@@ -31,7 +31,7 @@ public class ArrayUtils {
 	 *
 	 * @return Count of all secondary items.
 	 */
-	public static <T extends Object, Y extends Object> int totalSecondaryCount(Map<T, List<Y>> hashMap) {
+	public static <T, Y> int totalSecondaryCount(Map<T, List<Y>> hashMap) {
 		int count = 0;
 
 		for (List<Y> list : hashMap.values()) {

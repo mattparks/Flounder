@@ -8,10 +8,6 @@ import flounder.maths.vectors.*;
  * Holds a 3 dimensional ray.
  */
 public class Ray {
-	private static final int RECURSION_COUNT = 5;
-	private static final float RAY_RANGE = 120.0f;
-	private static final float RAY_SECTION = 2.0f;
-
 	private boolean useMouse;
 	private Vector2f screenStart;
 
@@ -48,6 +44,11 @@ public class Ray {
 		this.rayWorld = new Vector4f();
 	}
 
+	/**
+	 * Updates the ray to a new position.
+	 *
+	 * @param currentPosition The new position.
+	 */
 	public void update(Vector3f currentPosition) {
 		origin.set(currentPosition);
 
@@ -84,23 +85,64 @@ public class Ray {
 		Matrix4f.invert(FlounderEngine.getCamera().getViewMatrix(), invertedView);
 		Matrix4f.transform(invertedView, eyeCoords, rayWorld);
 		currentRay.set(rayWorld.x, rayWorld.y, rayWorld.z);
-	//	currentRay.normalize();
 	}
 
+	/**
+	 * Gets the rays origin.
+	 *
+	 * @return The rays origin.
+	 */
 	public Vector3f getOrigin() {
 		return origin;
 	}
 
+	/**
+	 * Gets the current ray.
+	 *
+	 * @return The current ray.
+	 */
 	public Vector3f getCurrentRay() {
 		return currentRay;
 	}
 
+	/**
+	 * Gets a point on the ray.
+	 *
+	 * @param distance Distance down the ray to sample.
+	 * @param destination The destination vector, if null one will be created.
+	 *
+	 * @return Returns the destination vector.
+	 */
 	public Vector3f getPointOnRay(float distance, Vector3f destination) {
 		if (destination == null) {
 			destination = new Vector3f();
 		}
 
 		return Vector3f.add(origin, destination.set(currentRay).scale(distance), destination);
+	}
+
+	/**
+	 * Converts a position from world space to screen space.
+	 *
+	 * @param position The position to convert.
+	 * @param destination The destination point. X and Y being screen space coords and Z being the distance to the camera.
+	 *
+	 * @return Returns the destination vector.
+	 */
+	public Vector3f convertToScreenSpace(Vector3f position, Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Vector4f coords = new Vector4f(position.x, position.y, position.z, 1.0f);
+		Matrix4f.transform(FlounderEngine.getCamera().getViewMatrix(), coords, coords);
+		Matrix4f.transform(FlounderEngine.getProjectionMatrix(), coords, coords);
+
+		if (coords.w < 0.0f) {
+			return null;
+		}
+
+		return destination.set((coords.x / coords.w + 1.0f) / 2.0f, 1.0f - (coords.y / coords.w + 1.0f) / 2.0f, coords.z);
 	}
 
 	@Override

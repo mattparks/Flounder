@@ -136,8 +136,6 @@ public class QuickHull {
 
 			if (distanceToPoint > 0) {
 				ptDistanceSet.add(new PointDistance(p, distanceToPoint));
-			} else {
-				continue;
 			}
 		}
 

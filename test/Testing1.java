@@ -46,7 +46,7 @@ public class Testing1 {
 
 			@Override
 			public void update() {
-				rotation.set(0.0f, FlounderEngine.getCamera().getYaw(), 0.0f);
+				rotation.set(0.0f, FlounderEngine.getCamera().getRotation().y, 0.0f);
 				velocity.x = SIDE_SPEED * FlounderEngine.getDelta() * Maths.deadband(0.05f, inputSide.getAmount());
 				velocity.y = UP_SPEED * FlounderEngine.getDelta() * Maths.deadband(0.05f, inputUp.getAmount());
 				velocity.z = FRONT_SPEED * FlounderEngine.getDelta() * Maths.deadband(0.05f, inputForward.getAmount());
@@ -134,25 +134,13 @@ public class Testing1 {
 			}
 
 			@Override
-			public float getPitch() {
-				return rotation.x;
+			public Vector3f getRotation() {
+				return rotation;
 			}
 
 			@Override
-			public float getYaw() {
-				return rotation.y;
-			}
-
-			@Override
-			public float getRoll() {
-				return rotation.z;
-			}
-
-			@Override
-			public void setRotation(float pitch, float yaw, float roll) {
-				this.rotation.x = pitch;
-				this.rotation.y = yaw;
-				this.rotation.z = roll;
+			public void setRotation(Vector3f rotation) {
+				this.rotation.set(rotation);
 			}
 
 			@Override

@@ -71,28 +71,16 @@ public interface ICamera extends IAudioListener {
 	Vector3f getPosition();
 
 	/**
-	 * @return The camera's pitch (x rotation).
+	 * @return The camera's 3D rotation in the world, where x=pitch, y=yaw, z=roll.
 	 */
-	float getPitch();
+	Vector3f getRotation();
 
 	/**
-	 * @return The camera's yaw (y rotation).
-	 */
-	float getYaw();
-
-	/**
-	 * @return The camera's roll (z rotation).
-	 */
-	float getRoll();
-
-	/**
-	 * Sets the rotation of the camera.
+	 * Sets the rotation of the camera, where x=pitch, y=yaw, z=roll.
 	 *
-	 * @param pitch The cameras new pitch.
-	 * @param yaw The cameras new yaw,
-	 * @param roll The cameras new roll.
+	 * @param rotation The cameras new rotation.
 	 */
-	void setRotation(float pitch, float yaw, float roll);
+	void setRotation(Vector3f rotation);
 
 	/**
 	 * @return The cameras aim distance at the terrain.

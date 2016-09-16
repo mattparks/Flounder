@@ -49,9 +49,7 @@ public class Implementation implements IModule {
 	@Override
 	public void update() {
 		delta.update();
-
 		game.update();
-		camera.update(game.getFocusPosition(), game.getFocusRotation(), game.isGamePaused());
 
 		if (timerLog.isPassedTime()) {
 			//	FlounderEngine.getLogger().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");

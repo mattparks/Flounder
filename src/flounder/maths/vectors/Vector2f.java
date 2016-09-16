@@ -49,6 +49,10 @@ public class Vector2f {
 	 * @return This.
 	 */
 	public Vector2f set(Vector2f source) {
+		if (source == null) {
+			return this;
+		}
+
 		this.x = source.x;
 		this.y = source.y;
 		return this;
