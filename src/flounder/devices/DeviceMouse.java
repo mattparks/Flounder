@@ -31,6 +31,8 @@ public class DeviceMouse implements IModule {
 	protected DeviceMouse() {
 		mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
 		displaySelected = true;
+		mousePositionX = 0.5f;
+		mousePositionY = 0.5f;
 	}
 
 	@Override
@@ -89,6 +91,15 @@ public class DeviceMouse implements IModule {
 	@Override
 	public void profile() {
 
+	}
+
+	/**
+	 * Sets if the operating systems cursor is hidden whilst in the display.
+	 *
+	 * @param disabled If the system cursor should be disabled or hidden when not shown.
+	 */
+	public void setCursorHidden(boolean disabled) {
+		glfwSetInputMode(FlounderEngine.getDevices().getDisplay().getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_HIDDEN));
 	}
 
 	/**

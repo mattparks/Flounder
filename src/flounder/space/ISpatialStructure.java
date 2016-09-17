@@ -42,7 +42,7 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
 	 * @param result The list to store results into.
-	 * @param range The frustum range of flounder.space being queried.
+	 * @param range The frustum range of space being queried.
 	 *
 	 * @return The list of all object in range.
 	 */
@@ -52,9 +52,9 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
 	 * @param result The list to store results into.
-	 * @param range The aabb range of flounder.space being queried.
+	 * @param range The shape range of space being queried.
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInAABB(List<T> result, AABB range);
+	List<T> queryInBounding(List<T> result, IBounding range);
 }

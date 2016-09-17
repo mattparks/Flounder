@@ -1,14 +1,14 @@
 package flounder.physics;
 
 /**
- * A class that represents collision data.
+ * A class that represents bounding collision data.
  */
 public class IntersectData {
 	private boolean intersection;
 	private float distance;
 
 	/**
-	 * Creates a new collision data.
+	 * Creates a new bounding collision data.
 	 *
 	 * @param intersects If there is a collision.
 	 * @param distance What distance that collision is at.

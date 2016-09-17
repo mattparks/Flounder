@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * A 3D axis-aligned bounding box.
  */
-public class AABB implements IShape<AABB> {
+public class AABB implements IBounding<AABB> {
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
 
 	private Vector3f minExtents;
@@ -479,17 +479,32 @@ public class AABB implements IShape<AABB> {
 	}
 
 	@Override
-	public Vector3f getRenderCentre() {
-		Vector3f position = Vector3f.add(getMaxExtents(), getMinExtents(), null);
-		position.set(position.x / 2.0f, position.y / 2.0f, position.z / 2.0f);
-		return position;
+	public Vector3f getRenderCentre(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Vector3f.add(getMaxExtents(), getMinExtents(), destination);
+		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
 	}
 
 	@Override
-	public Vector3f getRenderScale() {
-		Vector3f scale = Vector3f.subtract(getMaxExtents(), getMinExtents(), null);
-		scale.set(scale.x / 2.0f, scale.y / 2.0f, scale.z / 2.0f);
-		return scale;
+	public Vector3f getRenderScale(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Vector3f.subtract(getMaxExtents(), getMinExtents(), destination);
+		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
+	}
+
+	@Override
+	public Colour getRenderColour(Colour destination) {
+		if (destination == null) {
+			destination = new Colour();
+		}
+
+		return destination.set(1.0f, 0.0f, 0.0f);
 	}
 
 	@Override
@@ -508,11 +523,11 @@ public class AABB implements IShape<AABB> {
 			return false;
 		}
 
-		AABB that = (AABB) object;
+		AABB other = (AABB) object;
 
-		if (!Objects.equals(minExtents, that.minExtents)) {
+		if (!Objects.equals(minExtents, other.minExtents)) {
 			return false;
-		} else if (!Objects.equals(maxExtents, that.maxExtents)) {
+		} else if (!Objects.equals(maxExtents, other.maxExtents)) {
 			return false;
 		}
 

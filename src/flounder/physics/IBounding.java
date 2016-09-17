@@ -1,7 +1,9 @@
 package flounder.physics;
 
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
+import flounder.physics.renderer.*;
 import flounder.space.*;
 
 /**
@@ -9,7 +11,7 @@ import flounder.space.*;
  *
  * @param <T> The type of shape.
  */
-public interface IShape<T extends IShape> {
+public interface IBounding<T extends IBounding> {
 	/**
 	 * Tests whether another this shape completely contains the other.
 	 *
@@ -56,15 +58,32 @@ public interface IShape<T extends IShape> {
 	boolean inFrustum(Frustum frustum);
 
 	/**
-	 * Gets the (optinal) model to be used in the {@link flounder.physics.renderer.ShapesRenderer}.
+	 * Gets the (optinal) model to be used in the {@link BoundingRenderer}.
 	 *
 	 * @return A model that can be used to render this shape.
 	 */
 	Model getRenderModel();
 
-	Vector3f getRenderCentre();
+	/**
+	 * Gets the centre for the rendered model.
+	 *
+	 * @return The centre for the rendered model.
+	 */
+	Vector3f getRenderCentre(Vector3f destination);
 
-	Vector3f getRenderScale();
+	/**
+	 * Gets the scale for the rendered model.
+	 *
+	 * @return The scale for the rendered model.
+	 */
+	Vector3f getRenderScale(Vector3f destination);
+
+	/**
+	 * Gets the colour for the rendered model.
+	 *
+	 * @return The colour for the rendered model.
+	 */
+	Colour getRenderColour(Colour destination);
 
 	@Override
 	int hashCode();

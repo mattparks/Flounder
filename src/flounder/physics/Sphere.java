@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;
@@ -7,7 +8,10 @@ import flounder.space.*;
 
 import java.util.*;
 
-public class Sphere implements IShape<Sphere> {
+/**
+ * Represents a sphere in a 3d space.
+ */
+public class Sphere implements IBounding<Sphere> {
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "sphere.obj");
 
 	private float radius;
@@ -176,11 +180,7 @@ public class Sphere implements IShape<Sphere> {
 
 	@Override
 	public boolean contains(Vector3f point) {
-		float xDif = position.x - point.x;
-		float yDif = position.y - point.y;
-		float zDif = position.z - point.z;
-		float distance = xDif * xDif + yDif * yDif + zDif * zDif;
-		return radius * radius < distance;
+		return Vector3f.getDistanceSquared(position, point) <= radius * radius;
 	}
 
 	@Override
@@ -212,13 +212,30 @@ public class Sphere implements IShape<Sphere> {
 	}
 
 	@Override
-	public Vector3f getRenderCentre() {
-		return position;
+	public Vector3f getRenderCentre(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(position);
 	}
 
 	@Override
-	public Vector3f getRenderScale() {
-		return new Vector3f(radius, radius, radius);
+	public Vector3f getRenderScale(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(radius, radius, radius);
+	}
+
+	@Override
+	public Colour getRenderColour(Colour destination) {
+		if (destination == null) {
+			destination = new Colour();
+		}
+
+		return destination.set(0.0f, 1.0f, 0.0f);
 	}
 
 	@Override
@@ -237,11 +254,11 @@ public class Sphere implements IShape<Sphere> {
 			return false;
 		}
 
-		Sphere that = (Sphere) object;
+		Sphere other = (Sphere) object;
 
-		if (!Objects.equals(radius, that.radius)) {
+		if (!Objects.equals(radius, other.radius)) {
 			return false;
-		} else if (!Objects.equals(position, that.position)) {
+		} else if (!Objects.equals(position, other.position)) {
 			return false;
 		}
 

@@ -17,14 +17,15 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * A renderer that is used to render AABB's.
  */
-public class ShapesRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "shapes", "shapesVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "shapes", "shapesFragment.glsl");
+public class BoundingRenderer extends IRenderer {
+	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "bounding", "boundingVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "bounding", "boundingFragment.glsl");
 
-	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
-	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
-
-	public static Colour colourRed = new Colour(1, 0, 0, 1);
+	private static Vector3f POSITION_REUSABLE = new Vector3f();
+	private static Vector3f ROTATION_REUSABLE = new Vector3f();
+	private static Vector3f SCALE_REUSABLE = new Vector3f();
+	private static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
+	private static Colour COLOUR_REUSABLE = new Colour();
 
 	private Shader shader;
 	private boolean lastWireframe;
@@ -32,8 +33,8 @@ public class ShapesRenderer extends IRenderer {
 	/**
 	 * Creates a new AABB renderer.
 	 */
-	public ShapesRenderer() {
-		shader = Shader.newShader("aabbs").setShaderTypes(
+	public BoundingRenderer() {
+		shader = Shader.newShader("bounding").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
 		).createInSecondThread();
@@ -43,16 +44,16 @@ public class ShapesRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!shader.isLoaded() || !FlounderEngine.getShapes().renders()) {
+		if (!shader.isLoaded() || !FlounderEngine.getBounding().renders()) {
 			return;
 		}
 
 		prepareRendering(clipPlane, camera);
 
-		for (Model model : FlounderEngine.getShapes().getRenderShapes().keySet()) {
+		for (Model model : FlounderEngine.getBounding().getRenderShapes().keySet()) {
 			prepareModel(model);
 
-			for (IShape shape : FlounderEngine.getShapes().getRenderShapes().get(model)) {
+			for (IBounding shape : FlounderEngine.getBounding().getRenderShapes().get(model)) {
 				renderShape(model, shape);
 			}
 
@@ -64,9 +65,7 @@ public class ShapesRenderer extends IRenderer {
 
 	@Override
 	public void profile() {
-		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("AABBs", "Render Time", super.getRenderTimeMs());
-		}
+		FlounderEngine.getProfiler().add("AABBs", "Render Time", super.getRenderTimeMs());
 	}
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
@@ -87,14 +86,17 @@ public class ShapesRenderer extends IRenderer {
 		OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3);
 	}
 
-	private void renderShape(Model model, IShape shape) {
+	private void renderShape(Model model, IBounding shape) {
+		POSITION_REUSABLE.set(0.0f, 0.0f, 0.0f);
 		ROTATION_REUSABLE.set(0.0f, 0.0f, 0.0f);
-
+		SCALE_REUSABLE.set(0.0f, 0.0f, 0.0f);
 		MODEL_MATRIX_REUSABLE.setIdentity();
-		Matrix4f.transformationMatrix(shape.getRenderCentre(), ROTATION_REUSABLE, shape.getRenderScale(), MODEL_MATRIX_REUSABLE);
+		COLOUR_REUSABLE.set(0.0f, 0.0f, 0.0f);
+
+		Matrix4f.transformationMatrix(shape.getRenderCentre(POSITION_REUSABLE), ROTATION_REUSABLE, shape.getRenderScale(SCALE_REUSABLE), MODEL_MATRIX_REUSABLE);
 
 		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
-		shader.getUniformVec3("colour").loadVec3(colourRed); // POSITION_REUSABLE.normalize()
+		shader.getUniformVec3("colour").loadVec3(shape.getRenderColour(COLOUR_REUSABLE));
 
 		glDrawElements(GL_TRIANGLES, model.getVaoLength(), GL_UNSIGNED_INT, 0);
 	}

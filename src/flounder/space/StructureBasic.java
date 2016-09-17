@@ -45,7 +45,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		while (it.hasNext()) {
 			T current = it.next();
 
-			if (current.getShape().inFrustum(range)) {
+			if (current.getBounding().inFrustum(range)) {
 				result.add(current);
 			}
 		}
@@ -54,14 +54,14 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public List<T> queryInAABB(List<T> result, AABB range) {
+	public List<T> queryInBounding(List<T> result, IBounding range) {
 		Iterator<T> it = objects.iterator();
 
 		while (it.hasNext()) {
 			T current = it.next();
 
-			if (current.getShape() != null) {
-				if (current.getShape().intersects(range).isIntersection()) {
+			if (current.getBounding() != null) {
+				if (current.getBounding().intersects(range).isIntersection()) {
 					result.add(current);
 				}
 			} else {

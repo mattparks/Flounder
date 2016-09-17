@@ -38,7 +38,7 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderGuis guis;
 	private FlounderCursor cursor;
 	private FlounderParticles particles;
-	private FlounderShapes shapes;
+	private FlounderBounding shapes;
 	private FlounderNetwork network;
 	private FlounderLogger logger;
 	private FlounderShaders shaders;
@@ -77,7 +77,7 @@ public class FlounderEngine extends Thread implements IModule {
 		this.guis = new FlounderGuis();
 		this.cursor = new FlounderCursor();
 		this.particles = new FlounderParticles();
-		this.shapes = new FlounderShapes();
+		this.shapes = new FlounderBounding();
 		this.network = new FlounderNetwork(1331);
 		this.logger = new FlounderLogger();
 		this.shaders = new FlounderShaders();
@@ -332,7 +332,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 *
 	 * @return The engines current shape renderer manager.
 	 */
-	public static FlounderShapes getShapes() {
+	public static FlounderBounding getBounding() {
 		return instance.shapes;
 	}
 

@@ -265,15 +265,6 @@ public class DeviceDisplay implements IModule {
 	}
 
 	/**
-	 * Sets if the operating systems cursor is hidden whilst in the display.
-	 *
-	 * @param hidden If the cursor should be hidden.
-	 */
-	public void setCursorHidden(boolean hidden) {
-		glfwSetInputMode(window, GLFW_CURSOR, hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
-	}
-
-	/**
 	 * Gets the width of the display in pixels.
 	 *
 	 * @return The width of the display.

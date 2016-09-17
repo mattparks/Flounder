@@ -1,4 +1,4 @@
 /**
- * Contains classes for computing collisions, and other physics2.
+ * Contains classes for computing bounding collisions, and other physics.
  */
 package flounder.physics;
