@@ -1,4 +1,4 @@
-package flounder.maths.rays;
+package flounder.physics;
 
 import flounder.engine.*;
 import flounder.maths.matrices.*;

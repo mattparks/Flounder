@@ -1,20 +1,39 @@
 package flounder.physics;
 
+/**
+ * A class that represents collision data.
+ */
 public class IntersectData {
-	private float distance;
 	private boolean intersection;
+	private float distance;
 
+	/**
+	 * Creates a new collision data.
+	 *
+	 * @param intersects If there is a collision.
+	 * @param distance What distance that collision is at.
+	 */
 	public IntersectData(boolean intersects, float distance) {
+		this.intersection = intersects;
 		this.distance = distance;
-		intersection = intersects;
 	}
 
-	public float getDistance() {
-		return distance;
-	}
-
+	/**
+	 * Gets if there is a collision.
+	 *
+	 * @return If there is a collision.
+	 */
 	public boolean isIntersection() {
 		return intersection;
+	}
+
+	/**
+	 * Gets the distance that collision is at.
+	 *
+	 * @return The distance that collision is at.
+	 */
+	public float getDistance() {
+		return distance;
 	}
 
 	@Override

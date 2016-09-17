@@ -38,7 +38,7 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderGuis guis;
 	private FlounderCursor cursor;
 	private FlounderParticles particles;
-	private FlounderAABBs aabbs;
+	private FlounderShapes shapes;
 	private FlounderNetwork network;
 	private FlounderLogger logger;
 	private FlounderShaders shaders;
@@ -77,7 +77,7 @@ public class FlounderEngine extends Thread implements IModule {
 		this.guis = new FlounderGuis();
 		this.cursor = new FlounderCursor();
 		this.particles = new FlounderParticles();
-		this.aabbs = new FlounderAABBs();
+		this.shapes = new FlounderShapes();
 		this.network = new FlounderNetwork(1331);
 		this.logger = new FlounderLogger();
 		this.shaders = new FlounderShaders();
@@ -115,7 +115,7 @@ public class FlounderEngine extends Thread implements IModule {
 			guis.init();
 			cursor.init();
 			particles.init();
-			aabbs.init();
+			shapes.init();
 			network.init();
 			events.init();
 			implementation.init();
@@ -160,7 +160,7 @@ public class FlounderEngine extends Thread implements IModule {
 			implementation.update();
 
 			particles.update();
-			aabbs.update();
+			shapes.update();
 			logger.update();
 			profiler.update();
 			network.update();
@@ -178,7 +178,7 @@ public class FlounderEngine extends Thread implements IModule {
 			events.profile();
 			implementation.profile();
 			particles.profile();
-			aabbs.profile();
+			shapes.profile();
 			network.profile();
 			loader.profile();
 			materials.profile();
@@ -328,12 +328,12 @@ public class FlounderEngine extends Thread implements IModule {
 	}
 
 	/**
-	 * Gets the engines current AABB renderer manager.
+	 * Gets the engines current shape renderer manager.
 	 *
-	 * @return The engines current AABB renderer manager.
+	 * @return The engines current shape renderer manager.
 	 */
-	public static FlounderAABBs getAABBs() {
-		return instance.aabbs;
+	public static FlounderShapes getShapes() {
+		return instance.shapes;
 	}
 
 	/**
@@ -475,7 +475,7 @@ public class FlounderEngine extends Thread implements IModule {
 			loader.dispose();
 			network.dispose();
 			particles.dispose();
-			aabbs.dispose();
+			shapes.dispose();
 			textures.dispose();
 			cursor.dispose();
 			guis.dispose();

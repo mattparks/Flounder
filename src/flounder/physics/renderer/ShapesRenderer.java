@@ -17,47 +17,46 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * A renderer that is used to render AABB's.
  */
-public class AABBRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "aabbs", "aabbVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "aabbs", "aabbFragment.glsl");
+public class ShapesRenderer extends IRenderer {
+	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "shapes", "shapesVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "shapes", "shapesFragment.glsl");
 
 	public static Vector3f ROTATION_REUSABLE = new Vector3f(0, 0, 0);
-	public static Vector3f POSITION_REUSABLE = new Vector3f(0, 0, 0);
-	public static Vector3f SCALE_REUSABLE = new Vector3f(0, 0, 0);
 	public static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
 
 	public static Colour colourRed = new Colour(1, 0, 0, 1);
 
-	private Model aabbModel;
-
 	private Shader shader;
-
 	private boolean lastWireframe;
 
 	/**
 	 * Creates a new AABB renderer.
 	 */
-	public AABBRenderer() {
+	public ShapesRenderer() {
 		shader = Shader.newShader("aabbs").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
 		).createInSecondThread();
 
 		lastWireframe = false;
-
-		aabbModel = Model.newModel(new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj")).createInBackground();
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!shader.isLoaded() || !FlounderEngine.getAABBs().renders()) {
+		if (!shader.isLoaded() || !FlounderEngine.getShapes().renders()) {
 			return;
 		}
 
 		prepareRendering(clipPlane, camera);
 
-		for (AABB aabb : FlounderEngine.getAABBs().getRenderAABB()) {
-			renderAABB(aabb);
+		for (Model model : FlounderEngine.getShapes().getRenderShapes().keySet()) {
+			prepareModel(model);
+
+			for (IShape shape : FlounderEngine.getShapes().getRenderShapes().get(model)) {
+				renderShape(model, shape);
+			}
+
+			unbindModel();
 		}
 
 		endRendering();
@@ -82,31 +81,30 @@ public class AABBRenderer extends IRenderer {
 		OpenGlUtils.cullBackFaces(false);
 		OpenGlUtils.goWireframe(true);
 		OpenGlUtils.enableDepthTesting();
-
-		OpenGlUtils.bindVAO(aabbModel.getVaoID(), 0, 1, 2, 3);
 	}
 
-	private void renderAABB(AABB aabb) {
-		Vector3f.add(aabb.getMaxExtents(), aabb.getMinExtents(), POSITION_REUSABLE);
-		POSITION_REUSABLE.set(POSITION_REUSABLE.x / 2.0f, POSITION_REUSABLE.y / 2.0f, POSITION_REUSABLE.z / 2.0f);
+	private void prepareModel(Model model) {
+		OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3);
+	}
 
+	private void renderShape(Model model, IShape shape) {
 		ROTATION_REUSABLE.set(0.0f, 0.0f, 0.0f);
 
-		Vector3f.subtract(aabb.getMaxExtents(), aabb.getMinExtents(), SCALE_REUSABLE);
-		SCALE_REUSABLE.set(SCALE_REUSABLE.x / 2.0f, SCALE_REUSABLE.y / 2.0f, SCALE_REUSABLE.z / 2.0f);
-
 		MODEL_MATRIX_REUSABLE.setIdentity();
-		Matrix4f.transformationMatrix(POSITION_REUSABLE, ROTATION_REUSABLE, SCALE_REUSABLE, MODEL_MATRIX_REUSABLE);
+		Matrix4f.transformationMatrix(shape.getRenderCentre(), ROTATION_REUSABLE, shape.getRenderScale(), MODEL_MATRIX_REUSABLE);
 
 		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
 		shader.getUniformVec3("colour").loadVec3(colourRed); // POSITION_REUSABLE.normalize()
 
-		glDrawElements(GL_TRIANGLES, aabbModel.getVaoLength(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, model.getVaoLength(), GL_UNSIGNED_INT, 0);
+	}
+
+	private void unbindModel() {
+		OpenGlUtils.unbindVAO(0, 1, 2, 3);
 	}
 
 	private void endRendering() {
 		OpenGlUtils.goWireframe(lastWireframe);
-		OpenGlUtils.unbindVAO(0, 1, 2, 3);
 		shader.stop();
 	}
 

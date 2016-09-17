@@ -45,7 +45,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		while (it.hasNext()) {
 			T current = it.next();
 
-			if (range.aabbInFrustum(current.getAABB())) {
+			if (current.getShape().inFrustum(range)) {
 				result.add(current);
 			}
 		}
@@ -60,8 +60,8 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		while (it.hasNext()) {
 			T current = it.next();
 
-			if (current.getAABB() != null) {
-				if (current.getAABB().intersects(range).isIntersection()) {
+			if (current.getShape() != null) {
+				if (current.getShape().intersects(range).isIntersection()) {
 					result.add(current);
 				}
 			} else {

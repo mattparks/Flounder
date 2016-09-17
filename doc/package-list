@@ -17,7 +17,6 @@ flounder.logger
 flounder.materials
 flounder.maths
 flounder.maths.matrices
-flounder.maths.rays
 flounder.maths.vectors
 flounder.models
 flounder.networking

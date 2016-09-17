@@ -176,7 +176,7 @@ public class Particle implements ISpatialObject, Comparable<Particle> {
 	}
 
 	@Override
-	public AABB getAABB() {
+	public AABB getShape() {
 		return aabb;
 	}
 

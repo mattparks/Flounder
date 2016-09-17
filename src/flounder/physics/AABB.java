@@ -1,15 +1,19 @@
 package flounder.physics;
 
 import flounder.maths.*;
-import flounder.maths.rays.*;
 import flounder.maths.vectors.*;
+import flounder.models.*;
+import flounder.resources.*;
+import flounder.space.*;
 
 import java.util.*;
 
 /**
  * A 3D axis-aligned bounding box.
  */
-public class AABB {
+public class AABB implements IShape<AABB> {
+	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
+
 	private Vector3f minExtents;
 	private Vector3f maxExtents;
 
@@ -21,7 +25,7 @@ public class AABB {
 	}
 
 	/**
-	 * Creates a new mixed AABB based on it's extents.
+	 * Creates a new AABB based on it's extents.
 	 *
 	 * @param minExtents The minimum extent of the box.
 	 * @param maxExtents The minimum extent of the box.
@@ -37,85 +41,8 @@ public class AABB {
 	 * @param source The source to create off of.
 	 */
 	public AABB(AABB source) {
-		this(new Vector3f(source.getMinExtents()), new Vector3f(source.getMaxExtents()));
-	}
-
-	/**
-	 * Calculates the centre of this AABB on the X axis.
-	 *
-	 * @return The centre location of this AABB on the X axis.
-	 */
-	public double getCentreX() {
-		return (minExtents.getX() + maxExtents.getX()) / 2.0;
-	}
-
-	/**
-	 * Calculates the centre of this AABB on the Y axis.
-	 *
-	 * @return The centre location of this AABB on the Y axis.
-	 */
-	public double getCentreY() {
-		return (minExtents.getY() + maxExtents.getY()) / 2.0;
-	}
-
-	/**
-	 * Calculates the centre of this AABB on the Z axis.
-	 *
-	 * @return The centre location of this AABB on the Z axis.
-	 */
-	public double getCentreZ() {
-		return (minExtents.getZ() + maxExtents.getZ()) / 2.0;
-	}
-
-	/**
-	 * Gets the width of this AABB.
-	 *
-	 * @return The width of this AABB.
-	 */
-	public double getWidth() {
-		return maxExtents.getX() - minExtents.getX();
-	}
-
-	/**
-	 * Gets the height of this AABB.
-	 *
-	 * @return The height of this AABB.
-	 */
-	public double getHeight() {
-		return maxExtents.getY() - minExtents.getY();
-	}
-
-	/**
-	 * Gets the depth of this AABB.
-	 *
-	 * @return The depth of this AABB.
-	 */
-	public double getDepth() {
-		return maxExtents.getZ() - minExtents.getZ();
-	}
-
-	public Vector3f getMinExtents() {
-		return minExtents;
-	}
-
-	public void setMinExtents(Vector3f minExtents) {
-		this.minExtents.set(minExtents);
-	}
-
-	public Vector3f getMaxExtents() {
-		return maxExtents;
-	}
-
-	public void setMaxExtents(Vector3f maxExtents) {
-		this.maxExtents.set(maxExtents);
-	}
-
-	public void setMinExtents(float minX, float minY, float minZ) {
-		this.minExtents.set(minX, minY, minZ);
-	}
-
-	public void setMaxExtents(float maxX, float maxY, float maxZ) {
-		this.maxExtents.set(maxX, maxY, maxZ);
+		this.minExtents = new Vector3f(source.getMinExtents());
+		this.maxExtents = new Vector3f(source.getMaxExtents());
 	}
 
 	/**
@@ -279,14 +206,14 @@ public class AABB {
 	 * Creates an AABB equivalent to this, but in a new position and rotation.
 	 *
 	 * @param source The source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 * @param position The amount to move.
 	 * @param rotation The amount to rotate.
 	 * @param scale The amount to scale the object.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
 	 *
 	 * @return An AABB equivalent to this, but in a new position.
 	 */
-	public static AABB recalculate(AABB source, AABB destination, Vector3f position, Vector3f rotation, float scale) {
+	public static AABB recalculate(AABB source, Vector3f position, Vector3f rotation, float scale, AABB destination) {
 		if (destination == null) {
 			destination = new AABB();
 		}
@@ -335,75 +262,60 @@ public class AABB {
 		return destination;
 	}
 
-	/**
-	 * Tests whether another AABB is completely contained by this one.
-	 *
-	 * @param other The AABB being tested for containment
-	 *
-	 * @return True if {@code other} is contained by this AABB, false otherwise.
-	 */
+	@Override
 	public boolean contains(AABB other) {
-		return minExtents.getX() <= other.minExtents.getX() && other.maxExtents.getX() <= maxExtents.getX() && minExtents.getY() <= other.minExtents.getY() && other.maxExtents.getY() <= maxExtents.getY() && minExtents.getZ() <= other.minExtents.getZ() && other.maxExtents.getZ() <= maxExtents.getZ();
+		return minExtents.getX() <= other.minExtents.getX() &&
+				other.maxExtents.getX() <= maxExtents.getX() &&
+				minExtents.getY() <= other.minExtents.getY() &&
+				other.maxExtents.getY() <= maxExtents.getY() &&
+				minExtents.getZ() <= other.minExtents.getZ() &&
+				other.maxExtents.getZ() <= maxExtents.getZ();
 	}
 
-	/**
-	 * Tests whether another AABB is intersecting this one.
-	 *
-	 * @param other The AABB being tested for intersection
-	 *
-	 * @return True if {@code other} is intersecting this AABB, false otherwise.
-	 */
+	@Override
 	public IntersectData intersects(AABB other) throws IllegalArgumentException {
 		if (other == null) {
 			throw new IllegalArgumentException("Null AABB collider.");
 		} else if (equals(other)) {
-			return new IntersectData(true, 0);
+			return new IntersectData(true, 0.0f);
 		}
 
-		final float maxDist = Maths.max(Maths.max(new Vector3f(getMinExtents().getX() - other.getMaxExtents().getX(), getMinExtents().getY() - other.getMaxExtents().getY(), getMinExtents().getZ() - other.getMaxExtents().getZ()), new Vector3f(other.getMinExtents().getX() - getMaxExtents().getX(), other.getMinExtents().getY() - getMaxExtents().getY(), other.getMinExtents().getZ() - getMaxExtents().getZ())));
-
+		float maxDist = Maths.max(Maths.max(new Vector3f(getMinExtents().getX() - other.getMaxExtents().getX(), getMinExtents().getY() - other.getMaxExtents().getY(), getMinExtents().getZ() - other.getMaxExtents().getZ()), new Vector3f(other.getMinExtents().getX() - getMaxExtents().getX(), other.getMinExtents().getY() - getMaxExtents().getY(), other.getMinExtents().getZ() - getMaxExtents().getZ())));
 		return new IntersectData(maxDist < 0, maxDist);
 	}
 
 	/**
 	 * Tests if a sphere intersects this AABB.
 	 *
-	 * @param position The spheres position.
-	 * @param radius The spheres radius.
+	 * @param sphere The sphere to test with.
 	 *
 	 * @return If the sphere intersects this AABB.
 	 */
-	public boolean intersectsSphere(Vector3f position, float radius) {
-		float distanceSquared = radius * radius;
+	public boolean intersectsSphere(Sphere sphere) {
+		float distanceSquared = sphere.getRadius() * sphere.getRadius();
 
-		if (position.x < minExtents.x) {
-			distanceSquared -= Math.pow(position.x - minExtents.x, 2);
-		} else if (position.x > maxExtents.x) {
-			distanceSquared -= Math.pow(position.x - maxExtents.x, 2);
+		if (sphere.getPosition().x < minExtents.x) {
+			distanceSquared -= Math.pow(sphere.getPosition().x - minExtents.x, 2);
+		} else if (sphere.getPosition().x > maxExtents.x) {
+			distanceSquared -= Math.pow(sphere.getPosition().x - maxExtents.x, 2);
 		}
 
-		if (position.y < minExtents.x) {
-			distanceSquared -= Math.pow(position.y - minExtents.y, 2);
-		} else if (position.x > maxExtents.x) {
-			distanceSquared -= Math.pow(position.y - maxExtents.y, 2);
+		if (sphere.getPosition().y < minExtents.x) {
+			distanceSquared -= Math.pow(sphere.getPosition().y - minExtents.y, 2);
+		} else if (sphere.getPosition().x > maxExtents.x) {
+			distanceSquared -= Math.pow(sphere.getPosition().y - maxExtents.y, 2);
 		}
 
-		if (position.z < minExtents.x) {
-			distanceSquared -= Math.pow(position.z - minExtents.z, 2);
-		} else if (position.z > maxExtents.x) {
-			distanceSquared -= Math.pow(position.z - maxExtents.z, 2);
+		if (sphere.getPosition().z < minExtents.x) {
+			distanceSquared -= Math.pow(sphere.getPosition().z - minExtents.z, 2);
+		} else if (sphere.getPosition().z > maxExtents.x) {
+			distanceSquared -= Math.pow(sphere.getPosition().z - maxExtents.z, 2);
 		}
 
 		return distanceSquared > 0.0f;
 	}
 
-	/**
-	 * Calculates intersection between this AABB and a ray.
-	 *
-	 * @param ray The ray to test if there is an intersection with.
-	 *
-	 * @return If there is a intersection between this AABB and a ray.
-	 */
+	@Override
 	public boolean intersectsRay(Ray ray) {
 		double tmin = (minExtents.x - ray.getOrigin().x) / ray.getCurrentRay().x;
 		double tmax = (maxExtents.x - ray.getOrigin().x) / ray.getCurrentRay().x;
@@ -459,6 +371,7 @@ public class AABB {
 		return true;
 	}
 
+	@Override
 	public boolean contains(Vector3f point) {
 		if (point.x > maxExtents.x) {
 			return false;
@@ -475,6 +388,108 @@ public class AABB {
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean inFrustum(Frustum frustum) {
+		return frustum.cubeInFrustum(minExtents.x, minExtents.y, minExtents.z, maxExtents.x, maxExtents.y, maxExtents.z);
+	}
+
+	/**
+	 * Calculates the centre of this AABB on the X axis.
+	 *
+	 * @return The centre location of this AABB on the X axis.
+	 */
+	public double getCentreX() {
+		return (minExtents.getX() + maxExtents.getX()) / 2.0;
+	}
+
+	/**
+	 * Calculates the centre of this AABB on the Y axis.
+	 *
+	 * @return The centre location of this AABB on the Y axis.
+	 */
+	public double getCentreY() {
+		return (minExtents.getY() + maxExtents.getY()) / 2.0;
+	}
+
+	/**
+	 * Calculates the centre of this AABB on the Z axis.
+	 *
+	 * @return The centre location of this AABB on the Z axis.
+	 */
+	public double getCentreZ() {
+		return (minExtents.getZ() + maxExtents.getZ()) / 2.0;
+	}
+
+	/**
+	 * Gets the width of this AABB.
+	 *
+	 * @return The width of this AABB.
+	 */
+	public double getWidth() {
+		return maxExtents.getX() - minExtents.getX();
+	}
+
+	/**
+	 * Gets the height of this AABB.
+	 *
+	 * @return The height of this AABB.
+	 */
+	public double getHeight() {
+		return maxExtents.getY() - minExtents.getY();
+	}
+
+	/**
+	 * Gets the depth of this AABB.
+	 *
+	 * @return The depth of this AABB.
+	 */
+	public double getDepth() {
+		return maxExtents.getZ() - minExtents.getZ();
+	}
+
+	public Vector3f getMinExtents() {
+		return minExtents;
+	}
+
+	public Vector3f getMaxExtents() {
+		return maxExtents;
+	}
+
+	public void setMinExtents(Vector3f minExtents) {
+		this.minExtents.set(minExtents);
+	}
+
+	public void setMinExtents(float minX, float minY, float minZ) {
+		this.minExtents.set(minX, minY, minZ);
+	}
+
+	public void setMaxExtents(Vector3f maxExtents) {
+		this.maxExtents.set(maxExtents);
+	}
+
+	public void setMaxExtents(float maxX, float maxY, float maxZ) {
+		this.maxExtents.set(maxX, maxY, maxZ);
+	}
+
+	@Override
+	public Model getRenderModel() {
+		return Model.newModel(MODEL_FILE).create();
+	}
+
+	@Override
+	public Vector3f getRenderCentre() {
+		Vector3f position = Vector3f.add(getMaxExtents(), getMinExtents(), null);
+		position.set(position.x / 2.0f, position.y / 2.0f, position.z / 2.0f);
+		return position;
+	}
+
+	@Override
+	public Vector3f getRenderScale() {
+		Vector3f scale = Vector3f.subtract(getMaxExtents(), getMinExtents(), null);
+		scale.set(scale.x / 2.0f, scale.y / 2.0f, scale.z / 2.0f);
+		return scale;
 	}
 
 	@Override

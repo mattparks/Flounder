@@ -152,7 +152,7 @@ public class Testing1 {
 
 			private FontRenderer fontRenderer;
 			private GuiRenderer guiRenderer;
-			private AABBRenderer aabbRenderer;
+			private ShapesRenderer aabbRenderer;
 
 			private Matrix4f projectionMatrix;
 			private Colour clearColour;
@@ -164,7 +164,7 @@ public class Testing1 {
 			public void init() {
 				fontRenderer = new FontRenderer();
 				guiRenderer = new GuiRenderer(GuiRenderer.GuiRenderType.GUI);
-				aabbRenderer = new AABBRenderer();
+				aabbRenderer = new ShapesRenderer();
 
 				projectionMatrix = new Matrix4f();
 				clearColour = new Colour();
