@@ -2,14 +2,17 @@ package flounder.lights;
 
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.physics.*;
+import flounder.space.*;
 
 /**
  * Represents a light in the game, contains a colour, position and attenuation.
  */
-public class Light {
+public class Light implements ISpatialObject {
 	public Colour colour;
 	public Vector3f position;
 	public Attenuation attenuation;
+	private Sphere lightDistance;
 
 	/**
 	 * Creates a new Light with unlimited range.
@@ -32,6 +35,7 @@ public class Light {
 		this.colour = colour;
 		this.position = position;
 		this.attenuation = attenuation;
+		this.lightDistance = new Sphere((float) (Math.sqrt(Math.pow(attenuation.linear, 2) - (4.0f * attenuation.constant * attenuation.exponent)) + attenuation.linear) / (2.0f * attenuation.exponent), position); // TODO: Test radius.
 	}
 
 	/**
@@ -86,5 +90,10 @@ public class Light {
 	 */
 	public void setAttenuation(Attenuation attenuation) {
 		this.attenuation = attenuation;
+	}
+
+	@Override
+	public Sphere getBounding() {
+		return lightDistance;
 	}
 }

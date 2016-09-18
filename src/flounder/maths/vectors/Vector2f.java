@@ -352,11 +352,16 @@ public class Vector2f {
 	 *
 	 * @param point1 The first point.
 	 * @param point2 The second point.
+	 * @param destination The destination vector or null if a new vector is to be created.
 	 *
 	 * @return The vector distance between the points.
 	 */
-	public static Vector2f getVectorDistance(Vector2f point1, Vector2f point2) {
-		return new Vector2f((float) Math.pow(point2.x - point1.x, 2), (float) Math.pow(point2.y - point1.y, 2));
+	public static Vector2f getVectorDistance(Vector2f point1, Vector2f point2, Vector2f destination) {
+		if (destination == null) {
+			destination = new Vector2f();
+		}
+
+		return destination.set((float) Math.pow(point2.x - point1.x, 2), (float) Math.pow(point2.y - point1.y, 2));
 	}
 
 	/**
