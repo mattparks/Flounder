@@ -184,11 +184,15 @@ public abstract class GuiComponent {
 	 * Removes some text from the component and deletes the text.
 	 *
 	 * @param text The text currently in the component that needs to be removed.
+	 * @param deleteFromMemory If the text should be deleted from memory after removal.
 	 */
-	public void deleteText(Text text) {
+	public void deleteText(Text text, boolean deleteFromMemory) {
 		if (text != null) {
 			componentTexts.remove(text);
-			text.deleteFromMemory();
+
+			if (deleteFromMemory) {
+				text.deleteFromMemory();
+			}
 		}
 	}
 

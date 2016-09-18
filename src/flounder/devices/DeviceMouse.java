@@ -20,6 +20,9 @@ public class DeviceMouse implements IModule {
 	private float mouseWheel;
 	private boolean displaySelected;
 
+	private boolean cursorDisabled;
+	private boolean lastCursorDisabled;
+
 	private GLFWScrollCallback callbackScroll;
 	private GLFWMouseButtonCallback callbackMouseButton;
 	private GLFWCursorPosCallback callbackCursorPos;
@@ -33,6 +36,9 @@ public class DeviceMouse implements IModule {
 		displaySelected = true;
 		mousePositionX = 0.5f;
 		mousePositionY = 0.5f;
+
+		cursorDisabled = false;
+		lastCursorDisabled = false;
 	}
 
 	@Override
@@ -70,20 +76,25 @@ public class DeviceMouse implements IModule {
 
 	@Override
 	public void update() {
-		// Gets the engines delta.
-		float delta = FlounderEngine.getDelta();
-
 		// Updates the mouses delta.
-		mouseDeltaX = (lastMousePositionX - mousePositionX) * delta;
-		mouseDeltaY = (lastMousePositionY - mousePositionY) * delta;
+		mouseDeltaX = FlounderEngine.getDelta() * (lastMousePositionX - mousePositionX);
+		mouseDeltaY = FlounderEngine.getDelta() * (lastMousePositionY - mousePositionY);
 
 		// Sets the last position of the current.
 		lastMousePositionX = mousePositionX;
 		lastMousePositionY = mousePositionY;
 
+		// Fixes snaps when toggling cursor.
+		if (cursorDisabled != lastCursorDisabled) {
+			mouseDeltaX = 0.0f;
+			mouseDeltaY = 0.0f;
+
+			lastCursorDisabled = cursorDisabled;
+		}
+
 		// Updates the mouse wheel using a smooth scroll technique.
 		if (mouseWheel != 0.0f) {
-			mouseWheel -= (((mouseWheel < 0.0f) ? -1.0f : 1.0f) * delta);
+			mouseWheel -= FlounderEngine.getDelta() * ((mouseWheel < 0.0f) ? -1.0f : 1.0f);
 			mouseWheel = Maths.deadband(0.1f, mouseWheel);
 		}
 	}
@@ -100,6 +111,12 @@ public class DeviceMouse implements IModule {
 	 */
 	public void setCursorHidden(boolean disabled) {
 		glfwSetInputMode(FlounderEngine.getDevices().getDisplay().getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_HIDDEN));
+
+		if (!disabled && cursorDisabled) {
+			glfwSetCursorPos(FlounderEngine.getDevices().getDisplay().getWindow(), mousePositionX * FlounderEngine.getDevices().getDisplay().getWidth(), mousePositionY * FlounderEngine.getDevices().getDisplay().getHeight());
+		}
+
+		this.cursorDisabled = disabled;
 	}
 
 	/**
