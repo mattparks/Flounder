@@ -11,7 +11,7 @@ import flounder.space.*;
  *
  * @param <T> The type of shape.
  */
-public interface IBounding<T extends IBounding> {
+public abstract class IBounding<T extends IBounding> {
 	/**
 	 * Tests whether another this shape completely contains the other.
 	 *
@@ -19,25 +19,7 @@ public interface IBounding<T extends IBounding> {
 	 *
 	 * @return True if {@code other} is contained by this shape, false otherwise.
 	 */
-	boolean contains(T other);
-
-	/**
-	 * Tests whether another shape is intersecting this shape.
-	 *
-	 * @param other The other shape being tested for intersection
-	 *
-	 * @return Data about the calculated intersection.
-	 */
-	IntersectData intersects(T other) throws IllegalArgumentException;
-
-	/**
-	 * Calculates intersection between this shape and a ray.
-	 *
-	 * @param ray The ray to test if there is an intersection with.
-	 *
-	 * @return If there is a intersection between this shape and a ray.
-	 */
-	boolean intersectsRay(Ray ray);
+	public abstract boolean contains(T other);
 
 	/**
 	 * Gets if a point is contained in this shape.
@@ -46,7 +28,55 @@ public interface IBounding<T extends IBounding> {
 	 *
 	 * @return If the point is contained in this shape.
 	 */
-	boolean contains(Vector3f point);
+	public abstract boolean contains(Vector3f point);
+
+	public IntersectData intersects(IBounding bounding) {
+		if (bounding instanceof AABB) {
+			return intersects((AABB) bounding);
+		} else if (bounding instanceof Sphere) {
+			return intersects((Sphere) bounding);
+		} else if (bounding instanceof Rectangle) {
+			return intersects((Rectangle) bounding);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Tests whether a AABB is intersecting this shape.
+	 *
+	 * @param aabb The other AABB being tested for intersection
+	 *
+	 * @return Data about the calculated intersection.
+	 */
+	public abstract IntersectData intersects(AABB aabb) throws IllegalArgumentException;
+
+	/**
+	 * Tests whether a Sphere is intersecting this shape.
+	 *
+	 * @param sphere The other Sphere being tested for intersection
+	 *
+	 * @return Data about the calculated intersection.
+	 */
+	public abstract IntersectData intersects(Sphere sphere) throws IllegalArgumentException;
+
+	/**
+	 * Tests whether a Rectangle is intersecting this shape.
+	 *
+	 * @param rectangle The other Rectangle being tested for intersection
+	 *
+	 * @return Data about the calculated intersection.
+	 */
+	public abstract IntersectData intersects(Rectangle rectangle) throws IllegalArgumentException;
+
+	/**
+	 * Calculates intersection between this shape and a ray.
+	 *
+	 * @param ray The ray to test if there is an intersection with.
+	 *
+	 * @return Data about intersection between this shape and a ray.
+	 */
+	public abstract IntersectData intersects(Ray ray) throws IllegalArgumentException;
 
 	/**
 	 * Gets if the shape is partially in the view frustum.
@@ -55,42 +85,33 @@ public interface IBounding<T extends IBounding> {
 	 *
 	 * @return If the shape is partially in the view frustum.
 	 */
-	boolean inFrustum(Frustum frustum);
+	public abstract boolean inFrustum(Frustum frustum);
 
 	/**
 	 * Gets the (optinal) model to be used in the {@link BoundingRenderer}.
 	 *
 	 * @return A model that can be used to render this shape.
 	 */
-	Model getRenderModel();
+	public abstract Model getRenderModel();
 
 	/**
 	 * Gets the centre for the rendered model.
 	 *
 	 * @return The centre for the rendered model.
 	 */
-	Vector3f getRenderCentre(Vector3f destination);
+	public abstract Vector3f getRenderCentre(Vector3f destination);
 
 	/**
 	 * Gets the scale for the rendered model.
 	 *
 	 * @return The scale for the rendered model.
 	 */
-	Vector3f getRenderScale(Vector3f destination);
+	public abstract Vector3f getRenderScale(Vector3f destination);
 
 	/**
 	 * Gets the colour for the rendered model.
 	 *
 	 * @return The colour for the rendered model.
 	 */
-	Colour getRenderColour(Colour destination);
-
-	@Override
-	int hashCode();
-
-	@Override
-	boolean equals(Object object);
-
-	@Override
-	String toString();
+	public abstract Colour getRenderColour(Colour destination);
 }

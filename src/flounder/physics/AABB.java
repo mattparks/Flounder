@@ -5,13 +5,14 @@ import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;
 import flounder.space.*;
+import sun.reflect.generics.reflectiveObjects.*;
 
 import java.util.*;
 
 /**
  * A 3D axis-aligned bounding box.
  */
-public class AABB implements IBounding<AABB> {
+public class AABB extends IBounding<AABB> {
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
 
 	private Vector3f minExtents;
@@ -273,6 +274,25 @@ public class AABB implements IBounding<AABB> {
 	}
 
 	@Override
+	public boolean contains(Vector3f point) {
+		if (point.x > maxExtents.x) {
+			return false;
+		} else if (point.x < minExtents.x) {
+			return false;
+		} else if (point.y > maxExtents.y) {
+			return false;
+		} else if (point.y < minExtents.y) {
+			return false;
+		} else if (point.z > maxExtents.z) {
+			return false;
+		} else if (point.z < minExtents.z) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
 	public IntersectData intersects(AABB other) throws IllegalArgumentException {
 		if (other == null) {
 			throw new IllegalArgumentException("Null AABB collider.");
@@ -284,14 +304,8 @@ public class AABB implements IBounding<AABB> {
 		return new IntersectData(maxDist < 0, maxDist);
 	}
 
-	/**
-	 * Tests if a sphere intersects this AABB.
-	 *
-	 * @param sphere The sphere to test with.
-	 *
-	 * @return If the sphere intersects this AABB.
-	 */
-	public boolean intersectsSphere(Sphere sphere) {
+	@Override
+	public IntersectData intersects(Sphere sphere) {
 		float distanceSquared = sphere.getRadius() * sphere.getRadius();
 
 		if (sphere.getPosition().x < minExtents.x) {
@@ -312,11 +326,16 @@ public class AABB implements IBounding<AABB> {
 			distanceSquared -= Math.pow(sphere.getPosition().z - maxExtents.z, 2);
 		}
 
-		return distanceSquared > 0.0f;
+		return new IntersectData(distanceSquared > 0.0f, (float) Math.sqrt(distanceSquared));
 	}
 
 	@Override
-	public boolean intersectsRay(Ray ray) {
+	public IntersectData intersects(Rectangle rectangle) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public IntersectData intersects(Ray ray) throws IllegalArgumentException {
 		double tmin = (minExtents.x - ray.getOrigin().x) / ray.getCurrentRay().x;
 		double tmax = (maxExtents.x - ray.getOrigin().x) / ray.getCurrentRay().x;
 
@@ -336,7 +355,7 @@ public class AABB implements IBounding<AABB> {
 		}
 
 		if ((tmin > tymax) || (tymin > tmax)) {
-			return false;
+			return new IntersectData(false, 0.0f);
 		}
 
 		if (tymin > tmin) {
@@ -357,7 +376,7 @@ public class AABB implements IBounding<AABB> {
 		}
 
 		if ((tmin > tzmax) || (tzmin > tmax)) {
-			return false;
+			return new IntersectData(false, 0.0f);
 		}
 
 		if (tzmin > tmin) {
@@ -368,26 +387,7 @@ public class AABB implements IBounding<AABB> {
 			tmax = tzmax;
 		}
 
-		return true;
-	}
-
-	@Override
-	public boolean contains(Vector3f point) {
-		if (point.x > maxExtents.x) {
-			return false;
-		} else if (point.x < minExtents.x) {
-			return false;
-		} else if (point.y > maxExtents.y) {
-			return false;
-		} else if (point.y < minExtents.y) {
-			return false;
-		} else if (point.z > maxExtents.z) {
-			return false;
-		} else if (point.z < minExtents.z) {
-			return false;
-		}
-
-		return true;
+		return new IntersectData(true, 0.0f);
 	}
 
 	@Override

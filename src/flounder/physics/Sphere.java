@@ -5,13 +5,14 @@ import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;
 import flounder.space.*;
+import sun.reflect.generics.reflectiveObjects.*;
 
 import java.util.*;
 
 /**
  * Represents a sphere in a 3d space.
  */
-public class Sphere implements IBounding<Sphere> {
+public class Sphere extends IBounding<Sphere> {
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "sphere.obj");
 
 	private float radius;
@@ -79,32 +80,12 @@ public class Sphere implements IBounding<Sphere> {
 	}
 
 	@Override
-	public IntersectData intersects(Sphere other) {
-		if (other == null) {
-			throw new IllegalArgumentException("Null Sphere collider.");
-		} else if (equals(other)) {
-			return new IntersectData(true, 0.0f);
-		}
-
-		float d = other.radius + radius;
-
-		float xDif = position.x - other.position.x;
-		float yDif = position.y - other.position.y;
-		float zDif = position.z - other.position.z;
-		float distance = xDif * xDif + yDif * yDif + zDif * zDif;
-
-		boolean intersects = d * d > distance;
-		return new IntersectData(intersects, (d * d) - distance);
+	public boolean contains(Vector3f point) {
+		return Vector3f.getDistanceSquared(position, point) <= radius * radius;
 	}
 
-	/**
-	 * Tests if a AABB intersects this Sphere.
-	 *
-	 * @param aabb The AABB to test with.
-	 *
-	 * @return If the AABB intersects this sphere.
-	 */
-	public boolean intersectsAABB(AABB aabb) {
+	@Override
+	public IntersectData intersects(AABB aabb) {
 		float distanceSquared = radius * radius;
 
 		if (position.x < aabb.getMinExtents().x) {
@@ -125,11 +106,35 @@ public class Sphere implements IBounding<Sphere> {
 			distanceSquared -= Math.pow(position.z - aabb.getMaxExtents().z, 2);
 		}
 
-		return distanceSquared > 0.0f;
+		return new IntersectData(distanceSquared > 0.0f, (float) Math.sqrt(distanceSquared));
 	}
 
 	@Override
-	public boolean intersectsRay(Ray ray) {
+	public IntersectData intersects(Sphere other) {
+		if (other == null) {
+			throw new IllegalArgumentException("Null Sphere collider.");
+		} else if (equals(other)) {
+			return new IntersectData(true, 0.0f);
+		}
+
+		float d = other.radius + radius;
+
+		float xDif = position.x - other.position.x;
+		float yDif = position.y - other.position.y;
+		float zDif = position.z - other.position.z;
+		float distance = xDif * xDif + yDif * yDif + zDif * zDif;
+
+		boolean intersects = d * d > distance;
+		return new IntersectData(intersects, (d * d) - distance);
+	}
+
+	@Override
+	public IntersectData intersects(Rectangle rectangle) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public IntersectData intersects(Ray ray) throws IllegalArgumentException {
 		double t;
 
 		Vector3f L = Vector3f.subtract(ray.getOrigin(), position, null);
@@ -141,7 +146,7 @@ public class Sphere implements IBounding<Sphere> {
 		double disc = b * b - 4.0 * a * c;
 
 		if (disc < 0.0) {
-			return false;
+			return new IntersectData(false, -1.0f);
 			//	return -1.0;
 		}
 
@@ -164,7 +169,7 @@ public class Sphere implements IBounding<Sphere> {
 		}
 
 		if (t1 < 0.0) {
-			return false;
+			return new IntersectData(false, -1.0f);
 			// return -1.0;
 		}
 
@@ -174,13 +179,8 @@ public class Sphere implements IBounding<Sphere> {
 			t = t0;
 		}
 
-		return true;
+		return new IntersectData(true, (float) t);
 		// return t;
-	}
-
-	@Override
-	public boolean contains(Vector3f point) {
-		return Vector3f.getDistanceSquared(position, point) <= radius * radius;
 	}
 
 	@Override

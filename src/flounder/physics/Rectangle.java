@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Holds info for a 2d rectangle.
  */
-public class Rectangle implements IBounding<Rectangle> {
+public class Rectangle extends IBounding<Rectangle> {
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "rectangle", "sphere.obj");
 
 	private Vector2f position;
@@ -47,12 +47,22 @@ public class Rectangle implements IBounding<Rectangle> {
 	}
 
 	@Override
+	public IntersectData intersects(AABB aabb) throws IllegalArgumentException {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public IntersectData intersects(Sphere sphere) throws IllegalArgumentException {
+		throw new NotImplementedException();
+	}
+
+	@Override
 	public IntersectData intersects(Rectangle other) throws IllegalArgumentException {
 		return new IntersectData(position.x < other.position.x + other.width && position.x + width > other.position.x && position.y < other.position.y + other.height && position.y + height > other.position.y, 0.0f);
 	}
 
 	@Override
-	public boolean intersectsRay(Ray ray) {
+	public IntersectData intersects(Ray ray) throws IllegalArgumentException {
 		throw new NotImplementedException();
 	}
 
