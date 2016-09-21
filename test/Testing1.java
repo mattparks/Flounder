@@ -163,7 +163,7 @@ public class Testing1 {
 			@Override
 			public void init() {
 				fontRenderer = new FontRenderer();
-				guiRenderer = new GuiRenderer(GuiRenderer.GuiRenderType.GUI);
+				guiRenderer = new GuiRenderer();
 				aabbRenderer = new BoundingRenderer();
 
 				projectionMatrix = new Matrix4f();

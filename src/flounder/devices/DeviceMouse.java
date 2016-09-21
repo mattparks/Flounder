@@ -2,7 +2,15 @@ package flounder.devices;
 
 import flounder.engine.*;
 import flounder.maths.*;
+import flounder.resources.*;
+import org.lwjgl.*;
 import org.lwjgl.glfw.*;
+
+import javax.imageio.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import java.io.*;
+import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -72,6 +80,52 @@ public class DeviceMouse implements IModule {
 				displaySelected = entered;
 			}
 		});
+
+		try {
+			createCustomMouse();
+		} catch (IOException e) {
+			FlounderEngine.getLogger().error("Could not load custom mouse!");
+			FlounderEngine.getLogger().exception(e);
+		}
+	}
+
+	private MyFile customMouse = new MyFile(MyFile.RES_FOLDER, "cursor.png");
+
+	private void createCustomMouse() throws IOException {
+		BufferedImage image = ImageIO.read(customMouse.getInputStream());
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int[] pixels = new int[width * height];
+		image.getRGB(0, 0, width, height, pixels, 0, width);
+
+		// Converts image to RGBA format.
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int pixel = pixels[y * width + x];
+				buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red.
+				buffer.put((byte) ((pixel >> 8) & 0xFF)); // Green.
+				buffer.put((byte) (pixel & 0xFF)); // Blue.
+				buffer.put((byte) ((pixel >> 24) & 0xFF)); // Alpha.
+			}
+		}
+
+		buffer.flip(); // This will flip the cursor image vertically.
+
+		// Creates a GLFWImage.
+		GLFWImage cursorImg = GLFWImage.create();
+		cursorImg.width(width); // Setup the images' width.
+		cursorImg.height(height); // Setup the images' height.
+		cursorImg.pixels(buffer); // Pass image data.
+
+		// Create custom cursor and store its ID.
+		int hotspotX = 0;
+		int hotspotY = 0;
+		long cursorID = GLFW.glfwCreateCursor(cursorImg, hotspotX, hotspotY);
+
+		// Set current cursor.
+		glfwSetCursor(FlounderEngine.getDevices().getDisplay().getWindow(), cursorID);
 	}
 
 	@Override
@@ -110,7 +164,7 @@ public class DeviceMouse implements IModule {
 	 * @param disabled If the system cursor should be disabled or hidden when not shown.
 	 */
 	public void setCursorHidden(boolean disabled) {
-		glfwSetInputMode(FlounderEngine.getDevices().getDisplay().getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_HIDDEN));
+		glfwSetInputMode(FlounderEngine.getDevices().getDisplay().getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 
 		if (!disabled && cursorDisabled) {
 			glfwSetCursorPos(FlounderEngine.getDevices().getDisplay().getWindow(), mousePositionX * FlounderEngine.getDevices().getDisplay().getWidth(), mousePositionY * FlounderEngine.getDevices().getDisplay().getHeight());

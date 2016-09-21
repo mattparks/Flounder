@@ -91,7 +91,7 @@ public class StructureSplit<T extends ISpatialObject> implements ISpatialStructu
 
 	@Override
 	public void remove(T object) {
-	//	objects.remove(object);
+		//	objects.remove(object);
 	}
 
 	@Override

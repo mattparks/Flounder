@@ -24,51 +24,29 @@ public class GuiRenderer extends IRenderer {
 	private int vaoID;
 
 	private boolean lastWireframe;
-	private GuiRenderType type;
 
-	public GuiRenderer(GuiRenderType type) {
+	public GuiRenderer() {
 		shader = Shader.newShader("guis").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
 		).createInSecondThread();
 		vaoID = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
-		this.type = type;
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		switch (type) {
-			case GUI:
-				if (!shader.isLoaded() || FlounderEngine.getGuis().getGuiTextures().size() < 1) {
-					return;
-				}
-
-				prepareRendering();
-				FlounderEngine.getGuis().getGuiTextures().forEach(this::renderGui);
-				endRendering();
-				break;
-			case CURSOR:
-				if (!shader.isLoaded() || !FlounderEngine.getCursor().isShown()) {
-					return;
-				}
-
-				prepareRendering();
-				renderGui(FlounderEngine.getCursor().getCursorTexture());
-				endRendering();
-				break;
+		if (!shader.isLoaded() || FlounderEngine.getGuis().getGuiTextures().isEmpty()) {
+			return;
 		}
+
+		prepareRendering();
+		FlounderEngine.getGuis().getGuiTextures().forEach(this::renderGui);
+		endRendering();
 	}
 
 	@Override
 	public void profile() {
-		switch (type) {
-			case GUI:
-				FlounderEngine.getProfiler().add("GUIs", "Render Time", super.getRenderTimeMs());
-				break;
-			case CURSOR:
-				FlounderEngine.getProfiler().add("Cursor", "Render Time", super.getRenderTimeMs());
-				break;
-		}
+		FlounderEngine.getProfiler().add("GUIs", "Render Time", super.getRenderTimeMs());
 	}
 
 	private void prepareRendering() {

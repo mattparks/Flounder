@@ -45,7 +45,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		while (it.hasNext()) {
 			T current = it.next();
 
-			if (current.getBounding().inFrustum(range)) {
+			if (current.getBounding() == null || current.getBounding().inFrustum(range)) {
 				result.add(current);
 			}
 		}

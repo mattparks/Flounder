@@ -1,8 +1,10 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
+import org.lwjgl.stb.*;
 
 import javax.imageio.*;
 import java.awt.geom.*;
@@ -22,6 +24,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class DeviceDisplay implements IModule {
 	private int windowWidth;
 	private int windowHeight;
+	private int fullscreenWidth;
+	private int fullscreenHeight;
+
 	private String title;
 	private boolean vsync;
 	private boolean antialiasing;
@@ -69,33 +74,30 @@ public class DeviceDisplay implements IModule {
 			System.exit(-1);
 		}
 
+		// Gets the video mode from the primary monitor.
+		long monitor = glfwGetPrimaryMonitor();
+		GLFWVidMode mode = glfwGetVideoMode(monitor);
+
 		// Configures the window.
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
-		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE); // The window will be resizable depending on if its createDisplay.
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // The window will be resizable depending on if its createDisplay.
 		glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
-		glfwWindowHint(GLFW_RESIZABLE, fullscreen ? GL_FALSE : GL_TRUE); // Only enabled in windowed.
 
-		// Gets the video mode from the primary monitor.
-		long monitor = glfwGetPrimaryMonitor();
-		GLFWVidMode mode = glfwGetVideoMode(monitor);
-
-		if (fullscreen) {
-			glfwWindowHint(GLFW_RED_BITS, mode.redBits());
-			glfwWindowHint(GLFW_GREEN_BITS, mode.greenBits());
-			glfwWindowHint(GLFW_BLUE_BITS, mode.blueBits());
-			glfwWindowHint(GLFW_REFRESH_RATE, mode.refreshRate());
-		}
+		glfwWindowHint(GLFW_RED_BITS, mode.redBits());
+		glfwWindowHint(GLFW_GREEN_BITS, mode.greenBits());
+		glfwWindowHint(GLFW_BLUE_BITS, mode.blueBits());
+		glfwWindowHint(GLFW_REFRESH_RATE, mode.refreshRate());
 
 		if (fullscreen) {
-			windowWidth = mode.width();
-			windowHeight = mode.height();
+			fullscreenWidth = mode.width();
+			fullscreenHeight = mode.height();
 		}
 
 		// Create a windowed mode window and its OpenGL context.
-		window = glfwCreateWindow(windowWidth, windowHeight, title, fullscreen ? monitor : NULL, NULL);
+		window = glfwCreateWindow(fullscreen ? fullscreenWidth : windowWidth, fullscreen ? fullscreenHeight : windowHeight, title, fullscreen ? monitor : NULL, NULL);
 
 		// Sets the display to fullscreen or windowed.
 		focused = true;
@@ -109,6 +111,13 @@ public class DeviceDisplay implements IModule {
 
 		// Creates the OpenGL context.
 		glfwMakeContextCurrent(window);
+
+		try {
+			setWindowIcon();
+		} catch (IOException e) {
+			FlounderEngine.getLogger().error("Could not load custom display image!");
+			FlounderEngine.getLogger().exception(e);
+		}
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
 		createCapabilities(true);
@@ -160,8 +169,10 @@ public class DeviceDisplay implements IModule {
 		glfwSetWindowSizeCallback(window, callbackWindowSize = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				windowWidth = width;
-				windowHeight = height;
+				if (!fullscreen) {
+					windowWidth = width;
+					windowHeight = height;
+				}
 			}
 		});
 
@@ -171,6 +182,39 @@ public class DeviceDisplay implements IModule {
 				glViewport(0, 0, width, height);
 			}
 		});
+
+	}
+
+	private MyFile customIcon = new MyFile(MyFile.RES_FOLDER, "flounder.png");
+
+	private void setWindowIcon() throws IOException {
+		BufferedImage image = ImageIO.read(customIcon.getInputStream());
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int[] pixels = new int[width * height];
+		image.getRGB(0, 0, width, height, pixels, 0, width);
+
+		// Converts image to RGBA format.
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int pixel = pixels[y * width + x];
+				buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red.
+				buffer.put((byte) ((pixel >> 8) & 0xFF)); // Green.
+				buffer.put((byte) (pixel & 0xFF)); // Blue.
+				buffer.put((byte) ((pixel >> 24) & 0xFF)); // Alpha.
+			}
+		}
+
+		buffer.flip(); // This will flip the cursor image vertically.
+
+		// Creates a GLFWImage.
+		GLFWImage cursorImg = GLFWImage.create();
+		cursorImg.width(width); // Setup the images' width.
+		cursorImg.height(height); // Setup the images' height.
+		cursorImg.pixels(buffer); // Pass image data.
+	//	glfwSetWindowIcon(window, buffer); // TODO
 	}
 
 	@Override
@@ -270,6 +314,10 @@ public class DeviceDisplay implements IModule {
 	 * @return The width of the display.
 	 */
 	public int getWidth() {
+		return fullscreen ? fullscreenWidth : windowWidth;
+	}
+
+	public int getWindowWidth() {
 		return windowWidth;
 	}
 
@@ -279,6 +327,10 @@ public class DeviceDisplay implements IModule {
 	 * @return The height of the display.
 	 */
 	public int getHeight() {
+		return fullscreen ? fullscreenHeight : windowHeight;
+	}
+
+	public int getWindowHeight() {
 		return windowHeight;
 	}
 
@@ -375,9 +427,19 @@ public class DeviceDisplay implements IModule {
 			return;
 		}
 
-		this.fullscreen = fullscreen;
 		FlounderEngine.getLogger().log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
-		// TODO: MAKE FULLSCREEN WORK!!!
+
+		this.fullscreen = fullscreen;
+		long monitor = glfwGetPrimaryMonitor();
+		GLFWVidMode mode = glfwGetVideoMode(monitor);
+
+		if (fullscreen) {
+			fullscreenWidth = mode.width();
+			fullscreenHeight = mode.height();
+			glfwSetWindowMonitor(window, monitor, 0, 0, fullscreenWidth, fullscreenHeight, FlounderEngine.getTargetFPS());
+		} else {
+			glfwSetWindowMonitor(window, NULL, (windowPosX = (mode.width() - windowWidth) / 2), (windowPosY = (mode.height() - windowHeight) / 2), windowWidth, windowHeight, FlounderEngine.getTargetFPS());
+		}
 	}
 
 	/**

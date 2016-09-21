@@ -5,7 +5,6 @@ import flounder.engine.implementation.*;
 import flounder.events.*;
 import flounder.fonts.*;
 import flounder.guis.*;
-import flounder.guis.cursor.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.materials.*;
@@ -36,7 +35,6 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderTextures textures;
 	private FlounderFonts fonts;
 	private FlounderGuis guis;
-	private FlounderCursor cursor;
 	private FlounderParticles particles;
 	private FlounderBounding shapes;
 	private FlounderNetwork network;
@@ -64,7 +62,7 @@ public class FlounderEngine extends Thread implements IModule {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.09.18");
+		version = new Version("1.09.20");
 
 		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
@@ -75,7 +73,6 @@ public class FlounderEngine extends Thread implements IModule {
 		this.textures = new FlounderTextures();
 		this.fonts = new FlounderFonts();
 		this.guis = new FlounderGuis();
-		this.cursor = new FlounderCursor();
 		this.particles = new FlounderParticles();
 		this.shapes = new FlounderBounding();
 		this.network = new FlounderNetwork(1331);
@@ -113,7 +110,6 @@ public class FlounderEngine extends Thread implements IModule {
 			textures.init();
 			fonts.init();
 			guis.init();
-			cursor.init();
 			particles.init();
 			shapes.init();
 			network.init();
@@ -154,7 +150,6 @@ public class FlounderEngine extends Thread implements IModule {
 			processors.update();
 			fonts.update();
 			guis.update();
-			cursor.update();
 			events.update();
 
 			implementation.update();
@@ -185,7 +180,6 @@ public class FlounderEngine extends Thread implements IModule {
 			models.profile();
 			textures.profile();
 			guis.profile();
-			cursor.profile();
 			fonts.profile();
 			logger.profile();
 			profiler.profile();
@@ -298,15 +292,6 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static FlounderGuis getGuis() {
 		return instance.guis;
-	}
-
-	/**
-	 * Gets the engines current cursor manager.
-	 *
-	 * @return The engines current cursor manager.
-	 */
-	public static FlounderCursor getCursor() {
-		return instance.cursor;
 	}
 
 	/**
@@ -477,7 +462,6 @@ public class FlounderEngine extends Thread implements IModule {
 			particles.dispose();
 			shapes.dispose();
 			textures.dispose();
-			cursor.dispose();
 			guis.dispose();
 			fonts.dispose();
 			implementation.dispose();
