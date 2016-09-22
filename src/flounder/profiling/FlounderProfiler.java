@@ -55,7 +55,7 @@ public class FlounderProfiler implements IModule {
 		profilerOpen = false;
 
 		// Opens the profiler if not running from jar.
-		//	toggle(!FlounderLogger.ALLOW_LOUD_LOGS);
+		//	toggle(!FlounderLogger.RUNNING_FROM_JAR);
 	}
 
 	@Override

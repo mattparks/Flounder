@@ -8,6 +8,7 @@ import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.renderer.*;
+import flounder.resources.*;
 import flounder.space.*;
 import flounder.visual.*;
 import sun.reflect.generics.reflectiveObjects.*;
@@ -220,7 +221,8 @@ public class Testing1 {
 				return 0;
 			}
 		}, -1);
-		FlounderEngine engine = new FlounderEngine(implementation, 1080, 720, "Testing", false, true, 0, false);
+		MyFile[] displayIcons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
+		FlounderEngine engine = new FlounderEngine(implementation, 1080, 720, "Testing", displayIcons, false, true, 0, false);
 		engine.startEngine(FlounderEngine.getFonts().bungee);
 	}
 }

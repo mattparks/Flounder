@@ -11,7 +11,6 @@ import java.util.*;
 public class FlounderLogger implements IModule {
 	public static final boolean LOG_TO_CONSOLE = true;
 	public static final boolean LOG_TO_FILE = true;
-	public static final boolean ALLOW_LOUD_LOGS = FlounderLogger.class.getResource("/" + FlounderLogger.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
 
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
@@ -46,12 +45,7 @@ public class FlounderLogger implements IModule {
 	public void profile() {
 		FlounderEngine.getProfiler().add("Logger", "Log To Console", LOG_TO_CONSOLE);
 		FlounderEngine.getProfiler().add("Logger", "Log To Files", LOG_TO_FILE);
-		FlounderEngine.getProfiler().add("Logger", "Loud Logs", ALLOW_LOUD_LOGS);
 		FlounderEngine.getProfiler().add("Logger", "Lines Recorded", linesRecorded);
-	}
-
-	public boolean inJar() {
-		return ALLOW_LOUD_LOGS;
 	}
 
 	/**
@@ -72,7 +66,7 @@ public class FlounderLogger implements IModule {
 	 * @param <T> The object type to be logged.
 	 */
 	public <T> void log(T value, boolean loud) {
-		if (loud && !ALLOW_LOUD_LOGS) {
+		if (loud && !FlounderEngine.isRunningFromJar()) {
 			return;
 		}
 
@@ -104,7 +98,7 @@ public class FlounderLogger implements IModule {
 	 * @param <T> The object type to be logged.
 	 */
 	public <T> void warning(T value, boolean loud) {
-		if (loud && !ALLOW_LOUD_LOGS) {
+		if (loud && !FlounderEngine.isRunningFromJar()) {
 			return;
 		}
 
@@ -134,7 +128,7 @@ public class FlounderLogger implements IModule {
 	 * @param <T> The object type to be logged.
 	 */
 	public <T> void error(T value, boolean loud) {
-		if (loud && !ALLOW_LOUD_LOGS) {
+		if (loud && !FlounderEngine.isRunningFromJar()) {
 			return;
 		}
 
@@ -189,7 +183,7 @@ public class FlounderLogger implements IModule {
 	 * @throws IOException Failed to create / find folder.
 	 */
 	private String getLogsSave() throws IOException {
-		File saveDirectory = new File("logs");
+		File saveDirectory = new File(FlounderEngine.getRoamingFolder().getPath(), "logs");
 
 		if (!saveDirectory.exists()) {
 			System.out.println("Creating directory: " + saveDirectory);
@@ -197,7 +191,7 @@ public class FlounderLogger implements IModule {
 			try {
 				saveDirectory.mkdir();
 			} catch (SecurityException e) {
-				error("Filed to create logging folder.");
+				error("Filed to create logging folder: " + saveDirectory.getAbsolutePath());
 				exception(e);
 			}
 		}

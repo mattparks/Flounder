@@ -7,7 +7,7 @@ import flounder.physics.*;
 import java.util.*;
 
 /**
- * A manager for AABB's that want to be renderer.
+ * A manager for Boundings that want to be renderer.
  */
 public class FlounderBounding implements IModule {
 	private Map<Model, List<IBounding>> renderShapes;
@@ -15,7 +15,7 @@ public class FlounderBounding implements IModule {
 	private int aabbCount;
 
 	/**
-	 * Creates a new AABB manager.
+	 * Creates a new Boundings manager.
 	 */
 	public FlounderBounding() {
 		renderShapes = new HashMap<>();
@@ -30,12 +30,12 @@ public class FlounderBounding implements IModule {
 	@Override
 	public void update() {
 		aabbCount = renderShapes.size();
-		clear(); // Should have already been rendered.
+		clear(); // Clears before the next batch of rendering.
 	}
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Shapes", "Renderable", aabbCount);
+		FlounderEngine.getProfiler().add("Boundings", "Renderable", aabbCount);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class FlounderBounding implements IModule {
 	}
 
 	/**
-	 * Clears the renderable AABB's.
+	 * Clears the renderable Boundings.
 	 */
 	protected void clear() {
 		renderShapes.clear();

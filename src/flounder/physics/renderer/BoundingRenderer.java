@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A renderer that is used to render AABB's.
+ * A renderer that is used to render Boundings.
  */
 public class BoundingRenderer extends IRenderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "bounding", "boundingVertex.glsl");
@@ -31,7 +31,7 @@ public class BoundingRenderer extends IRenderer {
 	private boolean lastWireframe;
 
 	/**
-	 * Creates a new AABB renderer.
+	 * Creates a new Boundings renderer.
 	 */
 	public BoundingRenderer() {
 		shader = Shader.newShader("bounding").setShaderTypes(
@@ -65,7 +65,7 @@ public class BoundingRenderer extends IRenderer {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("AABBs", "Render Time", super.getRenderTimeMs());
+		FlounderEngine.getProfiler().add("Boundings", "Render Time", super.getRenderTimeMs());
 	}
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {

@@ -4,7 +4,6 @@ import flounder.engine.*;
 import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.stb.*;
 
 import javax.imageio.*;
 import java.awt.geom.*;
@@ -28,6 +27,7 @@ public class DeviceDisplay implements IModule {
 	private int fullscreenHeight;
 
 	private String title;
+	private MyFile[] icons;
 	private boolean vsync;
 	private boolean antialiasing;
 	private int samples;
@@ -51,15 +51,17 @@ public class DeviceDisplay implements IModule {
 	 * @param width The window width in pixels.
 	 * @param height The window height in pixels.
 	 * @param title The window title.
+	 * @param icons A list of icons to load for the window.
 	 * @param vsync If the window will use vSync..
 	 * @param antialiasing If OpenGL will use antialiasing.
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param fullscreen If the window will start fullscreen.
 	 */
-	protected DeviceDisplay(int width, int height, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+	protected DeviceDisplay(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
 		this.windowWidth = width;
 		this.windowHeight = height;
 		this.title = title;
+		this.icons = icons;
 		this.vsync = vsync;
 		this.antialiasing = antialiasing;
 		this.samples = samples;
@@ -185,10 +187,19 @@ public class DeviceDisplay implements IModule {
 
 	}
 
-	private MyFile customIcon = new MyFile(MyFile.RES_FOLDER, "flounder.png");
-
 	private void setWindowIcon() throws IOException {
-		BufferedImage image = ImageIO.read(customIcon.getInputStream());
+		// Creates a GLFWImage Buffer,
+		GLFWImage.Buffer images = GLFWImage.malloc(icons.length);
+		for (int i = 0; i < icons.length; i++) {
+			images.put(i, loadGLFWImage(icons[i])); // Stores a image into a slot.
+		}
+
+		// Loads the buffer into the window.
+		glfwSetWindowIcon(window, images);
+	}
+
+	private GLFWImage loadGLFWImage(MyFile file) throws IOException {
+		BufferedImage image = ImageIO.read(file.getInputStream());
 		int width = image.getWidth();
 		int height = image.getHeight();
 		int[] pixels = new int[width * height];
@@ -210,11 +221,11 @@ public class DeviceDisplay implements IModule {
 		buffer.flip(); // This will flip the cursor image vertically.
 
 		// Creates a GLFWImage.
-		GLFWImage cursorImg = GLFWImage.create();
-		cursorImg.width(width); // Setup the images' width.
-		cursorImg.height(height); // Setup the images' height.
-		cursorImg.pixels(buffer); // Pass image data.
-	//	glfwSetWindowIcon(window, buffer); // TODO
+		GLFWImage glfwImage = GLFWImage.create();
+		glfwImage.width(width); // Setup the images' width.
+		glfwImage.height(height); // Setup the images' height.
+		glfwImage.pixels(buffer); // Pass image data.
+		return glfwImage;
 	}
 
 	@Override
@@ -252,7 +263,7 @@ public class DeviceDisplay implements IModule {
 	public void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
 		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		File saveDirectory = new File("screenshots");
+		File saveDirectory = new File(FlounderEngine.getRoamingFolder().getPath(), "screenshots");
 
 		if (!saveDirectory.exists()) {
 			try {

@@ -97,6 +97,8 @@ public abstract class IBounding<T extends IBounding> {
 	/**
 	 * Gets the centre for the rendered model.
 	 *
+	 * @param destination The destination for the information.
+	 *
 	 * @return The centre for the rendered model.
 	 */
 	public abstract Vector3f getRenderCentre(Vector3f destination);
@@ -104,12 +106,16 @@ public abstract class IBounding<T extends IBounding> {
 	/**
 	 * Gets the scale for the rendered model.
 	 *
+	 * @param destination The destination for the information.
+	 *
 	 * @return The scale for the rendered model.
 	 */
 	public abstract Vector3f getRenderScale(Vector3f destination);
 
 	/**
 	 * Gets the colour for the rendered model.
+	 *
+	 * @param destination The destination for the information.
 	 *
 	 * @return The colour for the rendered model.
 	 */

@@ -31,7 +31,7 @@ public class Version {
 		}
 
 		try {
-			File versionFile = new File("version.txt");
+			File versionFile = new File(FlounderEngine.getRoamingFolder().getPath() + "/" + "flounder.txt");
 
 			if (!versionFile.exists()) {
 				if (!versionFile.createNewFile()) {

@@ -15,8 +15,11 @@ import flounder.particles.*;
 import flounder.physics.renderer.*;
 import flounder.processing.*;
 import flounder.profiling.*;
+import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;
+
+import java.io.*;
 
 /**
  * Deals with much of the initializing, updating, and cleaning up of the engine.
@@ -36,7 +39,7 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderFonts fonts;
 	private FlounderGuis guis;
 	private FlounderParticles particles;
-	private FlounderBounding shapes;
+	private FlounderBounding bounding;
 	private FlounderNetwork network;
 	private FlounderLogger logger;
 	private FlounderShaders shaders;
@@ -45,6 +48,29 @@ public class FlounderEngine extends Thread implements IModule {
 	private Implementation implementation;
 
 	private boolean initialized;
+	private static boolean runningFromJar;
+	private static MyFile roamingFolder;
+
+	/**
+	 * Called before the engine loads, used to setup roaming folders and other statics.
+	 *
+	 * @param gameName The games name, used to set the roaming save folder.
+	 */
+	public static void loadEngineStatics(String gameName) {
+		runningFromJar = FlounderEngine.class.getResource("/" + FlounderEngine.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
+		roamingFolder = new MyFile(System.getenv("APPDATA"), gameName);
+		File saveDirectory = new File(System.getenv("APPDATA") + "/" + gameName + "/");
+
+		if (!saveDirectory.exists()) {
+			System.out.println("Creating directory: " + saveDirectory);
+
+			try {
+				saveDirectory.mkdir();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * Carries out the setup for basic engine components and the engine. Call {@link #startEngine(FontType)} immediately after this.
@@ -53,18 +79,19 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @param width The window width in pixels.
 	 * @param height The window height in pixels.
 	 * @param title The window title.
+	 * @param icons A list of icons to load for the window.
 	 * @param vsync If the window will use vSync..
 	 * @param antialiasing If OpenGL will use antialiasing.
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param fullscreen If the window will start fullscreen.
 	 */
-	public FlounderEngine(Implementation implementation, int width, int height, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+	public FlounderEngine(Implementation implementation, int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.09.20");
+		version = new Version("1.09.21");
 
-		this.devices = new FlounderDevices(width, height, title, vsync, antialiasing, samples, fullscreen);
+		this.devices = new FlounderDevices(width, height, title, icons, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();
 		this.events = new FlounderEvents();
 		this.loader = new FlounderLoader();
@@ -74,7 +101,7 @@ public class FlounderEngine extends Thread implements IModule {
 		this.fonts = new FlounderFonts();
 		this.guis = new FlounderGuis();
 		this.particles = new FlounderParticles();
-		this.shapes = new FlounderBounding();
+		this.bounding = new FlounderBounding();
 		this.network = new FlounderNetwork(1331);
 		this.logger = new FlounderLogger();
 		this.shaders = new FlounderShaders();
@@ -111,7 +138,7 @@ public class FlounderEngine extends Thread implements IModule {
 			fonts.init();
 			guis.init();
 			particles.init();
-			shapes.init();
+			bounding.init();
 			network.init();
 			events.init();
 			implementation.init();
@@ -148,6 +175,7 @@ public class FlounderEngine extends Thread implements IModule {
 			textures.update();
 			shaders.update();
 			processors.update();
+			bounding.update();
 			fonts.update();
 			guis.update();
 			events.update();
@@ -155,7 +183,6 @@ public class FlounderEngine extends Thread implements IModule {
 			implementation.update();
 
 			particles.update();
-			shapes.update();
 			logger.update();
 			profiler.update();
 			network.update();
@@ -167,13 +194,16 @@ public class FlounderEngine extends Thread implements IModule {
 	@Override
 	public void profile() {
 		if (FlounderEngine.getProfiler().isOpen()) {
+			FlounderEngine.getProfiler().add("Engine", "Running From Jar", runningFromJar);
+			FlounderEngine.getProfiler().add("Engine", "Save Folder", roamingFolder.getPath());
+
 			devices.profile();
 			processors.profile();
 			shaders.profile();
 			events.profile();
 			implementation.profile();
 			particles.profile();
-			shapes.profile();
+			bounding.profile();
 			network.profile();
 			loader.profile();
 			materials.profile();
@@ -318,7 +348,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return The engines current shape renderer manager.
 	 */
 	public static FlounderBounding getBounding() {
-		return instance.shapes;
+		return instance.bounding;
 	}
 
 	/**
@@ -449,6 +479,24 @@ public class FlounderEngine extends Thread implements IModule {
 		return instance.initialized;
 	}
 
+	/**
+	 * Gets if the engine is currently running from a jae.
+	 *
+	 * @return Is the engine is currently running from a jae?
+	 */
+	public static boolean isRunningFromJar() {
+		return runningFromJar;
+	}
+
+	/**
+	 * Gets the file that goes to the roaming folder.
+	 *
+	 * @return The roaming folder file.
+	 */
+	public static MyFile getRoamingFolder() {
+		return roamingFolder;
+	}
+
 	@Override
 	public void dispose() {
 		if (initialized) {
@@ -460,7 +508,7 @@ public class FlounderEngine extends Thread implements IModule {
 			loader.dispose();
 			network.dispose();
 			particles.dispose();
-			shapes.dispose();
+			bounding.dispose();
 			textures.dispose();
 			guis.dispose();
 			fonts.dispose();

@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.resources.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -21,13 +22,14 @@ public class FlounderDevices implements IModule {
 	 * @param width The window width in pixels.
 	 * @param height The window height in pixels.
 	 * @param title The window title.
+	 * @param icons A list of icons to load for the window.
 	 * @param vsync If the window will use vSync..
 	 * @param antialiasing If OpenGL will use antialiasing.
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param fullscreen If the window will start fullscreen.
 	 */
-	public FlounderDevices(int width, int height, String title, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
-		display = new DeviceDisplay(width, height, title, vsync, antialiasing, samples, fullscreen);
+	public FlounderDevices(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+		display = new DeviceDisplay(width, height, title, icons, vsync, antialiasing, samples, fullscreen);
 		joysticks = new DeviceJoysticks();
 		keyboard = new DeviceKeyboard();
 		mouse = new DeviceMouse();

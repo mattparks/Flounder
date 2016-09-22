@@ -7,7 +7,6 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
-import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.*;
