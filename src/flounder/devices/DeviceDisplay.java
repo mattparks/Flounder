@@ -163,8 +163,10 @@ public class DeviceDisplay implements IModule {
 		glfwSetWindowPosCallback(window, callbackWindowPos = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long window, int xpos, int ypos) {
-				windowPosX = xpos;
-				windowPosY = ypos;
+				if (!fullscreen) {
+					windowPosX = xpos;
+					windowPosY = ypos;
+				}
 			}
 		});
 
@@ -449,7 +451,7 @@ public class DeviceDisplay implements IModule {
 			fullscreenHeight = mode.height();
 			glfwSetWindowMonitor(window, monitor, 0, 0, fullscreenWidth, fullscreenHeight, FlounderEngine.getTargetFPS());
 		} else {
-			glfwSetWindowMonitor(window, NULL, (windowPosX = (mode.width() - windowWidth) / 2), (windowPosY = (mode.height() - windowHeight) / 2), windowWidth, windowHeight, FlounderEngine.getTargetFPS());
+			glfwSetWindowMonitor(window, NULL, windowPosX, windowPosY, windowWidth, windowHeight, FlounderEngine.getTargetFPS());
 		}
 	}
 

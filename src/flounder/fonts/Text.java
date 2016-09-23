@@ -5,10 +5,12 @@ import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.visual.*;
 
+/**
+ * A class that holds info about a text object.
+ */
 public class Text {
 	private float fontSize;
 	private FontType fontType;
-	private TextAlign textAlign;
 	private String textString;
 	private int textMesh;
 	private int vertexCount;
@@ -41,11 +43,17 @@ public class Text {
 
 	private boolean loaded;
 
-	protected Text(String text, FontType font, float fontSize, TextAlign textAlign) {
+	/**
+	 * Creates a new text object.
+	 *
+	 * @param text The inital text.
+	 * @param font The font family to use.
+	 * @param fontSize The font size to use.
+	 */
+	protected Text(String text, FontType font, float fontSize) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.fontType = font;
-		this.textAlign = textAlign;
 
 		this.alphaDriver = new ConstantDriver(1.0f);
 		this.scaleDriver = new ConstantDriver(1.0f);
@@ -64,10 +72,24 @@ public class Text {
 		this.loaded = false;
 	}
 
-	public static TextBuilder newText(String text, TextAlign textAlign) {
-		return new TextBuilder(text, textAlign);
+	/**
+	 * Creates a new text builder.
+	 *
+	 * @param text The inital text.
+	 *
+	 * @return The newly created text builder.
+	 */
+	public static TextBuilder newText(String text) {
+		return new TextBuilder(text);
 	}
 
+	/**
+	 * Initializes the text.
+	 *
+	 * @param absX The absolute x position.
+	 * @param absY The absolute Y position.
+	 * @param maxXLength The max length for the text.
+	 */
 	public void init(float absX, float absY, float maxXLength) {
 		positionXDriver = new ConstantDriver(absX);
 		positionYDriver = new ConstantDriver(absY);
@@ -79,13 +101,18 @@ public class Text {
 		}
 	}
 
-	public void update(float delta) {
+	/**
+	 * Updates the text status.
+	 */
+	public void update() {
 		if (loaded && newText != null) {
-			deleteFromMemory();
+			delete();
 			textString = newText;
 			fontType.loadText(this);
 			newText = null;
 		}
+
+		float delta = FlounderEngine.getDelta();
 
 		currentScale = scaleDriver.update(delta);
 		currentX = positionXDriver.update(delta);
@@ -93,15 +120,6 @@ public class Text {
 		currentAlpha = alphaDriver.update(delta);
 		glowSize = glowDriver.update(delta);
 		borderSize = borderDriver.update(delta);
-
-		switch (textAlign) {
-			case LEFT:
-				break;
-			case CENTRE:
-				break;
-			case RIGHT:
-				break;
-		}
 	}
 
 	protected Vector2f getPosition() {
@@ -140,20 +158,12 @@ public class Text {
 		}
 	}
 
-	public void deleteFromMemory() {
-		FlounderEngine.getLoader().deleteVAOFromCache(textMesh);
-	}
-
 	public float getFontSize() {
 		return fontSize;
 	}
 
 	public FontType getFontType() {
 		return fontType;
-	}
-
-	public TextAlign getTextAlign() {
-		return textAlign;
 	}
 
 	public int getMesh() {
@@ -171,14 +181,6 @@ public class Text {
 
 	public float getMaxLineSize() {
 		return lineMaxSize;
-	}
-
-	protected void setOriginalWidth(float width) {
-		originalWidth = width;
-	}
-
-	protected void setOriginalHeight(float height) {
-		originalHeight = height;
 	}
 
 	public Colour getColour() {
@@ -220,6 +222,22 @@ public class Text {
 		glowBorder = false;
 	}
 
+	protected float getGlowSize() {
+		if (solidBorder) {
+			return calculateAntialiasSize();
+		} else if (glowBorder) {
+			return glowSize;
+		} else {
+			return 0;
+		}
+	}
+
+	protected float calculateAntialiasSize() {
+		float size = fontSize * currentScale;
+		size = (size - 1.0f) / (1.0f + size / 4.0f) + 1.0f;
+		return 0.1f / size;
+	}
+
 	public void setGlowing(ValueDriver driver) {
 		solidBorder = false;
 		glowBorder = true;
@@ -238,7 +256,7 @@ public class Text {
 		return numberOfLines;
 	}
 
-	public void setNumberOfLines(int number) {
+	protected void setNumberOfLines(int number) {
 		numberOfLines = number;
 	}
 
@@ -246,32 +264,24 @@ public class Text {
 		return borderSize;
 	}
 
-	protected float getGlowSize() {
-		if (solidBorder) {
-			return calculateAntialiasSize();
-		} else if (glowBorder) {
-			return glowSize;
-		} else {
-			return 0;
-		}
-	}
-
-	protected float calculateAntialiasSize() {
-		float size = fontSize * currentScale;
-		size = (size - 1.0f) / (1.0f + size / 4.0f) + 1.0f;
-		return 0.1f / size;
-	}
-
 	public float getOriginalWidth() {
 		return originalWidth;
 	}
 
-	public float getCurrentWidth() {
-		return originalWidth * currentScale;
+	protected void setOriginalWidth(float width) {
+		originalWidth = width;
 	}
 
 	public float getOriginalHeight() {
 		return originalHeight;
+	}
+
+	protected void setOriginalHeight(float height) {
+		originalHeight = height;
+	}
+
+	public float getCurrentWidth() {
+		return originalWidth * currentScale;
 	}
 
 	public float getCurrentHeight() {
@@ -286,7 +296,14 @@ public class Text {
 		return currentY;
 	}
 
-	protected float getTransparency() {
+	public float getCurrentAlpha() {
 		return currentAlpha;
+	}
+
+	/**
+	 * Deletes the text VAO from memory.
+	 */
+	public void delete() {
+		FlounderEngine.getLoader().deleteVAOFromCache(textMesh);
 	}
 }

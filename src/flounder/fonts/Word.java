@@ -39,6 +39,8 @@ public class Word {
 	}
 
 	/**
+	 * Gets the list of characters in the word.
+	 *
 	 * @return The list of characters in the word.
 	 */
 	protected List<Character> getCharacters() {
@@ -46,6 +48,8 @@ public class Word {
 	}
 
 	/**
+	 * Gets the width of the word in terms of screen size.
+	 *
 	 * @return The width of the word in terms of screen size.
 	 */
 	protected double getWordWidth() {

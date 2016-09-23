@@ -58,8 +58,16 @@ public class FlounderEngine extends Thread implements IModule {
 	 */
 	public static void loadEngineStatics(String gameName) {
 		runningFromJar = FlounderEngine.class.getResource("/" + FlounderEngine.class.getName().replace('.', '/') + ".class").toString().startsWith("jar:");
-		roamingFolder = new MyFile(System.getenv("APPDATA"), gameName);
-		File saveDirectory = new File(System.getenv("APPDATA") + "/" + gameName + "/");
+		String saveDir;
+
+		if (System.getProperty("os.name").contains("Windows")) {
+			saveDir = System.getenv("APPDATA");
+		} else {
+			saveDir = System.getProperty("user.home");
+		}
+
+		roamingFolder = new MyFile(saveDir, "." + gameName);
+		File saveDirectory = new File(saveDir + "/." + gameName + "/");
 
 		if (!saveDirectory.exists()) {
 			System.out.println("Creating directory: " + saveDirectory);
@@ -89,7 +97,7 @@ public class FlounderEngine extends Thread implements IModule {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.09.21");
+		version = new Version("1.09.22");
 
 		this.devices = new FlounderDevices(width, height, title, icons, vsync, antialiasing, samples, fullscreen);
 		this.processors = new FlounderProcessors();

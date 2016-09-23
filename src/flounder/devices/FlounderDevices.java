@@ -47,8 +47,9 @@ public class FlounderDevices implements IModule {
 
 		FlounderEngine.getLogger().log("===== This is not an error message, it is a system log. =====");
 		FlounderEngine.getLogger().log("Flounder Engine Version: " + FlounderEngine.getVersion().version);
+		FlounderEngine.getLogger().log("Flounder Operating System: " + System.getProperty("os.name"));
 
-		FlounderEngine.getLogger().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));    /* Total number of processors or cores available to the JVM */
+		FlounderEngine.getLogger().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
 
 		FlounderEngine.getLogger().log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
 
@@ -58,6 +59,7 @@ public class FlounderDevices implements IModule {
 		FlounderEngine.getLogger().log("Flounder Maximum Memory (bytes): " + (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory));
 
 		FlounderEngine.getLogger().log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
+
 		FlounderEngine.getLogger().log("===== End of system log. =====\n");
 	}
 

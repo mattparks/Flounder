@@ -16,6 +16,8 @@ public class Character {
 	private double xAdvance;
 
 	/**
+	 * Creates a new simple data structure for characters.
+	 *
 	 * @param id The ASCII value of the character.
 	 * @param xTextureCoord The x texture coordinate for the top left corner of the character in the texture atlas.
 	 * @param yTextureCoord The y texture coordinate for the top left corner of the character in the texture atlas.
@@ -41,6 +43,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the ASCII value of the character.
+	 *
 	 * @return The ASCII value of the character.
 	 */
 	protected int getId() {
@@ -48,6 +52,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the x texture coordinate for the top left corner of the character in the texture atlas.
+	 *
 	 * @return The x texture coordinate for the top left corner of the character in the texture atlas.
 	 */
 	protected double getXTextureCoord() {
@@ -55,6 +61,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the y texture coordinate for the top left corner of the character in the texture atlas.
+	 *
 	 * @return The y texture coordinate for the top left corner of the character in the texture atlas.
 	 */
 	protected double getYTextureCoord() {
@@ -62,6 +70,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the max width of the character in the texture atlas.
+	 *
 	 * @return The max width of the character in the texture atlas.
 	 */
 	protected double getXMaxTextureCoord() {
@@ -69,6 +79,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the max height of the character in the texture atlas.
+	 *
 	 * @return The max height of the character in the texture atlas.
 	 */
 	protected double getYMaxTextureCoord() {
@@ -76,6 +88,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the x distance from the cursor to the left edge of the character's quad.
+	 *
 	 * @return The x distance from the cursor to the left edge of the character's quad.
 	 */
 	protected double getXOffset() {
@@ -83,6 +97,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the y distance from the cursor to the left edge of the character's quad.
+	 *
 	 * @return The y distance from the cursor to the left edge of the character's quad.
 	 */
 	protected double getYOffset() {
@@ -90,6 +106,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the width of the character's quad in screen space.
+	 *
 	 * @return The width of the character's quad in screen space.
 	 */
 	protected double getSizeX() {
@@ -97,6 +115,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets the height of the character's quad in screen space.
+	 *
 	 * @return The height of the character's quad in screen space.
 	 */
 	protected double getSizeY() {
@@ -104,6 +124,8 @@ public class Character {
 	}
 
 	/**
+	 * Gets how much the cursor will move forward after this character.
+	 *
 	 * @return How much the cursor will move forward after this character.
 	 */
 	protected double getXAdvance() {

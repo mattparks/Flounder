@@ -47,6 +47,8 @@ public class Line {
 	}
 
 	/**
+	 * Gets the max length of the line.
+	 *
 	 * @return The max length of the line.
 	 */
 	protected double getMaxLength() {
@@ -54,6 +56,8 @@ public class Line {
 	}
 
 	/**
+	 * Gets the list of words in the line.
+	 *
 	 * @return The list of words in the line.
 	 */
 	protected List<Word> getWords() {
@@ -61,6 +65,8 @@ public class Line {
 	}
 
 	/**
+	 * Gets the current screen-space length of the line.
+	 *
 	 * @return The current screen-space length of the line.
 	 */
 	protected double getLineLength() {

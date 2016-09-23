@@ -67,7 +67,7 @@ public abstract class GuiComponent {
 	 * Update the component's texts.
 	 */
 	private void updateTexts() {
-		componentTexts.keySet().forEach(text -> text.update(FlounderEngine.getDelta()));
+		componentTexts.keySet().forEach(Text::update);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public abstract class GuiComponent {
 			componentTexts.remove(text);
 
 			if (deleteFromMemory) {
-				text.deleteFromMemory();
+				text.delete();
 			}
 		}
 	}
@@ -319,7 +319,7 @@ public abstract class GuiComponent {
 	 * Deletes the component and all subtract-components. Mainly just deletes the texts VAOs from memory.
 	 */
 	private void delete() {
-		componentTexts.keySet().forEach(Text::deleteFromMemory);
+		componentTexts.keySet().forEach(Text::delete);
 		componentsToDelete.forEach(GuiComponent::delete);
 		componentsToAdd.forEach(GuiComponent::delete);
 		childComponents.forEach(GuiComponent::delete);

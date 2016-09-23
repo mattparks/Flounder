@@ -78,18 +78,6 @@ public class TextLoader {
 		List<Float> textureCoords = new ArrayList<>();
 
 		for (Line line : lines) {
-			switch (text.getTextAlign()) {
-				case LEFT:
-					cursorX = 0.0;
-					break;
-				case CENTRE:
-					cursorX = (line.getMaxLength() - line.getLineLength()) / 2.0;
-					break;
-				case RIGHT:
-					cursorX = line.getMaxLength() - line.getLineLength();
-					break;
-			}
-
 			for (Word word : line.getWords()) {
 				for (Character letter : word.getCharacters()) {
 					addVerticesForCharacter(cursorX, cursorY, letter, text.getFontSize(), vertices);
@@ -128,7 +116,7 @@ public class TextLoader {
 	private void setTextSettings(Text text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 
-		if (text.getTextAlign().equals(TextAlign.CENTRE) || lines.size() > 1.0f) {
+		if (lines.size() > 1.0f) {
 			text.setOriginalWidth((float) lines.get(0).getMaxLength());
 		} else {
 			text.setOriginalWidth((float) lines.get(0).getLineLength());

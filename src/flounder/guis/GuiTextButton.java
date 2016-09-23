@@ -33,7 +33,7 @@ public class GuiTextButton extends GuiComponent {
 	private ListenerBasic guiListenerLeft;
 	private ListenerBasic guiListenerRight;
 
-	private TextAlign textAlign;
+	private GuiAlign guiAlign;
 	private float leftMarginX;
 
 	// A static method that is used to create a easy colour event.
@@ -54,15 +54,15 @@ public class GuiTextButton extends GuiComponent {
 		});
 	}
 
-	public GuiTextButton(Text text, TextAlign textAlign, float leftMarginX) {
+	public GuiTextButton(Text text, GuiAlign guiAlign, float leftMarginX) {
 		this.text = text;
 		this.background = new GuiTexture(Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "button.png")).clampEdges().create());
 		this.mouseOver = false;
 
-		this.textAlign = textAlign;
+		this.guiAlign = guiAlign;
 		this.leftMarginX = leftMarginX;
 
-		switch (textAlign) {
+		switch (guiAlign) {
 			case LEFT:
 				addText(text, leftMarginX, 0.0f, 1.0f);
 				break;
@@ -94,7 +94,7 @@ public class GuiTextButton extends GuiComponent {
 		float height = text.getCurrentHeight();
 		float positionX;
 
-		switch (textAlign) {
+		switch (guiAlign) {
 			case LEFT:
 				positionX = super.getPosition().x - (leftMarginX * text.getScale());
 				break;
@@ -111,7 +111,7 @@ public class GuiTextButton extends GuiComponent {
 
 		background.getPosition().x = positionX;
 		background.getPosition().y = super.getPosition().y - (BACKGROUND_PADDING * text.getScale());
-		background.setFlipTexture(textAlign.equals(TextAlign.RIGHT));
+		background.setFlipTexture(guiAlign.equals(GuiAlign.RIGHT));
 		background.getScale().set(width, height + ((BACKGROUND_PADDING * 2.0f) / text.getScale()));
 
 		background.getColourOffset().set(isMouseOver() ? HOVER_COLOUR : DEFAULT_COLOUR);
