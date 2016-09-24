@@ -1,4 +1,4 @@
-package flounder.engine.implementation;
+package flounder.engine.entrance;
 
 public abstract class IManagerGUI {
 	/**

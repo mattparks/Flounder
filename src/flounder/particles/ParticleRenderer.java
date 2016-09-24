@@ -1,7 +1,7 @@
 package flounder.particles;
 
 import flounder.engine.*;
-import flounder.engine.implementation.*;
+import flounder.engine.entrance.*;
 import flounder.helpers.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;

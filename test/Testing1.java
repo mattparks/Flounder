@@ -1,22 +1,5 @@
-import flounder.engine.*;
-import flounder.engine.implementation.*;
-import flounder.fonts.*;
-import flounder.guis.*;
-import flounder.helpers.*;
-import flounder.inputs.*;
-import flounder.maths.*;
-import flounder.maths.matrices.*;
-import flounder.maths.vectors.*;
-import flounder.physics.renderer.*;
-import flounder.resources.*;
-import flounder.space.*;
-import flounder.visual.*;
-import sun.reflect.generics.reflectiveObjects.*;
-
-import static org.lwjgl.glfw.GLFW.*;
-
 public class Testing1 {
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		Implementation implementation = new Implementation(new IGame() {
 			private final float FRONT_SPEED = 40.0f;
 			private final float UP_SPEED = 30.0f;
@@ -224,5 +207,5 @@ public class Testing1 {
 		MyFile[] displayIcons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
 		FlounderEngine engine = new FlounderEngine(implementation, 1080, 720, "Testing", displayIcons, false, true, 0, false);
 		engine.startEngine(FlounderEngine.getFonts().bungee);
-	}
+	}*/
 }

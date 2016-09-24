@@ -1,7 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
-import flounder.engine.implementation.*;
+import flounder.engine.entrance.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.sounds.*;

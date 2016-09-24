@@ -1,13 +1,14 @@
 package flounder.engine;
 
 import flounder.devices.*;
-import flounder.engine.implementation.*;
+import flounder.engine.entrance.*;
 import flounder.events.*;
 import flounder.fonts.*;
 import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.materials.*;
+import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.models.*;
 import flounder.networking.*;
@@ -24,10 +25,12 @@ import java.io.*;
 /**
  * Deals with much of the initializing, updating, and cleaning up of the engine.
  */
-public class FlounderEngine extends Thread implements IModule {
+public class FlounderEngine extends Thread {
 	private static FlounderEngine instance;
 
 	private Version version;
+
+	private FlounderEntrance entrance;
 
 	private FlounderDevices devices;
 	private FlounderProcessors processors;
@@ -45,7 +48,10 @@ public class FlounderEngine extends Thread implements IModule {
 	private FlounderShaders shaders;
 	private FlounderProfiler profiler;
 
-	private Implementation implementation;
+	private int fpsLimit;
+	private boolean closedRequested;
+	private Delta delta;
+	private Timer timerLog;
 
 	private boolean initialized;
 	private static boolean runningFromJar;
@@ -83,7 +89,6 @@ public class FlounderEngine extends Thread implements IModule {
 	/**
 	 * Carries out the setup for basic engine components and the engine. Call {@link #startEngine(FontType)} immediately after this.
 	 *
-	 * @param implementation The game implementation of the engine.
 	 * @param width The window width in pixels.
 	 * @param height The window height in pixels.
 	 * @param title The window title.
@@ -92,8 +97,9 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @param antialiasing If OpenGL will use antialiasing.
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param fullscreen If the window will start fullscreen.
+	 * @param fpsLimit The maximum FPS the engine can render at.
 	 */
-	public FlounderEngine(Implementation implementation, int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+	public FlounderEngine(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, int fpsLimit) {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
@@ -115,7 +121,16 @@ public class FlounderEngine extends Thread implements IModule {
 		this.shaders = new FlounderShaders();
 		this.profiler = new FlounderProfiler(title + " Profiler");
 
-		this.implementation = implementation;
+		this.fpsLimit = fpsLimit;
+		this.closedRequested = false;
+		this.delta = new Delta();
+		this.timerLog = new Timer(1.0f);
+
+		this.initialized = false;
+	}
+
+	protected void loadEntrance(FlounderEntrance entrance) {
+		this.entrance = entrance;
 	}
 
 	/**
@@ -131,8 +146,7 @@ public class FlounderEngine extends Thread implements IModule {
 		run();
 	}
 
-	@Override
-	public void init() {
+	private void initEngine() {
 		if (!initialized) {
 			logger.init();
 			profiler.init();
@@ -149,7 +163,11 @@ public class FlounderEngine extends Thread implements IModule {
 			bounding.init();
 			network.init();
 			events.init();
-			implementation.init();
+
+			entrance.managerGUI.init();
+			entrance.renderer.init();
+			entrance.camera.init();
+			entrance.init();
 
 			initialized = true;
 		}
@@ -158,22 +176,21 @@ public class FlounderEngine extends Thread implements IModule {
 	@Override
 	public void run() {
 		try {
-			init();
+			initEngine();
 
 			while (isRunning()) {
-				update();
-				profile();
+				updateEngine();
+				profileEngine();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.exception(e);
 		} finally {
-			dispose();
+			disposeEngine();
 		}
 	}
 
-	@Override
-	public void update() {
+	private void updateEngine() {
 		if (initialized) {
 			devices.update();
 
@@ -188,7 +205,18 @@ public class FlounderEngine extends Thread implements IModule {
 			guis.update();
 			events.update();
 
-			implementation.update();
+			{
+				delta.update();
+				entrance.update();
+
+				if (timerLog.isPassedTime()) {
+					FlounderEngine.getLogger().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
+					timerLog.resetStartTime();
+				}
+
+				entrance.renderer.render();
+				entrance.managerGUI.update();
+			}
 
 			particles.update();
 			logger.update();
@@ -199,17 +227,16 @@ public class FlounderEngine extends Thread implements IModule {
 		}
 	}
 
-	@Override
-	public void profile() {
-		if (FlounderEngine.getProfiler().isOpen()) {
-			FlounderEngine.getProfiler().add("Engine", "Running From Jar", runningFromJar);
-			FlounderEngine.getProfiler().add("Engine", "Save Folder", roamingFolder.getPath());
+	private void profileEngine() {
+		if (profiler.isOpen()) {
+			profiler.add("Engine", "Running From Jar", runningFromJar);
+			profiler.add("Engine", "Save Folder", roamingFolder.getPath());
 
 			devices.profile();
 			processors.profile();
 			shaders.profile();
 			events.profile();
-			implementation.profile();
+			entrance.profile();
 			particles.profile();
 			bounding.profile();
 			network.profile();
@@ -370,25 +397,16 @@ public class FlounderEngine extends Thread implements IModule {
 	}
 
 	/**
-	 * Gets the modules current game manager.
-	 *
-	 * @return The modules current game manager.
-	 */
-	public static IGame getGame() {
-		return instance.implementation.getGame();
-	}
-
-	/**
 	 * Gets the engines camera implementation.
 	 *
 	 * @return The engines camera implementation.
 	 */
 	public static ICamera getCamera() {
-		return instance.implementation.getCamera();
+		return instance.entrance.camera;
 	}
 
 	public static void setCamera(ICamera camera) {
-		instance.implementation.setCamera(camera);
+		instance.entrance.camera = camera;
 	}
 
 	/**
@@ -397,7 +415,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return The modules current master renderer.
 	 */
 	public static IRendererMaster getMasterRenderer() {
-		return instance.implementation.getRendererMaster();
+		return instance.entrance.renderer;
 	}
 
 	/**
@@ -406,7 +424,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return The modules current GUI manager.
 	 */
 	public static IManagerGUI getManagerGUI() {
-		return instance.implementation.getManagerGUI();
+		return instance.entrance.managerGUI;
 	}
 
 	/**
@@ -415,15 +433,15 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return The projection matrix used in the current scene renderObjects.
 	 */
 	public static Matrix4f getProjectionMatrix() {
-		return instance.implementation.getRendererMaster().getProjectionMatrix();
+		return instance.entrance.renderer.getProjectionMatrix();
 	}
 
 	public static void setTargetFPS(int fpsLimit) {
-		instance.implementation.setFpsLimit(fpsLimit);
+		instance.fpsLimit = fpsLimit;
 	}
 
 	public static int getTargetFPS() {
-		return instance.implementation.getFpsLimit();
+		return instance.fpsLimit;
 	}
 
 	/**
@@ -432,7 +450,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return The delta between updates.
 	 */
 	public static float getDelta() {
-		return instance.implementation.getDelta();
+		return instance.delta.getDelta();
 	}
 
 	/**
@@ -441,7 +459,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return The current engine time.
 	 */
 	public static float getDeltaTime() {
-		return instance.implementation.getDeltaTime();
+		return instance.delta.getTime();
 	}
 
 	/**
@@ -450,7 +468,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return Is the engine still running?
 	 */
 	public static boolean isRunning() {
-		return instance.implementation.isRunning();
+		return !instance.closedRequested && !FlounderEngine.getDevices().getDisplay().isClosed();
 	}
 
 	/**
@@ -459,7 +477,7 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return The current screen blur factor.
 	 */
 	public static float getScreenBlur() {
-		return instance.implementation.getGame().getScreenBlur();
+		return instance.entrance.screenBlur;
 	}
 
 	/**
@@ -468,14 +486,14 @@ public class FlounderEngine extends Thread implements IModule {
 	 * @return Is the game currently paused?
 	 */
 	public static boolean isGamePaused() {
-		return instance.implementation.getGame().isGamePaused();
+		return instance.entrance.gamePaused;
 	}
 
 	/**
 	 * Requests the gameloop to stop and the game to exit.
 	 */
 	public static void requestClose() {
-		instance.implementation.requestClose();
+		instance.closedRequested = true;
 	}
 
 	/**
@@ -505,9 +523,11 @@ public class FlounderEngine extends Thread implements IModule {
 		return roamingFolder;
 	}
 
-	@Override
-	public void dispose() {
+	private void disposeEngine() {
 		if (initialized) {
+			entrance.renderer.dispose();
+			entrance.dispose();
+
 			processors.dispose();
 			shaders.dispose();
 			events.dispose();
@@ -520,7 +540,6 @@ public class FlounderEngine extends Thread implements IModule {
 			textures.dispose();
 			guis.dispose();
 			fonts.dispose();
-			implementation.dispose();
 			devices.dispose();
 			profiler.dispose();
 			logger.dispose();
