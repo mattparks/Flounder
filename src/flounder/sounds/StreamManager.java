@@ -1,6 +1,6 @@
 package flounder.sounds;
 
-import flounder.engine.*;
+import flounder.logger.*;
 
 import java.util.*;
 
@@ -65,8 +65,8 @@ public class StreamManager extends Thread {
 		try {
 			Thread.sleep(SLEEP_TIME);
 		} catch (InterruptedException e) {
-			FlounderEngine.getLogger().error("Thread could not sleep!");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Thread could not sleep!");
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -100,8 +100,8 @@ public class StreamManager extends Thread {
 		try {
 			streamers.add(new Streamer(sound, source, controller));
 		} catch (Exception e) {
-			FlounderEngine.getLogger().error("Couldn't open stream for sound " + sound.getSoundFile().getPath());
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Couldn't open stream for sound " + sound.getSoundFile().getPath());
+			FlounderLogger.exception(e);
 		}
 	}
 }

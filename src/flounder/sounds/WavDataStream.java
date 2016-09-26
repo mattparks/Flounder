@@ -1,6 +1,6 @@
 package flounder.sounds;
 
-import flounder.engine.*;
+import flounder.logger.*;
 import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.openal.*;
@@ -93,8 +93,8 @@ public class WavDataStream {
 		try {
 			audioStream.read(data, 0, bytesRead);
 		} catch (IOException e) {
-			FlounderEngine.getLogger().error("Could not set Wav Data Stream start point!");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Could not set Wav Data Stream start point!");
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -113,8 +113,8 @@ public class WavDataStream {
 			buffer.put(data, 0, bytesRead);
 			buffer.flip();
 		} catch (IOException e) {
-			FlounderEngine.getLogger().error("Couldn't read more bytes from audio stream!");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Couldn't read more bytes from audio stream!");
+			FlounderLogger.exception(e);
 		}
 		return buffer;
 	}
@@ -149,8 +149,8 @@ public class WavDataStream {
 		try {
 			audioStream.close();
 		} catch (IOException e) {
-			FlounderEngine.getLogger().error("Could not close Wav Data Streamer!");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Could not close Wav Data Streamer!");
+			FlounderLogger.exception(e);
 		}
 	}
 }

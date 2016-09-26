@@ -1,6 +1,9 @@
 package flounder.textures;
 
 import flounder.engine.*;
+import flounder.logger.*;
+import flounder.processing.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import org.lwjgl.*;
 
@@ -18,13 +21,17 @@ import static org.lwjgl.opengl.GL30.*;
 /**
  * Manages the caches of textures.
  */
-public class FlounderTextures implements IModule {
+public class FlounderTextures extends IModule {
+	private static FlounderTextures instance;
+
 	private List<Integer> textureCache;
 
-	/**
-	 * Creates a new texture manager.
-	 */
-	public FlounderTextures() {
+	static {
+		instance = new FlounderTextures();
+	}
+
+	private FlounderTextures() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderProcessors.class.getClass());
 		textureCache = new ArrayList<>();
 	}
 
@@ -38,7 +45,7 @@ public class FlounderTextures implements IModule {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Textures", "Loaded", textureCache.size());
+		FlounderProfiler.add("Textures", "Loaded", textureCache.size());
 	}
 
 	/**
@@ -48,14 +55,14 @@ public class FlounderTextures implements IModule {
 	 *
 	 * @return The textureID for the cube map.
 	 */
-	public int loadCubeMap(MyFile... textureFiles) {
+	public static int loadCubeMap(MyFile... textureFiles) {
 		int texID = glGenTextures();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			FlounderEngine.getLogger().log(textureFiles[i].getPath() + " is being loaded into the texture cube map!");
+			FlounderLogger.log(textureFiles[i].getPath() + " is being loaded into the texture cube map!");
 			TextureData data = decodeTextureFile(textureFiles[i]);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, data.getBuffer());
 		}
@@ -64,7 +71,7 @@ public class FlounderTextures implements IModule {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		textureCache.add(texID);
+		instance.textureCache.add(texID);
 		return texID;
 	}
 
@@ -75,7 +82,7 @@ public class FlounderTextures implements IModule {
 	 *
 	 * @return The decoded data in a class.
 	 */
-	public TextureData decodeTextureFile(MyFile file) {
+	public static TextureData decodeTextureFile(MyFile file) {
 		int width = 0;
 		int height = 0;
 		boolean hasAlpha = false;
@@ -92,8 +99,8 @@ public class FlounderTextures implements IModule {
 			buffer.flip();
 			in.close();
 		} catch (Exception e) {
-			FlounderEngine.getLogger().log("Tried to load texture '" + file + "', didn't work");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.log("Tried to load texture '" + file + "', didn't work");
+			FlounderLogger.exception(e);
 			System.exit(-1);
 		}
 
@@ -108,7 +115,7 @@ public class FlounderTextures implements IModule {
 	 *
 	 * @return A OpenGL texture ID.
 	 */
-	public int loadTextureToOpenGL(TextureData data, TextureBuilder builder) {
+	public static int loadTextureToOpenGL(TextureData data, TextureBuilder builder) {
 		int texID = glGenTextures();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texID);
@@ -148,7 +155,7 @@ public class FlounderTextures implements IModule {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		}
 
-		textureCache.add(texID);
+		instance.textureCache.add(texID);
 		return texID;
 	}
 
@@ -157,8 +164,8 @@ public class FlounderTextures implements IModule {
 	 *
 	 * @param textureID The texture to delete.
 	 */
-	public void deleteTexture(int textureID) {
-		textureCache.remove(textureID);
+	public static void deleteTexture(int textureID) {
+		instance.textureCache.remove(textureID);
 		glDeleteTextures(textureID);
 	}
 

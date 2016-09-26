@@ -1,6 +1,6 @@
 package flounder.textures;
 
-import flounder.engine.*;
+import flounder.processing.*;
 import flounder.resources.*;
 
 /**
@@ -129,6 +129,6 @@ public class Texture {
 	 */
 	public void delete() {
 		loaded = false;
-		FlounderEngine.getProcessors().sendGLRequest(new TextureDeleteRequest(textureID));
+		FlounderProcessors.sendGLRequest(new TextureDeleteRequest(textureID));
 	}
 }

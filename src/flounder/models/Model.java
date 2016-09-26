@@ -1,9 +1,9 @@
 package flounder.models;
 
-import flounder.engine.*;
 import flounder.materials.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
+import flounder.processing.*;
 import flounder.resources.*;
 
 import java.util.*;
@@ -209,6 +209,6 @@ public class Model {
 	 */
 	public void delete() {
 		loaded = false;
-		FlounderEngine.getProcessors().sendGLRequest(new ModelDeleteRequest(vaoID));
+		FlounderProcessors.sendGLRequest(new ModelDeleteRequest(vaoID));
 	}
 }

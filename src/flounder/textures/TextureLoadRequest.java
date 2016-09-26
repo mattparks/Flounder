@@ -1,6 +1,5 @@
 package flounder.textures;
 
-import flounder.engine.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 
@@ -28,16 +27,16 @@ public class TextureLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void doResourceRequest() {
-		data = FlounderEngine.getTextures().decodeTextureFile(builder.getFile());
+		data = FlounderTextures.decodeTextureFile(builder.getFile());
 
 		if (sendRequest) {
-			FlounderEngine.getProcessors().sendGLRequest(this);
+			FlounderProcessors.sendGLRequest(this);
 		}
 	}
 
 	@Override
 	public void executeGlRequest() {
-		int textureID = FlounderEngine.getTextures().loadTextureToOpenGL(data, builder);
+		int textureID = FlounderTextures.loadTextureToOpenGL(data, builder);
 		texture.setTextureID(textureID);
 		texture.setFile(builder.getFile());
 		texture.setHasTransparency(data.hasAlpha());

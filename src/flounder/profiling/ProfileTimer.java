@@ -1,6 +1,6 @@
 package flounder.profiling;
 
-import flounder.engine.*;
+import flounder.logger.*;
 
 /**
  * Can be used to record various timings within the engine.
@@ -31,7 +31,7 @@ public class ProfileTimer {
 	 */
 	public void stopInvocation() {
 		if (startTime == 0) {
-			FlounderEngine.getLogger().error("Stop Invocation called without matching start invocation!");
+			FlounderLogger.error("Stop Invocation called without matching start invocation!");
 			assert (startTime != 0); // Stops from running faulty data.
 		}
 

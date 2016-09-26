@@ -1,6 +1,5 @@
 package flounder.textures;
 
-import flounder.engine.*;
 import flounder.processing.glProcessing.*;
 
 /**
@@ -20,6 +19,6 @@ public class TextureDeleteRequest implements GlRequest {
 
 	@Override
 	public void executeGlRequest() {
-		FlounderEngine.getTextures().deleteTexture(textureID);
+		FlounderTextures.deleteTexture(textureID);
 	}
 }

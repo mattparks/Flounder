@@ -53,7 +53,7 @@ public class ParticleSystem {
 
 		this.paused = false;
 
-		FlounderEngine.getParticles().addSystem(this);
+		FlounderParticles.addSystem(this);
 	}
 
 	public List<ParticleTemplate> getTypes() {
@@ -182,7 +182,7 @@ public class ParticleSystem {
 		float lifeLength = generateValue(emitType.getLifeLength(), emitType.getLifeLength() * lifeError);
 		Vector3f spawnPos = Vector3f.add(systemCentre, spawn.getBaseSpawnPosition(), null);
 
-		FlounderEngine.getParticles().addParticle(emitType, spawnPos, velocity, lifeLength, generateRotation(), scale, gravityEffect);
+		FlounderParticles.addParticle(emitType, spawnPos, velocity, lifeLength, generateRotation(), scale, gravityEffect);
 	}
 
 	private float generateValue(float average, float errorMargin) {
@@ -233,6 +233,6 @@ public class ParticleSystem {
 	}
 
 	public void delete() {
-		FlounderEngine.getParticles().removeSystem(this);
+		FlounderParticles.removeSystem(this);
 	}
 }

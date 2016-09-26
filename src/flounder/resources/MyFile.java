@@ -1,6 +1,6 @@
 package flounder.resources;
 
-import flounder.engine.*;
+import flounder.logger.*;
 
 import java.io.*;
 
@@ -81,8 +81,8 @@ public class MyFile {
 			InputStreamReader isr = new InputStreamReader(getInputStream());
 			return new BufferedReader(isr);
 		} catch (Exception e) {
-			FlounderEngine.getLogger().error("Couldn't get reader for " + path);
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Couldn't get reader for " + path);
+			FlounderLogger.exception(e);
 			return null;
 		}
 	}

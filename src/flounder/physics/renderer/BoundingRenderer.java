@@ -1,5 +1,6 @@
 package flounder.physics.renderer;
 
+import flounder.devices.*;
 import flounder.engine.*;
 import flounder.engine.entrance.*;
 import flounder.helpers.*;
@@ -8,6 +9,7 @@ import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.physics.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
@@ -44,16 +46,16 @@ public class BoundingRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!shader.isLoaded() || !FlounderEngine.getBounding().renders()) {
+		if (!shader.isLoaded() || !FlounderBounding.renders()) {
 			return;
 		}
 
 		prepareRendering(clipPlane, camera);
 
-		for (Model model : FlounderEngine.getBounding().getRenderShapes().keySet()) {
+		for (Model model : FlounderBounding.getRenderShapes().keySet()) {
 			prepareModel(model);
 
-			for (IBounding shape : FlounderEngine.getBounding().getRenderShapes().get(model)) {
+			for (IBounding shape : FlounderBounding.getRenderShapes().get(model)) {
 				renderShape(model, shape);
 			}
 
@@ -65,7 +67,7 @@ public class BoundingRenderer extends IRenderer {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Boundings", "Render Time", super.getRenderTimeMs());
+		FlounderProfiler.add("Boundings", "Render Time", super.getRenderTimeMs());
 	}
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
@@ -76,7 +78,7 @@ public class BoundingRenderer extends IRenderer {
 
 		lastWireframe = OpenGlUtils.isInWireframe();
 
-		OpenGlUtils.antialias(FlounderEngine.getDevices().getDisplay().isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.cullBackFaces(false);
 		OpenGlUtils.goWireframe(true);
 		OpenGlUtils.enableDepthTesting();

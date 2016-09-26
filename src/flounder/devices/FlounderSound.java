@@ -2,7 +2,10 @@ package flounder.devices;
 
 import flounder.engine.*;
 import flounder.engine.entrance.*;
+import flounder.logger.*;
 import flounder.maths.vectors.*;
+import flounder.processing.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.sounds.*;
 import org.lwjgl.openal.*;
@@ -17,8 +20,10 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * An Sound Device implemented using OpenAL.
  */
-public class DeviceSound implements IModule {
+public class FlounderSound extends IModule {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
+
+	private static FlounderSound instance;
 
 	private long device;
 
@@ -27,11 +32,13 @@ public class DeviceSound implements IModule {
 	private StreamManager streamManager;
 	private MusicPlayer musicPlayer;
 
-	/**
-	 * Creates a new OpenGL sound manager.
-	 */
-	protected DeviceSound() {
-		cameraPosition = new Vector3f(0.0f, 0.0f, 0.0f);
+	static {
+		instance = new FlounderSound();
+	}
+
+	private FlounderSound() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderProcessors.class.getClass());
+		cameraPosition = new Vector3f();
 	}
 
 	@Override
@@ -46,7 +53,7 @@ public class DeviceSound implements IModule {
 		int alError = alGetError();
 
 		if (alError != GL_NO_ERROR) {
-			FlounderEngine.getLogger().error("OpenAL Error " + alError);
+			FlounderLogger.error("OpenAL Error " + alError);
 		}
 
 		// Creates a new model and main objects.
@@ -79,8 +86,8 @@ public class DeviceSound implements IModule {
 	 *
 	 * @return The cameras position.
 	 */
-	public Vector3f getCameraPosition() {
-		return cameraPosition;
+	public static Vector3f getCameraPosition() {
+		return instance.cameraPosition;
 	}
 
 	/**
@@ -90,12 +97,12 @@ public class DeviceSound implements IModule {
 	 *
 	 * @return The controller for the source which plays the sound. Returns {@code null} if no source was available to play the sound.
 	 */
-	public AudioController play3DSound(PlayRequest playRequest) {
+	public static AudioController play3DSound(PlayRequest playRequest) {
 		if (playRequest.getSound() != null && !playRequest.getSound().isLoaded()) {
 			return null;
 		}
 
-		return sourcePool.play(playRequest);
+		return instance.sourcePool.play(playRequest);
 	}
 
 	/**
@@ -105,12 +112,12 @@ public class DeviceSound implements IModule {
 	 *
 	 * @return The controller for the playing of this sound.
 	 */
-	public AudioController playSystemSound(Sound sound) {
+	public static AudioController playSystemSound(Sound sound) {
 		if (sound != null && !sound.isLoaded()) {
 			return null;
 		}
 
-		return sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
+		return instance.sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
 	}
 
 	/**
@@ -118,8 +125,8 @@ public class DeviceSound implements IModule {
 	 *
 	 * @return The sound stream manager.
 	 */
-	public StreamManager getStreamManager() {
-		return streamManager;
+	public static StreamManager getStreamManager() {
+		return instance.streamManager;
 	}
 
 	/**
@@ -127,8 +134,8 @@ public class DeviceSound implements IModule {
 	 *
 	 * @return The background music player.
 	 */
-	public MusicPlayer getMusicPlayer() {
-		return musicPlayer;
+	public static MusicPlayer getMusicPlayer() {
+		return instance.musicPlayer;
 	}
 
 	@Override

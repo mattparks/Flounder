@@ -2,25 +2,16 @@ package flounder.engine;
 
 import flounder.devices.*;
 import flounder.engine.entrance.*;
-import flounder.events.*;
 import flounder.fonts.*;
-import flounder.guis.*;
-import flounder.loaders.*;
 import flounder.logger.*;
-import flounder.materials.*;
 import flounder.maths.*;
+import flounder.maths.Timer;
 import flounder.maths.matrices.*;
-import flounder.models.*;
-import flounder.networking.*;
-import flounder.particles.*;
-import flounder.physics.renderer.*;
-import flounder.processing.*;
 import flounder.profiling.*;
 import flounder.resources.*;
-import flounder.shaders.*;
-import flounder.textures.*;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * Deals with much of the initializing, updating, and cleaning up of the engine.
@@ -32,21 +23,8 @@ public class FlounderEngine extends Thread {
 
 	private FlounderEntrance entrance;
 
-	private FlounderDevices devices;
-	private FlounderProcessors processors;
-	private FlounderEvents events;
-	private FlounderLoader loader;
-	private FlounderMaterials materials;
-	private FlounderModels models;
-	private FlounderTextures textures;
-	private FlounderFonts fonts;
-	private FlounderGuis guis;
-	private FlounderParticles particles;
-	private FlounderBounding bounding;
-	private FlounderNetwork network;
-	private FlounderLogger logger;
-	private FlounderShaders shaders;
-	private FlounderProfiler profiler;
+	private static final List<IModule> unregistedModules = new ArrayList<>();
+	private static final List<IModule> activeModules = new ArrayList<>();
 
 	private int fpsLimit;
 	private boolean closedRequested;
@@ -86,6 +64,15 @@ public class FlounderEngine extends Thread {
 		}
 	}
 
+	public static void registerModule(IModule module) {
+		unregistedModules.add(module);
+		String data = "";
+		for (int i = 0; i < module.getRequires().length; i++) {
+			data += module.getRequires()[i] + ", ";
+		}
+		System.out.println("[" + module.getClass().getName() + "]: " + data);
+	}
+
 	/**
 	 * Carries out the setup for basic engine components and the engine. Call {@link #startEngine(FontType)} immediately after this.
 	 *
@@ -104,22 +91,6 @@ public class FlounderEngine extends Thread {
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
 		version = new Version("1.09.22");
-
-		this.devices = new FlounderDevices(width, height, title, icons, vsync, antialiasing, samples, fullscreen);
-		this.processors = new FlounderProcessors();
-		this.events = new FlounderEvents();
-		this.loader = new FlounderLoader();
-		this.materials = new FlounderMaterials();
-		this.models = new FlounderModels();
-		this.textures = new FlounderTextures();
-		this.fonts = new FlounderFonts();
-		this.guis = new FlounderGuis();
-		this.particles = new FlounderParticles();
-		this.bounding = new FlounderBounding();
-		this.network = new FlounderNetwork(1331);
-		this.logger = new FlounderLogger();
-		this.shaders = new FlounderShaders();
-		this.profiler = new FlounderProfiler(title + " Profiler");
 
 		this.fpsLimit = fpsLimit;
 		this.closedRequested = false;
@@ -148,21 +119,9 @@ public class FlounderEngine extends Thread {
 
 	private void initEngine() {
 		if (!initialized) {
-			logger.init();
-			profiler.init();
-			devices.init();
-			shaders.init();
-			processors.init();
-			loader.init();
-			materials.init();
-			models.init();
-			textures.init();
-			fonts.init();
-			guis.init();
-			particles.init();
-			bounding.init();
-			network.init();
-			events.init();
+			for (IModule module : activeModules) {
+				module.init();
+			}
 
 			entrance.managerGUI.init();
 			entrance.renderer.init();
@@ -184,7 +143,7 @@ public class FlounderEngine extends Thread {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.exception(e);
+			FlounderLogger.exception(e);
 		} finally {
 			disposeEngine();
 		}
@@ -192,25 +151,13 @@ public class FlounderEngine extends Thread {
 
 	private void updateEngine() {
 		if (initialized) {
-			devices.update();
-
-			loader.update();
-			materials.update();
-			models.update();
-			textures.update();
-			shaders.update();
-			processors.update();
-			bounding.update();
-			fonts.update();
-			guis.update();
-			events.update();
 
 			{
 				delta.update();
 				entrance.update();
 
 				if (timerLog.isPassedTime()) {
-					FlounderEngine.getLogger().log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
+					FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
 					timerLog.resetStartTime();
 				}
 
@@ -218,36 +165,16 @@ public class FlounderEngine extends Thread {
 				entrance.managerGUI.update();
 			}
 
-			particles.update();
-			logger.update();
-			profiler.update();
-			network.update();
-
-			devices.swapBuffers();
+			FlounderDisplay.swapBuffers();
 		}
 	}
 
 	private void profileEngine() {
-		if (profiler.isOpen()) {
-			profiler.add("Engine", "Running From Jar", runningFromJar);
-			profiler.add("Engine", "Save Folder", roamingFolder.getPath());
+		if (FlounderProfiler.isOpen()) {
+			FlounderProfiler.add("Engine", "Running From Jar", runningFromJar);
+			FlounderProfiler.add("Engine", "Save Folder", roamingFolder.getPath());
 
-			devices.profile();
-			processors.profile();
-			shaders.profile();
-			events.profile();
 			entrance.profile();
-			particles.profile();
-			bounding.profile();
-			network.profile();
-			loader.profile();
-			materials.profile();
-			models.profile();
-			textures.profile();
-			guis.profile();
-			fonts.profile();
-			logger.profile();
-			profiler.profile();
 		}
 	}
 
@@ -258,142 +185,6 @@ public class FlounderEngine extends Thread {
 	 */
 	public static Version getVersion() {
 		return instance.version;
-	}
-
-	/**
-	 * Gets the engines current device manager.
-	 *
-	 * @return The engines current device manager.
-	 */
-	public static FlounderDevices getDevices() {
-		return instance.devices;
-	}
-
-	/**
-	 * Gets the engines current profiler.
-	 *
-	 * @return The engines current profiler.
-	 */
-	public static FlounderProfiler getProfiler() {
-		return instance.profiler;
-	}
-
-	/**
-	 * Gets the engines current event manager.
-	 *
-	 * @return The engines current event manager.
-	 */
-	public static FlounderEvents getEvents() {
-		return instance.events;
-	}
-
-	/**
-	 * Gets the engines current logger.
-	 *
-	 * @return The engines current logger.
-	 */
-	public static FlounderLogger getLogger() {
-		return instance.logger;
-	}
-
-	/**
-	 * Gets the engines current OpenGL loader.
-	 *
-	 * @return The engines current OpenGL loader.
-	 */
-	public static FlounderLoader getLoader() {
-		return instance.loader;
-	}
-
-	/**
-	 * Gets the engines current OpenGL model loader.
-	 *
-	 * @return The engines current OpenGL model loader.
-	 */
-	public static FlounderModels getModels() {
-		return instance.models;
-	}
-
-	/**
-	 * Gets the engines current MTL materials loader.
-	 *
-	 * @return The engines current MTL materials loader.
-	 */
-	public static FlounderMaterials getMaterials() {
-		return instance.materials;
-	}
-
-	/**
-	 * Gets the engines current shader load processor.
-	 *
-	 * @return The engines current shader load processor.
-	 */
-	public static FlounderShaders getShaders() {
-		return instance.shaders;
-	}
-
-	/**
-	 * Gets the engines current request processor.
-	 *
-	 * @return The engines current request processor.
-	 */
-	public static FlounderProcessors getProcessors() {
-		return instance.processors;
-	}
-
-	/**
-	 * Gets the engines current texture manager.
-	 *
-	 * @return The engines current texture manager.
-	 */
-	public static FlounderTextures getTextures() {
-		return instance.textures;
-	}
-
-	/**
-	 * Gets the engines current gui manager.
-	 *
-	 * @return The engines current gui manager.
-	 */
-	public static FlounderGuis getGuis() {
-		return instance.guis;
-	}
-
-	/**
-	 * Gets the engines current font manager.
-	 *
-	 * @return The engines current font manager.
-	 */
-	public static FlounderFonts getFonts() {
-		return instance.fonts;
-	}
-
-	/**
-	 * Gets the engines current particles renderer manager.
-	 *
-	 * @return The engines current particles renderer manager.
-	 */
-	public static FlounderParticles getParticles() {
-		return instance.particles;
-	}
-
-	/**
-	 * Gets the engines current shape renderer manager.
-	 *
-	 * @return The engines current shape renderer manager.
-	 */
-	public static FlounderBounding getBounding() {
-		return instance.bounding;
-	}
-
-	/**
-	 * Gets the engines current network manager.
-	 *
-	 * @return The engines current network manager.
-	 */
-
-	public static FlounderNetwork getNetwork() {
-		return instance.network;
 	}
 
 	/**
@@ -468,7 +259,7 @@ public class FlounderEngine extends Thread {
 	 * @return Is the engine still running?
 	 */
 	public static boolean isRunning() {
-		return !instance.closedRequested && !FlounderEngine.getDevices().getDisplay().isClosed();
+		return !instance.closedRequested && !FlounderDisplay.isClosed();
 	}
 
 	/**
@@ -528,21 +319,9 @@ public class FlounderEngine extends Thread {
 			entrance.renderer.dispose();
 			entrance.dispose();
 
-			processors.dispose();
-			shaders.dispose();
-			events.dispose();
-			models.dispose();
-			materials.dispose();
-			loader.dispose();
-			network.dispose();
-			particles.dispose();
-			bounding.dispose();
-			textures.dispose();
-			guis.dispose();
-			fonts.dispose();
-			devices.dispose();
-			profiler.dispose();
-			logger.dispose();
+			for (IModule module : activeModules) {
+				module.dispose();
+			}
 
 			initialized = false;
 		}

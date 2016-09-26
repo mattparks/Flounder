@@ -1,6 +1,7 @@
 package flounder.logger;
 
 import flounder.engine.*;
+import flounder.profiling.*;
 
 import java.io.*;
 import java.util.*;
@@ -8,7 +9,9 @@ import java.util.*;
 /**
  * Various utility functions for debugging.
  */
-public class FlounderLogger implements IModule {
+public class FlounderLogger extends IModule {
+	private static FlounderLogger instance;
+
 	public static final boolean LOG_TO_CONSOLE = true;
 	public static final boolean LOG_TO_FILE = true;
 
@@ -25,10 +28,12 @@ public class FlounderLogger implements IModule {
 	private StringBuilder saveData;
 	private int linesRecorded;
 
-	/**
-	 * Creates a new instance of the logger.
-	 */
-	public FlounderLogger() {
+	static {
+		instance = new FlounderLogger();
+	}
+
+	private FlounderLogger() {
+		super(FlounderProfiler.class.getClass());
 		saveData = new StringBuilder();
 		linesRecorded = 0;
 	}
@@ -43,9 +48,9 @@ public class FlounderLogger implements IModule {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Logger", "Log To Console", LOG_TO_CONSOLE);
-		FlounderEngine.getProfiler().add("Logger", "Log To Files", LOG_TO_FILE);
-		FlounderEngine.getProfiler().add("Logger", "Lines Recorded", linesRecorded);
+		FlounderProfiler.add("Logger", "Log To Console", LOG_TO_CONSOLE);
+		FlounderProfiler.add("Logger", "Log To Files", LOG_TO_FILE);
+		FlounderProfiler.add("Logger", "Lines Recorded", linesRecorded);
 	}
 
 	/**
@@ -54,7 +59,7 @@ public class FlounderLogger implements IModule {
 	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public <T> void log(T value) {
+	public static <T> void log(T value) {
 		log(value, false);
 	}
 
@@ -65,7 +70,7 @@ public class FlounderLogger implements IModule {
 	 * @param loud If the logged value is not useful, it may or may not be logged because of this.
 	 * @param <T> The object type to be logged.
 	 */
-	public <T> void log(T value, boolean loud) {
+	public static <T> void log(T value, boolean loud) {
 		if (loud && !FlounderEngine.isRunningFromJar()) {
 			return;
 		}
@@ -75,8 +80,8 @@ public class FlounderLogger implements IModule {
 		}
 
 		if (LOG_TO_FILE) {
-			saveData.append("LOG [" + getDateString() + "]: " + getString(value) + "\n");
-			linesRecorded++;
+			instance.saveData.append("LOG [" + getDateString() + "]: " + getString(value) + "\n");
+			instance.linesRecorded++;
 		}
 	}
 
@@ -86,7 +91,7 @@ public class FlounderLogger implements IModule {
 	 * @param value Warnings being added to the log file and possibly to your IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public <T> void warning(T value) {
+	public static <T> void warning(T value) {
 		warning(value, false);
 	}
 
@@ -97,7 +102,7 @@ public class FlounderLogger implements IModule {
 	 * @param loud If the logged value is not useful, it may or may not be logged because of this.
 	 * @param <T> The object type to be logged.
 	 */
-	public <T> void warning(T value, boolean loud) {
+	public static <T> void warning(T value, boolean loud) {
 		if (loud && !FlounderEngine.isRunningFromJar()) {
 			return;
 		}
@@ -105,8 +110,8 @@ public class FlounderLogger implements IModule {
 		System.err.println("WARNING [" + getDateString() + "]: " + getString(value));
 
 		if (LOG_TO_FILE) {
-			saveData.append("WARNING [" + getDateString() + "]: " + getString(value) + "\n");
-			linesRecorded++;
+			instance.saveData.append("WARNING [" + getDateString() + "]: " + getString(value) + "\n");
+			instance.linesRecorded++;
 		}
 	}
 
@@ -116,7 +121,7 @@ public class FlounderLogger implements IModule {
 	 * @param value Errors being added to the log file and possibly to your IDES console.
 	 * @param <T> The object type to be logged.
 	 */
-	public <T> void error(T value) {
+	public static <T> void error(T value) {
 		error(value, false);
 	}
 
@@ -127,7 +132,7 @@ public class FlounderLogger implements IModule {
 	 * @param loud If the logged value is not useful, it may or may not be logged because of this.
 	 * @param <T> The object type to be logged.
 	 */
-	public <T> void error(T value, boolean loud) {
+	public static <T> void error(T value, boolean loud) {
 		if (loud && !FlounderEngine.isRunningFromJar()) {
 			return;
 		}
@@ -135,12 +140,12 @@ public class FlounderLogger implements IModule {
 		System.err.println("ERROR [" + getDateString() + "]: " + getString(value));
 
 		if (LOG_TO_FILE) {
-			saveData.append("ERROR [" + getDateString() + "]: " + getString(value) + "\n");
-			linesRecorded++;
+			instance.saveData.append("ERROR [" + getDateString() + "]: " + getString(value) + "\n");
+			instance.linesRecorded++;
 		}
 	}
 
-	private <T> String getString(T value) {
+	private static <T> String getString(T value) {
 		if (value == null) {
 			return "NULL";
 		}
@@ -153,22 +158,22 @@ public class FlounderLogger implements IModule {
 	 *
 	 * @param exception The exception added to the log file and possibly to your IDES console.
 	 */
-	public void exception(Exception exception) {
+	public static void exception(Exception exception) {
 		if (LOG_TO_CONSOLE) {
 			System.err.println("EXCEPTION [" + getDateString() + "]: " + exception.toString());
 			exception.printStackTrace();
 		}
 
 		if (LOG_TO_FILE) {
-			saveData.append("EXCEPTION [" + getDateString() + "]: " + exception.toString() + "\n");
-			linesRecorded += exception.toString().split("\n").length;
+			instance.saveData.append("EXCEPTION [" + getDateString() + "]: " + exception.toString() + "\n");
+			instance.linesRecorded += exception.toString().split("\n").length;
 		}
 	}
 
 	/**
 	 * @return Returns the string of the current date as [hour:minute:second | day/month/year].
 	 */
-	public String getDateString() {
+	public static String getDateString() {
 		int hour = Calendar.getInstance().get(Calendar.HOUR);
 		int minute = Calendar.getInstance().get(Calendar.MINUTE);
 		int second = Calendar.getInstance().get(Calendar.SECOND) + 1;

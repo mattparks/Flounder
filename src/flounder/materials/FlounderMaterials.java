@@ -1,6 +1,7 @@
 package flounder.materials;
 
 import flounder.engine.*;
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.resources.*;
 
@@ -11,10 +12,17 @@ import java.util.*;
 /**
  * Class capable of loading MTL files into Materials.
  */
-public class FlounderMaterials implements IModule {
+public class FlounderMaterials extends IModule {
+	private static FlounderMaterials instance;
+
 	private static Map<String, SoftReference<List<Material>>> loaded = new HashMap<>();
 
-	public FlounderMaterials() {
+	static {
+		instance = new FlounderMaterials();
+	}
+
+	private FlounderMaterials() {
+		super(FlounderLogger.class.getClass());
 	}
 
 	@Override
@@ -36,7 +44,7 @@ public class FlounderMaterials implements IModule {
 	 *
 	 * @return Returns a loaded list of MTLMaterials.
 	 */
-	public List<Material> loadMTL(MyFile file) {
+	public static List<Material> loadMTL(MyFile file) {
 		SoftReference<List<Material>> ref = loaded.get(file.getPath());
 		List<Material> data = ref == null ? null : ref.get();
 
@@ -56,7 +64,7 @@ public class FlounderMaterials implements IModule {
 			Material parseMaterial = new Material();
 
 			if (reader == null) {
-				FlounderEngine.getLogger().error("Error creating reader the MTL: " + file);
+				FlounderLogger.error("Error creating reader the MTL: " + file);
 			}
 
 			try {
@@ -94,7 +102,7 @@ public class FlounderMaterials implements IModule {
 							break;
 						case "map_Kd":
 							String fileNameKd = line.split(" ")[1].trim();
-							// FlounderEngine.getLogger().error("File Kd: " + fileNameKd);
+							// FlounderLogger.error("File Kd: " + fileNameKd);
 
 							//	if (!fileNameKd.isEmpty() && !fileNameKd.equals(".")) {
 							//		parseMaterial.texture = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameKd)).create();
@@ -102,14 +110,14 @@ public class FlounderMaterials implements IModule {
 							break;
 						case "map_Bump":
 							String fileNameBump = line.split(" ")[1].trim();
-							// FlounderEngine.getLogger().error("File Bump: " + fileNameBump);
+							// FlounderLogger.error("File Bump: " + fileNameBump);
 
 							//	if (!fileNameBump.isEmpty() && !fileNameBump.equals(".")) {
 							//		parseMaterial.normalMap = Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "entities", file.getName().replace(".mtl", ""), fileNameBump)).create();
 							//	}
 							break;
 						default:
-							FlounderEngine.getLogger().warning("[MTL " + file.getName() + "] Unknown Line: " + line);
+							FlounderLogger.warning("[MTL " + file.getName() + "] Unknown Line: " + line);
 							break;
 					}
 				}
@@ -117,7 +125,7 @@ public class FlounderMaterials implements IModule {
 				reader.close();
 				data.add(parseMaterial);
 			} catch (IOException | NullPointerException e) {
-				FlounderEngine.getLogger().error("Error reading the MTL: " + file);
+				FlounderLogger.error("Error reading the MTL: " + file);
 			}
 
 			loaded.put(file.getPath(), new SoftReference<>(data));

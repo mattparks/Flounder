@@ -1,6 +1,8 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.logger.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -20,7 +22,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * Manages the creation, updating and destruction of the display.
  */
-public class DeviceDisplay implements IModule {
+public class FlounderDisplay extends IModule {
+	private static FlounderDisplay instance;
+
 	private int windowWidth;
 	private int windowHeight;
 	private int fullscreenWidth;
@@ -45,34 +49,37 @@ public class DeviceDisplay implements IModule {
 	private GLFWWindowSizeCallback callbackWindowSize;
 	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
-	/**
-	 * Creates a new GLFW display.
-	 *
-	 * @param width The window width in pixels.
-	 * @param height The window height in pixels.
-	 * @param title The window title.
-	 * @param icons A list of icons to load for the window.
-	 * @param vsync If the window will use vSync..
-	 * @param antialiasing If OpenGL will use antialiasing.
-	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
-	 * @param fullscreen If the window will start fullscreen.
-	 */
-	protected DeviceDisplay(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
-		this.windowWidth = width;
-		this.windowHeight = height;
-		this.title = title;
-		this.icons = icons;
-		this.vsync = vsync;
-		this.antialiasing = antialiasing;
-		this.samples = samples;
-		this.fullscreen = fullscreen;
+	static {
+		instance = new FlounderDisplay();
+	}
+
+	private FlounderDisplay() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass());
+
+		this.windowWidth = 1080;
+		this.windowHeight = 720;
+		this.title = "Testing 1";
+		this.icons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
+		this.vsync = true;
+		this.antialiasing = true;
+		this.samples = 0;
+		this.fullscreen = false;
+
+		//	this.windowWidth = width;
+		//	this.windowHeight = height;
+		//	this.title = title;
+		//	this.icons = icons;
+		//	this.vsync = vsync;
+		//	this.antialiasing = antialiasing;
+		//	this.samples = samples;
+		//	this.fullscreen = fullscreen;
 	}
 
 	@Override
 	public void init() {
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
-			FlounderEngine.getLogger().error("Could not init GLFW!");
+			FlounderLogger.error("Could not init GLFW!");
 			System.exit(-1);
 		}
 
@@ -106,7 +113,7 @@ public class DeviceDisplay implements IModule {
 
 		// Gets any window errors.
 		if (window == NULL) {
-			FlounderEngine.getLogger().error("Could not create the window!");
+			FlounderLogger.error("Could not create the window!");
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -117,8 +124,8 @@ public class DeviceDisplay implements IModule {
 		try {
 			setWindowIcon();
 		} catch (IOException e) {
-			FlounderEngine.getLogger().error("Could not load custom display image!");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Could not load custom display image!");
+			FlounderLogger.exception(e);
 		}
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
@@ -128,7 +135,7 @@ public class DeviceDisplay implements IModule {
 		long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
-			FlounderEngine.getLogger().error("OpenGL Error: " + glError);
+			FlounderLogger.error("OpenGL Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
@@ -239,30 +246,30 @@ public class DeviceDisplay implements IModule {
 	/**
 	 * Updates the display image by swapping the colour buffers.
 	 */
-	public void swapBuffers() {
-		glfwSwapBuffers(window);
+	public static void swapBuffers() {
+		glfwSwapBuffers(instance.window);
 	}
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Display", "Width", windowWidth);
-		FlounderEngine.getProfiler().add("Display", "Height", windowHeight);
-		FlounderEngine.getProfiler().add("Display", "Title", title);
-		FlounderEngine.getProfiler().add("Display", "VSync", vsync);
-		FlounderEngine.getProfiler().add("Display", "Antialiasing", antialiasing);
-		FlounderEngine.getProfiler().add("Display", "Samples", samples);
-		FlounderEngine.getProfiler().add("Display", "Fullscreen", fullscreen);
+		FlounderProfiler.add("Display", "Width", windowWidth);
+		FlounderProfiler.add("Display", "Height", windowHeight);
+		FlounderProfiler.add("Display", "Title", title);
+		FlounderProfiler.add("Display", "VSync", vsync);
+		FlounderProfiler.add("Display", "Antialiasing", antialiasing);
+		FlounderProfiler.add("Display", "Samples", samples);
+		FlounderProfiler.add("Display", "Fullscreen", fullscreen);
 
-		FlounderEngine.getProfiler().add("Display", "Closed", closed);
-		FlounderEngine.getProfiler().add("Display", "Focused", focused);
-		FlounderEngine.getProfiler().add("Display", "Window Pos.X", windowPosX);
-		FlounderEngine.getProfiler().add("Display", "Window Pos.Y", windowPosY);
+		FlounderProfiler.add("Display", "Closed", closed);
+		FlounderProfiler.add("Display", "Focused", focused);
+		FlounderProfiler.add("Display", "Window Pos.X", windowPosX);
+		FlounderProfiler.add("Display", "Window Pos.Y", windowPosY);
 	}
 
 	/**
 	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
 	 */
-	public void screenshot() {
+	public static void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
 		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
 		File saveDirectory = new File(FlounderEngine.getRoamingFolder().getPath(), "screenshots");
@@ -270,11 +277,11 @@ public class DeviceDisplay implements IModule {
 		if (!saveDirectory.exists()) {
 			try {
 				if (!saveDirectory.mkdir()) {
-					FlounderEngine.getLogger().error("The screenshot directory could not be created.");
+					FlounderLogger.error("The screenshot directory could not be created.");
 				}
 			} catch (SecurityException e) {
-				FlounderEngine.getLogger().error("The screenshot directory could not be created.");
-				FlounderEngine.getLogger().exception(e);
+				FlounderLogger.error("The screenshot directory could not be created.");
+				FlounderLogger.exception(e);
 				return;
 			}
 		}
@@ -282,14 +289,14 @@ public class DeviceDisplay implements IModule {
 		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
 		String format = "png"; // "PNG" or "JPG".
 
-		FlounderEngine.getLogger().log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
 
 		// Tries to create image.
 		try {
-			ImageIO.write(createBufferedImage(), format, file);
+			ImageIO.write(instance.createBufferedImage(), format, file);
 		} catch (Exception e) {
-			FlounderEngine.getLogger().error("Failed to take screenshot.");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Failed to take screenshot.");
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -326,12 +333,12 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return The width of the display.
 	 */
-	public int getWidth() {
-		return fullscreen ? fullscreenWidth : windowWidth;
+	public static int getWidth() {
+		return instance.fullscreen ? instance.fullscreenWidth : instance.windowWidth;
 	}
 
-	public int getWindowWidth() {
-		return windowWidth;
+	public static int getWindowWidth() {
+		return instance.windowWidth;
 	}
 
 	/**
@@ -339,12 +346,12 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return The height of the display.
 	 */
-	public int getHeight() {
-		return fullscreen ? fullscreenHeight : windowHeight;
+	public static int getHeight() {
+		return instance.fullscreen ? instance.fullscreenHeight : instance.windowHeight;
 	}
 
-	public int getWindowHeight() {
-		return windowHeight;
+	public static int getWindowHeight() {
+		return instance.windowHeight;
 	}
 
 	/**
@@ -352,7 +359,7 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return The aspect ratio.
 	 */
-	public float getAspectRatio() {
+	public static float getAspectRatio() {
 		return ((float) getWidth()) / ((float) getHeight());
 	}
 
@@ -361,8 +368,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return The window's title.
 	 */
-	public String getTitle() {
-		return title;
+	public static String getTitle() {
+		return instance.title;
 	}
 
 	/**
@@ -370,8 +377,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return If VSync is enabled.
 	 */
-	public boolean isVSync() {
-		return vsync;
+	public static boolean isVSync() {
+		return instance.vsync;
 	}
 
 	/**
@@ -379,8 +386,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @param vsync Weather or not to use vSync.
 	 */
-	public void setVSync(boolean vsync) {
-		this.vsync = vsync;
+	public static void setVSync(boolean vsync) {
+		instance.vsync = vsync;
 		glfwSwapInterval(vsync ? 1 : 0);
 	}
 
@@ -389,8 +396,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return If using antialiased images.
 	 */
-	public boolean isAntialiasing() {
-		return antialiasing;
+	public static boolean isAntialiasing() {
+		return instance.antialiasing;
 	}
 
 	/**
@@ -398,8 +405,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @param antialiasing If the display should antialias.
 	 */
-	public void setAntialiasing(boolean antialiasing) {
-		this.antialiasing = antialiasing;
+	public static void setAntialiasing(boolean antialiasing) {
+		instance.antialiasing = antialiasing;
 	}
 
 	/**
@@ -407,8 +414,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return Amount of MFAA samples.
 	 */
-	public int getSamples() {
-		return samples;
+	public static int getSamples() {
+		return instance.samples;
 	}
 
 	/**
@@ -416,8 +423,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @param samples The amount of MFSS samples.
 	 */
-	public void setSamples(int samples) {
-		this.samples = samples;
+	public static void setSamples(int samples) {
+		instance.samples = samples;
 		glfwWindowHint(GLFW_SAMPLES, samples);
 	}
 
@@ -426,8 +433,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return Fullscreen or windowed.
 	 */
-	public boolean isFullscreen() {
-		return fullscreen;
+	public static boolean isFullscreen() {
+		return instance.fullscreen;
 	}
 
 	/**
@@ -435,23 +442,23 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
-	public void setFullscreen(boolean fullscreen) {
-		if (this.fullscreen == fullscreen) {
+	public static void setFullscreen(boolean fullscreen) {
+		if (instance.fullscreen == fullscreen) {
 			return;
 		}
 
-		FlounderEngine.getLogger().log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
-
-		this.fullscreen = fullscreen;
+		instance.fullscreen = fullscreen;
 		long monitor = glfwGetPrimaryMonitor();
 		GLFWVidMode mode = glfwGetVideoMode(monitor);
 
+		FlounderLogger.log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
+
 		if (fullscreen) {
-			fullscreenWidth = mode.width();
-			fullscreenHeight = mode.height();
-			glfwSetWindowMonitor(window, monitor, 0, 0, fullscreenWidth, fullscreenHeight, FlounderEngine.getTargetFPS());
+			instance.fullscreenWidth = mode.width();
+			instance.fullscreenHeight = mode.height();
+			glfwSetWindowMonitor(instance.window, monitor, 0, 0, instance.fullscreenWidth, instance.fullscreenHeight, FlounderEngine.getTargetFPS());
 		} else {
-			glfwSetWindowMonitor(window, NULL, windowPosX, windowPosY, windowWidth, windowHeight, FlounderEngine.getTargetFPS());
+			glfwSetWindowMonitor(instance.window, NULL, instance.windowPosX, instance.windowPosY, instance.windowWidth, instance.windowHeight, FlounderEngine.getTargetFPS());
 		}
 	}
 
@@ -460,8 +467,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return The current GLFW window.
 	 */
-	public long getWindow() {
-		return window;
+	public static long getWindow() {
+		return instance.window;
 	}
 
 	/**
@@ -469,8 +476,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return If the GLFW display is closed.
 	 */
-	public boolean isClosed() {
-		return closed;
+	public static boolean isClosed() {
+		return instance.closed;
 	}
 
 	/**
@@ -478,8 +485,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return If the GLFW display is selected.
 	 */
-	public boolean isFocused() {
-		return focused;
+	public static boolean isFocused() {
+		return instance.focused;
 	}
 
 	/**
@@ -487,8 +494,8 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return The windows x position.
 	 */
-	public int getWindowXPos() {
-		return windowPosX;
+	public static int getWindowXPos() {
+		return instance.windowPosX;
 	}
 
 	/**
@@ -496,8 +503,15 @@ public class DeviceDisplay implements IModule {
 	 *
 	 * @return The windows Y position.
 	 */
-	public int getWindowYPos() {
-		return windowPosY;
+	public static int getWindowYPos() {
+		return instance.windowPosY;
+	}
+
+	/**
+	 * @return The current GLFW time time in seconds.
+	 */
+	public static float getTime() {
+		return (float) (glfwGetTime() * 1000.0f);
 	}
 
 	@Override

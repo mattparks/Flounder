@@ -2,6 +2,9 @@ package flounder.shaders;
 
 import flounder.engine.*;
 import flounder.helpers.*;
+import flounder.logger.*;
+import flounder.processing.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -15,8 +18,15 @@ import static org.lwjgl.opengl.GL30.*;
 /**
  * Class capable of loading OBJ files into shaders.
  */
-public class FlounderShaders implements IModule {
-	public FlounderShaders() {
+public class FlounderShaders extends IModule {
+	private static FlounderShaders instance;
+
+	static {
+		instance = new FlounderShaders();
+	}
+
+	private FlounderShaders() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderProcessors.class.getClass());
 	}
 
 	@Override
@@ -38,7 +48,7 @@ public class FlounderShaders implements IModule {
 	 *
 	 * @return The shader data.
 	 */
-	public ShaderData loadShader(ShaderBuilder builder) {
+	public static ShaderData loadShader(ShaderBuilder builder) {
 		ShaderData data = new ShaderData();
 
 		for (ShaderType shaderType : builder.getShaderTypes()) {
@@ -50,18 +60,18 @@ public class FlounderShaders implements IModule {
 					String line;
 
 					while ((line = reader.readLine()) != null) {
-						shaderType.getShaderBuilder().append(processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
+						shaderType.getShaderBuilder().append(instance.processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
 					}
 				} catch (Exception e) {
-					FlounderEngine.getLogger().error("Could not read file " + file.getName());
-					FlounderEngine.getLogger().exception(e);
+					FlounderLogger.error("Could not read file " + file.getName());
+					FlounderLogger.exception(e);
 					System.exit(-1);
 				}
 			} else if (shaderType.getShaderString().isPresent()) {
 				String string = shaderType.getShaderString().get();
 
 				for (String line : string.split("\n")) {
-					shaderType.getShaderBuilder().append(processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
+					shaderType.getShaderBuilder().append(instance.processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
 				}
 			}
 		}
@@ -84,8 +94,8 @@ public class FlounderShaders implements IModule {
 					includeSource.append(processShaderLine(includeLine.trim(), data, shaderType) + "\n");
 				}
 			} catch (Exception e) {
-				FlounderEngine.getLogger().error("Could not read file " + includeFile.getName());
-				FlounderEngine.getLogger().exception(e);
+				FlounderLogger.error("Could not read file " + includeFile.getName());
+				FlounderLogger.exception(e);
 				System.exit(-1);
 			}
 
@@ -147,7 +157,7 @@ public class FlounderShaders implements IModule {
 	 * @param data The data to use when creating the shader.
 	 * @param builder The builder configured for the shader.
 	 */
-	public void loadShaderToOpenGL(Shader shader, ShaderData data, ShaderBuilder builder) {
+	public static void loadShaderToOpenGL(Shader shader, ShaderData data, ShaderBuilder builder) {
 		int programID = glCreateProgram();
 
 		for (ShaderType shaderType : builder.getShaderTypes()) {
@@ -156,8 +166,8 @@ public class FlounderShaders implements IModule {
 			glCompileShader(shaderID);
 
 			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-				FlounderEngine.getLogger().error(glGetShaderInfoLog(shaderID, 500));
-				FlounderEngine.getLogger().error("Could not compile shader " + builder.getShaderName());
+				FlounderLogger.error(glGetShaderInfoLog(shaderID, 500));
+				FlounderLogger.error("Could not compile shader " + builder.getShaderName());
 				System.exit(-1);
 			}
 
@@ -165,7 +175,7 @@ public class FlounderShaders implements IModule {
 			glAttachShader(programID, shaderID);
 		}
 
-		loadLocations(programID, data);
+		instance.loadLocations(programID, data);
 		glLinkProgram(programID);
 
 		for (ShaderType shaderType : builder.getShaderTypes()) {
@@ -174,9 +184,9 @@ public class FlounderShaders implements IModule {
 			shaderType.setShaderProgramID(-1);
 		}
 
-		loadBindings(programID, data);
+		instance.loadBindings(programID, data);
 
-		shader.loadData(programID, builder.getShaderName(), builder.getShaderTypes(), createUniforms(programID, data));
+		shader.loadData(programID, builder.getShaderName(), builder.getShaderTypes(), instance.createUniforms(programID, data));
 		data.destroy();
 	}
 
@@ -192,7 +202,7 @@ public class FlounderShaders implements IModule {
 			} else if (type.contains("out")) {
 				glBindFragDataLocation(programID, locationValue, locationName);
 			} else {
-				FlounderEngine.getLogger().error("Could not find location type of: " + type);
+				FlounderLogger.error("Could not find location type of: " + type);
 			}
 		}
 	}
@@ -225,7 +235,7 @@ public class FlounderShaders implements IModule {
 				Object object = ctor.newInstance(new Object[]{pair.getSecond()});
 				uniformObject = (Uniform) object;
 			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-				FlounderEngine.getLogger().error("Shader could not create the uniform type of " + uniformClass);
+				FlounderLogger.error("Shader could not create the uniform type of " + uniformClass);
 				e.printStackTrace();
 			}
 

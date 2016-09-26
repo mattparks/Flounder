@@ -1,7 +1,8 @@
 package flounder.models;
 
-import flounder.engine.*;
+import flounder.logger.*;
 import flounder.materials.*;
+import flounder.processing.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
@@ -44,7 +45,7 @@ public class ModelBuilder {
 		Model data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(getPath() + " is being loaded into the model builder right now!");
+			FlounderLogger.log(getPath() + " is being loaded into the model builder right now!");
 			loadedModels.remove(getPath());
 			data = new Model();
 			ModelLoadRequest request = new ModelLoadRequest(data, this, false);
@@ -66,10 +67,10 @@ public class ModelBuilder {
 		Model data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(getPath() + " is being loaded into the model builder in the background!");
+			FlounderLogger.log(getPath() + " is being loaded into the model builder in the background!");
 			loadedModels.remove(getPath());
 			data = new Model();
-			FlounderEngine.getProcessors().sendRequest(new ModelLoadRequest(data, this, true));
+			FlounderProcessors.sendRequest(new ModelLoadRequest(data, this, true));
 			loadedModels.put(getPath(), new SoftReference<>(data));
 		}
 
@@ -86,12 +87,12 @@ public class ModelBuilder {
 		Model data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(getPath() + " is being loaded into the model builder in separate thread!");
+			FlounderLogger.log(getPath() + " is being loaded into the model builder in separate thread!");
 			loadedModels.remove(getPath());
 			data = new Model();
 			ModelLoadRequest request = new ModelLoadRequest(data, this, false);
 			request.doResourceRequest();
-			FlounderEngine.getProcessors().sendGLRequest(request);
+			FlounderProcessors.sendGLRequest(request);
 			loadedModels.put(getPath(), new SoftReference<>(data));
 		}
 

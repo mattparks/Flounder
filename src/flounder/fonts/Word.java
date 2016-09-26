@@ -1,6 +1,6 @@
 package flounder.fonts;
 
-import flounder.engine.*;
+import flounder.logger.*;
 
 import java.util.*;
 
@@ -30,7 +30,7 @@ public class Word {
 	 */
 	protected void addCharacter(Character character) {
 		if (character == null) {
-			FlounderEngine.getLogger().error("Invalid character detected!");
+			FlounderLogger.error("Invalid character detected!");
 			return;
 		}
 

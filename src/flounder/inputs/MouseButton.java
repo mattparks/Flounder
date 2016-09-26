@@ -1,6 +1,6 @@
 package flounder.inputs;
 
-import flounder.engine.*;
+import flounder.devices.*;
 
 /**
  * Handles buttons on a mouse.
@@ -12,6 +12,6 @@ public class MouseButton extends BaseButton {
 	 * @param mouseButtons The codes for the mouse buttons being checked. They should be GLFW.MOUSE_BUTTON values.
 	 */
 	public MouseButton(int... mouseButtons) {
-		super((int code) -> FlounderEngine.getDevices().getMouse().getMouse(code), mouseButtons);
+		super((int code) -> FlounderMouse.getMouse(code), mouseButtons);
 	}
 }

@@ -1,6 +1,6 @@
 package flounder.particles.loading;
 
-import flounder.engine.*;
+import flounder.logger.*;
 import flounder.particles.*;
 import flounder.resources.*;
 import flounder.textures.*;
@@ -20,7 +20,7 @@ public class ParticleLoader {
 		ParticleTemplate data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(name + " is being loaded into a particle type right now!");
+			FlounderLogger.log(name + " is being loaded into a particle type right now!");
 			loadedTypes.remove(name);
 
 			// Creates the file reader.
@@ -30,7 +30,7 @@ public class ParticleLoader {
 				BufferedReader fileReader = saveFile.getReader();
 
 				if (fileReader == null) {
-					FlounderEngine.getLogger().error("Error creating reader the particle file: " + saveFile);
+					FlounderLogger.error("Error creating reader the particle file: " + saveFile);
 					return null;
 				}
 
@@ -68,8 +68,8 @@ public class ParticleLoader {
 				texture.setNumberOfRows(Integer.parseInt(numberOfRows));
 				data = new ParticleTemplate(particleName, texture, Float.parseFloat(lifeLength), Float.parseFloat(scale));
 			} catch (IOException e) {
-				FlounderEngine.getLogger().error("File reader for particle " + saveFile.getPath() + " did not execute successfully!");
-				FlounderEngine.getLogger().exception(e);
+				FlounderLogger.error("File reader for particle " + saveFile.getPath() + " did not execute successfully!");
+				FlounderLogger.exception(e);
 				return null;
 			}
 

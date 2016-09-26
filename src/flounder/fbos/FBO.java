@@ -1,6 +1,7 @@
 package flounder.fbos;
 
-import flounder.engine.*;
+import flounder.devices.*;
+import flounder.logger.*;
 import org.lwjgl.*;
 
 import java.nio.*;
@@ -94,7 +95,7 @@ public class FBO {
 	 * @return A new FBO Builder.
 	 */
 	public static FBOBuilder newFBO(float sizeScalar) {
-		return new FBOBuilder(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen(sizeScalar);
+		return new FBOBuilder(FlounderDisplay.getWidth(), FlounderDisplay.getHeight()).fitToScreen(sizeScalar);
 	}
 
 	/**
@@ -203,7 +204,7 @@ public class FBO {
 	 */
 	public void unbindFrameBuffer() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight());
+		glViewport(0, 0, FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
 	}
 
 	/**
@@ -213,7 +214,7 @@ public class FBO {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glDrawBuffer(GL_BACK);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDisplay.getWidth(), FlounderDisplay.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	/**
@@ -225,7 +226,7 @@ public class FBO {
 		if (this.attachments != outputFBO.attachments && this.hasGivenResolveError != outputFBO.hasGivenResolveError) {
 			this.hasGivenResolveError = true;
 			outputFBO.hasGivenResolveError = true;
-			FlounderEngine.getLogger().log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
+			FlounderLogger.log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
 		}
 
 		for (int a = 0; a < attachments; a++) {
@@ -257,8 +258,8 @@ public class FBO {
 	 */
 	private void updateSize() {
 		if (fitToScreen) {
-			int displayWidth = FlounderEngine.getDevices().getDisplay().getWidth();
-			int displayHeight = FlounderEngine.getDevices().getDisplay().getHeight();
+			int displayWidth = FlounderDisplay.getWidth();
+			int displayHeight = FlounderDisplay.getHeight();
 			int reverseWidth = (int) (displayWidth * sizeScalar);
 			int reverseHeight = (int) (displayHeight * sizeScalar);
 
@@ -271,7 +272,7 @@ public class FBO {
 				height = (int) (displayHeight * sizeScalar);
 
 				delete();
-				FlounderEngine.getLogger().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+				FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 				initializeFBO();
 			}
 		}

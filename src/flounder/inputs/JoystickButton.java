@@ -1,7 +1,7 @@
 package flounder.inputs;
 
 
-import flounder.engine.*;
+import flounder.devices.*;
 
 /**
  * Handles buttons on a joystick.
@@ -14,6 +14,6 @@ public class JoystickButton extends BaseButton {
 	 * @param joystickButtons The buttons on the joystick being checked.
 	 */
 	public JoystickButton(int joystick, int... joystickButtons) {
-		super((int code) -> FlounderEngine.getDevices().getJoysticks().isConnected(joystick) && FlounderEngine.getDevices().getJoysticks().getButton(joystick, code), joystickButtons);
+		super((int code) -> FlounderJoysticks.isConnected(joystick) && FlounderJoysticks.getButton(joystick, code), joystickButtons);
 	}
 }

@@ -1,10 +1,11 @@
 package flounder.fonts;
 
-import flounder.engine.*;
+import flounder.devices.*;
 import flounder.engine.entrance.*;
 import flounder.helpers.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
@@ -34,18 +35,18 @@ public class FontRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!shader.isLoaded() || FlounderEngine.getFonts().getTexts().keySet().size() < 1) {
+		if (!shader.isLoaded() || FlounderFonts.getTexts().keySet().size() < 1) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderEngine.getFonts().getTexts().keySet().forEach(font -> FlounderEngine.getFonts().getTexts().get(font).forEach(this::renderText));
+		FlounderFonts.getTexts().keySet().forEach(font -> FlounderFonts.getTexts().get(font).forEach(this::renderText));
 		endRendering();
 	}
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Fonts", "Render Time", super.getRenderTimeMs());
+		FlounderProfiler.add("Fonts", "Render Time", super.getRenderTimeMs());
 	}
 
 	private void prepareRendering() {
@@ -76,7 +77,7 @@ public class FontRenderer extends IRenderer {
 		OpenGlUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
-		shader.getUniformFloat("aspectRatio").loadFloat(FlounderEngine.getDevices().getDisplay().getAspectRatio());
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 		shader.getUniformVec3("transform").loadVec3(textPosition.x, textPosition.y, text.getScale());
 		shader.getUniformVec4("colour").loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getCurrentAlpha());
 		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());

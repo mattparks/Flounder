@@ -1,12 +1,10 @@
 package flounder.fonts;
 
-import flounder.engine.*;
-
 /**
  * A simple text builder.
  */
 public class TextBuilder {
-	public static FontType DEFAULT_TYPE = FlounderEngine.getFonts().comicSans;
+	public static FontType DEFAULT_TYPE = FlounderFonts.COMIC_SANS;
 
 	private String text;
 	private float textSize;

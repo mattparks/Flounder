@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.resources.*;
 import org.lwjgl.*;
@@ -16,7 +17,9 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * Manages the creation, updating and destruction of the mouse.
  */
-public class DeviceMouse implements IModule {
+public class FlounderMouse extends IModule {
+	private static FlounderMouse instance;
+
 	private int mouseButtons[];
 	private float lastMousePositionX;
 	private float lastMousePositionY;
@@ -35,10 +38,12 @@ public class DeviceMouse implements IModule {
 	private GLFWCursorPosCallback callbackCursorPos;
 	private GLFWCursorEnterCallback callbackCursorEnter;
 
-	/**
-	 * Creates a new GLFW mouse.
-	 */
-	protected DeviceMouse() {
+	static {
+		instance = new FlounderMouse();
+	}
+
+	private FlounderMouse() {
+		super(FlounderLogger.class.getClass(), FlounderDisplay.class.getClass());
 		mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
 		displaySelected = true;
 		mousePositionX = 0.5f;
@@ -51,29 +56,29 @@ public class DeviceMouse implements IModule {
 	@Override
 	public void init() {
 		// Sets the mouse callbacks.
-		glfwSetScrollCallback(FlounderEngine.getDevices().getDisplay().getWindow(), callbackScroll = new GLFWScrollCallback() {
+		glfwSetScrollCallback(FlounderDisplay.getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
 				mouseWheel = (float) yoffset;
 			}
 		});
 
-		glfwSetMouseButtonCallback(FlounderEngine.getDevices().getDisplay().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(FlounderDisplay.getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
 				mouseButtons[button] = action;
 			}
 		});
 
-		glfwSetCursorPosCallback(FlounderEngine.getDevices().getDisplay().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
+		glfwSetCursorPosCallback(FlounderDisplay.getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				mousePositionX = (float) (xpos / FlounderEngine.getDevices().getDisplay().getWidth());
-				mousePositionY = (float) (ypos / FlounderEngine.getDevices().getDisplay().getHeight());
+				mousePositionX = (float) (xpos / FlounderDisplay.getWidth());
+				mousePositionY = (float) (ypos / FlounderDisplay.getHeight());
 			}
 		});
 
-		glfwSetCursorEnterCallback(FlounderEngine.getDevices().getDisplay().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
+		glfwSetCursorEnterCallback(FlounderDisplay.getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
 			@Override
 			public void invoke(long window, boolean entered) {
 				displaySelected = entered;
@@ -83,8 +88,8 @@ public class DeviceMouse implements IModule {
 		try {
 			createCustomMouse();
 		} catch (IOException e) {
-			FlounderEngine.getLogger().error("Could not load custom mouse!");
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Could not load custom mouse!");
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -124,7 +129,7 @@ public class DeviceMouse implements IModule {
 		long cursorID = GLFW.glfwCreateCursor(cursorImg, hotspotX, hotspotY);
 
 		// Set current cursor.
-		glfwSetCursor(FlounderEngine.getDevices().getDisplay().getWindow(), cursorID);
+		glfwSetCursor(FlounderDisplay.getWindow(), cursorID);
 	}
 
 	@Override
@@ -162,14 +167,14 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @param disabled If the system cursor should be disabled or hidden when not shown.
 	 */
-	public void setCursorHidden(boolean disabled) {
-		glfwSetInputMode(FlounderEngine.getDevices().getDisplay().getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
+	public static void setCursorHidden(boolean disabled) {
+		glfwSetInputMode(FlounderDisplay.getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 
-		if (!disabled && cursorDisabled) {
-			glfwSetCursorPos(FlounderEngine.getDevices().getDisplay().getWindow(), mousePositionX * FlounderEngine.getDevices().getDisplay().getWidth(), mousePositionY * FlounderEngine.getDevices().getDisplay().getHeight());
+		if (!disabled && instance.cursorDisabled) {
+			glfwSetCursorPos(FlounderDisplay.getWindow(), instance.mousePositionX * FlounderDisplay.getWidth(), instance.mousePositionY * FlounderDisplay.getHeight());
 		}
 
-		this.cursorDisabled = disabled;
+		instance.cursorDisabled = disabled;
 	}
 
 	/**
@@ -180,8 +185,8 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @return If the mouse button is currently pressed.
 	 */
-	public boolean getMouse(int button) {
-		return mouseButtons[button] != GLFW_RELEASE;
+	public static boolean getMouse(int button) {
+		return instance.mouseButtons[button] != GLFW_RELEASE;
 	}
 
 	/**
@@ -189,8 +194,8 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @return The mouses x position.
 	 */
-	public float getPositionX() {
-		return mousePositionX;
+	public static float getPositionX() {
+		return instance.mousePositionX;
 	}
 
 	/**
@@ -198,8 +203,8 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @return The mouses y position.
 	 */
-	public float getPositionY() {
-		return mousePositionY;
+	public static float getPositionY() {
+		return instance.mousePositionY;
 	}
 
 	/**
@@ -207,8 +212,8 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @return The mouses delta x.
 	 */
-	public float getDeltaX() {
-		return mouseDeltaX;
+	public static float getDeltaX() {
+		return instance.mouseDeltaX;
 	}
 
 	/**
@@ -216,8 +221,8 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @return The mouses delta y.
 	 */
-	public float getDeltaY() {
-		return mouseDeltaY;
+	public static float getDeltaY() {
+		return instance.mouseDeltaY;
 	}
 
 	/**
@@ -225,8 +230,8 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @return The mouses wheel delta.
 	 */
-	public float getDeltaWheel() {
-		return mouseWheel;
+	public static float getDeltaWheel() {
+		return instance.mouseWheel;
 	}
 
 	/**
@@ -234,8 +239,8 @@ public class DeviceMouse implements IModule {
 	 *
 	 * @return If the display is selected.
 	 */
-	public boolean isDisplaySelected() {
-		return displaySelected;
+	public static boolean isDisplaySelected() {
+		return instance.displaySelected;
 	}
 
 	@Override

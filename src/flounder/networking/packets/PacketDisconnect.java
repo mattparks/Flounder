@@ -1,6 +1,6 @@
 package flounder.networking.packets;
 
-import flounder.engine.*;
+import flounder.logger.*;
 import flounder.networking.*;
 
 import java.net.*;
@@ -41,7 +41,7 @@ public class PacketDisconnect extends Packet {
 
 	@Override
 	public void clientHandlePacket(Client client, InetAddress address, int port) {
-		FlounderEngine.getLogger().log("[" + address.getHostAddress() + ":" + port + "] " + username + " has quit the game.");
+		FlounderLogger.log("[" + address.getHostAddress() + ":" + port + "] " + username + " has quit the game.");
 	}
 
 	@Override

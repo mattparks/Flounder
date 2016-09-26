@@ -1,6 +1,7 @@
 package flounder.networking;
 
 import flounder.engine.*;
+import flounder.logger.*;
 import flounder.networking.packets.*;
 
 import java.io.*;
@@ -27,7 +28,7 @@ public class Client extends Thread {
 			this.ipAddress = InetAddress.getByName(ipAddress);
 			this.port = port;
 		} catch (SocketException | UnknownHostException e) {
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -40,8 +41,8 @@ public class Client extends Thread {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				FlounderEngine.getLogger().error("Client socket could not receive data!");
-				FlounderEngine.getLogger().exception(e);
+				FlounderLogger.error("Client socket could not receive data!");
+				FlounderLogger.exception(e);
 				System.exit(-1);
 			}
 
@@ -65,7 +66,7 @@ public class Client extends Thread {
 			Object object = ctor.newInstance(new Object[]{data});
 			packet = (Packet) object;
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-			FlounderEngine.getLogger().error("Client could not load packet with the class of " + className);
+			FlounderLogger.error("Client could not load packet with the class of " + className);
 			e.printStackTrace();
 		}
 

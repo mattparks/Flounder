@@ -1,6 +1,6 @@
 package flounder.post.filters;
 
-import flounder.engine.*;
+import flounder.devices.*;
 import flounder.fbos.*;
 import flounder.post.*;
 import flounder.resources.*;
@@ -21,7 +21,7 @@ public class FilterBlurHorizontal extends PostFilter {
 		).createInSecondThread(), FBO.newFBO(sizeScalar).create());
 		this.fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
-		init((int) (FlounderEngine.getDevices().getDisplay().getWidth() * sizeScalar));
+		init((int) (FlounderDisplay.getWidth() * sizeScalar));
 	}
 
 	public FilterBlurHorizontal(int widthValue, int heightValue) {
@@ -46,7 +46,7 @@ public class FilterBlurHorizontal extends PostFilter {
 	@Override
 	public void storeValues() {
 		if (fitToDisplay) {
-			widthValue = (int) (FlounderEngine.getDevices().getDisplay().getWidth() * sizeScalar);
+			widthValue = (int) (FlounderDisplay.getWidth() * sizeScalar);
 		}
 
 		shader.getUniformFloat("width").loadFloat(widthValue);

@@ -1,24 +1,29 @@
 package flounder.networking;
 
 import flounder.engine.*;
+import flounder.logger.*;
 import flounder.networking.packets.*;
 
 /**
  * A manager that manages the current network connections of the engine.
  */
-public class FlounderNetwork implements IModule {
+public class FlounderNetwork extends IModule {
+	public static final int PORT = 2266;
+
+	private static FlounderNetwork instance;
+
 	private Server socketServer;
 	private Client socketClient;
 	private String username;
 	private int port;
 
-	/**
-	 * Creates a new network manager.
-	 *
-	 * @param port The port for the client and server to onEvent off of.
-	 */
-	public FlounderNetwork(int port) {
-		this.port = port;
+	static {
+		instance = new FlounderNetwork();
+	}
+
+	private FlounderNetwork() {
+		super(FlounderLogger.class.getClass());
+		this.port = PORT;
 	}
 
 	@Override
@@ -37,47 +42,47 @@ public class FlounderNetwork implements IModule {
 	/**
 	 * Starts the server.
 	 */
-	public void startServer() {
-		FlounderEngine.getLogger().log("Starting server!");
-		socketServer = new Server(port);
-		socketServer.start();
+	public static void startServer() {
+		FlounderLogger.log("Starting server!");
+		instance.socketServer = new Server(instance.port);
+		instance.socketServer.start();
 	}
 
 	/**
 	 * Starts the client.
 	 */
-	public void startClient() {
-		FlounderEngine.getLogger().log("Starting Client!");
-		socketClient = new Client("localhost", port);
-		socketClient.start();
+	public static void startClient() {
+		FlounderLogger.log("Starting Client!");
+		instance.socketClient = new Client("localhost", instance.port);
+		instance.socketClient.start();
 
-		PacketLogin loginPacket = new PacketLogin(username);
-		loginPacket.writeData(socketClient);
+		PacketLogin loginPacket = new PacketLogin(instance.username);
+		loginPacket.writeData(instance.socketClient);
 	}
 
 	/**
 	 * Closes the server.
 	 */
-	public void closeServer() {
-		if (socketServer != null) {
-			FlounderEngine.getLogger().log("Closing server!");
+	public static void closeServer() {
+		if (instance.socketServer != null) {
+			FlounderLogger.log("Closing server!");
 
-			new PacketDisconnect("server").writeData(socketServer);
-			socketServer.dispose();
-			socketServer = null;
+			new PacketDisconnect("server").writeData(instance.socketServer);
+			instance.socketServer.dispose();
+			instance.socketServer = null;
 		}
 	}
 
 	/**
 	 * Closes the client.
 	 */
-	public void closeClient() {
-		if (socketClient != null) {
-			FlounderEngine.getLogger().log("Closing client!");
+	public static void closeClient() {
+		if (instance.socketClient != null) {
+			FlounderLogger.log("Closing client!");
 
-			new PacketDisconnect(username).writeData(socketClient);
-			socketClient.dispose();
-			socketClient = null;
+			new PacketDisconnect(instance.username).writeData(instance.socketClient);
+			instance.socketClient.dispose();
+			instance.socketClient = null;
 		}
 	}
 
@@ -86,8 +91,8 @@ public class FlounderNetwork implements IModule {
 	 *
 	 * @return The server running from this server.
 	 */
-	public Server getSocketServer() {
-		return socketServer;
+	public static Server getSocketServer() {
+		return instance.socketServer;
 	}
 
 	/**
@@ -95,12 +100,12 @@ public class FlounderNetwork implements IModule {
 	 *
 	 * @return The client running.
 	 */
-	public Client getSocketClient() {
-		return socketClient;
+	public static Client getSocketClient() {
+		return instance.socketClient;
 	}
 
-	public String getUsername() {
-		return username;
+	public static String getUsername() {
+		return instance.username;
 	}
 
 	@Override

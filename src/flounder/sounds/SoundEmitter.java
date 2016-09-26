@@ -1,7 +1,6 @@
 package flounder.sounds;
 
 import flounder.devices.*;
-import flounder.engine.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
@@ -71,7 +70,7 @@ public class SoundEmitter {
 	 * @return {@code true} if the sound effect would be heard by the listener when played from this emitter.
 	 */
 	private boolean isInRange(SoundEffect soundEffect) {
-		float disSquared = Vector3f.subtract(FlounderEngine.getDevices().getSound().getCameraPosition(), position, null).lengthSquared();
+		float disSquared = Vector3f.subtract(FlounderSound.getCameraPosition(), position, null).lengthSquared();
 		float range = soundEffect.getRange() * RANGE_THRESHOLD;
 		float rangeSquared = range * range;
 		return disSquared < rangeSquared;
@@ -122,7 +121,7 @@ public class SoundEmitter {
 	}
 
 	/**
-	 * Plays a sound effect from the position of this emitter in the world. It does this by sending a {@link PlayRequest} to the {@link DeviceSound}.
+	 * Plays a sound effect from the position of this emitter in the world. It does this by sending a {@link PlayRequest} to the {@link FlounderSound}.
 	 *
 	 * @param soundEffect The sound effect to be played from this emitter.
 	 */
@@ -132,7 +131,7 @@ public class SoundEmitter {
 		}
 
 		PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
-		AudioController controller = FlounderEngine.getDevices().getSound().play3DSound(request);
+		AudioController controller = FlounderSound.play3DSound(request);
 
 		if (controller != null) {
 			playingSounds.put(soundEffect, controller);

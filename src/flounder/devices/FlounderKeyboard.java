@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.logger.*;
 import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -8,26 +9,30 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * Manages the creation, updating and destruction of the keyboard keys.
  */
-public class DeviceKeyboard implements IModule {
+public class FlounderKeyboard extends IModule {
+	private static FlounderKeyboard instance;
+
 	private int keyboardKeys[];
 
 	private GLFWKeyCallback callbackKey;
 
-	/**
-	 * Creates a new GLFW keyboard.
-	 */
-	protected DeviceKeyboard() {
+	static {
+		instance = new FlounderKeyboard();
+	}
+
+	private FlounderKeyboard() {
+		super(FlounderLogger.class.getClass(), FlounderDisplay.class.getClass());
 		keyboardKeys = new int[GLFW_KEY_LAST + 1];
 	}
 
 	@Override
 	public void init() {
 		// Sets the keyboards callbacks.
-		glfwSetKeyCallback(FlounderEngine.getDevices().getDisplay().getWindow(), callbackKey = new GLFWKeyCallback() {
+		glfwSetKeyCallback(FlounderDisplay.getWindow(), callbackKey = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (key < 0 || key > GLFW_KEY_LAST) {
-					FlounderEngine.getLogger().error("Invalid action attempted with key " + key);
+					FlounderLogger.error("Invalid action attempted with key " + key);
 				} else {
 					keyboardKeys[key] = action;
 				}
@@ -51,8 +56,8 @@ public class DeviceKeyboard implements IModule {
 	 *
 	 * @return If the key is currently pressed.
 	 */
-	public boolean getKey(int key) {
-		return keyboardKeys[key] != GLFW_RELEASE;
+	public static boolean getKey(int key) {
+		return instance.keyboardKeys[key] != GLFW_RELEASE;
 	}
 
 	@Override

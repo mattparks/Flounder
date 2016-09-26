@@ -1,6 +1,6 @@
 package flounder.inputs;
 
-import flounder.engine.*;
+import flounder.devices.*;
 import flounder.maths.*;
 
 /**
@@ -30,7 +30,7 @@ public class JoystickAxis implements IAxis {
 		float result = 0.0f;
 
 		for (int joystickAxe : joystickAxes) {
-			result += (FlounderEngine.getDevices().getJoysticks().isConnected(joystick) ? FlounderEngine.getDevices().getJoysticks().getAxis(joystick, joystickAxe) : 0.0f);
+			result += (FlounderJoysticks.isConnected(joystick) ? FlounderJoysticks.getAxis(joystick, joystickAxe) : 0.0f);
 		}
 
 		return Maths.clamp(result, -1.0f, 1.0f);

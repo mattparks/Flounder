@@ -1,6 +1,5 @@
 package flounder.models;
 
-import flounder.engine.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 
@@ -29,11 +28,11 @@ public class ModelLoadRequest implements ResourceRequest, GlRequest {
 	@Override
 	public void doResourceRequest() {
 		if (builder.getFile() != null) {
-			data = FlounderEngine.getModels().loadOBJ(builder.getFile());
+			data = FlounderModels.loadOBJ(builder.getFile());
 		}
 
 		if (sendRequest) {
-			FlounderEngine.getProcessors().sendGLRequest(this);
+			FlounderProcessors.sendGLRequest(this);
 		}
 	}
 
@@ -41,10 +40,10 @@ public class ModelLoadRequest implements ResourceRequest, GlRequest {
 	public void executeGlRequest() {
 		if (builder.getFile() != null) {
 			model.setName(builder.getFile().getPath());
-			FlounderEngine.getModels().loadModelToOpenGL(model, data);
+			FlounderModels.loadModelToOpenGL(model, data);
 		} else {
 			model.setName(builder.getLoadManual().getModelName());
-			FlounderEngine.getModels().loadModelToOpenGL(model, builder.getLoadManual());
+			FlounderModels.loadModelToOpenGL(model, builder.getLoadManual());
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package flounder.shaders;
 
-import flounder.engine.*;
+import flounder.logger.*;
+import flounder.processing.*;
 
 import java.lang.ref.*;
 import java.util.*;
@@ -45,7 +46,7 @@ public class ShaderBuilder {
 		Shader data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(shaderName + " is being loaded into the shader builder right now!");
+			FlounderLogger.log(shaderName + " is being loaded into the shader builder right now!");
 			loadedModels.remove(shaderName);
 			data = new Shader();
 			ShaderLoadRequest request = new ShaderLoadRequest(data, this, false);
@@ -67,10 +68,10 @@ public class ShaderBuilder {
 		Shader data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(shaderName + " is being loaded into the shader builder in the background!");
+			FlounderLogger.log(shaderName + " is being loaded into the shader builder in the background!");
 			loadedModels.remove(shaderName);
 			data = new Shader();
-			FlounderEngine.getProcessors().sendRequest(new ShaderLoadRequest(data, this, true));
+			FlounderProcessors.sendRequest(new ShaderLoadRequest(data, this, true));
 			loadedModels.put(shaderName, new SoftReference<>(data));
 		}
 
@@ -87,12 +88,12 @@ public class ShaderBuilder {
 		Shader data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(shaderName + " is being loaded into the shader builder in separate thread!");
+			FlounderLogger.log(shaderName + " is being loaded into the shader builder in separate thread!");
 			loadedModels.remove(shaderName);
 			data = new Shader();
 			ShaderLoadRequest request = new ShaderLoadRequest(data, this, false);
 			request.doResourceRequest();
-			FlounderEngine.getProcessors().sendGLRequest(request);
+			FlounderProcessors.sendGLRequest(request);
 			loadedModels.put(shaderName, new SoftReference<>(data));
 		}
 

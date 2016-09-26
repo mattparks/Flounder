@@ -20,9 +20,9 @@ public class GuiTextButton extends GuiComponent {
 	public static final Colour DEFAULT_COLOUR = new Colour(0.2f, 0.2f, 0.2f);
 	public static final Colour HOVER_COLOUR = new Colour(56, 182, 52, true);
 
-	public static final Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button1.wav"), 0.8f);
-	public static final Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button2.wav"), 0.8f);
-	public static final Sound SOUND_MOUSE_RIGHT = Sound.loadSoundInBackground(new MyFile(DeviceSound.SOUND_FOLDER, "button3.wav"), 0.8f);
+	public static final Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button1.wav"), 0.8f);
+	public static final Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button2.wav"), 0.8f);
+	public static final Sound SOUND_MOUSE_RIGHT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button3.wav"), 0.8f);
 
 	public static final float BACKGROUND_PADDING = 0.018f;
 
@@ -38,7 +38,7 @@ public class GuiTextButton extends GuiComponent {
 
 	// A static method that is used to create a easy colour event.
 	static {
-		FlounderEngine.getEvents().addEvent(new IEvent() {
+		FlounderEvents.addEvent(new IEvent() {
 			private SinWaveDriver titleColourX = new SinWaveDriver(0.0f, 1.0f, 40.0f);
 			private SinWaveDriver titleColourY = new SinWaveDriver(0.0f, 1.0f, 20.0f);
 
@@ -90,7 +90,7 @@ public class GuiTextButton extends GuiComponent {
 	@Override
 	protected void updateSelf() {
 		// Background image updates.
-		float width = ((text.getMaxLineSize() * WIDTH_MULTIPLIER) / FlounderEngine.getDevices().getDisplay().getAspectRatio()) * text.getScale();
+		float width = ((text.getMaxLineSize() * WIDTH_MULTIPLIER) / FlounderDisplay.getAspectRatio()) * text.getScale();
 		float height = text.getCurrentHeight();
 		float positionX;
 
@@ -121,31 +121,31 @@ public class GuiTextButton extends GuiComponent {
 		if (isMouseOver() && !mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), MAX_SCALE, CHANGE_TIME));
 			mouseOver = true;
-			FlounderEngine.getDevices().getSound().playSystemSound(GuiTextButton.SOUND_MOUSE_HOVER);
+			FlounderSound.playSystemSound(GuiTextButton.SOUND_MOUSE_HOVER);
 		} else if (!isMouseOver() && mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), 1.0f, CHANGE_TIME));
 			mouseOver = false;
 		}
 
 		// Click updates.
-		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasLeftClick()) {
-			FlounderEngine.getDevices().getSound().playSystemSound(GuiTextButton.SOUND_MOUSE_LEFT);
+		if (isMouseOver() && FlounderGuis.getSelector().wasLeftClick()) {
+			FlounderSound.playSystemSound(GuiTextButton.SOUND_MOUSE_LEFT);
 
 			if (guiListenerLeft != null) {
 				guiListenerLeft.eventOccurred();
 			}
 
-			FlounderEngine.getGuis().getSelector().cancelWasEvent();
+			FlounderGuis.getSelector().cancelWasEvent();
 		}
 
-		if (isMouseOver() && FlounderEngine.getGuis().getSelector().wasRightClick()) {
-			FlounderEngine.getDevices().getSound().playSystemSound(GuiTextButton.SOUND_MOUSE_RIGHT);
+		if (isMouseOver() && FlounderGuis.getSelector().wasRightClick()) {
+			FlounderSound.playSystemSound(GuiTextButton.SOUND_MOUSE_RIGHT);
 
 			if (guiListenerRight != null) {
 				guiListenerRight.eventOccurred();
 			}
 
-			FlounderEngine.getGuis().getSelector().cancelWasEvent();
+			FlounderGuis.getSelector().cancelWasEvent();
 		}
 	}
 

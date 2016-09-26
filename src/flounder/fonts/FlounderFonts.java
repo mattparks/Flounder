@@ -1,34 +1,43 @@
 package flounder.fonts;
 
+import flounder.devices.*;
 import flounder.engine.*;
 import flounder.helpers.*;
+import flounder.loaders.*;
+import flounder.logger.*;
+import flounder.profiling.*;
 import flounder.resources.*;
+import flounder.textures.*;
 
 import java.util.*;
 
 /**
  * A class that holds a list of available engine fonts and texts currently on the screen.
  */
-public class FlounderFonts implements IModule {
+public class FlounderFonts extends IModule {
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
-	public FontType bungee = new FontType(new MyFile(FONTS_LOC, "bungee.png"), new MyFile(FONTS_LOC, "bungee.fnt"));
-	public FontType comicSans = new FontType(new MyFile(FONTS_LOC, "comicSans.png"), new MyFile(FONTS_LOC, "comicSans.fnt"));
-	public FontType fffForward = new FontType(new MyFile(FONTS_LOC, "fffForward.png"), new MyFile(FONTS_LOC, "fffForward.fnt"));
-	public FontType forte = new FontType(new MyFile(FONTS_LOC, "forte.png"), new MyFile(FONTS_LOC, "forte.fnt"));
-	public FontType nexaBold = new FontType(new MyFile(FONTS_LOC, "nexaBold.png"), new MyFile(FONTS_LOC, "nexaBold.fnt"));
-	public FontType segoeUi = new FontType(new MyFile(FONTS_LOC, "segoeUI.png"), new MyFile(FONTS_LOC, "segoeUI.fnt"));
-	public FontType segoeUiBlack = new FontType(new MyFile(FONTS_LOC, "segoeUIBlack.png"), new MyFile(FONTS_LOC, "segoeUIBlack.fnt"));
-	public FontType serif = new FontType(new MyFile(FONTS_LOC, "serif.png"), new MyFile(FONTS_LOC, "serif.fnt"));
-	public FontType trebuchet = new FontType(new MyFile(FONTS_LOC, "trebuchet.png"), new MyFile(FONTS_LOC, "trebuchet.fnt"));
-	public FontType brushScript = new FontType(new MyFile(FONTS_LOC, "brushScript.png"), new MyFile(FONTS_LOC, "brushScript.fnt"));
+	public static final FontType BUNGEE = new FontType(new MyFile(FONTS_LOC, "bungee.png"), new MyFile(FONTS_LOC, "bungee.fnt"));
+	public static final FontType COMIC_SANS = new FontType(new MyFile(FONTS_LOC, "comicSans.png"), new MyFile(FONTS_LOC, "comicSans.fnt"));
+	public static final FontType FFF_FORWARD = new FontType(new MyFile(FONTS_LOC, "fffForward.png"), new MyFile(FONTS_LOC, "fffForward.fnt"));
+	public static final FontType FORTE = new FontType(new MyFile(FONTS_LOC, "forte.png"), new MyFile(FONTS_LOC, "forte.fnt"));
+	public static final FontType NEXA_BOLD = new FontType(new MyFile(FONTS_LOC, "nexaBold.png"), new MyFile(FONTS_LOC, "nexaBold.fnt"));
+	public static final FontType SEGO_UI = new FontType(new MyFile(FONTS_LOC, "segoeUI.png"), new MyFile(FONTS_LOC, "segoeUI.fnt"));
+	public static final FontType SEGOE_UI_BLACK = new FontType(new MyFile(FONTS_LOC, "segoeUIBlack.png"), new MyFile(FONTS_LOC, "segoeUIBlack.fnt"));
+	public static final FontType SERIF = new FontType(new MyFile(FONTS_LOC, "serif.png"), new MyFile(FONTS_LOC, "serif.fnt"));
+	public static final FontType TREBUCHET = new FontType(new MyFile(FONTS_LOC, "trebuchet.png"), new MyFile(FONTS_LOC, "trebuchet.fnt"));
+	public static final FontType BRUSH_SCRIPT = new FontType(new MyFile(FONTS_LOC, "brushScript.png"), new MyFile(FONTS_LOC, "brushScript.fnt"));
+
+	private static FlounderFonts instance;
 
 	private Map<FontType, List<Text>> texts;
 
-	/**
-	 * Creates a new font manager.
-	 */
-	public FlounderFonts() {
+	static {
+		instance = new FlounderFonts();
+	}
+
+	private FlounderFonts() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderDisplay.class.getClass(), FlounderLoader.class.getClass(), FlounderTextures.class.getClass());
 		texts = new HashMap<>();
 	}
 
@@ -48,7 +57,7 @@ public class FlounderFonts implements IModule {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Fonts", "Used Family's", ArrayUtils.totalSecondaryCount(texts));
+		FlounderProfiler.add("Fonts", "Used Family's", ArrayUtils.totalSecondaryCount(texts));
 	}
 
 	/**
@@ -56,8 +65,8 @@ public class FlounderFonts implements IModule {
 	 *
 	 * @return The current texts.
 	 */
-	public Map<FontType, List<Text>> getTexts() {
-		return texts;
+	public static Map<FontType, List<Text>> getTexts() {
+		return instance.texts;
 	}
 
 	@Override

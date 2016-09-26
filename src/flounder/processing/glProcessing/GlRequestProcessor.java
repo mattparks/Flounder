@@ -1,11 +1,11 @@
 package flounder.processing.glProcessing;
 
-import flounder.engine.*;
+import flounder.profiling.*;
 
 /**
  * Class that is responsible for processing OpenGL requests.
  */
-public class GlRequestProcessor implements IModule {
+public class GlRequestProcessor {
 	private static final float MAX_TIME_MILLIS = 8.0f;
 
 	private GlRequestQueue requestQueue;
@@ -17,18 +17,15 @@ public class GlRequestProcessor implements IModule {
 		requestQueue = new GlRequestQueue();
 	}
 
-	@Override
 	public void init() {
 	}
 
-	@Override
 	public void update() {
 		dealWithTopRequests();
 	}
 
-	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("GLProcessor", "Requests", requestQueue.count());
+		FlounderProfiler.add("GLProcessor", "Requests", requestQueue.count());
 	}
 
 	/**
@@ -69,7 +66,6 @@ public class GlRequestProcessor implements IModule {
 		requestQueue.addRequest(request);
 	}
 
-	@Override
 	public void dispose() {
 		completeAllRequests();
 	}

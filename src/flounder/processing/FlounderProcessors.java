@@ -1,19 +1,25 @@
 package flounder.processing;
 
 import flounder.engine.*;
+import flounder.logger.*;
 import flounder.processing.glProcessing.*;
+import flounder.profiling.*;
 
 /**
  * Manages the all engine request processors.
  */
-public class FlounderProcessors implements IModule {
+public class FlounderProcessors extends IModule {
+	private static FlounderProcessors instance;
+
 	private RequestProcessor requestProcessor;
 	private GlRequestProcessor glRequestProcessor;
 
-	/**
-	 * Creates all engine request processors.
-	 */
-	public FlounderProcessors() {
+	static {
+		instance = new FlounderProcessors();
+	}
+
+	private FlounderProcessors() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass());
 		requestProcessor = new RequestProcessor();
 		glRequestProcessor = new GlRequestProcessor();
 	}
@@ -40,8 +46,8 @@ public class FlounderProcessors implements IModule {
 	 *
 	 * @param request The resource request to add.
 	 */
-	public void sendRequest(ResourceRequest request) {
-		requestProcessor.addRequestToQueue(request);
+	public static void sendRequest(ResourceRequest request) {
+		instance.requestProcessor.addRequestToQueue(request);
 	}
 
 	/**
@@ -49,8 +55,8 @@ public class FlounderProcessors implements IModule {
 	 *
 	 * @param request The request to add.
 	 */
-	public void sendGLRequest(GlRequest request) {
-		glRequestProcessor.addRequestToQueue(request);
+	public static void sendGLRequest(GlRequest request) {
+		instance.glRequestProcessor.addRequestToQueue(request);
 	}
 
 	@Override

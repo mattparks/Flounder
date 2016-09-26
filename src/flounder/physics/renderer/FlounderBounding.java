@@ -1,23 +1,31 @@
 package flounder.physics.renderer;
 
+import flounder.devices.*;
 import flounder.engine.*;
+import flounder.loaders.*;
+import flounder.logger.*;
 import flounder.models.*;
 import flounder.physics.*;
+import flounder.profiling.*;
 
 import java.util.*;
 
 /**
  * A manager for Boundings that want to be renderer.
  */
-public class FlounderBounding implements IModule {
+public class FlounderBounding extends IModule {
+	private static FlounderBounding instance;
+
 	private Map<Model, List<IBounding>> renderShapes;
 	private boolean renders;
 	private int aabbCount;
 
-	/**
-	 * Creates a new Boundings manager.
-	 */
-	public FlounderBounding() {
+	static {
+		instance = new FlounderBounding();
+	}
+
+	private FlounderBounding() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderDisplay.class.getClass(), FlounderMouse.class.getClass(), FlounderLoader.class.getClass());
 		renderShapes = new HashMap<>();
 		renders = true;
 		aabbCount = 0;
@@ -35,7 +43,7 @@ public class FlounderBounding implements IModule {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Boundings", "Renderable", aabbCount);
+		FlounderProfiler.add("Boundings", "Renderable", aabbCount);
 	}
 
 	/**
@@ -43,17 +51,17 @@ public class FlounderBounding implements IModule {
 	 *
 	 * @param shape The shape to add.
 	 */
-	public void addShapeRender(IBounding shape) {
-		for (Model model : renderShapes.keySet()) {
+	public static void addShapeRender(IBounding shape) {
+		for (Model model : instance.renderShapes.keySet()) {
 			if (model.equals(shape.getRenderModel())) {
-				renderShapes.get(model).add(shape);
+				instance.renderShapes.get(model).add(shape);
 				return;
 			}
 		}
 
 		List<IBounding> list = new ArrayList<>();
 		list.add(shape);
-		renderShapes.put(shape.getRenderModel(), list);
+		instance.renderShapes.put(shape.getRenderModel(), list);
 	}
 
 	/**
@@ -61,23 +69,23 @@ public class FlounderBounding implements IModule {
 	 *
 	 * @return The renderable shapes.
 	 */
-	protected Map<Model, List<IBounding>> getRenderShapes() {
-		return renderShapes;
+	protected static Map<Model, List<IBounding>> getRenderShapes() {
+		return instance.renderShapes;
 	}
 
-	public boolean renders() {
-		return renders;
+	public static boolean renders() {
+		return instance.renders;
 	}
 
-	public void setRenders(boolean renders) {
-		this.renders = renders;
+	public static void setRenders(boolean renders) {
+		instance.renders = renders;
 	}
 
 	/**
 	 * Clears the renderable Boundings.
 	 */
-	protected void clear() {
-		renderShapes.clear();
+	protected static void clear() {
+		instance.renderShapes.clear();
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public abstract class Uniform {
 		location = glGetUniformLocation(programID, name);
 
 		//if (location == NOT_FOUND) {
-		//	FlounderEngine.getLogger().error("No uniform variable called " + name + " found!");
+		//	FlounderLogger.error("No uniform variable called " + name + " found!");
 		//}
 	}
 

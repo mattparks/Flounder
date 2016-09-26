@@ -1,8 +1,11 @@
 package flounder.models;
 
 import flounder.engine.*;
+import flounder.loaders.*;
+import flounder.logger.*;
 import flounder.materials.*;
 import flounder.maths.vectors.*;
+import flounder.processing.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -13,8 +16,15 @@ import static org.lwjgl.opengl.GL30.*;
 /**
  * Class capable of loading OBJ files into Models.
  */
-public class FlounderModels implements IModule {
-	public FlounderModels() {
+public class FlounderModels extends IModule {
+	private static FlounderModels instance;
+
+	static {
+		instance = new FlounderModels();
+	}
+
+	private FlounderModels() {
+		super(FlounderLogger.class.getClass(), FlounderLoader.class.getClass(), FlounderProcessors.class.getClass(), FlounderMaterials.class.getClass());
 	}
 
 	@Override
@@ -36,7 +46,7 @@ public class FlounderModels implements IModule {
 	 *
 	 * @return The data loaded.
 	 */
-	public ModelData loadOBJ(MyFile file) {
+	public static ModelData loadOBJ(MyFile file) {
 		BufferedReader reader;
 
 		try {
@@ -63,7 +73,7 @@ public class FlounderModels implements IModule {
 					case "mtllib":
 						String pathMTL = file.getPath().replace(file.getPath().split("/")[file.getPath().split("/").length - 1], "");
 						pathMTL = pathMTL.substring(1, pathMTL.length() - 1);
-						modelData.materials.addAll(FlounderEngine.getMaterials().loadMTL(new MyFile(pathMTL, line.split(" ")[1])));
+						modelData.materials.addAll(FlounderMaterials.loadMTL(new MyFile(pathMTL, line.split(" ")[1])));
 						break;
 					case "usemtl":
 						for (Material m : modelData.materials) {
@@ -96,20 +106,20 @@ public class FlounderModels implements IModule {
 						String[] vertex1 = currentLineF[1].split("/");
 						String[] vertex2 = currentLineF[2].split("/");
 						String[] vertex3 = currentLineF[3].split("/");
-						VertexData v0 = processDataVertex(vertex1, modelData.vertices, modelData.indices, currentMaterial);
-						VertexData v1 = processDataVertex(vertex2, modelData.vertices, modelData.indices, currentMaterial);
-						VertexData v2 = processDataVertex(vertex3, modelData.vertices, modelData.indices, currentMaterial);
-						calculateTangents(v0, v1, v2, modelData.textures);
+						VertexData v0 = instance.processDataVertex(vertex1, modelData.vertices, modelData.indices, currentMaterial);
+						VertexData v1 = instance.processDataVertex(vertex2, modelData.vertices, modelData.indices, currentMaterial);
+						VertexData v2 = instance.processDataVertex(vertex3, modelData.vertices, modelData.indices, currentMaterial);
+						instance.calculateTangents(v0, v1, v2, modelData.textures);
 						break;
 					default:
-						FlounderEngine.getLogger().warning("[OBJ " + file.getName() + "] Unknown Line: " + line);
+						FlounderLogger.warning("[OBJ " + file.getName() + "] Unknown Line: " + line);
 						break;
 				}
 			}
 
 			reader.close();
 		} catch (IOException e) {
-			FlounderEngine.getLogger().error("Error reading the OBJ " + file);
+			FlounderLogger.error("Error reading the OBJ " + file);
 		}
 
 		return modelData;
@@ -121,12 +131,12 @@ public class FlounderModels implements IModule {
 	 * @param model The model to be loaded to.
 	 * @param data The data to be ued when loading to the model.
 	 */
-	public void loadModelToOpenGL(Model model, ModelData data) {
+	public static void loadModelToOpenGL(Model model, ModelData data) {
 		if (data != null) {
 			model.loadData(data);
 		}
 
-		loadModelToOpenGL(model);
+		instance.loadModelToOpenGL(model);
 	}
 
 	/**
@@ -135,21 +145,21 @@ public class FlounderModels implements IModule {
 	 * @param model The model to be loaded to.
 	 * @param loadManual The manual data to be ued when loading to the model.
 	 */
-	public void loadModelToOpenGL(Model model, ModelBuilder.LoadManual loadManual) {
+	public static void loadModelToOpenGL(Model model, ModelBuilder.LoadManual loadManual) {
 		if (loadManual != null) {
 			model.loadData(loadManual.getVertices(), loadManual.getTextureCoords(), loadManual.getNormals(), loadManual.getTangents(), loadManual.getIndices(), loadManual.getMaterials());
 		}
 
-		loadModelToOpenGL(model);
+		instance.loadModelToOpenGL(model);
 	}
 
 	private void loadModelToOpenGL(Model model) {
-		model.setVaoID(FlounderEngine.getLoader().createVAO());
-		FlounderEngine.getLoader().createIndicesVBO(model.getVaoID(), model.getIndices());
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getTextures(), 1, 2);
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getNormals(), 2, 3);
-		FlounderEngine.getLoader().storeDataInVBO(model.getVaoID(), model.getTangents(), 3, 3);
+		model.setVaoID(FlounderLoader.createVAO());
+		FlounderLoader.createIndicesVBO(model.getVaoID(), model.getIndices());
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getTextures(), 1, 2);
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getNormals(), 2, 3);
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getTangents(), 3, 3);
 		glBindVertexArray(0);
 		model.setVaoLength(model.getIndices() != null ? model.getIndices().length : (model.getVertices().length / 3));
 	}

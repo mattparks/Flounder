@@ -1,6 +1,6 @@
 package flounder.sounds;
 
-import flounder.engine.*;
+import flounder.devices.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.visual.interpolation.*;
@@ -75,7 +75,7 @@ public class AmbientNode {
 	 * @return the distance between the {@link IAudioListener} and the node's centre.
 	 */
 	private float getDistanceFromListener() {
-		return Vector3f.subtract(FlounderEngine.getDevices().getSound().getCameraPosition(), position, null).length();
+		return Vector3f.subtract(FlounderSound.getCameraPosition(), position, null).length();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class AmbientNode {
 	private void playNewSound() {
 		Sound sound = chooseNextSound();
 		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, position, innerRadius.get(), getRange());
-		controller = FlounderEngine.getDevices().getSound().play3DSound(request);
+		controller = FlounderSound.play3DSound(request);
 		active = controller != null;
 	}
 

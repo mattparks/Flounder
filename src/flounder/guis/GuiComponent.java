@@ -1,6 +1,5 @@
 package flounder.guis;
 
-import flounder.engine.*;
 import flounder.fonts.*;
 import flounder.maths.vectors.*;
 
@@ -243,12 +242,12 @@ public abstract class GuiComponent {
 	 * @return {@code true} if the mouse cursor is currently over this component.
 	 */
 	protected boolean isMouseOver() {
-		float positionX = position.x; // / FlounderEngine.getDevices().getDisplay().getAspectRatio();
+		float positionX = position.x; // / FlounderDisplay.getAspectRatio();
 		float positionY = position.y;
 
-		//	if (FlounderEngine.getDevices().getMouse().isDisplaySelected() && FlounderEngine.getDevices().getDisplay().isFocused()) {
-		if (FlounderEngine.getGuis().getSelector().getCursorX() >= positionX && FlounderEngine.getGuis().getSelector().getCursorX() <= positionX + scale.x) {
-			if (FlounderEngine.getGuis().getSelector().getCursorY() >= positionY && FlounderEngine.getGuis().getSelector().getCursorY() <= positionY + scale.y) {
+		//	if (FlounderMouse.isDisplaySelected() && FlounderDisplay.isFocused()) {
+		if (FlounderGuis.getSelector().getCursorX() >= positionX && FlounderGuis.getSelector().getCursorX() <= positionX + scale.x) {
+			if (FlounderGuis.getSelector().getCursorY() >= positionY && FlounderGuis.getSelector().getCursorY() <= positionY + scale.y) {
 				return true;
 			}
 		}

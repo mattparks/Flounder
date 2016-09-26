@@ -1,24 +1,39 @@
 package flounder.particles;
 
+import flounder.devices.*;
 import flounder.engine.*;
 import flounder.helpers.*;
+import flounder.loaders.*;
+import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.particles.loading.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.space.*;
+import flounder.textures.*;
 
 import java.util.*;
 
 /**
  * A manager that manages particles.
  */
-public class FlounderParticles implements IModule {
+public class FlounderParticles extends IModule {
 	public static final MyFile PARTICLES_LOC = new MyFile(MyFile.RES_FOLDER, "particles");
 	public static final float MAX_ELAPED_TIME = 5.0f;
+
+	private static FlounderParticles instance;
 
 	private List<ParticleSystem> particleSystems;
 	private List<StructureBasic<Particle>> particles;
 	private List<Particle> deadParticles;
+
+	static {
+		instance = new FlounderParticles();
+	}
+
+	private FlounderParticles() {
+		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderDisplay.class.getClass(), FlounderLoader.class.getClass(), FlounderTextures.class.getClass());
+	}
 
 	@Override
 	public void init() {
@@ -62,15 +77,18 @@ public class FlounderParticles implements IModule {
 		ArraySorting.heapSort(deadParticles); // Sorts the list old to new.
 	}
 
-	public void clearAllParticles() {
-		particles.clear();
-	}
-
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Particles", "Systems", particleSystems.size());
-		FlounderEngine.getProfiler().add("Particles", "Types", particles.size());
-		FlounderEngine.getProfiler().add("Particles", "Dead Particles", deadParticles.size());
+		FlounderProfiler.add("Particles", "Systems", particleSystems.size());
+		FlounderProfiler.add("Particles", "Types", particles.size());
+		FlounderProfiler.add("Particles", "Dead Particles", deadParticles.size());
+	}
+
+	/**
+	 * Clears all particles from the scene.
+	 */
+	protected static void cleat() {
+		instance.particles.clear();
 	}
 
 	/**
@@ -78,8 +96,8 @@ public class FlounderParticles implements IModule {
 	 *
 	 * @param system The new system to add.
 	 */
-	public void addSystem(ParticleSystem system) {
-		particleSystems.add(system);
+	public static void addSystem(ParticleSystem system) {
+		instance.particleSystems.add(system);
 	}
 
 	/**
@@ -87,8 +105,8 @@ public class FlounderParticles implements IModule {
 	 *
 	 * @param system The system to remove.
 	 */
-	public void removeSystem(ParticleSystem system) {
-		particleSystems.remove(system);
+	public static void removeSystem(ParticleSystem system) {
+		instance.particleSystems.remove(system);
 	}
 
 	/**
@@ -96,8 +114,8 @@ public class FlounderParticles implements IModule {
 	 *
 	 * @return All particles.
 	 */
-	protected List<StructureBasic<Particle>> getParticles() {
-		return particles;
+	protected static List<StructureBasic<Particle>> getParticles() {
+		return instance.particles;
 	}
 
 	/**
@@ -111,17 +129,17 @@ public class FlounderParticles implements IModule {
 	 * @param scale The particles scale.
 	 * @param gravityEffect The particles gravity effect.
 	 */
-	public void addParticle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
+	public static void addParticle(ParticleTemplate particleTemplate, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		Particle particle;
 
-		if (deadParticles.size() > 0) {
-			particle = deadParticles.get(0).set(particleTemplate, position, velocity, lifeLength, rotation, scale, gravityEffect);
-			deadParticles.remove(0);
+		if (instance.deadParticles.size() > 0) {
+			particle = instance.deadParticles.get(0).set(particleTemplate, position, velocity, lifeLength, rotation, scale, gravityEffect);
+			instance.deadParticles.remove(0);
 		} else {
 			particle = new Particle(particleTemplate, position, velocity, lifeLength, rotation, scale, gravityEffect);
 		}
 
-		for (StructureBasic<Particle> list : particles) {
+		for (StructureBasic<Particle> list : instance.particles) {
 			if (list.getSize() > 0 && list.get(0).getParticleTemplate().equals(particle.getParticleTemplate())) {
 				list.add(particle);
 				return;
@@ -130,7 +148,7 @@ public class FlounderParticles implements IModule {
 
 		StructureBasic<Particle> list = new StructureBasic<>();
 		list.add(particle);
-		particles.add(list);
+		instance.particles.add(list);
 	}
 
 	@Override

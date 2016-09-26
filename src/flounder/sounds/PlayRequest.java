@@ -4,7 +4,7 @@ import flounder.devices.*;
 import flounder.maths.vectors.*;
 
 /**
- * A request that can be sent to the {@link DeviceSound} specifying what sound should be played and what settings the source playing it should use.
+ * A request that can be sent to the {@link FlounderSound} specifying what sound should be played and what settings the source playing it should use.
  */
 public class PlayRequest {
 	private Vector3f position;

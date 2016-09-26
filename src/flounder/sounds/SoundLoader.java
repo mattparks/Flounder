@@ -1,6 +1,6 @@
 package flounder.sounds;
 
-import flounder.engine.*;
+import flounder.logger.*;
 import org.lwjgl.openal.*;
 
 import java.nio.*;
@@ -20,7 +20,7 @@ public class SoundLoader {
 	 */
 	protected static void doInitialSoundLoad(Sound sound) {
 		try {
-			FlounderEngine.getLogger().log("Loading sound " + sound.getSoundFile().getPath());
+			FlounderLogger.log("Loading sound " + sound.getSoundFile().getPath());
 			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			ByteBuffer byteBuffer = stream.loadNextData();
@@ -29,8 +29,8 @@ public class SoundLoader {
 			sound.setBuffer(bufferID, byteBuffer.limit());
 			stream.close();
 		} catch (Exception e) {
-			FlounderEngine.getLogger().error("Couldn't load sound file " + sound.getSoundFile());
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.error("Couldn't load sound file " + sound.getSoundFile());
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class SoundLoader {
 		int error = AL10.alGetError();
 
 		if (error != AL10.AL_NO_ERROR) {
-			FlounderEngine.getLogger().error("Problem loading sound data into buffer. " + error);
+			FlounderLogger.error("Problem loading sound data into buffer. " + error);
 		}
 	}
 
@@ -72,7 +72,7 @@ public class SoundLoader {
 		AL10.alDeleteBuffers(bufferID);
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			FlounderEngine.getLogger().error("Problem deleting sound buffer.");
+			FlounderLogger.error("Problem deleting sound buffer.");
 		}
 	}
 
@@ -87,7 +87,7 @@ public class SoundLoader {
 		});
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			FlounderEngine.getLogger().error("Problem deleting sound buffers.");
+			FlounderLogger.error("Problem deleting sound buffers.");
 		}
 	}
 }

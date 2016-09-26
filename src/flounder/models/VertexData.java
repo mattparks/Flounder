@@ -89,7 +89,7 @@ public class VertexData {
 		if (averagedTangent.length() > 0) {
 			averagedTangent.normalize();
 		}// else {
-		//	FlounderEngine.getLogger().error(averagedTangent.toString() + " average tangents zero length vector!");
+		//	FlounderLogger.error(averagedTangent.toString() + " average tangents zero length vector!");
 		//}
 	}
 

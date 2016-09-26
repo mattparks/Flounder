@@ -1,6 +1,7 @@
 package flounder.fonts;
 
 import flounder.engine.*;
+import flounder.loaders.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.visual.*;
@@ -304,6 +305,6 @@ public class Text {
 	 * Deletes the text VAO from memory.
 	 */
 	public void delete() {
-		FlounderEngine.getLoader().deleteVAOFromCache(textMesh);
+		FlounderLoader.deleteVAOFromCache(textMesh);
 	}
 }

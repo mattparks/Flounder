@@ -1,6 +1,6 @@
 package flounder.post.filters;
 
-import flounder.engine.*;
+import flounder.devices.*;
 import flounder.fbos.*;
 import flounder.post.*;
 import flounder.resources.*;
@@ -18,10 +18,10 @@ public class FilterBlurVertical extends PostFilter {
 		super(Shader.newShader("filterBlurVertical").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
 				new ShaderType(GL_FRAGMENT_SHADER, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl"))
-		).createInSecondThread(), FBO.newFBO(FlounderEngine.getDevices().getDisplay().getWidth(), FlounderEngine.getDevices().getDisplay().getHeight()).fitToScreen(1.0f).create());
+		).createInSecondThread(), FBO.newFBO(FlounderDisplay.getWidth(), FlounderDisplay.getHeight()).fitToScreen(1.0f).create());
 		this.fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
-		init((int) (FlounderEngine.getDevices().getDisplay().getHeight() * sizeScalar));
+		init((int) (FlounderDisplay.getHeight() * sizeScalar));
 	}
 
 	public FilterBlurVertical(int widthValue, int heightValue) {
@@ -46,7 +46,7 @@ public class FilterBlurVertical extends PostFilter {
 	@Override
 	public void storeValues() {
 		if (fitToDisplay) {
-			heightValue = (int) (FlounderEngine.getDevices().getDisplay().getHeight() * sizeScalar);
+			heightValue = (int) (FlounderDisplay.getHeight() * sizeScalar);
 		}
 
 		shader.getUniformFloat("height").loadFloat(heightValue);

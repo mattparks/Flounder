@@ -1,6 +1,6 @@
 package flounder.models;
 
-import flounder.engine.*;
+import flounder.loaders.*;
 import flounder.processing.glProcessing.*;
 
 /**
@@ -20,6 +20,6 @@ public class ModelDeleteRequest implements GlRequest {
 
 	@Override
 	public void executeGlRequest() {
-		FlounderEngine.getLoader().deleteVAOFromCache(modelID);
+		FlounderLoader.deleteVAOFromCache(modelID);
 	}
 }

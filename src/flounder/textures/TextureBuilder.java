@@ -1,7 +1,8 @@
 package flounder.textures;
 
-import flounder.engine.*;
+import flounder.logger.*;
 import flounder.maths.*;
+import flounder.processing.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
@@ -102,7 +103,7 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder right now!");
+			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder right now!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this, false);
@@ -124,10 +125,10 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder in the background!");
+			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in the background!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			FlounderEngine.getProcessors().sendRequest(new TextureLoadRequest(data, this, true));
+			FlounderProcessors.sendRequest(new TextureLoadRequest(data, this, true));
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 
@@ -144,12 +145,12 @@ public class TextureBuilder {
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderEngine.getLogger().log(file.getPath() + " is being loaded into the texture builder in separate thread!");
+			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in separate thread!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
 			TextureLoadRequest request = new TextureLoadRequest(data, this, false);
 			request.doResourceRequest();
-			FlounderEngine.getProcessors().sendGLRequest(request);
+			FlounderProcessors.sendGLRequest(request);
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 

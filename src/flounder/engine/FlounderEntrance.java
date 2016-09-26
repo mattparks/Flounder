@@ -7,7 +7,7 @@ import flounder.resources.*;
 /**
  * A abstract class used to build a game out of.
  */
-public abstract class FlounderEntrance extends FlounderEngine implements IModule {
+public abstract class FlounderEntrance extends FlounderEngine {
 	protected ICamera camera;
 	protected IRendererMaster renderer;
 	protected IManagerGUI managerGUI;
@@ -61,15 +61,11 @@ public abstract class FlounderEntrance extends FlounderEngine implements IModule
 		FlounderEngine.getCamera().update(focusPosition, focusRotation, gamePaused);
 	}
 
-	@Override
 	public abstract void init();
 
-	@Override
 	public abstract void update();
 
-	@Override
 	public abstract void profile();
 
-	@Override
 	public abstract void dispose();
 }

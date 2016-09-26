@@ -1,6 +1,6 @@
 package flounder.maths;
 
-import flounder.engine.*;
+import flounder.devices.*;
 
 /**
  * A class for handing and calculation deltas.
@@ -27,7 +27,7 @@ public class Delta {
 	 * Updates delta and times.
 	 */
 	public void update() {
-		currentFrameTime = FlounderEngine.getDevices().getTime() / 1000.0f;
+		currentFrameTime = FlounderDisplay.getTime() / 1000.0f;
 		delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 		time += delta;

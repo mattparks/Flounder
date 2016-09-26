@@ -1,9 +1,10 @@
 package flounder.guis;
 
-import flounder.engine.*;
 import flounder.engine.entrance.*;
 import flounder.helpers.*;
+import flounder.loaders.*;
 import flounder.maths.vectors.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
@@ -30,23 +31,23 @@ public class GuiRenderer extends IRenderer {
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
 		).createInSecondThread();
-		vaoID = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
+		vaoID = FlounderLoader.createInterleavedVAO(POSITIONS, 2);
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!shader.isLoaded() || FlounderEngine.getGuis().getGuiTextures().isEmpty()) {
+		if (!shader.isLoaded() || FlounderGuis.getGuiTextures().isEmpty()) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderEngine.getGuis().getGuiTextures().forEach(this::renderGui);
+		FlounderGuis.getGuiTextures().forEach(this::renderGui);
 		endRendering();
 	}
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("GUIs", "Render Time", super.getRenderTimeMs());
+		FlounderProfiler.add("GUIs", "Render Time", super.getRenderTimeMs());
 	}
 
 	private void prepareRendering() {

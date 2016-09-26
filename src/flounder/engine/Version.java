@@ -1,6 +1,7 @@
 package flounder.engine;
 
 import flounder.exceptions.*;
+import flounder.logger.*;
 
 import java.io.*;
 
@@ -35,15 +36,15 @@ public class Version {
 
 			if (!versionFile.exists()) {
 				if (!versionFile.createNewFile()) {
-					FlounderEngine.getLogger().error("Failed to create new version file!");
+					FlounderLogger.error("Failed to create new version file!");
 				}
 			} else {
 				if (!versionFile.delete()) {
-					FlounderEngine.getLogger().error("Failed to delete version file!");
+					FlounderLogger.error("Failed to delete version file!");
 				}
 
 				if (!versionFile.createNewFile()) {
-					FlounderEngine.getLogger().error("Failed to create new version file!");
+					FlounderLogger.error("Failed to create new version file!");
 				}
 			}
 

@@ -1,6 +1,6 @@
 package flounder.sounds;
 
-import flounder.engine.*;
+import flounder.devices.*;
 import flounder.maths.vectors.*;
 
 import static org.lwjgl.openal.AL10.*;
@@ -125,7 +125,7 @@ public class SoundSource {
 		if (sound.needsStreaming()) {
 			queue(sound.getBufferID());
 			alSourcei(sourceID, AL_LOOPING, AL_FALSE);
-			FlounderEngine.getDevices().getSound().getStreamManager().stream(sound, this, currentController);
+			FlounderSound.getStreamManager().stream(sound, this, currentController);
 		} else {
 			alSourcei(sourceID, AL_LOOPING, AL_FALSE);
 			alSourcei(sourceID, AL_BUFFER, sound.getBufferID());

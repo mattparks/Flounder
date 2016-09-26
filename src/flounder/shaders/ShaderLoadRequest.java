@@ -1,6 +1,5 @@
 package flounder.shaders;
 
-import flounder.engine.*;
 import flounder.processing.*;
 import flounder.processing.glProcessing.*;
 
@@ -28,15 +27,15 @@ public class ShaderLoadRequest implements ResourceRequest, GlRequest {
 
 	@Override
 	public void doResourceRequest() {
-		data = FlounderEngine.getShaders().loadShader(builder);
+		data = FlounderShaders.loadShader(builder);
 
 		if (sendRequest) {
-			FlounderEngine.getProcessors().sendGLRequest(this);
+			FlounderProcessors.sendGLRequest(this);
 		}
 	}
 
 	@Override
 	public void executeGlRequest() {
-		FlounderEngine.getShaders().loadShaderToOpenGL(shader, data, builder);
+		FlounderShaders.loadShaderToOpenGL(shader, data, builder);
 	}
 }

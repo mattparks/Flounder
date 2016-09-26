@@ -1,6 +1,5 @@
 package flounder.engine.entrance;
 
-import flounder.engine.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 
@@ -31,7 +30,7 @@ public abstract class IRenderer {
 		profileTimer.stopInvocation();
 		renderTimeMs = profileTimer.reset();
 
-		if (FlounderEngine.getProfiler().isOpen()) {
+		if (FlounderProfiler.isOpen()) {
 			profile();
 		}
 	}

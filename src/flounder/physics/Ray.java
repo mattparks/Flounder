@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.devices.*;
 import flounder.engine.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -53,8 +54,8 @@ public class Ray {
 		origin.set(currentPosition);
 
 		if (useMouse) {
-			float mouseX = FlounderEngine.getDevices().getMouse().getPositionX();
-			float mouseY = FlounderEngine.getDevices().getMouse().getPositionY();
+			float mouseX = FlounderMouse.getPositionX();
+			float mouseY = FlounderMouse.getPositionY();
 			updateNormalisedDeviceCoordinates(mouseX, mouseY);
 		} else {
 			if (screenStart != null) {
@@ -70,8 +71,8 @@ public class Ray {
 	}
 
 	private void updateNormalisedDeviceCoordinates(float mouseX, float mouseY) {
-		float x = (2.0f * mouseX) / FlounderEngine.getDevices().getDisplay().getWidth() - 1.0f;
-		float y = (2.0f * mouseY) / FlounderEngine.getDevices().getDisplay().getHeight() - 1.0f;
+		float x = (2.0f * mouseX) / FlounderDisplay.getWidth() - 1.0f;
+		float y = (2.0f * mouseY) / FlounderDisplay.getHeight() - 1.0f;
 		normalizedCoords.set(x, y);
 	}
 

@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.engine.*;
+import flounder.logger.*;
 import org.lwjgl.*;
 
 import java.nio.*;
@@ -10,15 +11,19 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * Manages the creation, updating and destruction of joysticks.
  */
-public class DeviceJoysticks implements IModule {
+public class FlounderJoysticks extends IModule {
+	private static FlounderJoysticks instance;
+
 	private FloatBuffer joystickAxes[];
 	private ByteBuffer joystickButtons[];
 	private String joystickNames[];
 
-	/**
-	 * Creates a new GLFW joystick manager.
-	 */
-	protected DeviceJoysticks() {
+	static {
+		instance = new FlounderJoysticks();
+	}
+
+	private FlounderJoysticks() {
+		super(FlounderLogger.class.getClass());
 		joystickAxes = new FloatBuffer[GLFW_JOYSTICK_LAST];
 		joystickButtons = new ByteBuffer[GLFW_JOYSTICK_LAST];
 		joystickNames = new String[GLFW_JOYSTICK_LAST];
@@ -34,7 +39,7 @@ public class DeviceJoysticks implements IModule {
 		for (int i = 0; i < GLFW_JOYSTICK_LAST; i++) {
 			if (glfwJoystickPresent(i)) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {
-					FlounderEngine.getLogger().log("Connecting Joystick: " + i);
+					FlounderLogger.log("Connecting Joystick: " + i);
 					joystickAxes[i] = BufferUtils.createFloatBuffer(glfwGetJoystickAxes(i).capacity());
 					joystickButtons[i] = BufferUtils.createByteBuffer(glfwGetJoystickButtons(i).capacity());
 					joystickNames[i] = glfwGetJoystickName(i);
@@ -47,7 +52,7 @@ public class DeviceJoysticks implements IModule {
 				joystickButtons[i].put(glfwGetJoystickButtons(i));
 			} else {
 				if (joystickAxes[i] != null || joystickButtons[i] != null || joystickNames[i] != null) {
-					FlounderEngine.getLogger().log("Disconnecting Joystick: " + i);
+					FlounderLogger.log("Disconnecting Joystick: " + i);
 					joystickAxes[i].clear();
 					joystickAxes[i] = null;
 
@@ -70,8 +75,8 @@ public class DeviceJoysticks implements IModule {
 	 *
 	 * @return If the joystick is connected.
 	 */
-	public boolean isConnected(int joystick) {
-		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && joystickNames[joystick] != null;
+	public static boolean isConnected(int joystick) {
+		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && instance.joystickNames[joystick] != null;
 	}
 
 	/**
@@ -81,8 +86,8 @@ public class DeviceJoysticks implements IModule {
 	 *
 	 * @return The joysticks name.
 	 */
-	public String getName(int joystick) {
-		return joystickNames[joystick];
+	public static String getName(int joystick) {
+		return instance.joystickNames[joystick];
 	}
 
 	/**
@@ -93,8 +98,8 @@ public class DeviceJoysticks implements IModule {
 	 *
 	 * @return The value of the joystick's axis.
 	 */
-	public float getAxis(int joystick, int axis) {
-		return joystickAxes[joystick].get(axis);
+	public static float getAxis(int joystick, int axis) {
+		return instance.joystickAxes[joystick].get(axis);
 	}
 
 	/**
@@ -105,8 +110,8 @@ public class DeviceJoysticks implements IModule {
 	 *
 	 * @return Whether a button on a joystick is pressed.
 	 */
-	public boolean getButton(int joystick, int button) {
-		return joystickButtons[joystick].get(button) != 0;
+	public static boolean getButton(int joystick, int button) {
+		return instance.joystickButtons[joystick].get(button) != 0;
 	}
 
 	/**
@@ -116,8 +121,8 @@ public class DeviceJoysticks implements IModule {
 	 *
 	 * @return The number of axes the joystick offers.
 	 */
-	public int getCountAxes(int joystick) {
-		return joystickAxes[joystick].capacity();
+	public static int getCountAxes(int joystick) {
+		return instance.joystickAxes[joystick].capacity();
 	}
 
 	/**
@@ -127,8 +132,8 @@ public class DeviceJoysticks implements IModule {
 	 *
 	 * @return The number of buttons the joystick offers.
 	 */
-	public int getCountButtons(int joystick) {
-		return joystickButtons[joystick].capacity();
+	public static int getCountButtons(int joystick) {
+		return instance.joystickButtons[joystick].capacity();
 	}
 
 	@Override

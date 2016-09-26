@@ -1,6 +1,7 @@
 package flounder.fonts;
 
-import flounder.engine.*;
+import flounder.loaders.*;
+import flounder.logger.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
@@ -50,7 +51,7 @@ public class TextLoader {
 			Character character = metaData.getCharacter(c);
 
 			if (character == null) {
-				FlounderEngine.getLogger().error("Could not find font char for: " + c);
+				FlounderLogger.error("Could not find font char for: " + c);
 			} else {
 				currentWord.addCharacter(character);
 			}
@@ -94,7 +95,7 @@ public class TextLoader {
 
 		float[] verticesArray = listToArray(vertices);
 		float[] textureArray = listToArray(textureCoords);
-		int vao = FlounderEngine.getLoader().createInterleavedVAO(vertices.size() / 2, verticesArray, textureArray);
+		int vao = FlounderLoader.createInterleavedVAO(vertices.size() / 2, verticesArray, textureArray);
 		text.setMeshInfo(vao, vertices.size() / 2);
 	}
 

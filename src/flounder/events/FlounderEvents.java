@@ -4,8 +4,18 @@ import flounder.engine.*;
 
 import java.util.*;
 
-public class FlounderEvents implements IModule {
+public class FlounderEvents extends IModule {
+	private static FlounderEvents instance;
+
 	private ArrayList<IEvent> events;
+
+	static {
+		instance = new FlounderEvents();
+	}
+
+	private FlounderEvents() {
+		super();
+	}
 
 	@Override
 	public void init() {
@@ -21,12 +31,12 @@ public class FlounderEvents implements IModule {
 		}
 	}
 
-	public void addEvent(IEvent event) {
-		events.add(event);
+	public static void addEvent(IEvent event) {
+		instance.events.add(event);
 	}
 
-	public void removeEvent(IEvent event) {
-		events.remove(event);
+	public static void removeEvent(IEvent event) {
+		instance.events.remove(event);
 	}
 
 	@Override

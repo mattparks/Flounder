@@ -1,8 +1,8 @@
 package flounder.post;
 
-import flounder.engine.*;
 import flounder.fbos.*;
 import flounder.helpers.*;
+import flounder.loaders.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
@@ -17,7 +17,7 @@ public abstract class PostFilter {
 	public static final MyFile VERTEX_LOCATION = new MyFile(POST_LOC, "defaultVertex.glsl");
 
 	private static float[] POSITIONS = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
-	private static int VAO = FlounderEngine.getLoader().createInterleavedVAO(POSITIONS, 2);
+	private static int VAO = FlounderLoader.createInterleavedVAO(POSITIONS, 2);
 
 	public Shader shader;
 	public FBO fbo;

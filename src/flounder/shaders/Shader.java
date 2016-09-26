@@ -1,6 +1,7 @@
 package flounder.shaders;
 
-import flounder.engine.*;
+import flounder.logger.*;
+import flounder.processing.*;
 import flounder.resources.*;
 
 import java.util.*;
@@ -107,12 +108,12 @@ public class Shader {
 			return (UniformBool) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a bool!");
+				FlounderLogger.error(uniformName + " is not a bool!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -130,12 +131,12 @@ public class Shader {
 			return (UniformFloat) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a float!");
+				FlounderLogger.error(uniformName + " is not a float!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -153,12 +154,12 @@ public class Shader {
 			return (UniformMat2) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a mat2!");
+				FlounderLogger.error(uniformName + " is not a mat2!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -176,12 +177,12 @@ public class Shader {
 			return (UniformMat3) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a mat3!");
+				FlounderLogger.error(uniformName + " is not a mat3!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -199,12 +200,12 @@ public class Shader {
 			return (UniformMat4) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a mat4!");
+				FlounderLogger.error(uniformName + " is not a mat4!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -222,12 +223,12 @@ public class Shader {
 			return (UniformSampler2D) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a sampler!");
+				FlounderLogger.error(uniformName + " is not a sampler!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -245,12 +246,12 @@ public class Shader {
 			return (UniformVec2) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a vec2!");
+				FlounderLogger.error(uniformName + " is not a vec2!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -268,12 +269,12 @@ public class Shader {
 			return (UniformVec3) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a vec3!");
+				FlounderLogger.error(uniformName + " is not a vec3!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -291,12 +292,12 @@ public class Shader {
 			return (UniformVec4) uniforms.get(uniformName);
 		} catch (ClassCastException e) {
 			if (uniforms.get(uniformName) != null) {
-				FlounderEngine.getLogger().error(uniformName + " is not a vec4!");
+				FlounderLogger.error(uniformName + " is not a vec4!");
 			} else {
-				FlounderEngine.getLogger().error("Could not find a uniform for " + uniformName);
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
 			}
 
-			FlounderEngine.getLogger().exception(e);
+			FlounderLogger.exception(e);
 		}
 
 		return null;
@@ -306,7 +307,7 @@ public class Shader {
 	 * Deletes the shader, do not start after calling this.
 	 */
 	public void dispose() {
-		FlounderEngine.getProcessors().sendGLRequest(new ShaderDeleteRequest(programID));
+		FlounderProcessors.sendGLRequest(new ShaderDeleteRequest(programID));
 		loaded = false;
 	}
 }

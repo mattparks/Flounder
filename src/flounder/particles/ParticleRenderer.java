@@ -1,11 +1,15 @@
 package flounder.particles;
 
+import flounder.devices.*;
 import flounder.engine.*;
 import flounder.engine.entrance.*;
 import flounder.helpers.*;
+import flounder.loaders.*;
+import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.particles.loading.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.space.*;
@@ -26,9 +30,9 @@ public class ParticleRenderer extends IRenderer {
 	private static final int MAX_INSTANCES = 27500;
 	private static final int INSTANCE_DATA_LENGTH = 22;
 
-	private static final int VAO = FlounderEngine.getLoader().createInterleavedVAO(VERTICES, 2);
+	private static final int VAO = FlounderLoader.createInterleavedVAO(VERTICES, 2);
 	private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH);
-	private static final int VBO = FlounderEngine.getLoader().createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
+	private static final int VBO = FlounderLoader.createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
 
 	private Shader shader;
 	private int pointer;
@@ -43,24 +47,24 @@ public class ParticleRenderer extends IRenderer {
 		pointer = 0;
 		rendered = 0;
 
-		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 1, 4, INSTANCE_DATA_LENGTH, 0);
-		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 2, 4, INSTANCE_DATA_LENGTH, 4);
-		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 3, 4, INSTANCE_DATA_LENGTH, 8);
-		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 4, 4, INSTANCE_DATA_LENGTH, 12);
-		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 5, 4, INSTANCE_DATA_LENGTH, 16);
-		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 6, 1, INSTANCE_DATA_LENGTH, 20);
-		FlounderEngine.getLoader().addInstancedAttribute(VAO, VBO, 7, 1, INSTANCE_DATA_LENGTH, 21);
+		FlounderLoader.addInstancedAttribute(VAO, VBO, 1, 4, INSTANCE_DATA_LENGTH, 0);
+		FlounderLoader.addInstancedAttribute(VAO, VBO, 2, 4, INSTANCE_DATA_LENGTH, 4);
+		FlounderLoader.addInstancedAttribute(VAO, VBO, 3, 4, INSTANCE_DATA_LENGTH, 8);
+		FlounderLoader.addInstancedAttribute(VAO, VBO, 4, 4, INSTANCE_DATA_LENGTH, 12);
+		FlounderLoader.addInstancedAttribute(VAO, VBO, 5, 4, INSTANCE_DATA_LENGTH, 16);
+		FlounderLoader.addInstancedAttribute(VAO, VBO, 6, 1, INSTANCE_DATA_LENGTH, 20);
+		FlounderLoader.addInstancedAttribute(VAO, VBO, 7, 1, INSTANCE_DATA_LENGTH, 21);
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!shader.isLoaded() || FlounderEngine.getParticles().getParticles().size() < 1) {
+		if (!shader.isLoaded() || FlounderParticles.getParticles().size() < 1) {
 			return;
 		}
 
 		prepareRendering(clipPlane, camera);
 
-		for (StructureBasic<Particle> list : FlounderEngine.getParticles().getParticles()) {
+		for (StructureBasic<Particle> list : FlounderParticles.getParticles()) {
 			List<Particle> particles = list.queryInFrustum(new ArrayList<>(), camera.getViewFrustum());
 
 			if (particles.size() > 0) {
@@ -84,7 +88,7 @@ public class ParticleRenderer extends IRenderer {
 				}
 
 				// Renders the particles list.
-				FlounderEngine.getLoader().updateVBO(VBO, vboData, BUFFER);
+				FlounderLoader.updateVBO(VBO, vboData, BUFFER);
 				glDrawArraysInstancedARB(GL_TRIANGLE_STRIP, 0, VERTICES.length, particles.size());
 				unbindTexturedModel();
 			}
@@ -95,7 +99,7 @@ public class ParticleRenderer extends IRenderer {
 
 	@Override
 	public void profile() {
-		FlounderEngine.getProfiler().add("Particles", "Render Time", super.getRenderTimeMs());
+		FlounderProfiler.add("Particles", "Render Time", super.getRenderTimeMs());
 	}
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
@@ -111,7 +115,7 @@ public class ParticleRenderer extends IRenderer {
 		unbindTexturedModel();
 
 		OpenGlUtils.bindVAO(VAO, 0, 1, 2, 3, 4, 5, 6, 7);
-		OpenGlUtils.antialias(FlounderEngine.getDevices().getDisplay().isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.cullBackFaces(true);
 		OpenGlUtils.enableDepthTesting();
 		OpenGlUtils.enableAlphaBlending();
@@ -131,7 +135,7 @@ public class ParticleRenderer extends IRenderer {
 
 	private void prepareInstance(Particle particle, ICamera camera, float[] vboData) {
 		if (rendered >= MAX_INSTANCES) {
-			FlounderEngine.getLogger().error("Particles overflow: " + rendered);
+			FlounderLogger.error("Particles overflow: " + rendered);
 			return;
 		}
 
