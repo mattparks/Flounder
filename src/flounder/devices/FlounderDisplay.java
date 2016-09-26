@@ -23,7 +23,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Manages the creation, updating and destruction of the display.
  */
 public class FlounderDisplay extends IModule {
-	private static FlounderDisplay instance;
+	private static final FlounderDisplay instance = new FlounderDisplay();
 
 	private int windowWidth;
 	private int windowHeight;
@@ -49,12 +49,12 @@ public class FlounderDisplay extends IModule {
 	private GLFWWindowSizeCallback callbackWindowSize;
 	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
-	static {
-		instance = new FlounderDisplay();
+	public static void test() {
+
 	}
 
 	private FlounderDisplay() {
-		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass());
+		super(FlounderLogger.class, FlounderProfiler.class);
 
 		this.windowWidth = 1080;
 		this.windowHeight = 720;
@@ -194,6 +194,16 @@ public class FlounderDisplay extends IModule {
 			}
 		});
 
+		// System logs.
+		FlounderLogger.log("===== This is not an error message, it is a system log. =====");
+		FlounderLogger.log("Flounder Engine Version: " + FlounderEngine.getVersion().version);
+		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
+		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
+		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
+		FlounderLogger.log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
+		FlounderLogger.log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
+		FlounderLogger.log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
+		FlounderLogger.log("===== End of system log. =====\n");
 	}
 
 	private void setWindowIcon() throws IOException {
@@ -247,7 +257,9 @@ public class FlounderDisplay extends IModule {
 	 * Updates the display image by swapping the colour buffers.
 	 */
 	public static void swapBuffers() {
-		glfwSwapBuffers(instance.window);
+		if (instance.window != 0) {
+			glfwSwapBuffers(instance.window);
+		}
 	}
 
 	@Override

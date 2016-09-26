@@ -3,15 +3,15 @@ package flounder.engine;
 /**
  * A simple interface that can be applied anywhere.
  */
-public abstract class IModule {
-	private final Class[] requires;
+public abstract class IModule<T extends IModule> {
+	private final Class<T>[] requires;
 
 	/**
 	 * Creates a new abstract module.
 	 *
 	 * @param requires Classes the module depends on.
 	 */
-	public IModule(Class... requires) {
+	public IModule(Class<T>... requires) {
 		this.requires = requires;
 		FlounderEngine.registerModule(this);
 	}
@@ -31,7 +31,7 @@ public abstract class IModule {
 	 *
 	 * @return The classes that the module requires.
 	 */
-	public Class[] getRequires() {
+	public Class<T>[] getRequires() {
 		return requires;
 	}
 

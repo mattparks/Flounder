@@ -15,6 +15,8 @@ import java.util.*;
  * A class that holds a list of available engine fonts and texts currently on the screen.
  */
 public class FlounderFonts extends IModule {
+	private static final FlounderFonts instance = new FlounderFonts();
+
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
 	public static final FontType BUNGEE = new FontType(new MyFile(FONTS_LOC, "bungee.png"), new MyFile(FONTS_LOC, "bungee.fnt"));
@@ -28,16 +30,10 @@ public class FlounderFonts extends IModule {
 	public static final FontType TREBUCHET = new FontType(new MyFile(FONTS_LOC, "trebuchet.png"), new MyFile(FONTS_LOC, "trebuchet.fnt"));
 	public static final FontType BRUSH_SCRIPT = new FontType(new MyFile(FONTS_LOC, "brushScript.png"), new MyFile(FONTS_LOC, "brushScript.fnt"));
 
-	private static FlounderFonts instance;
-
 	private Map<FontType, List<Text>> texts;
 
-	static {
-		instance = new FlounderFonts();
-	}
-
 	private FlounderFonts() {
-		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderDisplay.class.getClass(), FlounderLoader.class.getClass(), FlounderTextures.class.getClass());
+		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 		texts = new HashMap<>();
 	}
 

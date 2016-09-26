@@ -12,18 +12,14 @@ import static org.lwjgl.glfw.GLFW.*;
  * Manages the creation, updating and destruction of joysticks.
  */
 public class FlounderJoysticks extends IModule {
-	private static FlounderJoysticks instance;
+	private static final FlounderJoysticks instance = new FlounderJoysticks();
 
 	private FloatBuffer joystickAxes[];
 	private ByteBuffer joystickButtons[];
 	private String joystickNames[];
 
-	static {
-		instance = new FlounderJoysticks();
-	}
-
 	private FlounderJoysticks() {
-		super(FlounderLogger.class.getClass());
+		super(FlounderLogger.class);
 		joystickAxes = new FloatBuffer[GLFW_JOYSTICK_LAST];
 		joystickButtons = new ByteBuffer[GLFW_JOYSTICK_LAST];
 		joystickNames = new String[GLFW_JOYSTICK_LAST];

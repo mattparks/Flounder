@@ -65,12 +65,20 @@ public class FlounderEngine extends Thread {
 	}
 
 	public static void registerModule(IModule module) {
-		unregistedModules.add(module);
 		String data = "";
 		for (int i = 0; i < module.getRequires().length; i++) {
-			data += module.getRequires()[i] + ", ";
+			data += module.getRequires()[i].getName() + ((i == module.getRequires().length - 1) ? "" : ", ");
 		}
 		System.out.println("[" + module.getClass().getName() + "]: " + data);
+
+		for (Class required : module.getRequires()) {
+			if (!required.getName().equals(module.getClass().getName()) && !unregistedModules.contains(required) && !activeModules.contains(required)) {
+				System.err.println(required);
+				// TODO: registerModule(required);
+			}
+		}
+
+		unregistedModules.add(module);
 	}
 
 	/**
@@ -91,6 +99,8 @@ public class FlounderEngine extends Thread {
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
 		version = new Version("1.09.22");
+
+		FlounderDisplay.test();
 
 		this.fpsLimit = fpsLimit;
 		this.closedRequested = false;
@@ -124,7 +134,7 @@ public class FlounderEngine extends Thread {
 			}
 
 			entrance.managerGUI.init();
-			entrance.renderer.init();
+//			entrance.renderer.init();
 			entrance.camera.init();
 			entrance.init();
 
@@ -154,14 +164,14 @@ public class FlounderEngine extends Thread {
 
 			{
 				delta.update();
-				entrance.update();
+//				entrance.update();
 
 				if (timerLog.isPassedTime()) {
 					FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
 					timerLog.resetStartTime();
 				}
 
-				entrance.renderer.render();
+//				entrance.renderer.render();
 				entrance.managerGUI.update();
 			}
 
@@ -316,7 +326,7 @@ public class FlounderEngine extends Thread {
 
 	private void disposeEngine() {
 		if (initialized) {
-			entrance.renderer.dispose();
+//			entrance.renderer.dispose();
 			entrance.dispose();
 
 			for (IModule module : activeModules) {

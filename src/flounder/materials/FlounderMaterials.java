@@ -13,16 +13,12 @@ import java.util.*;
  * Class capable of loading MTL files into Materials.
  */
 public class FlounderMaterials extends IModule {
-	private static FlounderMaterials instance;
+	private static final FlounderMaterials instance = new FlounderMaterials();
 
-	private static Map<String, SoftReference<List<Material>>> loaded = new HashMap<>();
-
-	static {
-		instance = new FlounderMaterials();
-	}
+	private Map<String, SoftReference<List<Material>>> loaded = new HashMap<>();
 
 	private FlounderMaterials() {
-		super(FlounderLogger.class.getClass());
+		super(FlounderLogger.class);
 	}
 
 	@Override
@@ -45,7 +41,7 @@ public class FlounderMaterials extends IModule {
 	 * @return Returns a loaded list of MTLMaterials.
 	 */
 	public static List<Material> loadMTL(MyFile file) {
-		SoftReference<List<Material>> ref = loaded.get(file.getPath());
+		SoftReference<List<Material>> ref = instance.loaded.get(file.getPath());
 		List<Material> data = ref == null ? null : ref.get();
 
 		if (data == null) {
@@ -128,7 +124,7 @@ public class FlounderMaterials extends IModule {
 				FlounderLogger.error("Error reading the MTL: " + file);
 			}
 
-			loaded.put(file.getPath(), new SoftReference<>(data));
+			instance.loaded.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;

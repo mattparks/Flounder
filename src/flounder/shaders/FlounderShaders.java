@@ -19,14 +19,10 @@ import static org.lwjgl.opengl.GL30.*;
  * Class capable of loading OBJ files into shaders.
  */
 public class FlounderShaders extends IModule {
-	private static FlounderShaders instance;
-
-	static {
-		instance = new FlounderShaders();
-	}
+	private final static FlounderShaders instance = new FlounderShaders();
 
 	private FlounderShaders() {
-		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderProcessors.class.getClass());
+		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override

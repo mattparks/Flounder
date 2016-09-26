@@ -22,16 +22,12 @@ import static org.lwjgl.opengl.GL30.*;
  * Manages the caches of textures.
  */
 public class FlounderTextures extends IModule {
-	private static FlounderTextures instance;
+	private static final FlounderTextures instance = new FlounderTextures();
 
 	private List<Integer> textureCache;
 
-	static {
-		instance = new FlounderTextures();
-	}
-
 	private FlounderTextures() {
-		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderProcessors.class.getClass());
+		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 		textureCache = new ArrayList<>();
 	}
 

@@ -5,13 +5,9 @@ import flounder.engine.*;
 import java.util.*;
 
 public class FlounderEvents extends IModule {
-	private static FlounderEvents instance;
+	private static final FlounderEvents instance = new FlounderEvents();
 
 	private ArrayList<IEvent> events;
-
-	static {
-		instance = new FlounderEvents();
-	}
 
 	private FlounderEvents() {
 		super();

@@ -15,20 +15,16 @@ import java.util.*;
  * A manager that manages GUI textures in a container.
  */
 public class FlounderGuis extends IModule {
-	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
+	private static final FlounderGuis instance = new FlounderGuis();
 
-	private static FlounderGuis instance;
+	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
 	private GuiScreenContainer container;
 	private List<GuiTexture> guiTextures;
 	private GuiSelector selector;
 
-	static {
-		instance = new FlounderGuis();
-	}
-
 	private FlounderGuis() {
-		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderDisplay.class.getClass(), FlounderMouse.class.getClass(), FlounderJoysticks.class.getClass(), FlounderSound.class.getClass(), FlounderLoader.class.getClass(), FlounderFonts.class.getClass(), FlounderTextures.class.getClass());
+		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderJoysticks.class, FlounderSound.class, FlounderLoader.class, FlounderFonts.class, FlounderTextures.class);
 	}
 
 	@Override

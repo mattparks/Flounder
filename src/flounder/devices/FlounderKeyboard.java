@@ -10,18 +10,14 @@ import static org.lwjgl.glfw.GLFW.*;
  * Manages the creation, updating and destruction of the keyboard keys.
  */
 public class FlounderKeyboard extends IModule {
-	private static FlounderKeyboard instance;
+	private static final FlounderKeyboard instance = new FlounderKeyboard();
 
 	private int keyboardKeys[];
 
 	private GLFWKeyCallback callbackKey;
 
-	static {
-		instance = new FlounderKeyboard();
-	}
-
 	private FlounderKeyboard() {
-		super(FlounderLogger.class.getClass(), FlounderDisplay.class.getClass());
+		super(FlounderLogger.class, FlounderDisplay.class);
 		keyboardKeys = new int[GLFW_KEY_LAST + 1];
 	}
 

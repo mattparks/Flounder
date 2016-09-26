@@ -17,14 +17,10 @@ import static org.lwjgl.opengl.GL30.*;
  * Class capable of loading OBJ files into Models.
  */
 public class FlounderModels extends IModule {
-	private static FlounderModels instance;
-
-	static {
-		instance = new FlounderModels();
-	}
+	private static final FlounderModels instance = new FlounderModels();
 
 	private FlounderModels() {
-		super(FlounderLogger.class.getClass(), FlounderLoader.class.getClass(), FlounderProcessors.class.getClass(), FlounderMaterials.class.getClass());
+		super(FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
 	}
 
 	@Override

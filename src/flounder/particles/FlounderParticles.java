@@ -18,21 +18,17 @@ import java.util.*;
  * A manager that manages particles.
  */
 public class FlounderParticles extends IModule {
+	private static final FlounderParticles instance = new FlounderParticles();
+
 	public static final MyFile PARTICLES_LOC = new MyFile(MyFile.RES_FOLDER, "particles");
 	public static final float MAX_ELAPED_TIME = 5.0f;
-
-	private static FlounderParticles instance;
 
 	private List<ParticleSystem> particleSystems;
 	private List<StructureBasic<Particle>> particles;
 	private List<Particle> deadParticles;
 
-	static {
-		instance = new FlounderParticles();
-	}
-
 	private FlounderParticles() {
-		super(FlounderLogger.class.getClass(), FlounderProfiler.class.getClass(), FlounderDisplay.class.getClass(), FlounderLoader.class.getClass(), FlounderTextures.class.getClass());
+		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
 	@Override
