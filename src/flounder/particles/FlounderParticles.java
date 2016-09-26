@@ -27,7 +27,7 @@ public class FlounderParticles extends IModule {
 	private List<StructureBasic<Particle>> particles;
 	private List<Particle> deadParticles;
 
-	private FlounderParticles() {
+	public FlounderParticles() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 

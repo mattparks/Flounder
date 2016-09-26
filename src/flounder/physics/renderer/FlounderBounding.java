@@ -20,7 +20,7 @@ public class FlounderBounding extends IModule {
 	private boolean renders;
 	private int aabbCount;
 
-	private FlounderBounding() {
+	public FlounderBounding() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderLoader.class);
 		renderShapes = new HashMap<>();
 		renders = true;

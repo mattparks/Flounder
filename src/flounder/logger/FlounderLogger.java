@@ -28,7 +28,7 @@ public class FlounderLogger extends IModule {
 	private StringBuilder saveData;
 	private int linesRecorded;
 
-	private FlounderLogger() {
+	public FlounderLogger() {
 		super(FlounderProfiler.class);
 		saveData = new StringBuilder();
 		linesRecorded = 0;

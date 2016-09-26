@@ -18,7 +18,7 @@ public class FlounderJoysticks extends IModule {
 	private ByteBuffer joystickButtons[];
 	private String joystickNames[];
 
-	private FlounderJoysticks() {
+	public FlounderJoysticks() {
 		super(FlounderLogger.class);
 		joystickAxes = new FloatBuffer[GLFW_JOYSTICK_LAST];
 		joystickButtons = new ByteBuffer[GLFW_JOYSTICK_LAST];

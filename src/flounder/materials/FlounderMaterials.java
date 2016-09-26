@@ -17,7 +17,7 @@ public class FlounderMaterials extends IModule {
 
 	private Map<String, SoftReference<List<Material>>> loaded = new HashMap<>();
 
-	private FlounderMaterials() {
+	public FlounderMaterials() {
 		super(FlounderLogger.class);
 	}
 

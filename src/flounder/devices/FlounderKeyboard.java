@@ -16,7 +16,7 @@ public class FlounderKeyboard extends IModule {
 
 	private GLFWKeyCallback callbackKey;
 
-	private FlounderKeyboard() {
+	public FlounderKeyboard() {
 		super(FlounderLogger.class, FlounderDisplay.class);
 		keyboardKeys = new int[GLFW_KEY_LAST + 1];
 	}

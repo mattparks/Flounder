@@ -64,21 +64,45 @@ public class FlounderEngine extends Thread {
 		}
 	}
 
-	public static void registerModule(IModule module) {
-		String data = "";
-		for (int i = 0; i < module.getRequires().length; i++) {
-			data += module.getRequires()[i].getName() + ((i == module.getRequires().length - 1) ? "" : ", ");
-		}
-		System.out.println("[" + module.getClass().getName() + "]: " + data);
-
-		for (Class required : module.getRequires()) {
-			if (!required.getName().equals(module.getClass().getName()) && !unregistedModules.contains(required) && !activeModules.contains(required)) {
-				System.err.println(required);
-				// TODO: registerModule(required);
+	public static boolean containsModule(IModule module) {
+		for (IModule m : unregistedModules) {
+			if (m.getClass().getName().equals(module.getClass().getName())) {
+				return true;
 			}
 		}
 
+		for (IModule m : activeModules) {
+			if (m.getClass().getName().equals(module.getClass().getName())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static void registerModule(IModule module) {
+		if (containsModule(module)) {
+			return;
+		}
+
+		String data = "";
+
+		for (int i = 0; i < module.getRequires().length; i++) {
+			data += module.getRequires()[i].getName() + ((i == module.getRequires().length - 1) ? "" : ", ");
+		}
+
+		System.out.println("[" + module.getClass().getName() + "]: " + data);
+
 		unregistedModules.add(module);
+
+		for (Class required : module.getRequires()) {
+			try {
+				required.newInstance(); // Should be registered from the super constructor.
+			} catch (IllegalAccessException | InstantiationException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
 	}
 
 	/**
@@ -127,21 +151,6 @@ public class FlounderEngine extends Thread {
 		run();
 	}
 
-	private void initEngine() {
-		if (!initialized) {
-			for (IModule module : activeModules) {
-				module.init();
-			}
-
-			entrance.managerGUI.init();
-//			entrance.renderer.init();
-			entrance.camera.init();
-			entrance.init();
-
-			initialized = true;
-		}
-	}
-
 	@Override
 	public void run() {
 		try {
@@ -159,19 +168,60 @@ public class FlounderEngine extends Thread {
 		}
 	}
 
+	private void updateModuleSets() {
+		if (unregistedModules.isEmpty()) {
+			return;
+		}
+
+		Iterator<IModule> iterator = unregistedModules.iterator();
+
+		while (iterator.hasNext()) {
+			IModule current = iterator.next();
+
+			if (initialized) {
+				current.init();
+			}
+
+			activeModules.add(current);
+			iterator.remove();
+		}
+	}
+
+	private void initEngine() {
+		if (!initialized) {
+			updateModuleSets();
+
+			for (IModule module : activeModules) {
+				module.init();
+			}
+
+			entrance.managerGUI.init();
+			entrance.renderer.init();
+			entrance.camera.init();
+			entrance.init();
+
+			initialized = true;
+		}
+	}
+
 	private void updateEngine() {
 		if (initialized) {
+			updateModuleSets();
+
+			for (IModule module : activeModules) {
+				module.update();
+			}
 
 			{
 				delta.update();
-//				entrance.update();
+				entrance.update();
 
 				if (timerLog.isPassedTime()) {
 					FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
 					timerLog.resetStartTime();
 				}
 
-//				entrance.renderer.render();
+				entrance.renderer.render();
 				entrance.managerGUI.update();
 			}
 
@@ -183,6 +233,10 @@ public class FlounderEngine extends Thread {
 		if (FlounderProfiler.isOpen()) {
 			FlounderProfiler.add("Engine", "Running From Jar", runningFromJar);
 			FlounderProfiler.add("Engine", "Save Folder", roamingFolder.getPath());
+
+			for (IModule module : activeModules) {
+				module.profile();
+			}
 
 			entrance.profile();
 		}
@@ -326,7 +380,7 @@ public class FlounderEngine extends Thread {
 
 	private void disposeEngine() {
 		if (initialized) {
-//			entrance.renderer.dispose();
+			entrance.renderer.dispose();
 			entrance.dispose();
 
 			for (IModule module : activeModules) {

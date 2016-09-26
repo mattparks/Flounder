@@ -26,7 +26,7 @@ public class FlounderTextures extends IModule {
 
 	private List<Integer> textureCache;
 
-	private FlounderTextures() {
+	public FlounderTextures() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 		textureCache = new ArrayList<>();
 	}

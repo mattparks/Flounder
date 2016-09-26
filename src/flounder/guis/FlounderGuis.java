@@ -23,7 +23,7 @@ public class FlounderGuis extends IModule {
 	private List<GuiTexture> guiTextures;
 	private GuiSelector selector;
 
-	private FlounderGuis() {
+	public FlounderGuis() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderJoysticks.class, FlounderSound.class, FlounderLoader.class, FlounderFonts.class, FlounderTextures.class);
 	}
 

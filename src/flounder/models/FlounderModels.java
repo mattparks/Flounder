@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class FlounderModels extends IModule {
 	private static final FlounderModels instance = new FlounderModels();
 
-	private FlounderModels() {
+	public FlounderModels() {
 		super(FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
 	}
 

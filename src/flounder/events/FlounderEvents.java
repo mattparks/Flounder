@@ -9,7 +9,7 @@ public class FlounderEvents extends IModule {
 
 	private ArrayList<IEvent> events;
 
-	private FlounderEvents() {
+	public FlounderEvents() {
 		super();
 	}
 

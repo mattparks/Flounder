@@ -31,7 +31,7 @@ public class FlounderSound extends IModule {
 	private StreamManager streamManager;
 	private MusicPlayer musicPlayer;
 
-	private FlounderSound() {
+	public FlounderSound() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 		cameraPosition = new Vector3f();
 	}

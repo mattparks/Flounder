@@ -53,7 +53,7 @@ public class FlounderDisplay extends IModule {
 
 	}
 
-	private FlounderDisplay() {
+	public FlounderDisplay() {
 		super(FlounderLogger.class, FlounderProfiler.class);
 
 		this.windowWidth = 1080;

@@ -42,7 +42,7 @@ public class FlounderMouse extends IModule {
 		instance = new FlounderMouse();
 	}
 
-	private FlounderMouse() {
+	public FlounderMouse() {
 		super(FlounderLogger.class, FlounderDisplay.class);
 		mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
 		displaySelected = true;

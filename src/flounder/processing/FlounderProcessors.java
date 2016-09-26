@@ -14,7 +14,7 @@ public class FlounderProcessors extends IModule {
 	private RequestProcessor requestProcessor;
 	private GlRequestProcessor glRequestProcessor;
 
-	private FlounderProcessors() {
+	public FlounderProcessors() {
 		super(FlounderLogger.class, FlounderProfiler.class);
 		requestProcessor = new RequestProcessor();
 		glRequestProcessor = new GlRequestProcessor();

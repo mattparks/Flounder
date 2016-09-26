@@ -23,7 +23,7 @@ public class FlounderLoader extends IModule {
 
 	private Map<Integer, List<Integer>> vaoCache;
 
-	private FlounderLoader() {
+	public FlounderLoader() {
 		super(FlounderProfiler.class);
 		vaoCache = new HashMap<>();
 	}

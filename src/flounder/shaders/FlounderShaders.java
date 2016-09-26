@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class FlounderShaders extends IModule {
 	private final static FlounderShaders instance = new FlounderShaders();
 
-	private FlounderShaders() {
+	public FlounderShaders() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 

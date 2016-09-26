@@ -17,7 +17,7 @@ public class FlounderNetwork extends IModule {
 	private String username;
 	private int port;
 
-	private FlounderNetwork() {
+	public FlounderNetwork() {
 		super(FlounderLogger.class);
 		this.port = PORT;
 	}

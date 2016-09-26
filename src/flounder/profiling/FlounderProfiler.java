@@ -15,7 +15,7 @@ public class FlounderProfiler extends IModule {
 	private FlounderTabMenu primaryTabMenu;
 	private boolean profilerOpen;
 
-	private FlounderProfiler() {
+	public FlounderProfiler() {
 		super(FlounderDisplay.class);
 	}
 

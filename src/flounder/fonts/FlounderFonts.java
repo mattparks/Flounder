@@ -32,7 +32,7 @@ public class FlounderFonts extends IModule {
 
 	private Map<FontType, List<Text>> texts;
 
-	private FlounderFonts() {
+	public FlounderFonts() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 		texts = new HashMap<>();
 	}

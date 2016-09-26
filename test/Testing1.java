@@ -69,8 +69,10 @@ public class Testing1 extends FlounderEntrance {
 						rotation.set(focusRotation);
 						updateViewMatrix();
 
-						FlounderProfiler.add("Camera", "Position", position);
-						FlounderProfiler.add("Camera", "Rotation", rotation);
+						if (FlounderProfiler.isOpen()) {
+							FlounderProfiler.add("Camera", "Position", position);
+							FlounderProfiler.add("Camera", "Rotation", rotation);
+						}
 					}
 
 					private void updateViewMatrix() {
@@ -155,9 +157,10 @@ public class Testing1 extends FlounderEntrance {
 				OpenGlUtils.prepareNewRenderParse(clearColour);
 				Matrix4f.perspectiveMatrix(FlounderEngine.getCamera().getFOV(), FlounderDisplay.getAspectRatio(), FlounderEngine.getCamera().getNearPlane(), FlounderEngine.getCamera().getFarPlane(), projectionMatrix);
 
-				fontRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
-				guiRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
-				aabbRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
+				// TODO
+			//	fontRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
+			//	guiRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
+			//	aabbRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
 			}
 
 			@Override
