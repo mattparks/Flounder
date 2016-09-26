@@ -29,9 +29,9 @@ public class FlounderGuis extends IModule {
 
 	@Override
 	public void init() {
-		container = new GuiScreenContainer();
-		guiTextures = new ArrayList<>();
-		selector = new GuiSelector();
+		this.container = new GuiScreenContainer();
+		this.guiTextures = new ArrayList<>();
+		this.selector = new GuiSelector();
 	}
 
 	@Override
@@ -75,6 +75,11 @@ public class FlounderGuis extends IModule {
 	 */
 	public static GuiSelector getSelector() {
 		return instance.selector;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

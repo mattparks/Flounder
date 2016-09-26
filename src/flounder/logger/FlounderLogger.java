@@ -30,12 +30,12 @@ public class FlounderLogger extends IModule {
 
 	public FlounderLogger() {
 		super(FlounderProfiler.class);
-		saveData = new StringBuilder();
-		linesRecorded = 0;
 	}
 
 	@Override
 	public void init() {
+		this.saveData = new StringBuilder();
+		this.linesRecorded = 0;
 	}
 
 	@Override
@@ -208,6 +208,11 @@ public class FlounderLogger extends IModule {
 		outputFile.close();
 
 		return result;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

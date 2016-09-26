@@ -1,4 +1,4 @@
-package flounder.physics.renderer;
+package flounder.physics.bounding;
 
 import flounder.devices.*;
 import flounder.engine.*;

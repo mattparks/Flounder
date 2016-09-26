@@ -15,7 +15,7 @@ public class FlounderEvents extends IModule {
 
 	@Override
 	public void init() {
-		events = new ArrayList<>();
+		this.events = new ArrayList<>();
 	}
 
 	@Override
@@ -37,6 +37,11 @@ public class FlounderEvents extends IModule {
 
 	@Override
 	public void profile() {
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

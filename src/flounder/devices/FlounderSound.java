@@ -24,22 +24,23 @@ public class FlounderSound extends IModule {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 	private static final FlounderSound instance = new FlounderSound();
 
+	private Vector3f cameraPosition;
 	private long device;
 
-	private Vector3f cameraPosition;
 	private SourcePoolManager sourcePool;
 	private StreamManager streamManager;
 	private MusicPlayer musicPlayer;
 
 	public FlounderSound() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
-		cameraPosition = new Vector3f();
 	}
 
 	@Override
 	public void init() {
+		this.cameraPosition = new Vector3f();
+
 		// Creates the OpenAL contexts.
-		device = alcOpenDevice((ByteBuffer) null);
+		this.device = alcOpenDevice((ByteBuffer) null);
 		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
 		alcMakeContextCurrent(alcCreateContext(device, (IntBuffer) null));
 		createCapabilities(deviceCaps);
@@ -53,10 +54,10 @@ public class FlounderSound extends IModule {
 
 		// Creates a new model and main objects.
 		alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
-		sourcePool = new SourcePoolManager();
-		streamManager = new StreamManager();
+		this.sourcePool = new SourcePoolManager();
+		this.streamManager = new StreamManager();
 		streamManager.start();
-		musicPlayer = new MusicPlayer();
+		this.musicPlayer = new MusicPlayer();
 		musicPlayer.setVolume(MusicPlayer.SOUND_VOLUME);
 	}
 
@@ -131,6 +132,11 @@ public class FlounderSound extends IModule {
 	 */
 	public static MusicPlayer getMusicPlayer() {
 		return instance.musicPlayer;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

@@ -14,11 +14,11 @@ public class RequestProcessor extends Thread {
 	 * Creates a new class for processing resource requests in a separate thread.
 	 */
 	public RequestProcessor() {
-		requestQueue = new RequestQueue();
-		running = true;
 	}
 
 	public void init() {
+		this.requestQueue = new RequestQueue();
+		this.running = true;
 		start();
 	}
 

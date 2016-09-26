@@ -8,6 +8,7 @@ import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.io.*;
+import java.lang.ref.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -21,12 +22,15 @@ import static org.lwjgl.opengl.GL30.*;
 public class FlounderShaders extends IModule {
 	private final static FlounderShaders instance = new FlounderShaders();
 
+	private Map<String, SoftReference<Shader>> loaded;
+
 	public FlounderShaders() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
 	public void init() {
+		this.loaded = new HashMap<>();
 	}
 
 	@Override
@@ -258,7 +262,22 @@ public class FlounderShaders extends IModule {
 		return 0;
 	}
 
+	/**
+	 * Gets a list of loaded shaders.
+	 *
+	 * @return A list of loaded shaders.
+	 */
+	public static Map<String, SoftReference<Shader>> getLoaded() {
+		return instance.loaded;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
+	}
+
 	@Override
 	public void dispose() {
+		// TODO: Delete shaders.
 	}
 }

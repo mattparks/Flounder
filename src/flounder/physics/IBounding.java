@@ -3,7 +3,7 @@ package flounder.physics;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
-import flounder.physics.renderer.*;
+import flounder.physics.bounding.*;
 import flounder.space.*;
 
 /**

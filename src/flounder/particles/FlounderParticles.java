@@ -33,9 +33,9 @@ public class FlounderParticles extends IModule {
 
 	@Override
 	public void init() {
-		particleSystems = new ArrayList<>();
-		particles = new ArrayList<>();
-		deadParticles = new ArrayList<>();
+		this.particleSystems = new ArrayList<>();
+		this.particles = new ArrayList<>();
+		this.deadParticles = new ArrayList<>();
 	}
 
 	@Override
@@ -145,6 +145,11 @@ public class FlounderParticles extends IModule {
 		StructureBasic<Particle> list = new StructureBasic<>();
 		list.add(particle);
 		instance.particles.add(list);
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

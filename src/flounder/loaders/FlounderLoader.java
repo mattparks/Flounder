@@ -25,11 +25,11 @@ public class FlounderLoader extends IModule {
 
 	public FlounderLoader() {
 		super(FlounderProfiler.class);
-		vaoCache = new HashMap<>();
 	}
 
 	@Override
 	public void init() {
+		this.vaoCache = new HashMap<>();
 	}
 
 	@Override
@@ -399,6 +399,11 @@ public class FlounderLoader extends IModule {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

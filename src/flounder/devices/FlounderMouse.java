@@ -18,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Manages the creation, updating and destruction of the mouse.
  */
 public class FlounderMouse extends IModule {
-	private static FlounderMouse instance;
+	private static final FlounderMouse instance = new FlounderMouse();
 
 	private int mouseButtons[];
 	private float lastMousePositionX;
@@ -38,23 +38,20 @@ public class FlounderMouse extends IModule {
 	private GLFWCursorPosCallback callbackCursorPos;
 	private GLFWCursorEnterCallback callbackCursorEnter;
 
-	static {
-		instance = new FlounderMouse();
-	}
-
 	public FlounderMouse() {
 		super(FlounderLogger.class, FlounderDisplay.class);
-		mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
-		displaySelected = true;
-		mousePositionX = 0.5f;
-		mousePositionY = 0.5f;
-
-		cursorDisabled = false;
-		lastCursorDisabled = false;
 	}
 
 	@Override
 	public void init() {
+		this.mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
+		this.displaySelected = true;
+		this.mousePositionX = 0.5f;
+		this.mousePositionY = 0.5f;
+
+		this.cursorDisabled = false;
+		this.lastCursorDisabled = false;
+
 		// Sets the mouse callbacks.
 		glfwSetScrollCallback(FlounderDisplay.getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
@@ -241,6 +238,11 @@ public class FlounderMouse extends IModule {
 	 */
 	public static boolean isDisplaySelected() {
 		return instance.displaySelected;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

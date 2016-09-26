@@ -1,10 +1,13 @@
 package flounder.engine;
 
+import java.util.*;
+
 /**
  * A simple interface that can be applied anywhere.
  */
 public abstract class IModule<T extends IModule> {
 	private final Class<T>[] requires;
+	public List<IModule> usedby;
 
 	/**
 	 * Creates a new abstract module.
@@ -13,6 +16,7 @@ public abstract class IModule<T extends IModule> {
 	 */
 	public IModule(Class<T>... requires) {
 		this.requires = requires;
+		this.usedby = new ArrayList<>();
 		FlounderEngine.registerModule(this);
 	}
 
@@ -39,6 +43,13 @@ public abstract class IModule<T extends IModule> {
 	 * Profiles the module.
 	 */
 	public abstract void profile();
+
+	/**
+	 * Gets the current module instance.
+	 *
+	 * @return The current module instance.
+	 */
+	public abstract IModule getInstance();
 
 	/**
 	 * Disposes the module.

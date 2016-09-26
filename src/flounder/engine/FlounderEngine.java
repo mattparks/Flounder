@@ -65,14 +65,18 @@ public class FlounderEngine extends Thread {
 	}
 
 	public static boolean containsModule(IModule module) {
+		return containsModule(module.getClass());
+	}
+
+	public static boolean containsModule(Class object) {
 		for (IModule m : unregistedModules) {
-			if (m.getClass().getName().equals(module.getClass().getName())) {
+			if (m.getClass().getName().equals(object.getName())) {
 				return true;
 			}
 		}
 
 		for (IModule m : activeModules) {
-			if (m.getClass().getName().equals(module.getClass().getName())) {
+			if (m.getClass().getName().equals(object.getName())) {
 				return true;
 			}
 		}
@@ -81,26 +85,27 @@ public class FlounderEngine extends Thread {
 	}
 
 	public static void registerModule(IModule module) {
-		if (containsModule(module)) {
+		if (module == null || containsModule(module)) {
 			return;
 		}
-
-		String data = "";
-
-		for (int i = 0; i < module.getRequires().length; i++) {
-			data += module.getRequires()[i].getName() + ((i == module.getRequires().length - 1) ? "" : ", ");
-		}
-
-		System.out.println("[" + module.getClass().getName() + "]: " + data);
 
 		unregistedModules.add(module);
 
 		for (Class required : module.getRequires()) {
-			try {
-				required.newInstance(); // Should be registered from the super constructor.
-			} catch (IllegalAccessException | InstantiationException e) {
-				e.printStackTrace();
-				return;
+			if (!module.getClass().getName().equals(required.getName()) && !containsModule(required)) {
+				IModule requiredModule = null;
+
+				try {
+					requiredModule = (IModule) required.newInstance(); // Should be registered from the super constructor.
+				} catch (IllegalAccessException | InstantiationException e) {
+					e.printStackTrace();
+				}
+
+				if (requiredModule != null && requiredModule.getInstance() != null && !module.getClass().getName().equals(requiredModule.getClass().getName())) {
+					requiredModule.getInstance().usedby.add(module);
+				} else {
+					System.err.println("Null instance for (" + module.getClass().getName() + "): " + required.getName());
+				}
 			}
 		}
 	}
@@ -124,8 +129,6 @@ public class FlounderEngine extends Thread {
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
 		version = new Version("1.09.22");
 
-		FlounderDisplay.test();
-
 		this.fpsLimit = fpsLimit;
 		this.closedRequested = false;
 		this.delta = new Delta();
@@ -136,6 +139,7 @@ public class FlounderEngine extends Thread {
 
 	protected void loadEntrance(FlounderEntrance entrance) {
 		this.entrance = entrance;
+		FlounderDisplay.test();
 	}
 
 	/**
@@ -178,6 +182,18 @@ public class FlounderEngine extends Thread {
 		while (iterator.hasNext()) {
 			IModule current = iterator.next();
 
+			{
+				String requires = "";
+				for (int i = 0; i < current.getRequires().length; i++) {
+					requires += current.getRequires()[i].getSimpleName() + ((i == current.getRequires().length - 1) ? "" : ", ");
+				}
+				String used = "";
+				for (int i = 0; i < current.usedby.size(); i++) {
+					used += current.usedby.get(i).getClass().getSimpleName() + ((i == current.usedby.size() - 1) ? "" : ", ");
+				}
+				System.out.println(FlounderLogger.ANSI_PURPLE + "[" + current.getClass().getSimpleName() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")," + FlounderLogger.ANSI_BLUE + " Used By(" + used + ");" + FlounderLogger.ANSI_RESET);
+			}
+
 			if (initialized) {
 				current.init();
 			}
@@ -217,7 +233,7 @@ public class FlounderEngine extends Thread {
 				entrance.update();
 
 				if (timerLog.isPassedTime()) {
-					FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
+//					FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
 					timerLog.resetStartTime();
 				}
 

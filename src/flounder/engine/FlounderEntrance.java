@@ -7,7 +7,7 @@ import flounder.resources.*;
 /**
  * A abstract class used to build a game out of.
  */
-public abstract class FlounderEntrance extends FlounderEngine {
+public abstract class FlounderEntrance<T extends IModule> extends FlounderEngine {
 	protected ICamera camera;
 	protected IRendererMaster renderer;
 	protected IManagerGUI managerGUI;
@@ -32,12 +32,25 @@ public abstract class FlounderEntrance extends FlounderEngine {
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param fullscreen If the window will start fullscreen.
 	 * @param fpsLimit The maximum FPS the engine can render at.
+	 * @param requires Classes the module depends on.
 	 */
-	public FlounderEntrance(ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI, int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, int fpsLimit) {
+	public FlounderEntrance(ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI, int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, int fpsLimit, Class<T>... requires) {
 		super(width, height, title, icons, vsync, antialiasing, samples, fullscreen, fpsLimit);
 		this.camera = camera;
 		this.renderer = renderer;
 		this.managerGUI = managerGUI;
+
+		for (Class required : requires) {
+			if (!FlounderEngine.containsModule(required) && !getClass().getName().equals(required.getName())) {
+				IModule requiredModule = null;
+
+				try {
+					requiredModule = (IModule) required.newInstance(); // Should be registered from the super constructor.
+				} catch (IllegalAccessException | InstantiationException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 		super.loadEntrance(this);
 

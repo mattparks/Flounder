@@ -1,4 +1,4 @@
-package flounder.physics.renderer;
+package flounder.physics.bounding;
 
 import flounder.devices.*;
 import flounder.engine.*;
@@ -22,13 +22,13 @@ public class FlounderBounding extends IModule {
 
 	public FlounderBounding() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderLoader.class);
-		renderShapes = new HashMap<>();
-		renders = true;
-		aabbCount = 0;
 	}
 
 	@Override
 	public void init() {
+		this.renderShapes = new HashMap<>();
+		this.renders = true;
+		this.aabbCount = 0;
 	}
 
 	@Override
@@ -82,6 +82,11 @@ public class FlounderBounding extends IModule {
 	 */
 	protected static void clear() {
 		instance.renderShapes.clear();
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

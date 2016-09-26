@@ -20,13 +20,13 @@ public class FlounderJoysticks extends IModule {
 
 	public FlounderJoysticks() {
 		super(FlounderLogger.class);
-		joystickAxes = new FloatBuffer[GLFW_JOYSTICK_LAST];
-		joystickButtons = new ByteBuffer[GLFW_JOYSTICK_LAST];
-		joystickNames = new String[GLFW_JOYSTICK_LAST];
 	}
 
 	@Override
 	public void init() {
+		this.joystickAxes = new FloatBuffer[GLFW_JOYSTICK_LAST];
+		this.joystickButtons = new ByteBuffer[GLFW_JOYSTICK_LAST];
+		this.joystickNames = new String[GLFW_JOYSTICK_LAST];
 	}
 
 	@Override
@@ -130,6 +130,11 @@ public class FlounderJoysticks extends IModule {
 	 */
 	public static int getCountButtons(int joystick) {
 		return instance.joystickButtons[joystick].capacity();
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

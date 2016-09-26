@@ -55,7 +55,10 @@ public class FlounderDisplay extends IModule {
 
 	public FlounderDisplay() {
 		super(FlounderLogger.class, FlounderProfiler.class);
+	}
 
+	@Override
+	public void init() {
 		this.windowWidth = 1080;
 		this.windowHeight = 720;
 		this.title = "Testing 1";
@@ -73,10 +76,7 @@ public class FlounderDisplay extends IModule {
 		//	this.antialiasing = antialiasing;
 		//	this.samples = samples;
 		//	this.fullscreen = fullscreen;
-	}
 
-	@Override
-	public void init() {
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
 			FlounderLogger.error("Could not init GLFW!");
@@ -524,6 +524,11 @@ public class FlounderDisplay extends IModule {
 	 */
 	public static float getTime() {
 		return (float) (glfwGetTime() * 1000.0f);
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

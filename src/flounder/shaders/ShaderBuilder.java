@@ -4,14 +4,11 @@ import flounder.logger.*;
 import flounder.processing.*;
 
 import java.lang.ref.*;
-import java.util.*;
 
 /**
  * A class capable of setting up a {@link flounder.shaders.Shader}.
  */
 public class ShaderBuilder {
-	private static Map<String, SoftReference<Shader>> loadedModels = new HashMap<>();
-
 	private String shaderName;
 	private ShaderType[] shaderTypes;
 
@@ -42,17 +39,17 @@ public class ShaderBuilder {
 	 * @return The shader that has been created.
 	 */
 	public Shader create() {
-		SoftReference<Shader> ref = loadedModels.get(shaderName);
+		SoftReference<Shader> ref = FlounderShaders.getLoaded().get(shaderName);
 		Shader data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(shaderName + " is being loaded into the shader builder right now!");
-			loadedModels.remove(shaderName);
+			FlounderShaders.getLoaded().remove(shaderName);
 			data = new Shader();
 			ShaderLoadRequest request = new ShaderLoadRequest(data, this, false);
 			request.doResourceRequest();
 			request.executeGlRequest();
-			loadedModels.put(shaderName, new SoftReference<>(data));
+			FlounderShaders.getLoaded().put(shaderName, new SoftReference<>(data));
 		}
 
 		return data;
@@ -64,15 +61,15 @@ public class ShaderBuilder {
 	 * @return The model.
 	 */
 	public Shader createInBackground() {
-		SoftReference<Shader> ref = loadedModels.get(shaderName);
+		SoftReference<Shader> ref = FlounderShaders.getLoaded().get(shaderName);
 		Shader data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(shaderName + " is being loaded into the shader builder in the background!");
-			loadedModels.remove(shaderName);
+			FlounderShaders.getLoaded().remove(shaderName);
 			data = new Shader();
 			FlounderProcessors.sendRequest(new ShaderLoadRequest(data, this, true));
-			loadedModels.put(shaderName, new SoftReference<>(data));
+			FlounderShaders.getLoaded().put(shaderName, new SoftReference<>(data));
 		}
 
 		return data;
@@ -84,17 +81,17 @@ public class ShaderBuilder {
 	 * @return The shader.
 	 */
 	public Shader createInSecondThread() {
-		SoftReference<Shader> ref = loadedModels.get(shaderName);
+		SoftReference<Shader> ref = FlounderShaders.getLoaded().get(shaderName);
 		Shader data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(shaderName + " is being loaded into the shader builder in separate thread!");
-			loadedModels.remove(shaderName);
+			FlounderShaders.getLoaded().remove(shaderName);
 			data = new Shader();
 			ShaderLoadRequest request = new ShaderLoadRequest(data, this, false);
 			request.doResourceRequest();
 			FlounderProcessors.sendGLRequest(request);
-			loadedModels.put(shaderName, new SoftReference<>(data));
+			FlounderShaders.getLoaded().put(shaderName, new SoftReference<>(data));
 		}
 
 		return data;

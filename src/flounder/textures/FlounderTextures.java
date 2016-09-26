@@ -28,11 +28,11 @@ public class FlounderTextures extends IModule {
 
 	public FlounderTextures() {
 		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
-		textureCache = new ArrayList<>();
 	}
 
 	@Override
 	public void init() {
+		this.textureCache = new ArrayList<>();
 	}
 
 	@Override
@@ -163,6 +163,11 @@ public class FlounderTextures extends IModule {
 	public static void deleteTexture(int textureID) {
 		instance.textureCache.remove(textureID);
 		glDeleteTextures(textureID);
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

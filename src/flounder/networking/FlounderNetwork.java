@@ -19,12 +19,12 @@ public class FlounderNetwork extends IModule {
 
 	public FlounderNetwork() {
 		super(FlounderLogger.class);
-		this.port = PORT;
 	}
 
 	@Override
 	public void init() {
-		username = "USERNAME" + ((int) (Math.random() * 10000));
+		this.port = PORT;
+		this.username = "USERNAME" + ((int) (Math.random() * 10000));
 	}
 
 	@Override
@@ -102,6 +102,11 @@ public class FlounderNetwork extends IModule {
 
 	public static String getUsername() {
 		return instance.username;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

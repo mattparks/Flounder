@@ -6,14 +6,11 @@ import flounder.processing.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
-import java.util.*;
 
 /**
  * A class capable of setting up a {@link flounder.models.Model}.
  */
 public class ModelBuilder {
-	private static Map<String, SoftReference<Model>> loadedModels = new HashMap<>();
-
 	private MyFile file;
 	private LoadManual loadManual;
 
@@ -41,17 +38,17 @@ public class ModelBuilder {
 	 * @return The model that has been created.
 	 */
 	public Model create() {
-		SoftReference<Model> ref = loadedModels.get(getPath());
+		SoftReference<Model> ref = FlounderModels.getLoaded().get(getPath());
 		Model data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(getPath() + " is being loaded into the model builder right now!");
-			loadedModels.remove(getPath());
+			FlounderModels.getLoaded().remove(getPath());
 			data = new Model();
 			ModelLoadRequest request = new ModelLoadRequest(data, this, false);
 			request.doResourceRequest();
 			request.executeGlRequest();
-			loadedModels.put(getPath(), new SoftReference<>(data));
+			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(data));
 		}
 
 		return data;
@@ -63,15 +60,15 @@ public class ModelBuilder {
 	 * @return The model.
 	 */
 	public Model createInBackground() {
-		SoftReference<Model> ref = loadedModels.get(getPath());
+		SoftReference<Model> ref = FlounderModels.getLoaded().get(getPath());
 		Model data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(getPath() + " is being loaded into the model builder in the background!");
-			loadedModels.remove(getPath());
+			FlounderModels.getLoaded().remove(getPath());
 			data = new Model();
 			FlounderProcessors.sendRequest(new ModelLoadRequest(data, this, true));
-			loadedModels.put(getPath(), new SoftReference<>(data));
+			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(data));
 		}
 
 		return data;
@@ -83,17 +80,17 @@ public class ModelBuilder {
 	 * @return The model.
 	 */
 	public Model createInSecondThread() {
-		SoftReference<Model> ref = loadedModels.get(getPath());
+		SoftReference<Model> ref = FlounderModels.getLoaded().get(getPath());
 		Model data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(getPath() + " is being loaded into the model builder in separate thread!");
-			loadedModels.remove(getPath());
+			FlounderModels.getLoaded().remove(getPath());
 			data = new Model();
 			ModelLoadRequest request = new ModelLoadRequest(data, this, false);
 			request.doResourceRequest();
 			FlounderProcessors.sendGLRequest(request);
-			loadedModels.put(getPath(), new SoftReference<>(data));
+			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(data));
 		}
 
 		return data;
@@ -125,19 +122,57 @@ public class ModelBuilder {
 		return loadManual;
 	}
 
+	/**
+	 * A interface used when manually loading model data.
+	 */
 	public interface LoadManual {
+		/**
+		 * Gets the manual model name.
+		 *
+		 * @return The manual model name.
+		 */
 		String getModelName();
 
+		/**
+		 * Gets the manual model vertices.
+		 *
+		 * @return The manual model vertices.
+		 */
 		float[] getVertices();
 
+		/**
+		 * Gets the manual model texture.
+		 *
+		 * @return The manual model texture.
+		 */
 		float[] getTextureCoords();
 
+		/**
+		 * Gets the manual model normals.
+		 *
+		 * @return The manual model normals.
+		 */
 		float[] getNormals();
 
+		/**
+		 * Gets the manual model tangents.
+		 *
+		 * @return The manual model tangents.
+		 */
 		float[] getTangents();
 
+		/**
+		 * Gets the manual model indices.
+		 *
+		 * @return The manual model indices.
+		 */
 		int[] getIndices();
 
+		/**
+		 * Gets the manual model materials.
+		 *
+		 * @return The manual model materials.
+		 */
 		Material[] getMaterials();
 	}
 }

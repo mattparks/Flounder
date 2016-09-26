@@ -18,11 +18,12 @@ public class FlounderKeyboard extends IModule {
 
 	public FlounderKeyboard() {
 		super(FlounderLogger.class, FlounderDisplay.class);
-		keyboardKeys = new int[GLFW_KEY_LAST + 1];
 	}
 
 	@Override
 	public void init() {
+		this.keyboardKeys = new int[GLFW_KEY_LAST + 1];
+
 		// Sets the keyboards callbacks.
 		glfwSetKeyCallback(FlounderDisplay.getWindow(), callbackKey = new GLFWKeyCallback() {
 			@Override
@@ -54,6 +55,11 @@ public class FlounderKeyboard extends IModule {
 	 */
 	public static boolean getKey(int key) {
 		return instance.keyboardKeys[key] != GLFW_RELEASE;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

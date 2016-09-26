@@ -5,13 +5,16 @@ import flounder.fonts.*;
 import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.inputs.*;
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
-import flounder.physics.renderer.*;
+import flounder.physics.bounding.*;
 import flounder.profiling.*;
 import flounder.resources.*;
+import flounder.shaders.*;
 import flounder.space.*;
+import flounder.textures.*;
 import flounder.visual.*;
 import sun.reflect.generics.reflectiveObjects.*;
 
@@ -158,9 +161,9 @@ public class Testing1 extends FlounderEntrance {
 				Matrix4f.perspectiveMatrix(FlounderEngine.getCamera().getFOV(), FlounderDisplay.getAspectRatio(), FlounderEngine.getCamera().getNearPlane(), FlounderEngine.getCamera().getFarPlane(), projectionMatrix);
 
 				// TODO
-			//	fontRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
-			//	guiRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
-			//	aabbRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
+				//	fontRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
+				//	guiRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
+				//	aabbRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
 			}
 
 			@Override
@@ -206,7 +209,8 @@ public class Testing1 extends FlounderEntrance {
 	private Testing1(ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI) {
 		super(
 				camera, renderer, managerGUI,
-				1080, 720, "Entity Editor", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, true, true, 8, false, 60
+				1080, 720, "Entity Editor", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, true, true, 8, false, 60,
+				FlounderLogger.class, FlounderKeyboard.class, FlounderTextures.class, FlounderShaders.class, FlounderGuis.class
 		);
 	}
 

@@ -16,13 +16,14 @@ public class FlounderProcessors extends IModule {
 
 	public FlounderProcessors() {
 		super(FlounderLogger.class, FlounderProfiler.class);
-		requestProcessor = new RequestProcessor();
-		glRequestProcessor = new GlRequestProcessor();
 	}
 
 	@Override
 	public void init() {
+		this.requestProcessor = new RequestProcessor();
+		this.glRequestProcessor = new GlRequestProcessor();
 		requestProcessor.init();
+		glRequestProcessor.init();
 	}
 
 	@Override
@@ -53,6 +54,11 @@ public class FlounderProcessors extends IModule {
 	 */
 	public static void sendGLRequest(GlRequest request) {
 		instance.glRequestProcessor.addRequestToQueue(request);
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

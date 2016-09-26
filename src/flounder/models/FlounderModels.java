@@ -9,6 +9,7 @@ import flounder.processing.*;
 import flounder.resources.*;
 
 import java.io.*;
+import java.lang.ref.*;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -19,12 +20,15 @@ import static org.lwjgl.opengl.GL30.*;
 public class FlounderModels extends IModule {
 	private static final FlounderModels instance = new FlounderModels();
 
+	private Map<String, SoftReference<Model>> loaded;
+
 	public FlounderModels() {
 		super(FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
 	}
 
 	@Override
 	public void init() {
+		this.loaded = new HashMap<>();
 	}
 
 	@Override
@@ -218,7 +222,22 @@ public class FlounderModels extends IModule {
 		v2.addTangent(tangent);
 	}
 
+	/**
+	 * Gets a list of loaded models.
+	 *
+	 * @return A list of loaded models.
+	 */
+	public static Map<String, SoftReference<Model>> getLoaded() {
+		return instance.loaded;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
+	}
+
 	@Override
 	public void dispose() {
+		// TODO: Dispose models.
 	}
 }

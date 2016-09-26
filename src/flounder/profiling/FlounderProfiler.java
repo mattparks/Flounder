@@ -22,7 +22,7 @@ public class FlounderProfiler extends IModule {
 	@Override
 	public void init() {
 		String title = FlounderDisplay.getTitle() + " Profiler";
-		profilerJFrame = new JFrame(title);
+		this.profilerJFrame = new JFrame(title);
 		profilerJFrame.setSize(420, 720);
 		profilerJFrame.setResizable(true);
 
@@ -45,10 +45,10 @@ public class FlounderProfiler extends IModule {
 			}
 		});
 
-		primaryTabMenu = new FlounderTabMenu();
-		profilerJFrame.add(primaryTabMenu);
+		this.primaryTabMenu = new FlounderTabMenu();
+		this.profilerJFrame.add(primaryTabMenu);
 
-		profilerOpen = false;
+		this.profilerOpen = false;
 
 		// Opens the profiler if not running from jar.
 		//	toggle(!FlounderLogger.RUNNING_FROM_JAR); // TODO
@@ -107,6 +107,11 @@ public class FlounderProfiler extends IModule {
 	 */
 	public static boolean isOpen() {
 		return instance.profilerOpen;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
 	}
 
 	@Override

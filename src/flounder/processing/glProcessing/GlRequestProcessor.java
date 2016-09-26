@@ -14,10 +14,10 @@ public class GlRequestProcessor {
 	 * Creates a new class for processing OpenGL requests in a separate thread.
 	 */
 	public GlRequestProcessor() {
-		requestQueue = new GlRequestQueue();
 	}
 
 	public void init() {
+		this.requestQueue = new GlRequestQueue();
 	}
 
 	public void update() {

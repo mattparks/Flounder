@@ -15,7 +15,7 @@ import java.util.*;
 public class FlounderMaterials extends IModule {
 	private static final FlounderMaterials instance = new FlounderMaterials();
 
-	private Map<String, SoftReference<List<Material>>> loaded = new HashMap<>();
+	private Map<String, SoftReference<List<Material>>> loaded;
 
 	public FlounderMaterials() {
 		super(FlounderLogger.class);
@@ -23,6 +23,7 @@ public class FlounderMaterials extends IModule {
 
 	@Override
 	public void init() {
+		this.loaded = new HashMap<>();
 	}
 
 	@Override
@@ -130,8 +131,22 @@ public class FlounderMaterials extends IModule {
 		return data;
 	}
 
+	/**
+	 * Gets a list of loaded models.
+	 *
+	 * @return A list of loaded models.
+	 */
+	public static Map<String, SoftReference<List<Material>>> getLoaded() {
+		return instance.loaded;
+	}
+
+	@Override
+	public IModule getInstance() {
+		return instance;
+	}
+
 	@Override
 	public void dispose() {
-
+		// TODO: Dispose materials.
 	}
 }
