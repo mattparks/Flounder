@@ -14,14 +14,17 @@ import java.util.*;
  * A manager for Boundings that want to be renderer.
  */
 public class FlounderBounding extends IModule {
-	private static final FlounderBounding instance = new FlounderBounding();
+	private static final FlounderBounding instance = new FlounderBounding(true);
 
 	private Map<Model, List<IBounding>> renderShapes;
 	private boolean renders;
 	private int aabbCount;
 
-	public FlounderBounding() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderLoader.class);
+	/**
+	 * Creates a new bounding manager.
+	 */
+	public FlounderBounding(boolean isInstance) {
+		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderLoader.class);
 	}
 
 	@Override

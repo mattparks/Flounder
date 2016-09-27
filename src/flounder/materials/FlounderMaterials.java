@@ -13,12 +13,15 @@ import java.util.*;
  * Class capable of loading MTL files into Materials.
  */
 public class FlounderMaterials extends IModule {
-	private static final FlounderMaterials instance = new FlounderMaterials();
+	private static final FlounderMaterials instance = new FlounderMaterials(true);
 
 	private Map<String, SoftReference<List<Material>>> loaded;
 
-	public FlounderMaterials() {
-		super(FlounderLogger.class);
+	/**
+	 * Creates a new material loader class.
+	 */
+	public FlounderMaterials(boolean isInstance) {
+		super(isInstance, FlounderLogger.class);
 	}
 
 	@Override

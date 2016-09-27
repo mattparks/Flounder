@@ -15,7 +15,7 @@ import java.util.*;
  * A manager that manages GUI textures in a container.
  */
 public class FlounderGuis extends IModule {
-	private static final FlounderGuis instance = new FlounderGuis();
+	private static final FlounderGuis instance = new FlounderGuis(true);
 
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
@@ -23,8 +23,11 @@ public class FlounderGuis extends IModule {
 	private List<GuiTexture> guiTextures;
 	private GuiSelector selector;
 
-	public FlounderGuis() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderJoysticks.class, FlounderSound.class, FlounderLoader.class, FlounderFonts.class, FlounderTextures.class);
+	/**
+	 * Creates a new GUI manager.
+	 */
+	public FlounderGuis(boolean isInstance) {
+		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderJoysticks.class, FlounderSound.class, FlounderLoader.class, FlounderFonts.class, FlounderTextures.class);
 	}
 
 	@Override

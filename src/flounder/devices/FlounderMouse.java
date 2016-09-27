@@ -18,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Manages the creation, updating and destruction of the mouse.
  */
 public class FlounderMouse extends IModule {
-	private static final FlounderMouse instance = new FlounderMouse();
+	private static final FlounderMouse instance = new FlounderMouse(true);
 
 	private int mouseButtons[];
 	private float lastMousePositionX;
@@ -38,8 +38,11 @@ public class FlounderMouse extends IModule {
 	private GLFWCursorPosCallback callbackCursorPos;
 	private GLFWCursorEnterCallback callbackCursorEnter;
 
-	public FlounderMouse() {
-		super(FlounderLogger.class, FlounderDisplay.class);
+	/**
+	 * Creates a new GLFW mouse.
+	 */
+	public FlounderMouse(boolean isInstance) {
+		super(isInstance, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override

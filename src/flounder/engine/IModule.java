@@ -1,23 +1,24 @@
 package flounder.engine;
 
-import java.util.*;
-
 /**
  * A simple interface that can be applied anywhere.
  */
 public abstract class IModule<T extends IModule> {
 	private final Class<T>[] requires;
-	public List<IModule> usedby;
 
 	/**
 	 * Creates a new abstract module.
 	 *
+	 * @param isInstance If this object is the instance for the module type.
 	 * @param requires Classes the module depends on.
 	 */
-	public IModule(Class<T>... requires) {
+	public IModule(boolean isInstance, Class<T>... requires) {
 		this.requires = requires;
-		this.usedby = new ArrayList<>();
-		FlounderEngine.registerModule(this);
+
+		// Only register if this instance is the same of the modules instance.
+		if (isInstance) {
+			FlounderEngine.registerModule(this);
+		}
 	}
 
 	/**

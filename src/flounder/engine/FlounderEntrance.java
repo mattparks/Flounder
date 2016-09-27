@@ -40,19 +40,13 @@ public abstract class FlounderEntrance<T extends IModule> extends FlounderEngine
 		this.renderer = renderer;
 		this.managerGUI = managerGUI;
 
-		for (Class required : requires) {
-			if (!FlounderEngine.containsModule(required) && !getClass().getName().equals(required.getName())) {
-				IModule requiredModule = null;
+		super.loadEntrance(this);
 
-				try {
-					requiredModule = (IModule) required.newInstance(); // Should be registered from the super constructor.
-				} catch (IllegalAccessException | InstantiationException e) {
-					e.printStackTrace();
-				}
+		for (Class required : requires) {
+			if (!FlounderEngine.containsModule(required)) {
+				FlounderEngine.registerModule(FlounderEngine.loadModule(required));
 			}
 		}
-
-		super.loadEntrance(this);
 
 		this.focusPosition = new Vector3f();
 		this.focusRotation = new Vector3f();

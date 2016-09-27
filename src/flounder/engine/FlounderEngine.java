@@ -11,6 +11,7 @@ import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -64,11 +65,11 @@ public class FlounderEngine extends Thread {
 		}
 	}
 
-	public static boolean containsModule(IModule module) {
+	protected static boolean containsModule(IModule module) {
 		return containsModule(module.getClass());
 	}
 
-	public static boolean containsModule(Class object) {
+	protected static boolean containsModule(Class object) {
 		for (IModule m : unregistedModules) {
 			if (m.getClass().getName().equals(object.getName())) {
 				return true;
@@ -84,30 +85,41 @@ public class FlounderEngine extends Thread {
 		return false;
 	}
 
-	public static void registerModule(IModule module) {
+	protected static IModule loadModule(Class object) {
+		try {
+			Class[] componentTypes = new Class[]{boolean.class};
+			@SuppressWarnings("unchecked") Constructor componentConstructor = object.getConstructor(componentTypes);
+			Object[] componentParameters = new Object[]{false}; // False because this is not the main instance.
+			return (IModule) componentConstructor.newInstance(componentParameters);
+		} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+			System.err.println("IModule class path " + object.getName() + " constructor could not be found!");
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	protected static void registerModule(IModule module) {
 		if (module == null || containsModule(module)) {
 			return;
 		}
 
-		unregistedModules.add(module);
+		List<IModule> toRegister = new ArrayList<>();
 
 		for (Class required : module.getRequires()) {
 			if (!module.getClass().getName().equals(required.getName()) && !containsModule(required)) {
-				IModule requiredModule = null;
+				IModule requiredModule = loadModule(required);
 
-				try {
-					requiredModule = (IModule) required.newInstance(); // Should be registered from the super constructor.
-				} catch (IllegalAccessException | InstantiationException e) {
-					e.printStackTrace();
-				}
-
-				if (requiredModule != null && requiredModule.getInstance() != null && !module.getClass().getName().equals(requiredModule.getClass().getName())) {
-					requiredModule.getInstance().usedby.add(module);
+				if (requiredModule != null && requiredModule.getInstance() != null) {
+					toRegister.add(requiredModule.getInstance());
 				} else {
 					System.err.println("Null instance for (" + module.getClass().getName() + "): " + required.getName());
 				}
 			}
 		}
+
+		toRegister.forEach(FlounderEngine::registerModule);
+		unregistedModules.add(module);
 	}
 
 	/**
@@ -187,11 +199,7 @@ public class FlounderEngine extends Thread {
 				for (int i = 0; i < current.getRequires().length; i++) {
 					requires += current.getRequires()[i].getSimpleName() + ((i == current.getRequires().length - 1) ? "" : ", ");
 				}
-				String used = "";
-				for (int i = 0; i < current.usedby.size(); i++) {
-					used += current.usedby.get(i).getClass().getSimpleName() + ((i == current.usedby.size() - 1) ? "" : ", ");
-				}
-				System.out.println(FlounderLogger.ANSI_PURPLE + "[" + current.getClass().getSimpleName() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")," + FlounderLogger.ANSI_BLUE + " Used By(" + used + ");" + FlounderLogger.ANSI_RESET);
+				System.out.println(FlounderLogger.ANSI_PURPLE + "[" + current.getClass().getSimpleName() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
 			}
 
 			if (initialized) {

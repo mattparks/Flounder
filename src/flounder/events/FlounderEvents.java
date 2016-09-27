@@ -5,12 +5,15 @@ import flounder.engine.*;
 import java.util.*;
 
 public class FlounderEvents extends IModule {
-	private static final FlounderEvents instance = new FlounderEvents();
+	private static final FlounderEvents instance = new FlounderEvents(true);
 
 	private ArrayList<IEvent> events;
 
-	public FlounderEvents() {
-		super();
+	/**
+	 * Creates a new event manager.
+	 */
+	public FlounderEvents(boolean isInstance) {
+		super(isInstance);
 	}
 
 	@Override

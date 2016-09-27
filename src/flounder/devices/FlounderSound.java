@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class FlounderSound extends IModule {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
-	private static final FlounderSound instance = new FlounderSound();
+	private static final FlounderSound instance = new FlounderSound(true);
 
 	private Vector3f cameraPosition;
 	private long device;
@@ -31,8 +31,11 @@ public class FlounderSound extends IModule {
 	private StreamManager streamManager;
 	private MusicPlayer musicPlayer;
 
-	public FlounderSound() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+	/**
+	 * Creates a new OpenGL sound manager.
+	 */
+	public FlounderSound(boolean isInstance) {
+		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override

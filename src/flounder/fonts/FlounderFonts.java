@@ -15,7 +15,7 @@ import java.util.*;
  * A class that holds a list of available engine fonts and texts currently on the screen.
  */
 public class FlounderFonts extends IModule {
-	private static final FlounderFonts instance = new FlounderFonts();
+	private static final FlounderFonts instance = new FlounderFonts(true);
 
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
@@ -32,8 +32,11 @@ public class FlounderFonts extends IModule {
 
 	private Map<FontType, List<Text>> texts;
 
-	public FlounderFonts() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
+	/**
+	 * Creates a new font manager.
+	 */
+	public FlounderFonts(boolean isInstance) {
+		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
 	@Override

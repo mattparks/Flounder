@@ -10,7 +10,7 @@ import java.util.*;
  * Various utility functions for debugging.
  */
 public class FlounderLogger extends IModule {
-	private final static FlounderLogger instance = new FlounderLogger();
+	private final static FlounderLogger instance = new FlounderLogger(true);
 
 	public static final boolean LOG_TO_CONSOLE = true;
 	public static final boolean LOG_TO_FILE = true;
@@ -28,8 +28,11 @@ public class FlounderLogger extends IModule {
 	private StringBuilder saveData;
 	private int linesRecorded;
 
-	public FlounderLogger() {
-		super(FlounderProfiler.class);
+	/**
+	 * Creates a new logger manager.
+	 */
+	public FlounderLogger(boolean isInstance) {
+		super(isInstance, FlounderProfiler.class);
 	}
 
 	@Override
@@ -72,11 +75,20 @@ public class FlounderLogger extends IModule {
 		}
 
 		if (LOG_TO_CONSOLE) {
-			System.out.println("LOG [" + getDateString() + "]: " + getString(value));
+			if (getString(value).isEmpty()) {
+				System.out.println();
+			} else {
+				System.out.println(ANSI_YELLOW + "LOG [" + getDateString() + "]: " + ANSI_RESET + getString(value));
+			}
 		}
 
 		if (LOG_TO_FILE) {
-			instance.saveData.append("LOG [" + getDateString() + "]: " + getString(value) + "\n");
+			if (getString(value).isEmpty()) {
+				instance.saveData.append("\n");
+			} else {
+				instance.saveData.append("LOG [" + getDateString() + "]: " + getString(value) + "\n");
+			}
+
 			instance.linesRecorded++;
 		}
 	}
@@ -103,7 +115,7 @@ public class FlounderLogger extends IModule {
 			return;
 		}
 
-		System.err.println("WARNING [" + getDateString() + "]: " + getString(value));
+		System.out.println(ANSI_PURPLE + "WARNING [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 
 		if (LOG_TO_FILE) {
 			instance.saveData.append("WARNING [" + getDateString() + "]: " + getString(value) + "\n");
@@ -133,7 +145,7 @@ public class FlounderLogger extends IModule {
 			return;
 		}
 
-		System.err.println("ERROR [" + getDateString() + "]: " + getString(value));
+		System.out.println(ANSI_RED + "ERROR [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 
 		if (LOG_TO_FILE) {
 			instance.saveData.append("ERROR [" + getDateString() + "]: " + getString(value) + "\n");

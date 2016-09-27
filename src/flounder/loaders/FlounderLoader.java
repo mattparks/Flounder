@@ -19,12 +19,15 @@ import static org.lwjgl.opengl.GL33.*;
  * Contains a lot of methods for VAO and VBO data management, and also keeps track of all currently active VAOs and VBOs.
  */
 public class FlounderLoader extends IModule {
-	private static final FlounderLoader instance = new FlounderLoader();
+	private static final FlounderLoader instance = new FlounderLoader(true);
 
 	private Map<Integer, List<Integer>> vaoCache;
 
-	public FlounderLoader() {
-		super(FlounderProfiler.class);
+	/**
+	 * Creates a new OpenGL loader class.
+	 */
+	public FlounderLoader(boolean isInstance) {
+		super(isInstance, FlounderProfiler.class);
 	}
 
 	@Override
