@@ -24,7 +24,6 @@ public class FlounderEngine extends Thread {
 
 	private FlounderEntrance entrance;
 
-	private static final List<IModule> unregistedModules = new ArrayList<>();
 	private static final List<IModule> activeModules = new ArrayList<>();
 
 	private int fpsLimit;
@@ -70,12 +69,6 @@ public class FlounderEngine extends Thread {
 	}
 
 	protected static boolean containsModule(Class object) {
-		for (IModule m : unregistedModules) {
-			if (m.getClass().getName().equals(object.getName())) {
-				return true;
-			}
-		}
-
 		for (IModule m : activeModules) {
 			if (m.getClass().getName().equals(object.getName())) {
 				return true;
@@ -87,11 +80,8 @@ public class FlounderEngine extends Thread {
 
 	protected static IModule loadModule(Class object) {
 		try {
-			Class[] componentTypes = new Class[]{};
-			@SuppressWarnings("unchecked") Constructor componentConstructor = object.getConstructor(componentTypes);
-			Object[] componentParameters = new Object[]{};
-			return (IModule) componentConstructor.newInstance(componentParameters);
-		} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+			return (IModule) object.newInstance();
+		} catch (IllegalAccessException | InstantiationException e) {
 			System.err.println("IModule class path " + object.getName() + " constructor could not be found!");
 			e.printStackTrace();
 		}
@@ -104,22 +94,38 @@ public class FlounderEngine extends Thread {
 			return;
 		}
 
-		List<IModule> toRegister = new ArrayList<>();
+		List<IModule> requirements = new ArrayList<>();
 
 		for (Class required : module.getRequires()) {
 			if (!module.getClass().getName().equals(required.getName()) && !containsModule(required)) {
 				IModule requiredModule = loadModule(required);
 
 				if (requiredModule != null && requiredModule.getInstance() != null) {
-					toRegister.add(requiredModule.getInstance());
+					requirements.add(requiredModule.getInstance());
 				} else {
 					System.err.println("Null instance for (" + module.getClass().getName() + "): " + required.getName());
 				}
 			}
 		}
 
-		unregistedModules.add(module);
-		toRegister.forEach(FlounderEngine::registerModule);
+		// Adds to unregistered list after all requirements.
+		activeModules.add(module.getInstance());
+		requirements.forEach(FlounderEngine::registerModule);
+		activeModules.remove(module.getInstance());
+		activeModules.add(module.getInstance());
+
+		if (instance.initialized && !module.isInitialized()) {
+			module.init();
+			module.setInitialized(true);
+		}
+
+		{
+			String requires = "";
+			for (int i = 0; i < module.getRequires().length; i++) {
+				requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
+			}
+			System.out.println(FlounderLogger.ANSI_PURPLE + "[" + module.getClass().getSimpleName() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
+		}
 	}
 
 	/**
@@ -151,7 +157,6 @@ public class FlounderEngine extends Thread {
 
 	protected void loadEntrance(FlounderEntrance entrance) {
 		this.entrance = entrance;
-	//	FlounderEngine.registerModule(new FlounderDisplay().getInstance());
 	}
 
 	/**
@@ -184,39 +189,13 @@ public class FlounderEngine extends Thread {
 		}
 	}
 
-	private void updateModuleSets() {
-		if (unregistedModules.isEmpty()) {
-			return;
-		}
-
-		Iterator<IModule> iterator = unregistedModules.iterator();
-
-		while (iterator.hasNext()) {
-			IModule current = iterator.next();
-
-			{
-				String requires = "";
-				for (int i = 0; i < current.getRequires().length; i++) {
-					requires += current.getRequires()[i].getSimpleName() + ((i == current.getRequires().length - 1) ? "" : ", ");
-				}
-				System.out.println(FlounderLogger.ANSI_PURPLE + "[" + current.getClass().getSimpleName() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
-			}
-
-			if (initialized) {
-				current.init();
-			}
-
-			activeModules.add(current);
-			iterator.remove();
-		}
-	}
-
 	private void initEngine() {
 		if (!initialized) {
-			updateModuleSets();
-
 			for (IModule module : activeModules) {
-				module.init();
+				if (!module.isInitialized()) {
+					module.init();
+					module.setInitialized(true);
+				}
 			}
 
 			entrance.managerGUI.init();
@@ -230,8 +209,6 @@ public class FlounderEngine extends Thread {
 
 	private void updateEngine() {
 		if (initialized) {
-			updateModuleSets();
-
 			for (IModule module : activeModules) {
 				module.update();
 			}

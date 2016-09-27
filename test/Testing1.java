@@ -210,7 +210,7 @@ public class Testing1 extends FlounderEntrance {
 		super(
 				camera, renderer, managerGUI,
 				1080, 720, "Entity Editor", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, true, true, 8, false, 60,
-				FlounderLogger.class, FlounderDisplay.class, FlounderGuis.class
+				FlounderDisplay.class, FlounderGuis.class, FlounderFonts.class
 		);
 	}
 

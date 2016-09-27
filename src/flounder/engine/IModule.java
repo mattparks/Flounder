@@ -5,6 +5,7 @@ package flounder.engine;
  */
 public abstract class IModule<T extends IModule> {
 	private final Class<T>[] requires;
+	private boolean initialized;
 
 	/**
 	 * Creates a new abstract module.
@@ -13,6 +14,7 @@ public abstract class IModule<T extends IModule> {
 	 */
 	public IModule(Class<T>... requires) {
 		this.requires = requires;
+		this.initialized = false;
 	}
 
 	/**
@@ -30,8 +32,26 @@ public abstract class IModule<T extends IModule> {
 	 *
 	 * @return The classes that the module requires.
 	 */
-	public Class<T>[] getRequires() {
+	protected Class<T>[] getRequires() {
 		return requires;
+	}
+
+	/**
+	 * Gets if the module is initialized.
+	 *
+	 * @return If the module is initialized.
+	 */
+	protected boolean isInitialized() {
+		return initialized;
+	}
+
+	/**
+	 * Sets if the module is initialized.
+	 *
+	 * @param initialized If the module is initialized.
+	 */
+	protected void setInitialized(boolean initialized) {
+		this.initialized = initialized;
 	}
 
 	/**
