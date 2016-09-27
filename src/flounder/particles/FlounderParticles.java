@@ -86,7 +86,7 @@ public class FlounderParticles extends IModule {
 	/**
 	 * Clears all particles from the scene.
 	 */
-	protected static void cleat() {
+	public static void clear() {
 		instance.particles.clear();
 	}
 

@@ -2,6 +2,7 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.engine.*;
+import flounder.events.*;
 import flounder.fonts.*;
 import flounder.loaders.*;
 import flounder.logger.*;
@@ -27,7 +28,7 @@ public class FlounderGuis extends IModule {
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis(boolean isInstance) {
-		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderJoysticks.class, FlounderSound.class, FlounderLoader.class, FlounderFonts.class, FlounderTextures.class);
+		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderJoysticks.class, FlounderEvents.class, FlounderSound.class, FlounderLoader.class, FlounderFonts.class, FlounderTextures.class);
 	}
 
 	@Override
