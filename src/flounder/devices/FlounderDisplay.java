@@ -23,7 +23,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Manages the creation, updating and destruction of the display.
  */
 public class FlounderDisplay extends IModule {
-	private static final FlounderDisplay instance = new FlounderDisplay(true);
+	private static final FlounderDisplay instance = new FlounderDisplay();
 
 	private int windowWidth;
 	private int windowHeight;
@@ -49,15 +49,11 @@ public class FlounderDisplay extends IModule {
 	private GLFWWindowSizeCallback callbackWindowSize;
 	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
-	public static void test() {
-
-	}
-
 	/**
 	 * Creates a new GLFW display.
 	 */
-	public FlounderDisplay(boolean isInstance) {
-		super(isInstance, FlounderLogger.class, FlounderProfiler.class);
+	public FlounderDisplay() {
+		super(FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.profiling.*;
 import flounder.resources.*;
+import flounder.shaders.*;
 import flounder.textures.*;
 
 import java.util.*;
@@ -16,7 +17,7 @@ import java.util.*;
  * A manager that manages GUI textures in a container.
  */
 public class FlounderGuis extends IModule {
-	private static final FlounderGuis instance = new FlounderGuis(true);
+	private static final FlounderGuis instance = new FlounderGuis();
 
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
@@ -27,8 +28,8 @@ public class FlounderGuis extends IModule {
 	/**
 	 * Creates a new GUI manager.
 	 */
-	public FlounderGuis(boolean isInstance) {
-		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderJoysticks.class, FlounderEvents.class, FlounderSound.class, FlounderLoader.class, FlounderFonts.class, FlounderTextures.class);
+	public FlounderGuis() {
+		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderEvents.class, FlounderFonts.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
 	}
 
 	@Override

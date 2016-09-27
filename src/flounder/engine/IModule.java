@@ -9,16 +9,10 @@ public abstract class IModule<T extends IModule> {
 	/**
 	 * Creates a new abstract module.
 	 *
-	 * @param isInstance If this object is the instance for the module type.
 	 * @param requires Classes the module depends on.
 	 */
-	public IModule(boolean isInstance, Class<T>... requires) {
+	public IModule(Class<T>... requires) {
 		this.requires = requires;
-
-		// Only register if this instance is the same of the modules instance.
-		if (isInstance) {
-			FlounderEngine.registerModule(this);
-		}
 	}
 
 	/**

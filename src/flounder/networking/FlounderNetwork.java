@@ -8,7 +8,7 @@ import flounder.networking.packets.*;
  * A manager that manages the current network connections of the engine.
  */
 public class FlounderNetwork extends IModule {
-	private static final FlounderNetwork instance = new FlounderNetwork(true);
+	private static final FlounderNetwork instance = new FlounderNetwork();
 
 	private static final int PORT = 2266;
 
@@ -20,8 +20,8 @@ public class FlounderNetwork extends IModule {
 	/**
 	 * Creates a new network manager.
 	 */
-	public FlounderNetwork(boolean isInstance) {
-		super(isInstance, FlounderLogger.class);
+	public FlounderNetwork() {
+		super(FlounderLogger.class);
 	}
 
 	@Override

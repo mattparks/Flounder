@@ -7,6 +7,7 @@ import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.profiling.*;
 import flounder.resources.*;
+import flounder.shaders.*;
 import flounder.textures.*;
 
 import java.util.*;
@@ -15,7 +16,7 @@ import java.util.*;
  * A class that holds a list of available engine fonts and texts currently on the screen.
  */
 public class FlounderFonts extends IModule {
-	private static final FlounderFonts instance = new FlounderFonts(true);
+	private static final FlounderFonts instance = new FlounderFonts();
 
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
@@ -35,8 +36,8 @@ public class FlounderFonts extends IModule {
 	/**
 	 * Creates a new font manager.
 	 */
-	public FlounderFonts(boolean isInstance) {
-		super(isInstance, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
+	public FlounderFonts() {
+		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
 	}
 
 	@Override

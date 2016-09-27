@@ -9,7 +9,7 @@ import flounder.profiling.*;
  * Manages the all engine request processors.
  */
 public class FlounderProcessors extends IModule {
-	private static final FlounderProcessors instance = new FlounderProcessors(true);
+	private static final FlounderProcessors instance = new FlounderProcessors();
 
 	private RequestProcessor requestProcessor;
 	private GlRequestProcessor glRequestProcessor;
@@ -17,8 +17,8 @@ public class FlounderProcessors extends IModule {
 	/**
 	 * Creates all engine request processors.
 	 */
-	public FlounderProcessors(boolean isInstance) {
-		super(isInstance, FlounderLogger.class, FlounderProfiler.class);
+	public FlounderProcessors() {
+		super(FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override

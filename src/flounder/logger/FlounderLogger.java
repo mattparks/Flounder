@@ -10,7 +10,7 @@ import java.util.*;
  * Various utility functions for debugging.
  */
 public class FlounderLogger extends IModule {
-	private final static FlounderLogger instance = new FlounderLogger(true);
+	private final static FlounderLogger instance = new FlounderLogger();
 
 	public static final boolean LOG_TO_CONSOLE = true;
 	public static final boolean LOG_TO_FILE = true;
@@ -31,8 +31,8 @@ public class FlounderLogger extends IModule {
 	/**
 	 * Creates a new logger manager.
 	 */
-	public FlounderLogger(boolean isInstance) {
-		super(isInstance, FlounderProfiler.class);
+	public FlounderLogger() {
+		super(FlounderProfiler.class);
 	}
 
 	@Override

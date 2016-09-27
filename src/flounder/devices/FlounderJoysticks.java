@@ -12,7 +12,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * Manages the creation, updating and destruction of joysticks.
  */
 public class FlounderJoysticks extends IModule {
-	private static final FlounderJoysticks instance = new FlounderJoysticks(true);
+	private static final FlounderJoysticks instance = new FlounderJoysticks();
 
 	private FloatBuffer joystickAxes[];
 	private ByteBuffer joystickButtons[];
@@ -21,8 +21,8 @@ public class FlounderJoysticks extends IModule {
 	/**
 	 * Creates a new GLFW joystick manager.
 	 */
-	public FlounderJoysticks(boolean isInstance) {
-		super(isInstance, FlounderLogger.class);
+	public FlounderJoysticks() {
+		super(FlounderLogger.class);
 	}
 
 	@Override

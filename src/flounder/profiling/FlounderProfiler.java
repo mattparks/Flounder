@@ -9,7 +9,7 @@ import javax.swing.*;
  * A JFrame that holds profiling tabs and values.
  */
 public class FlounderProfiler extends IModule {
-	private static final FlounderProfiler instance = new FlounderProfiler(true);
+	private static final FlounderProfiler instance = new FlounderProfiler();
 
 	private JFrame profilerJFrame;
 	private FlounderTabMenu primaryTabMenu;
@@ -18,8 +18,8 @@ public class FlounderProfiler extends IModule {
 	/**
 	 * Creates the engines profiler.
 	 */
-	public FlounderProfiler(boolean isInstance) {
-		super(isInstance, FlounderDisplay.class);
+	public FlounderProfiler() {
+		super(FlounderDisplay.class);
 	}
 
 	@Override

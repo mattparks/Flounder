@@ -18,15 +18,15 @@ import static org.lwjgl.opengl.GL30.*;
  * Class capable of loading OBJ files into Models.
  */
 public class FlounderModels extends IModule {
-	private static final FlounderModels instance = new FlounderModels(true);
+	private static final FlounderModels instance = new FlounderModels();
 
 	private Map<String, SoftReference<Model>> loaded;
 
 	/**
 	 * Creates a new model loader class.
 	 */
-	public FlounderModels(boolean isInstance) {
-		super(isInstance, FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
+	public FlounderModels() {
+		super(FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
 	}
 
 	@Override

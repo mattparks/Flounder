@@ -87,9 +87,9 @@ public class FlounderEngine extends Thread {
 
 	protected static IModule loadModule(Class object) {
 		try {
-			Class[] componentTypes = new Class[]{boolean.class};
+			Class[] componentTypes = new Class[]{};
 			@SuppressWarnings("unchecked") Constructor componentConstructor = object.getConstructor(componentTypes);
-			Object[] componentParameters = new Object[]{false}; // False because this is not the main instance.
+			Object[] componentParameters = new Object[]{};
 			return (IModule) componentConstructor.newInstance(componentParameters);
 		} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
 			System.err.println("IModule class path " + object.getName() + " constructor could not be found!");
@@ -118,8 +118,8 @@ public class FlounderEngine extends Thread {
 			}
 		}
 
-		toRegister.forEach(FlounderEngine::registerModule);
 		unregistedModules.add(module);
+		toRegister.forEach(FlounderEngine::registerModule);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class FlounderEngine extends Thread {
 
 	protected void loadEntrance(FlounderEntrance entrance) {
 		this.entrance = entrance;
-		FlounderDisplay.test();
+	//	FlounderEngine.registerModule(new FlounderDisplay().getInstance());
 	}
 
 	/**
