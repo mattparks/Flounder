@@ -21,7 +21,7 @@ public class FlounderNetwork extends IModule {
 	 * Creates a new network manager.
 	 */
 	public FlounderNetwork() {
-		super(FlounderLogger.class);
+		super(ModuleUpdate.AFTER_ENTRANCE, FlounderLogger.class);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class FlounderNetwork extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override

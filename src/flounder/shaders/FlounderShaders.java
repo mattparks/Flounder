@@ -28,7 +28,7 @@ public class FlounderShaders extends IModule {
 	 * Creates the engines shader loader.
 	 */
 	public FlounderShaders() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class FlounderShaders extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override

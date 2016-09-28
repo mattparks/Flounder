@@ -53,7 +53,7 @@ public class FlounderDisplay extends IModule {
 	 * Creates a new GLFW display.
 	 */
 	public FlounderDisplay() {
-		super(FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override
@@ -248,7 +248,7 @@ public class FlounderDisplay extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		// Polls for window events. The key callback will only be invoked during this call.
 		glfwPollEvents();
 	}

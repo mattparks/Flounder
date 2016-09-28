@@ -24,7 +24,7 @@ public class FlounderBounding extends IModule {
 	 * Creates a new bounding manager.
 	 */
 	public FlounderBounding() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderLoader.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderLoader.class);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class FlounderBounding extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		aabbCount = renderShapes.size();
 		clear(); // Clears before the next batch of rendering.
 	}

@@ -30,7 +30,7 @@ public class FlounderTextures extends IModule {
 	 * Creates a new texture manager.
 	 */
 	public FlounderTextures() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class FlounderTextures extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override

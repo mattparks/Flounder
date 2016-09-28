@@ -11,7 +11,6 @@ import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -64,10 +63,13 @@ public class FlounderEngine extends Thread {
 		}
 	}
 
-	protected static boolean containsModule(IModule module) {
-		return containsModule(module.getClass());
-	}
-
+	/**
+	 * Gets if the engine contains a module.
+	 *
+	 * @param object The module class.
+	 *
+	 * @return If the engine contains a module.
+	 */
 	protected static boolean containsModule(Class object) {
 		for (IModule m : activeModules) {
 			if (m.getClass().getName().equals(object.getName())) {
@@ -78,9 +80,16 @@ public class FlounderEngine extends Thread {
 		return false;
 	}
 
+	/**
+	 * Loads a module into a IModule class and gets the instance.
+	 *
+	 * @param object The module class.
+	 *
+	 * @return The module instance class.
+	 */
 	protected static IModule loadModule(Class object) {
 		try {
-			return (IModule) object.newInstance();
+			return ((IModule) object.newInstance()).getInstance();
 		} catch (IllegalAccessException | InstantiationException e) {
 			System.err.println("IModule class path " + object.getName() + " constructor could not be found!");
 			e.printStackTrace();
@@ -90,42 +99,35 @@ public class FlounderEngine extends Thread {
 	}
 
 	protected static void registerModule(IModule module) {
-		if (module == null || containsModule(module)) {
+		if (module == null || containsModule(module.getClass())) {
 			return;
 		}
 
-		List<IModule> requirements = new ArrayList<>();
+		// Add the module temperaraly.
+		activeModules.add(module);
 
 		for (Class required : module.getRequires()) {
-			if (!module.getClass().getName().equals(required.getName()) && !containsModule(required)) {
-				IModule requiredModule = loadModule(required);
-
-				if (requiredModule != null && requiredModule.getInstance() != null) {
-					requirements.add(requiredModule.getInstance());
-				} else {
-					System.err.println("Null instance for (" + module.getClass().getName() + "): " + required.getName());
-				}
-			}
+			FlounderEngine.registerModule(loadModule(required));
 		}
 
-		// Adds to unregistered list after all requirements.
-		activeModules.add(module.getInstance());
-		requirements.forEach(FlounderEngine::registerModule);
-		activeModules.remove(module.getInstance());
-		activeModules.add(module.getInstance());
+		// Add the module after all required.
+		activeModules.remove(module);
+		activeModules.add(module);
 
+		// Initialize modules if needed,
 		if (instance.initialized && !module.isInitialized()) {
 			module.init();
 			module.setInitialized(true);
 		}
 
-		{
-			String requires = "";
-			for (int i = 0; i < module.getRequires().length; i++) {
-				requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
-			}
-			System.out.println(FlounderLogger.ANSI_PURPLE + "[" + module.getClass().getSimpleName() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
+		// Log module data.
+		String requires = "";
+
+		for (int i = 0; i < module.getRequires().length; i++) {
+			requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
 		}
+
+		System.out.println(FlounderLogger.ANSI_PURPLE + "[" + module.getClass().getSimpleName() + ", UPDATE_" + module.getModuleUpdate().name() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
 	}
 
 	/**
@@ -145,7 +147,7 @@ public class FlounderEngine extends Thread {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.09.22");
+		version = new Version("1.09.27");
 
 		this.fpsLimit = fpsLimit;
 		this.closedRequested = false;
@@ -178,7 +180,7 @@ public class FlounderEngine extends Thread {
 			initEngine();
 
 			while (isRunning()) {
-				updateEngine();
+				updateEngine(true, true); // TODO: Only update every 1/60 seconds. Only render when delta is below 1/fpsLimit.
 				profileEngine();
 			}
 		} catch (Exception e) {
@@ -207,26 +209,50 @@ public class FlounderEngine extends Thread {
 		}
 	}
 
-	private void updateEngine() {
+	private void updateEngine(boolean update, boolean render) {
 		if (initialized) {
-			for (IModule module : activeModules) {
-				module.update();
-			}
+			// Updates the module when needed always.
+			activeModules.forEach(module -> {
+				if (module.getModuleUpdate().equals(IModule.ModuleUpdate.ALWAYS)) {
+					module.run();
+				}
+			});
 
-			{
+			// Updates when needed.
+			if (update) {
+				// Updates the module when needed before the entrance.
+				activeModules.forEach(module -> {
+					if (module.getModuleUpdate().equals(IModule.ModuleUpdate.BEFORE_ENTRANCE)) {
+						module.run();
+					}
+				});
+
+				// Updates the engine delta, and entrance.
 				delta.update();
 				entrance.update();
 
+				// Updates the module when needed after the entrance.
+				activeModules.forEach(module -> {
+					if (module.getModuleUpdate().equals(IModule.ModuleUpdate.AFTER_ENTRANCE)) {
+						module.run();
+					}
+				});
+
+				// Updates the entrances gui manager.
+				entrance.managerGUI.update();
+
+				// Updates the timer logger.
 				if (timerLog.isPassedTime()) {
-//					FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
+					// FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
 					timerLog.resetStartTime();
 				}
-
-				entrance.renderer.render();
-				entrance.managerGUI.update();
 			}
 
-			FlounderDisplay.swapBuffers();
+			// Renders when needed.
+			if (render) {
+				entrance.renderer.render();
+				FlounderDisplay.swapBuffers();
+			}
 		}
 	}
 

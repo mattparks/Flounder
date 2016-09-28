@@ -27,7 +27,7 @@ public class FlounderLoader extends IModule {
 	 * Creates a new OpenGL loader class.
 	 */
 	public FlounderLoader() {
-		super(FlounderProfiler.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderProfiler.class);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class FlounderLoader extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override
@@ -323,7 +323,7 @@ public class FlounderLoader extends IModule {
 	/**
 	 * Updates a FBO with a new set of data.
 	 *
-	 * @param vbo The FBO to update.
+	 * @param vbo The FBO to run.
 	 * @param data The data to add into the FBO.
 	 * @param buffer A buffer to use to store the data in.
 	 */

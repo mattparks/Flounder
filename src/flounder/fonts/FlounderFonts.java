@@ -37,7 +37,7 @@ public class FlounderFonts extends IModule {
 	 * Creates a new font manager.
 	 */
 	public FlounderFonts() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class FlounderFonts extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		texts.clear();
 	}
 

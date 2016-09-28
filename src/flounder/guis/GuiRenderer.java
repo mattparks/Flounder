@@ -62,17 +62,6 @@ public class GuiRenderer extends IRenderer {
 		OpenGlUtils.goWireframe(false);
 	}
 
-	private void endRendering() {
-		OpenGlUtils.goWireframe(lastWireframe);
-
-		shader.stop();
-	}
-
-	@Override
-	public void dispose() {
-		shader.dispose();
-	}
-
 	private void renderGui(GuiTexture gui) {
 		if (!gui.getTexture().isLoaded()) {
 			return;
@@ -88,5 +77,15 @@ public class GuiRenderer extends IRenderer {
 		shader.getUniformVec3("colourOffset").loadVec3(gui.getColourOffset());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
 		OpenGlUtils.unbindVAO(0);
+	}
+
+	private void endRendering() {
+		OpenGlUtils.goWireframe(lastWireframe);
+		shader.stop();
+	}
+
+	@Override
+	public void dispose() {
+		shader.dispose();
 	}
 }

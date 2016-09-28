@@ -32,7 +32,7 @@ public class FlounderLogger extends IModule {
 	 * Creates a new logger manager.
 	 */
 	public FlounderLogger() {
-		super(FlounderProfiler.class);
+		super(ModuleUpdate.ALWAYS, FlounderProfiler.class);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class FlounderLogger extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override

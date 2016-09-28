@@ -3,17 +3,20 @@ package flounder.engine;
 /**
  * A simple interface that can be applied anywhere.
  */
-public abstract class IModule<T extends IModule> {
+public abstract class IModule<T extends IModule> implements Runnable {
 	private final Class<T>[] requires;
+	private ModuleUpdate moduleUpdate;
 	private boolean initialized;
 
 	/**
 	 * Creates a new abstract module.
 	 *
+	 * @param moduleUpdate How/when the module will update.
 	 * @param requires Classes the module depends on.
 	 */
-	public IModule(Class<T>... requires) {
+	public IModule(ModuleUpdate moduleUpdate, Class<T>... requires) {
 		this.requires = requires;
+		this.moduleUpdate = moduleUpdate;
 		this.initialized = false;
 	}
 
@@ -25,7 +28,13 @@ public abstract class IModule<T extends IModule> {
 	/**
 	 * Runs a update of the module.
 	 */
-	public abstract void update();
+	@Override
+	public abstract void run();
+
+	/**
+	 * Profiles the module.
+	 */
+	public abstract void profile();
 
 	/**
 	 * Gets the classes that the module requires.
@@ -34,6 +43,15 @@ public abstract class IModule<T extends IModule> {
 	 */
 	protected Class<T>[] getRequires() {
 		return requires;
+	}
+
+	/**
+	 * Gets how/when the module will update.
+	 *
+	 * @return How/when the module will update.
+	 */
+	public ModuleUpdate getModuleUpdate() {
+		return moduleUpdate;
 	}
 
 	/**
@@ -55,11 +73,6 @@ public abstract class IModule<T extends IModule> {
 	}
 
 	/**
-	 * Profiles the module.
-	 */
-	public abstract void profile();
-
-	/**
 	 * Gets the current module instance.
 	 *
 	 * @return The current module instance.
@@ -70,4 +83,11 @@ public abstract class IModule<T extends IModule> {
 	 * Disposes the module.
 	 */
 	public abstract void dispose();
+
+	/**
+	 * A enum that defines where a module will update.
+	 */
+	public enum ModuleUpdate {
+		ALWAYS, BEFORE_ENTRANCE, AFTER_ENTRANCE
+	}
 }

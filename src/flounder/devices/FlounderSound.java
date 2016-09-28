@@ -35,7 +35,7 @@ public class FlounderSound extends IModule {
 	 * Creates a new OpenGL sound manager.
 	 */
 	public FlounderSound() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class FlounderSound extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		ICamera camera = FlounderEngine.getCamera();
 
 		if (camera != null && camera.getPosition() != null) {

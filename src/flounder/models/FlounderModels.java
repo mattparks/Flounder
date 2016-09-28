@@ -26,7 +26,7 @@ public class FlounderModels extends IModule {
 	 * Creates a new model loader class.
 	 */
 	public FlounderModels() {
-		super(FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class FlounderModels extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override

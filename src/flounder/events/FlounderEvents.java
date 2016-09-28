@@ -13,7 +13,7 @@ public class FlounderEvents extends IModule {
 	 * Creates a new event manager.
 	 */
 	public FlounderEvents() {
-		super();
+		super(ModuleUpdate.BEFORE_ENTRANCE);
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class FlounderEvents extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		for (IEvent event : events) {
 			if (event.eventTriggered()) {
 				event.onEvent();

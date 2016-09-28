@@ -20,7 +20,7 @@ public abstract class ValueDriver {
 	/**
 	 * Updates the driver with the passed time.
 	 *
-	 * @param delta The time between the last update.
+	 * @param delta The time between the last run.
 	 *
 	 * @return The calculated value.
 	 */

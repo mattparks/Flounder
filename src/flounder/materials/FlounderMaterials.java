@@ -21,7 +21,7 @@ public class FlounderMaterials extends IModule {
 	 * Creates a new material loader class.
 	 */
 	public FlounderMaterials() {
-		super(FlounderLogger.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class FlounderMaterials extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override

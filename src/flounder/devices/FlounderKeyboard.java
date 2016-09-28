@@ -20,7 +20,7 @@ public class FlounderKeyboard extends IModule {
 	 * Creates a new GLFW keyboard.
 	 */
 	public FlounderKeyboard() {
-		super(FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class FlounderKeyboard extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 	}
 
 	@Override

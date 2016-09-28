@@ -18,7 +18,7 @@ public class FlounderProcessors extends IModule {
 	 * Creates all engine request processors.
 	 */
 	public FlounderProcessors() {
-		super(FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class FlounderProcessors extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		requestProcessor.update();
 		glRequestProcessor.update();
 	}

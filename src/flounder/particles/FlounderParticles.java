@@ -31,7 +31,7 @@ public class FlounderParticles extends IModule {
 	 * Creates a new particle systems manager.
 	 */
 	public FlounderParticles() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
+		super(ModuleUpdate.AFTER_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class FlounderParticles extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		if (FlounderEngine.isGamePaused()) {
 			return;
 		}
@@ -91,7 +91,7 @@ public class FlounderParticles extends IModule {
 	}
 
 	/**
-	 * Adds a particle system to the update loop.
+	 * Adds a particle system to the run loop.
 	 *
 	 * @param system The new system to add.
 	 */
@@ -100,7 +100,7 @@ public class FlounderParticles extends IModule {
 	}
 
 	/**
-	 * Removes a particle system from the update loop.
+	 * Removes a particle system from the run loop.
 	 *
 	 * @param system The system to remove.
 	 */
@@ -118,7 +118,7 @@ public class FlounderParticles extends IModule {
 	}
 
 	/**
-	 * Adds a particle to the update loop.
+	 * Adds a particle to the run loop.
 	 *
 	 * @param particleTemplate The particle template to build from.
 	 * @param position The particles initial position.

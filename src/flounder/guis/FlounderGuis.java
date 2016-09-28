@@ -29,7 +29,7 @@ public class FlounderGuis extends IModule {
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis() {
-		super(FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderEvents.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderEvents.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class FlounderGuis extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		guiTextures.clear();
 		selector.update();
 		container.update(guiTextures, FlounderFonts.getTexts());

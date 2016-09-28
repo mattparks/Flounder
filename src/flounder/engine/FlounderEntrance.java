@@ -43,9 +43,7 @@ public abstract class FlounderEntrance<T extends IModule> extends FlounderEngine
 		super.loadEntrance(this);
 
 		for (Class required : requires) {
-			if (!FlounderEngine.containsModule(required)) {
-				FlounderEngine.registerModule(FlounderEngine.loadModule(required));
-			}
+			FlounderEngine.registerModule(FlounderEngine.loadModule(required));
 		}
 
 		this.focusPosition = new Vector3f();

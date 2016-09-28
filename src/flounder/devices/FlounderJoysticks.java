@@ -22,7 +22,7 @@ public class FlounderJoysticks extends IModule {
 	 * Creates a new GLFW joystick manager.
 	 */
 	public FlounderJoysticks() {
-		super(FlounderLogger.class);
+		super(ModuleUpdate.ALWAYS, FlounderLogger.class);
 	}
 
 	@Override
@@ -33,8 +33,8 @@ public class FlounderJoysticks extends IModule {
 	}
 
 	@Override
-	public void update() {
-		// For each joystick check if connected and update.
+	public void run() {
+		// For each joystick check if connected and run.
 		for (int i = 0; i < GLFW_JOYSTICK_LAST; i++) {
 			if (glfwJoystickPresent(i)) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {

@@ -42,7 +42,7 @@ public class FlounderMouse extends IModule {
 	 * Creates a new GLFW mouse.
 	 */
 	public FlounderMouse() {
-		super(FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class FlounderMouse extends IModule {
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		// Updates the mouses delta.
 		mouseDeltaX = FlounderEngine.getDelta() * (lastMousePositionX - mousePositionX);
 		mouseDeltaY = FlounderEngine.getDelta() * (lastMousePositionY - mousePositionY);

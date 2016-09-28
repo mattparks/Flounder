@@ -1,6 +1,5 @@
 package flounder.profiling;
 
-import flounder.devices.*;
 import flounder.engine.*;
 
 import javax.swing.*;
@@ -19,12 +18,12 @@ public class FlounderProfiler extends IModule {
 	 * Creates the engines profiler.
 	 */
 	public FlounderProfiler() {
-		super(FlounderDisplay.class);
+		super(ModuleUpdate.ALWAYS);
 	}
 
 	@Override
 	public void init() {
-		String title = FlounderDisplay.getTitle() + " Profiler";
+		String title = "Flounder Engine Profiler";
 		this.profilerJFrame = new JFrame(title);
 		profilerJFrame.setSize(420, 720);
 		profilerJFrame.setResizable(true);
@@ -54,11 +53,11 @@ public class FlounderProfiler extends IModule {
 		this.profilerOpen = false;
 
 		// Opens the profiler if not running from jar.
-		//	toggle(!FlounderLogger.RUNNING_FROM_JAR); // TODO
+		toggle(!FlounderEngine.isRunningFromJar());
 	}
 
 	@Override
-	public void update() {
+	public void run() {
 		if (profilerJFrame.isVisible() != profilerOpen) {
 			profilerJFrame.setVisible(profilerOpen);
 		}
