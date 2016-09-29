@@ -1,6 +1,8 @@
 package flounder.profiling;
 
 import flounder.engine.*;
+import flounder.logger.*;
+import flounder.resources.*;
 
 import javax.swing.*;
 
@@ -18,7 +20,7 @@ public class FlounderProfiler extends IModule {
 	 * Creates the engines profiler.
 	 */
 	public FlounderProfiler() {
-		super(ModuleUpdate.ALWAYS);
+		super(ModuleUpdate.ALWAYS, FlounderLogger.class);
 	}
 
 	@Override

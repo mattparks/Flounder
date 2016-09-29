@@ -25,9 +25,10 @@ public class FlounderEngine extends Thread {
 
 	private static final List<IModule> activeModules = new ArrayList<>();
 
-	private int fpsLimit;
 	private boolean closedRequested;
-	private Delta delta;
+	private Delta deltaUpdate;
+	private Delta deltaRender;
+	private Timer timerUpdate;
 	private Timer timerLog;
 
 	private boolean initialized;
@@ -106,8 +107,8 @@ public class FlounderEngine extends Thread {
 		// Add the module temperaraly.
 		activeModules.add(module);
 
-		for (Class required : module.getRequires()) {
-			FlounderEngine.registerModule(loadModule(required));
+		for (int i = module.getRequires().length - 1; i >= 0; i--){
+			FlounderEngine.registerModule(loadModule(module.getRequires()[i]));
 		}
 
 		// Add the module after all required.
@@ -127,32 +128,26 @@ public class FlounderEngine extends Thread {
 			requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
 		}
 
-		System.out.println(FlounderLogger.ANSI_PURPLE + "[" + module.getClass().getSimpleName() + ", UPDATE_" + module.getModuleUpdate().name() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
+		System.out.println(FlounderLogger.ANSI_PURPLE + "[" + module.getClass().getSimpleName() + (instance.initialized ? ", POST_INIT, " : "") + ", UPDATE_" + module.getModuleUpdate().name() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
 	}
 
 	/**
 	 * Carries out the setup for basic engine components and the engine. Call {@link #startEngine(FontType)} immediately after this.
-	 *
-	 * @param width The window width in pixels.
-	 * @param height The window height in pixels.
-	 * @param title The window title.
-	 * @param icons A list of icons to load for the window.
-	 * @param vsync If the window will use vSync..
-	 * @param antialiasing If OpenGL will use antialiasing.
-	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
-	 * @param fullscreen If the window will start fullscreen.
-	 * @param fpsLimit The maximum FPS the engine can render at.
 	 */
-	public FlounderEngine(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, int fpsLimit) {
+	public FlounderEngine() {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
 		version = new Version("1.09.27");
 
-		this.fpsLimit = fpsLimit;
 		this.closedRequested = false;
-		this.delta = new Delta();
+		this.deltaUpdate = new Delta();
+		this.deltaRender = new Delta();
+		this.timerUpdate = new Timer(1.0f / 60.0f);
 		this.timerLog = new Timer(1.0f);
+
+		deltaUpdate.update();
+		deltaRender.update();
 
 		this.initialized = false;
 	}
@@ -180,7 +175,12 @@ public class FlounderEngine extends Thread {
 			initEngine();
 
 			while (isRunning()) {
-				updateEngine(true, true); // TODO: Only update every 1/60 seconds. Only render when delta is below 1/fpsLimit.
+				boolean update = false;
+				if (timerUpdate.isPassedTime()) {
+					update = true;
+					timerUpdate.resetStartTime();
+				}
+				updateEngine(update, true); // TODO: Only update every 1/60 seconds. Only render when deltaRender is below 1/fpsLimit.
 				profileEngine();
 			}
 		} catch (Exception e) {
@@ -228,7 +228,7 @@ public class FlounderEngine extends Thread {
 				});
 
 				// Updates the engine delta, and entrance.
-				delta.update();
+				deltaUpdate.update();
 				entrance.update();
 
 				// Updates the module when needed after the entrance.
@@ -240,24 +240,26 @@ public class FlounderEngine extends Thread {
 
 				// Updates the entrances gui manager.
 				entrance.managerGUI.update();
-
-				// Updates the timer logger.
-				if (timerLog.isPassedTime()) {
-					// FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
-					timerLog.resetStartTime();
-				}
 			}
 
 			// Renders when needed.
 			if (render) {
+				deltaRender.update();
 				entrance.renderer.render();
 				FlounderDisplay.swapBuffers();
+			}
+
+			// Sleep a bit after updating or rendering.
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
 
 	private void profileEngine() {
-		if (FlounderProfiler.isOpen()) {
+		if (FlounderProfiler.isOpen() && timerLog.isPassedTime()) {
 			FlounderProfiler.add("Engine", "Running From Jar", runningFromJar);
 			FlounderProfiler.add("Engine", "Save Folder", roamingFolder.getPath());
 
@@ -266,6 +268,8 @@ public class FlounderEngine extends Thread {
 			}
 
 			entrance.profile();
+			// FlounderLogger.log(Maths.roundToPlace(1.0f / getDelta(), 2) + "fps");
+			timerLog.resetStartTime();
 		}
 	}
 
@@ -318,21 +322,13 @@ public class FlounderEngine extends Thread {
 		return instance.entrance.renderer.getProjectionMatrix();
 	}
 
-	public static void setTargetFPS(int fpsLimit) {
-		instance.fpsLimit = fpsLimit;
-	}
-
-	public static int getTargetFPS() {
-		return instance.fpsLimit;
-	}
-
 	/**
 	 * Gets the delta (seconds) between updates.
 	 *
-	 * @return The delta between updates.
+	 * @return The deltaRender between updates.
 	 */
 	public static float getDelta() {
-		return instance.delta.getDelta();
+		return instance.deltaUpdate.getDelta();
 	}
 
 	/**
@@ -341,7 +337,25 @@ public class FlounderEngine extends Thread {
 	 * @return The current engine time.
 	 */
 	public static float getDeltaTime() {
-		return instance.delta.getTime();
+		return instance.deltaUpdate.getTime();
+	}
+
+	/**
+	 * Gets the delta (seconds) between renders.
+	 *
+	 * @return The delta between renders.
+	 */
+	public static float getDeltaRender() {
+		return instance.deltaRender.getDelta();
+	}
+
+	/**
+	 * Gets the current engine time (all delta added up).
+	 *
+	 * @return The current engine time.
+	 */
+	public static float getDeltaRenderTime() {
+		return instance.deltaRender.getTime();
 	}
 
 	/**

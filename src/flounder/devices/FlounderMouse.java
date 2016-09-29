@@ -20,6 +20,8 @@ import static org.lwjgl.glfw.GLFW.*;
 public class FlounderMouse extends IModule {
 	private static final FlounderMouse instance = new FlounderMouse();
 
+	private MyFile customMouse;
+
 	private int mouseButtons[];
 	private float lastMousePositionX;
 	private float lastMousePositionY;
@@ -42,11 +44,13 @@ public class FlounderMouse extends IModule {
 	 * Creates a new GLFW mouse.
 	 */
 	public FlounderMouse() {
-		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override
 	public void init() {
+		this.customMouse = new MyFile(MyFile.RES_FOLDER, "guis", "cursor.png");
+
 		this.mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
 		this.displaySelected = true;
 		this.mousePositionX = 0.5f;
@@ -92,8 +96,6 @@ public class FlounderMouse extends IModule {
 			FlounderLogger.exception(e);
 		}
 	}
-
-	private MyFile customMouse = new MyFile(MyFile.RES_FOLDER, "cursor.png");
 
 	private void createCustomMouse() throws IOException {
 		BufferedImage image = ImageIO.read(customMouse.getInputStream());

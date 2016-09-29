@@ -56,7 +56,7 @@ public class GuiTextButton extends GuiComponent {
 
 	public GuiTextButton(Text text, GuiAlign guiAlign, float leftMarginX) {
 		this.text = text;
-		this.background = new GuiTexture(Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "button.png")).clampEdges().create());
+		this.background = new GuiTexture(Texture.newTexture(new MyFile(MyFile.RES_FOLDER, "guis", "button.png")).clampEdges().create());
 		this.mouseOver = false;
 
 		this.guiAlign = guiAlign;

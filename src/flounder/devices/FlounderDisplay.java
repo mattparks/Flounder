@@ -42,6 +42,7 @@ public class FlounderDisplay extends IModule {
 	private boolean focused;
 	private int windowPosX;
 	private int windowPosY;
+	private boolean setup;
 
 	private GLFWWindowCloseCallback callbackWindowClose;
 	private GLFWWindowFocusCallback callbackWindowFocus;
@@ -56,25 +57,47 @@ public class FlounderDisplay extends IModule {
 		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class);
 	}
 
+	/**
+	 * A function called before {@link flounder.devices.FlounderDisplay.init()} to configure the display.
+	 *
+	 * @param width The window width in pixels.
+	 * @param height The window height in pixels.
+	 * @param title The window title.
+	 * @param icons A list of icons to load for the window.
+	 * @param vsync If the window will use vSync..
+	 * @param antialiasing If OpenGL will use antialiasing.
+	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
+	 * @param fullscreen If the window will start fullscreen.
+	 */
+	public static void setup(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+		if (!instance.isInitialized()) {
+			instance.windowWidth = width;
+			instance.windowHeight = height;
+			instance.title = title;
+			instance.icons = icons;
+			instance.vsync = vsync;
+			instance.antialiasing = antialiasing;
+			instance.samples = samples;
+			instance.fullscreen = fullscreen;
+			instance.setup = true;
+		} else {
+			FlounderLogger.error("Flounder Display setup MUST be called before the instance is initialized.");
+		}
+	}
+
 	@Override
 	public void init() {
-		this.windowWidth = 1080;
-		this.windowHeight = 720;
-		this.title = "Testing 1";
-		this.icons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
-		this.vsync = true;
-		this.antialiasing = true;
-		this.samples = 0;
-		this.fullscreen = false;
-
-		//	this.windowWidth = width;
-		//	this.windowHeight = height;
-		//	this.title = title;
-		//	this.icons = icons;
-		//	this.vsync = vsync;
-		//	this.antialiasing = antialiasing;
-		//	this.samples = samples;
-		//	this.fullscreen = fullscreen;
+		if (!setup) {
+			FlounderLogger.error("Flounder Display setup can be used to configure the display, default settings were set!");
+			this.windowWidth = 1080;
+			this.windowHeight = 720;
+			this.title = "Testing 1";
+			this.icons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
+			this.vsync = true;
+			this.antialiasing = true;
+			this.samples = 0;
+			this.fullscreen = false;
+		}
 
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
@@ -319,14 +342,14 @@ public class FlounderDisplay extends IModule {
 	 */
 	private BufferedImage createBufferedImage() {
 		// Creates a new buffer and stores the displays data into it.
-		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 3);
-		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGB, GL_UNSIGNED_BYTE, buffer);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 4);
+		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		// Transfers the data from the buffer into the image. This requires bit shifts to get the components data.
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int y = 0; y < image.getHeight(); y++) {
-				int i = (x + getWidth() * y) * 3;
+				int i = (x + getWidth() * y) * 4;
 				image.setRGB(x, y, (((buffer.get(i) & 0xFF) & 0x0ff) << 16) | (((buffer.get(i + 1) & 0xFF) & 0x0ff) << 8) | ((buffer.get(i + 2) & 0xFF) & 0x0ff));
 			}
 		}
@@ -468,9 +491,9 @@ public class FlounderDisplay extends IModule {
 		if (fullscreen) {
 			instance.fullscreenWidth = mode.width();
 			instance.fullscreenHeight = mode.height();
-			glfwSetWindowMonitor(instance.window, monitor, 0, 0, instance.fullscreenWidth, instance.fullscreenHeight, FlounderEngine.getTargetFPS());
+			glfwSetWindowMonitor(instance.window, monitor, 0, 0, instance.fullscreenWidth, instance.fullscreenHeight, GLFW_DONT_CARE);
 		} else {
-			glfwSetWindowMonitor(instance.window, NULL, instance.windowPosX, instance.windowPosY, instance.windowWidth, instance.windowHeight, FlounderEngine.getTargetFPS());
+			glfwSetWindowMonitor(instance.window, NULL, instance.windowPosX, instance.windowPosY, instance.windowWidth, instance.windowHeight, GLFW_DONT_CARE);
 		}
 	}
 

@@ -35,7 +35,7 @@ public class FlounderSound extends IModule {
 	 * Creates a new OpenGL sound manager.
 	 */
 	public FlounderSound() {
-		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override

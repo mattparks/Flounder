@@ -23,19 +23,10 @@ public abstract class FlounderEntrance<T extends IModule> extends FlounderEngine
 	 * @param camera The main camera to use.
 	 * @param renderer The master renderer to render with.
 	 * @param managerGUI The manager for the implementation for GUIs.
-	 * @param width The window width in pixels.
-	 * @param height The window height in pixels.
-	 * @param title The window title.
-	 * @param icons A list of icons to load for the window.
-	 * @param vsync If the window will use vSync..
-	 * @param antialiasing If OpenGL will use antialiasing.
-	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
-	 * @param fullscreen If the window will start fullscreen.
-	 * @param fpsLimit The maximum FPS the engine can render at.
 	 * @param requires Classes the module depends on.
 	 */
-	public FlounderEntrance(ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI, int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, int fpsLimit, Class<T>... requires) {
-		super(width, height, title, icons, vsync, antialiasing, samples, fullscreen, fpsLimit);
+	public FlounderEntrance(ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI, Class<T>... requires) {
+		super();
 		this.camera = camera;
 		this.renderer = renderer;
 		this.managerGUI = managerGUI;
