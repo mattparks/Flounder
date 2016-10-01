@@ -97,6 +97,7 @@ public class FlounderDisplay extends IModule {
 			this.antialiasing = true;
 			this.samples = 0;
 			this.fullscreen = false;
+			this.setup = true;
 		}
 
 		// Initialize the GLFW library.
@@ -565,5 +566,7 @@ public class FlounderDisplay extends IModule {
 		destroy();
 		glfwDestroyWindow(window);
 		glfwTerminate();
+
+		instance.setup = false;
 	}
 }

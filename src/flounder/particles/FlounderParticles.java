@@ -12,6 +12,8 @@ import flounder.resources.*;
 import flounder.space.*;
 import flounder.textures.*;
 
+import java.io.*;
+import java.lang.ref.*;
 import java.util.*;
 
 /**
@@ -22,6 +24,8 @@ public class FlounderParticles extends IModule {
 
 	public static final MyFile PARTICLES_LOC = new MyFile(MyFile.RES_FOLDER, "particles");
 	public static final float MAX_ELAPED_TIME = 5.0f;
+
+	private Map<String, SoftReference<ParticleTemplate>> loaded;
 
 	private List<ParticleSystem> particleSystems;
 	private List<StructureBasic<Particle>> particles;
@@ -36,6 +40,8 @@ public class FlounderParticles extends IModule {
 
 	@Override
 	public void init() {
+		this.loaded = new HashMap<>();
+
 		this.particleSystems = new ArrayList<>();
 		this.particles = new ArrayList<>();
 		this.deadParticles = new ArrayList<>();
@@ -115,6 +121,77 @@ public class FlounderParticles extends IModule {
 	 */
 	protected static List<StructureBasic<Particle>> getParticles() {
 		return instance.particles;
+	}
+
+	/**
+	 * Loads a particle type into a template.
+	 *
+	 * @param name The particle type name.
+	 *
+	 * @return The loaded template.
+	 */
+	public static ParticleTemplate load(String name) {
+		SoftReference<ParticleTemplate> ref = instance.loaded.get(name);
+		ParticleTemplate data = ref == null ? null : ref.get();
+
+		if (data == null) {
+			FlounderLogger.log(name + " is being loaded into a particle type right now!");
+			instance.loaded.remove(name);
+
+			// Creates the file reader.
+			MyFile saveFile = new MyFile(FlounderParticles.PARTICLES_LOC, name + ".particle");
+
+			try {
+				BufferedReader fileReader = saveFile.getReader();
+
+				if (fileReader == null) {
+					FlounderLogger.error("Error creating reader the particle file: " + saveFile);
+					return null;
+				}
+
+				// Loaded data.
+				String particleName = "unnamed";
+				String textureFile = "/";
+				String numberOfRows = "1";
+				String lifeLength = "1.0f";
+				String scale = "1.0f";
+
+				// Current line.
+				String line;
+
+				// Each line read loop.
+				while ((line = fileReader.readLine()) != null) {
+					// Entity General Data.
+					if (line.contains("ParticleData")) {
+						while (!(line = fileReader.readLine()).contains("};")) {
+							if (line.contains("Name")) {
+								particleName = line.replaceAll("\\s+", "").replaceAll(";", "").substring("Name:".length());
+							} else if (line.contains("Texture")) {
+								textureFile = line.replaceAll("\\s+", "").replaceAll(";", "").substring("Texture:".length());
+							} else if (line.contains("NumberOfRows")) {
+								numberOfRows = line.replaceAll("\\s+", "").replaceAll(";", "").substring("NumberOfRows:".length());
+							} else if (line.contains("LifeLength")) {
+								lifeLength = line.replaceAll("\\s+", "").replaceAll(";", "").substring("LifeLength:".length());
+							} else if (line.contains("Scale")) {
+								scale = line.replaceAll("\\s+", "").replaceAll(";", "").substring("Scale:".length());
+							}
+						}
+					}
+				}
+
+				Texture texture = Texture.newTexture(new MyFile(textureFile)).create();
+				texture.setNumberOfRows(Integer.parseInt(numberOfRows));
+				data = new ParticleTemplate(particleName, texture, Float.parseFloat(lifeLength), Float.parseFloat(scale));
+			} catch (IOException e) {
+				FlounderLogger.error("File reader for particle " + saveFile.getPath() + " did not execute successfully!");
+				FlounderLogger.exception(e);
+				return null;
+			}
+
+			instance.loaded.put(name, new SoftReference<>(data));
+		}
+
+		return data;
 	}
 
 	/**

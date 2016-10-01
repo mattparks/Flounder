@@ -1,6 +1,7 @@
 package flounder.shaders;
 
 import flounder.engine.*;
+import flounder.exceptions.*;
 import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.processing.*;
@@ -170,8 +171,7 @@ public class FlounderShaders extends IModule {
 
 			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 				FlounderLogger.error(glGetShaderInfoLog(shaderID, 500));
-				FlounderLogger.error("Could not compile shader " + builder.getShaderName());
-				System.exit(-1);
+				throw new FlounderRuntimeException("Could not compile shader " + builder.getShaderName());
 			}
 
 			shaderType.setShaderProgramID(shaderID);

@@ -208,7 +208,7 @@ public class Testing1 extends FlounderEntrance {
 				camera, renderer, managerGUI,
 				FlounderDisplay.class, FlounderFonts.class, FlounderGuis.class
 		);
-		FlounderDisplay.setup(1080, 720, "Entity Editor", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, true, true, 8, false);
+		FlounderDisplay.setup(1080, 720, "Testing 1", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, true, true, 8, false);
 	}
 
 	@Override

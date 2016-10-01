@@ -16,6 +16,7 @@ public class FlounderNetwork extends IModule {
 	private Client socketClient;
 	private String username;
 	private int port;
+	private boolean setup;
 
 	/**
 	 * Creates a new network manager.
@@ -24,9 +25,25 @@ public class FlounderNetwork extends IModule {
 		super(ModuleUpdate.AFTER_ENTRANCE, FlounderLogger.class);
 	}
 
+	/**
+	 * A function called before {@link flounder.networking.FlounderNetwork.init()} to configure the network.
+	 *
+	 * @param port The networks port.
+	 */
+	public static void setup(int port) {
+		if (!instance.setup) {
+			instance.port = port;
+			instance.setup = true;
+		}
+	}
+
 	@Override
 	public void init() {
-		this.port = PORT;
+		if (!setup) {
+			this.port = PORT;
+			this.setup = true;
+		}
+
 		this.username = "USERNAME" + ((int) (Math.random() * 10000));
 	}
 

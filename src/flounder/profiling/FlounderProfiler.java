@@ -2,7 +2,6 @@ package flounder.profiling;
 
 import flounder.engine.*;
 import flounder.logger.*;
-import flounder.resources.*;
 
 import javax.swing.*;
 

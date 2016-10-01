@@ -2,7 +2,6 @@ package flounder.engine;
 
 import flounder.engine.entrance.*;
 import flounder.maths.vectors.*;
-import flounder.resources.*;
 
 /**
  * A abstract class used to build a game out of.

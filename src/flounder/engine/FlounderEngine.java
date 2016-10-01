@@ -24,6 +24,7 @@ public class FlounderEngine extends Thread {
 	private FlounderEntrance entrance;
 
 	private static final List<IModule> activeModules = new ArrayList<>();
+	private static final List<String> unloggedModules = new ArrayList<>();
 
 	private boolean closedRequested;
 	private Delta deltaUpdate;
@@ -107,7 +108,7 @@ public class FlounderEngine extends Thread {
 		// Add the module temperaraly.
 		activeModules.add(module);
 
-		for (int i = module.getRequires().length - 1; i >= 0; i--){
+		for (int i = module.getRequires().length - 1; i >= 0; i--) {
 			FlounderEngine.registerModule(loadModule(module.getRequires()[i]));
 		}
 
@@ -128,7 +129,18 @@ public class FlounderEngine extends Thread {
 			requires += module.getRequires()[i].getSimpleName() + ((i == module.getRequires().length - 1) ? "" : ", ");
 		}
 
-		System.out.println(FlounderLogger.ANSI_PURPLE + "[" + module.getClass().getSimpleName() + (instance.initialized ? ", POST_INIT, " : "") + ", UPDATE_" + module.getModuleUpdate().name() + "]:" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET);
+		String logOutput = "Registering " + module.getClass().getSimpleName() + ":" + FlounderLogger.ANSI_PURPLE + " (" + (instance.initialized ? "POST_INIT, " : "") + "UPDATE_" + module.getModuleUpdate().name() + ")" + FlounderLogger.ANSI_RESET + ":" + FlounderLogger.ANSI_RED + " Requires(" + requires + ")" + FlounderLogger.ANSI_RESET;
+
+		if (instance.initialized && containsModule(FlounderLogger.class)) {
+			if (!unloggedModules.isEmpty()) {
+				unloggedModules.forEach(FlounderLogger::log);
+			}
+
+			unloggedModules.clear();
+			FlounderLogger.log(logOutput);
+		} else {
+			unloggedModules.add(logOutput);
+		}
 	}
 
 	/**
@@ -138,7 +150,7 @@ public class FlounderEngine extends Thread {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.09.27");
+		version = new Version("1.10.01");
 
 		this.closedRequested = false;
 		this.deltaUpdate = new Delta();
@@ -198,6 +210,14 @@ public class FlounderEngine extends Thread {
 					module.init();
 					module.setInitialized(true);
 				}
+			}
+
+			if (containsModule(FlounderLogger.class)) {
+				if (!unloggedModules.isEmpty()) {
+					unloggedModules.forEach(FlounderLogger::log);
+				}
+
+				unloggedModules.clear();
 			}
 
 			entrance.managerGUI.init();
@@ -426,8 +446,10 @@ public class FlounderEngine extends Thread {
 
 			for (IModule module : activeModules) {
 				module.dispose();
+				module.setInitialized(false);
 			}
 
+			activeModules.clear();
 			initialized = false;
 		}
 	}
