@@ -58,7 +58,7 @@ public class FlounderDisplay extends IModule {
 	}
 
 	/**
-	 * A function called before {@link flounder.devices.FlounderDisplay.init()} to configure the display.
+	 * A function called before initialization to configure the display.
 	 *
 	 * @param width The window width in pixels.
 	 * @param height The window height in pixels.
@@ -494,6 +494,8 @@ public class FlounderDisplay extends IModule {
 			instance.fullscreenHeight = mode.height();
 			glfwSetWindowMonitor(instance.window, monitor, 0, 0, instance.fullscreenWidth, instance.fullscreenHeight, GLFW_DONT_CARE);
 		} else {
+			instance.windowPosX = (mode.width() - instance.windowWidth) / 2;
+			instance.windowPosY = (mode.height() - instance.windowHeight) / 2;
 			glfwSetWindowMonitor(instance.window, NULL, instance.windowPosX, instance.windowPosY, instance.windowWidth, instance.windowHeight, GLFW_DONT_CARE);
 		}
 	}

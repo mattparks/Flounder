@@ -26,7 +26,7 @@ public class FlounderNetwork extends IModule {
 	}
 
 	/**
-	 * A function called before {@link flounder.networking.FlounderNetwork.init()} to configure the network.
+	 * A function called before initialization to configure the network.
 	 *
 	 * @param port The networks port.
 	 */
