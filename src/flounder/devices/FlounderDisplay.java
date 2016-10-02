@@ -565,10 +565,11 @@ public class FlounderDisplay extends IModule {
 		callbackWindowSize.free();
 		callbackFramebufferSize.free();
 
-		destroy();
+		// destroy(); // Would normally unload LWJGL natives, but for the Founder Engine we want to be able to reload the Engine in runtime.
 		glfwDestroyWindow(window);
 		glfwTerminate();
 
+		instance.closed = false;
 		instance.setup = false;
 	}
 }

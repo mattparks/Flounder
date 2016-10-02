@@ -198,6 +198,7 @@ public class FlounderEngine extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 			FlounderLogger.exception(e);
+			System.exit(-1);
 		} finally {
 			disposeEngine();
 		}
@@ -441,8 +442,12 @@ public class FlounderEngine extends Thread {
 
 	private void disposeEngine() {
 		if (initialized) {
+			FlounderLogger.warning("Disposing engine!");
+
 			entrance.renderer.dispose();
 			entrance.dispose();
+
+			Collections.reverse(activeModules);
 
 			for (IModule module : activeModules) {
 				module.dispose();
@@ -450,6 +455,7 @@ public class FlounderEngine extends Thread {
 			}
 
 			activeModules.clear();
+			closedRequested = false;
 			initialized = false;
 		}
 	}

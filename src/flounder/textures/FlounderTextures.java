@@ -164,8 +164,10 @@ public class FlounderTextures extends IModule {
 	 * @param textureID The texture to delete.
 	 */
 	public static void deleteTexture(int textureID) {
-		instance.textureCache.remove(textureID);
-		glDeleteTextures(textureID);
+		if (instance.textureCache.contains(textureID)) {
+			instance.textureCache.remove((Integer) textureID);
+			glDeleteTextures(textureID);
+		}
 	}
 
 	@Override

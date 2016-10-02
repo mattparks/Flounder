@@ -69,5 +69,6 @@ public class RequestProcessor extends Thread {
 	public void dispose() {
 		running = false;
 		indicateNewRequests();
+		//	requestQueue.clear();
 	}
 }

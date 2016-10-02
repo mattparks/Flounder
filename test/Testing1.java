@@ -200,7 +200,7 @@ public class Testing1 extends FlounderEntrance {
 			}
 		});
 		instance.startEngine(FlounderFonts.FFF_FORWARD);
-		System.exit(1);
+		System.exit(0);
 	}
 
 	private Testing1(ICamera camera, IRendererMaster renderer, IManagerGUI managerGUI) {
@@ -240,7 +240,6 @@ public class Testing1 extends FlounderEntrance {
 
 	@Override
 	public void profile() {
-
 	}
 
 	@Override

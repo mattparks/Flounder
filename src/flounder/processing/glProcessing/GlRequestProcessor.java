@@ -68,5 +68,6 @@ public class GlRequestProcessor {
 
 	public void dispose() {
 		completeAllRequests();
+		//	requestQueue.clear();
 	}
 }
