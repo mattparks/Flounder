@@ -242,5 +242,6 @@ public class FlounderModels extends IModule {
 	@Override
 	public void dispose() {
 		// TODO: Dispose models.
+		loaded.clear();
 	}
 }

@@ -41,5 +41,7 @@ public class FlounderTabMenu extends JTabbedPane {
 			FlounderProfilerTab disposeObject = (FlounderProfilerTab) pair.getValue();
 			disposeObject.dispose();
 		}
+
+		components.clear();
 	}
 }

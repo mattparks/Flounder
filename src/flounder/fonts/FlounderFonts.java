@@ -77,5 +77,6 @@ public class FlounderFonts extends IModule {
 
 	@Override
 	public void dispose() {
+		texts.clear();
 	}
 }

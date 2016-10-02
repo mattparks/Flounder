@@ -151,5 +151,6 @@ public class FlounderMaterials extends IModule {
 	@Override
 	public void dispose() {
 		// TODO: Dispose materials.
+		loaded.clear();
 	}
 }

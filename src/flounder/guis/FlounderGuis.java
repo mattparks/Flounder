@@ -94,5 +94,6 @@ public class FlounderGuis extends IModule {
 				guiTexture.getTexture().delete();
 			}
 		});
+		guiTextures.clear();
 	}
 }

@@ -282,5 +282,6 @@ public class FlounderShaders extends IModule {
 	@Override
 	public void dispose() {
 		// TODO: Delete shaders.
+		loaded.clear();
 	}
 }

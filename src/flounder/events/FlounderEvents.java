@@ -49,5 +49,6 @@ public class FlounderEvents extends IModule {
 
 	@Override
 	public void dispose() {
+		events.clear();
 	}
 }

@@ -105,7 +105,7 @@ public class FlounderEngine extends Thread {
 			return;
 		}
 
-		// Add the module temperaraly.
+		// Add the module temporally.
 		activeModules.add(module);
 
 		for (int i = module.getRequires().length - 1; i >= 0; i--) {
@@ -133,11 +133,11 @@ public class FlounderEngine extends Thread {
 
 		if (instance.initialized && containsModule(FlounderLogger.class)) {
 			if (!unloggedModules.isEmpty()) {
-				unloggedModules.forEach(FlounderLogger::log);
+				unloggedModules.forEach(FlounderLogger::register);
 			}
 
 			unloggedModules.clear();
-			FlounderLogger.log(logOutput);
+			FlounderLogger.register(logOutput);
 		} else {
 			unloggedModules.add(logOutput);
 		}
@@ -150,7 +150,7 @@ public class FlounderEngine extends Thread {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.10.01");
+		version = new Version("1.10.02");
 
 		this.closedRequested = false;
 		this.deltaUpdate = new Delta();
@@ -192,7 +192,7 @@ public class FlounderEngine extends Thread {
 					update = true;
 					timerUpdate.resetStartTime();
 				}
-				updateEngine(update, true); // TODO: Only update every 1/60 seconds. Only render when deltaRender is below 1/fpsLimit.
+				updateEngine(update, FlounderDisplay.isVSync() || update);
 				profileEngine();
 			}
 		} catch (Exception e) {
@@ -215,7 +215,7 @@ public class FlounderEngine extends Thread {
 
 			if (containsModule(FlounderLogger.class)) {
 				if (!unloggedModules.isEmpty()) {
-					unloggedModules.forEach(FlounderLogger::log);
+					unloggedModules.forEach(FlounderLogger::register);
 				}
 
 				unloggedModules.clear();

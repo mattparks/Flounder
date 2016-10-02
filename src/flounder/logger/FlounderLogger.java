@@ -53,27 +53,38 @@ public class FlounderLogger extends IModule {
 	}
 
 	/**
-	 * Log logs strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
+	 * Logs registration info strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
+	 *
+	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
+	 * @param <T> The object type to be logged.
+	 */
+	public static <T> void register(T value) {
+		if (LOG_TO_CONSOLE) {
+			if (getString(value).isEmpty()) {
+				System.out.println();
+			} else {
+				System.out.println(ANSI_GREEN + "REGISTER [" + getDateString() + "]: " + ANSI_RESET + getString(value));
+			}
+		}
+
+		if (LOG_TO_FILE) {
+			if (getString(value).isEmpty()) {
+				instance.saveData.append("\n");
+			} else {
+				instance.saveData.append("REGISTER [" + getDateString() + "]: " + getString(value).replaceAll("\u001B\\[[\\d;]*[^\\d;]", "") + "\n");
+			}
+
+			instance.linesRecorded++;
+		}
+	}
+
+	/**
+	 * Logs strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
 	 *
 	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
 	 * @param <T> The object type to be logged.
 	 */
 	public static <T> void log(T value) {
-		log(value, false);
-	}
-
-	/**
-	 * Log logs strings sent into a .log file, and if {@code LOG_TO_CONSOLE} is enabled it will also be logged to the IDE's console.
-	 *
-	 * @param value Text or numbers being added to the log file and possibly to the IDES console.
-	 * @param loud If the logged value is not useful, it may or may not be logged because of this.
-	 * @param <T> The object type to be logged.
-	 */
-	public static <T> void log(T value, boolean loud) {
-		if (loud && !FlounderEngine.isRunningFromJar()) {
-			return;
-		}
-
 		if (LOG_TO_CONSOLE) {
 			if (getString(value).isEmpty()) {
 				System.out.println();
@@ -100,21 +111,6 @@ public class FlounderLogger extends IModule {
 	 * @param <T> The object type to be logged.
 	 */
 	public static <T> void warning(T value) {
-		warning(value, false);
-	}
-
-	/**
-	 * Warning logs strings sent into javas console, and if {@code LOG_TO_FILE} is enabled it will also be logged to a log file.
-	 *
-	 * @param value Warnings being added to the log file and possibly to your IDES console.
-	 * @param loud If the logged value is not useful, it may or may not be logged because of this.
-	 * @param <T> The object type to be logged.
-	 */
-	public static <T> void warning(T value, boolean loud) {
-		if (loud && !FlounderEngine.isRunningFromJar()) {
-			return;
-		}
-
 		System.out.println(ANSI_PURPLE + "WARNING [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 
 		if (LOG_TO_FILE) {
@@ -130,21 +126,6 @@ public class FlounderLogger extends IModule {
 	 * @param <T> The object type to be logged.
 	 */
 	public static <T> void error(T value) {
-		error(value, false);
-	}
-
-	/**
-	 * Error logs strings sent into javas console, and if {@code LOG_TO_FILE} is enabled it will also be logged to a log file.
-	 *
-	 * @param value Errors being added to the log file and possibly to your IDES console.
-	 * @param loud If the logged value is not useful, it may or may not be logged because of this.
-	 * @param <T> The object type to be logged.
-	 */
-	public static <T> void error(T value, boolean loud) {
-		if (loud && !FlounderEngine.isRunningFromJar()) {
-			return;
-		}
-
 		System.out.println(ANSI_RED + "ERROR [" + getDateString() + "]: " + ANSI_RESET + getString(value));
 
 		if (LOG_TO_FILE) {
@@ -168,7 +149,7 @@ public class FlounderLogger extends IModule {
 	 */
 	public static void exception(Exception exception) {
 		if (LOG_TO_CONSOLE) {
-			System.err.println("EXCEPTION [" + getDateString() + "]: " + exception.toString());
+			System.err.println(ANSI_PURPLE + "EXCEPTION [" + getDateString() + "]: " + ANSI_RESET + exception.toString());
 			exception.printStackTrace();
 		}
 

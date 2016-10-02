@@ -87,6 +87,10 @@ public class FlounderProfiler extends IModule {
 	 * @param <T> The type of value to add.
 	 */
 	public static <T> void add(String tabName, String title, T value) {
+		if (instance.primaryTabMenu == null) {
+			return;
+		}
+
 		addTab(tabName); // Forces the tab to be there.
 		FlounderProfilerTab tab = instance.primaryTabMenu.getCategoryComponent(tabName).get();
 		tab.addLabel(title, value); // Adds the label to the tab.
@@ -121,5 +125,6 @@ public class FlounderProfiler extends IModule {
 	public void dispose() {
 		primaryTabMenu.dispose();
 		profilerJFrame.dispose();
+		profilerOpen = false;
 	}
 }
