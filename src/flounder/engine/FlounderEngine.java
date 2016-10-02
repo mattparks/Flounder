@@ -192,7 +192,7 @@ public class FlounderEngine extends Thread {
 					update = true;
 					timerUpdate.resetStartTime();
 				}
-				updateEngine(update, FlounderDisplay.isVSync() || update);
+				updateEngine(update, !FlounderDisplay.isVSync() || update);
 				profileEngine();
 			}
 		} catch (Exception e) {
