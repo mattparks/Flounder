@@ -288,6 +288,30 @@ public class FBO {
 	}
 
 	/**
+	 * Gets the number of antialiasing samples.
+	 *
+	 * @return The number of antialiasing samples.
+	 */
+	public int getSamples() {
+		return samples;
+	}
+
+	/**
+	 * Sets the number antialiasing samples, and recreates the FBO.
+	 *
+	 * @param samples The number of antialiasing samples.
+	 */
+	public void setSamples(int samples) {
+		if (this.samples != samples) {
+			delete();
+			FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+			initializeFBO();
+		}
+
+		this.samples = samples;
+	}
+
+	/**
 	 * Gets a colour buffer.
 	 *
 	 * @param readBuffer The colour attachment to be read from.

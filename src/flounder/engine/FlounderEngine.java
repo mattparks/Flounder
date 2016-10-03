@@ -221,9 +221,9 @@ public class FlounderEngine extends Thread {
 				unloggedModules.clear();
 			}
 
-			entrance.managerGUI.init();
 			entrance.renderer.init();
 			entrance.camera.init();
+			entrance.managerGUI.init();
 			entrance.init();
 
 			initialized = true;
