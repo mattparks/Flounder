@@ -150,7 +150,7 @@ public class FlounderEngine extends Thread {
 		instance = this;
 
 		// Increment revision every fix for the minor version release. Minor version represents the build month. Major incremented every two years OR after major core engine rewrites.
-		version = new Version("1.10.02");
+		version = new Version("1.10.06");
 
 		this.closedRequested = false;
 		this.deltaUpdate = new Delta();

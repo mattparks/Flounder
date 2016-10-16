@@ -8,7 +8,6 @@ import org.lwjgl.*;
 import java.nio.*;
 import java.util.*;
 
-import static org.lwjgl.opengl.ARBInstancedArrays.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -273,7 +272,7 @@ public class FlounderLoader extends IModule {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBindVertexArray(vao);
 		glVertexAttribPointer(attribute, dataSize, GL_FLOAT, false, instancedDataLength * 4, offset * 4);
-		glVertexAttribDivisorARB(attribute, 1);
+		glVertexAttribDivisor(attribute, 1); // TODO: Do not use this 3.3 function!
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}
