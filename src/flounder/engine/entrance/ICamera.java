@@ -39,23 +39,25 @@ public interface ICamera extends IAudioListener {
 	void update(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused);
 
 	/**
-	 * @return The view matrix created by the current camera position and rotation.
-	 */
-	Matrix4f getViewMatrix();
-
-	/**
+	 * Gets the view frustum created by the current camera position and rotation.
+	 *
 	 * @return The view frustum created by the current camera position and rotation.
 	 */
 	Frustum getViewFrustum();
 
 	/**
-	 * Calculates the view matrix for the reflection pass, given the height of the water plane.
+	 * Gets the view matrix created by the current camera position and rotation.
 	 *
-	 * @param planeHeight The height of the water.
-	 *
-	 * @return The view matrix to be used for the reflection renderObjects pass.
+	 * @return The view matrix created by the current camera position and rotation.
 	 */
-	Matrix4f getReflectionViewMatrix(float planeHeight);
+	Matrix4f getViewMatrix();
+
+	/**
+	 * Gets the projection matrix used in the current scene renderObjects.
+	 *
+	 * @return The projection matrix used in the current scene renderObjects.
+	 */
+	Matrix4f getProjectionMatrix();
 
 	/**
 	 * Prepares the camera for the reflection renderObjects pass.
@@ -65,13 +67,17 @@ public interface ICamera extends IAudioListener {
 	void reflect(float waterHeight);
 
 	/**
-	 * @return The camera's 3D position in the world.
+	 * Gets the cameras 3D position in the world.
+	 *
+	 * @return The cameras 3D position in the world.
 	 */
 	@Override
 	Vector3f getPosition();
 
 	/**
-	 * @return The camera's 3D rotation in the world, where x=pitch, y=yaw, z=roll.
+	 * Gets the cameras 3D rotation in the world, where x=pitch, y=yaw, z=roll.
+	 *
+	 * @return The cameras 3D rotation in the world, where x=pitch, y=yaw, z=roll.
 	 */
 	Vector3f getRotation();
 
@@ -81,10 +87,5 @@ public interface ICamera extends IAudioListener {
 	 * @param rotation The cameras new rotation.
 	 */
 	void setRotation(Vector3f rotation);
-
-	/**
-	 * @return The cameras aim distance at the terrain.
-	 */
-	float getAimDistance();
 }
 

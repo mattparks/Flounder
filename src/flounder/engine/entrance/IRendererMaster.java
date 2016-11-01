@@ -1,7 +1,5 @@
 package flounder.engine.entrance;
 
-import flounder.maths.matrices.*;
-
 /**
  * The engines main renderer, it organizes render objects passes of subtract renderer's.
  */
@@ -15,11 +13,6 @@ public abstract class IRendererMaster {
 	 * Carries out the rendering of all components.
 	 */
 	public abstract void render();
-
-	/**
-	 * @return The projection matrix used in the current scene renderObjects.
-	 */
-	public abstract Matrix4f getProjectionMatrix();
 
 	/**
 	 * Cleans up all of the render objects processes. Should be called when the game closes.

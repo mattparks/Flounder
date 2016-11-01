@@ -3,11 +3,15 @@ package flounder.textures;
 import flounder.processing.*;
 import flounder.resources.*;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
+
 /**
  * Class that represents a loaded texture.
  */
 public class Texture {
 	private int textureID;
+	private int glType;
 	private boolean hasTransparency;
 	private int numberOfRows;
 	private MyFile file;
@@ -17,6 +21,7 @@ public class Texture {
 	 * A new OpenGL FBO object.
 	 */
 	protected Texture() {
+		this.glType = GL_TEXTURE_2D;
 		this.hasTransparency = false;
 		this.numberOfRows = 1;
 		this.loaded = false;
@@ -40,6 +45,23 @@ public class Texture {
 	 */
 	public static Texture getEmptyTexture() {
 		return new Texture();
+	}
+
+	public static Texture newCubeMap(MyFile[] textureFiles) {
+		int cubeMapId = FlounderTextures.loadCubeMap(textureFiles);
+		// TODO: This needs to know its size!
+		Texture texture = new Texture();
+		texture.textureID = cubeMapId;
+		texture.glType = GL_TEXTURE_CUBE_MAP;
+		return texture;
+	}
+
+	public static Texture newEmptyCubeMap(int size) {
+		int cubeMapId = FlounderTextures.createEmptyCubeMap(size);
+		Texture texture = new Texture();
+		texture.textureID = cubeMapId;
+		texture.glType = GL_TEXTURE_CUBE_MAP;
+		return texture;
 	}
 
 	/**

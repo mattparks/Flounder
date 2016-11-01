@@ -48,6 +48,31 @@ public class FlounderTextures extends IModule {
 	}
 
 	/**
+	 * Creates a empty cubemap.
+	 *
+	 * @param size The size of the cubemaps faces.
+	 *
+	 * @return A empty cubemap.
+	 */
+	public static int createEmptyCubeMap(int size) {
+		int texID = glGenTextures();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
+
+		for (int i = 0; i < 6; i++) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+		}
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		instance.textureCache.add(texID);
+		return texID;
+	}
+
+	/**
 	 * Loads a list of textures into a cube map
 	 *
 	 * @param textureFiles The list of files to load.
@@ -70,6 +95,7 @@ public class FlounderTextures extends IModule {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		instance.textureCache.add(texID);
 		return texID;
 	}

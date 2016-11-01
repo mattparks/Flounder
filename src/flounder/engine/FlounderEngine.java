@@ -340,7 +340,7 @@ public class FlounderEngine extends Thread {
 	 * @return The projection matrix used in the current scene renderObjects.
 	 */
 	public static Matrix4f getProjectionMatrix() {
-		return instance.entrance.renderer.getProjectionMatrix();
+		return instance.entrance.camera.getProjectionMatrix();
 	}
 
 	/**

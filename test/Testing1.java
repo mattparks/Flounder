@@ -35,39 +35,46 @@ public class Testing1 extends FlounderEntrance {
 		FlounderEngine.loadEngineStatics("Ebon Universe");
 		instance = new Testing1(
 				new ICamera() {
+					private static final float NEAR_PLANE = 0.1f;
+					private static final float FAR_PLANE = (float) (2560) * 4.0f;
+					private static final float FIELD_OF_VIEW = 72.0f;
+
 					private Frustum viewFrustum;
+					private Matrix4f viewMatrix;
+					private Matrix4f projectionMatrix;
+
 					private Vector3f position;
 					private Vector3f rotation;
-					private Matrix4f viewMatrix;
 
 					@Override
 					public void init() {
-						viewFrustum = new Frustum();
-						position = new Vector3f();
-						rotation = new Vector3f();
-						viewMatrix = new Matrix4f();
+						this.viewFrustum = new Frustum();
+						this.viewMatrix = new Matrix4f();
+						this.projectionMatrix = new Matrix4f();
+
+						this.position = new Vector3f();
+						this.rotation = new Vector3f();
 					}
 
 					@Override
 					public float getNearPlane() {
-						return 3200.0f;
+						return NEAR_PLANE;
 					}
 
 					@Override
 					public float getFarPlane() {
-						return 0.1f;
+						return FAR_PLANE;
 					}
 
 					@Override
 					public float getFOV() {
-						return 70.0f;
+						return FIELD_OF_VIEW;
 					}
 
 					@Override
 					public void update(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused) {
 						position.set(focusPosition);
 						rotation.set(focusRotation);
-						updateViewMatrix();
 
 						if (FlounderProfiler.isOpen()) {
 							FlounderProfiler.add("Camera", "Position", position);
@@ -86,19 +93,25 @@ public class Testing1 extends FlounderEntrance {
 						viewFrustum.recalculateFrustum(FlounderEngine.getProjectionMatrix(), getViewMatrix());
 					}
 
+					private void updateProjectionMatrix() {
+						Matrix4f.perspectiveMatrix(FIELD_OF_VIEW, FlounderDisplay.getAspectRatio(), NEAR_PLANE, FAR_PLANE, projectionMatrix);
+					}
+
 					@Override
 					public Matrix4f getViewMatrix() {
+						updateViewMatrix();
 						return viewMatrix;
+					}
+
+					@Override
+					public Matrix4f getProjectionMatrix() {
+						updateProjectionMatrix();
+						return projectionMatrix;
 					}
 
 					@Override
 					public Frustum getViewFrustum() {
 						return viewFrustum;
-					}
-
-					@Override
-					public Matrix4f getReflectionViewMatrix(float planeHeight) {
-						throw new NotImplementedException();
 					}
 
 					@Override
@@ -120,11 +133,6 @@ public class Testing1 extends FlounderEntrance {
 					public void setRotation(Vector3f rotation) {
 						this.rotation.set(rotation);
 					}
-
-					@Override
-					public float getAimDistance() {
-						throw new NotImplementedException();
-					}
 				}, new IRendererMaster() {
 			private Vector4f POSITIVE_INFINITY = new Vector4f(0.0f, 1.0f, 0.0f, Float.POSITIVE_INFINITY);
 
@@ -132,7 +140,6 @@ public class Testing1 extends FlounderEntrance {
 			private GuiRenderer guiRenderer;
 			private BoundingRenderer aabbRenderer;
 
-			private Matrix4f projectionMatrix;
 			private Colour clearColour;
 
 			private SinWaveDriver clearColourX;
@@ -144,7 +151,6 @@ public class Testing1 extends FlounderEntrance {
 				guiRenderer = new GuiRenderer();
 				aabbRenderer = new BoundingRenderer();
 
-				projectionMatrix = new Matrix4f();
 				clearColour = new Colour();
 
 				clearColourX = new SinWaveDriver(0.0f, 1.0f, 30.0f);
@@ -155,17 +161,11 @@ public class Testing1 extends FlounderEntrance {
 			public void render() {
 				clearColour.set(clearColourX.update(FlounderEngine.getDelta()), clearColourY.update(FlounderEngine.getDelta()), 0.3f);
 				OpenGlUtils.prepareNewRenderParse(clearColour);
-				Matrix4f.perspectiveMatrix(FlounderEngine.getCamera().getFOV(), FlounderDisplay.getAspectRatio(), FlounderEngine.getCamera().getNearPlane(), FlounderEngine.getCamera().getFarPlane(), projectionMatrix);
 
 				// TODO
 				//	fontRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
 				//	guiRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
 				//	aabbRenderer.render(POSITIVE_INFINITY, FlounderEngine.getCamera());
-			}
-
-			@Override
-			public Matrix4f getProjectionMatrix() {
-				return projectionMatrix;
 			}
 
 			@Override
