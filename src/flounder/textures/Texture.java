@@ -48,18 +48,15 @@ public class Texture {
 	}
 
 	public static Texture newCubeMap(MyFile[] textureFiles) {
-		int cubeMapId = FlounderTextures.loadCubeMap(textureFiles);
-		// TODO: This needs to know its size!
 		Texture texture = new Texture();
-		texture.textureID = cubeMapId;
+		texture.textureID = FlounderTextures.loadCubeMap(textureFiles);
 		texture.glType = GL_TEXTURE_CUBE_MAP;
 		return texture;
 	}
 
 	public static Texture newEmptyCubeMap(int size) {
-		int cubeMapId = FlounderTextures.createEmptyCubeMap(size);
 		Texture texture = new Texture();
-		texture.textureID = cubeMapId;
+		texture.textureID = FlounderTextures.createEmptyCubeMap(size);
 		texture.glType = GL_TEXTURE_CUBE_MAP;
 		return texture;
 	}
