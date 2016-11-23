@@ -72,7 +72,7 @@ public class BoundingRenderer extends IRenderer {
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
 		shader.start();
-		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.getCamera().getProjectionMatrix());
+		shader.getUniformMat4("projectionMatrix").loadMat4(camera.getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
