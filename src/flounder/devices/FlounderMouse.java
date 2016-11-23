@@ -1,6 +1,6 @@
 package flounder.devices;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
 import flounder.resources.*;
@@ -44,7 +44,7 @@ public class FlounderMouse extends IModule {
 	 * Creates a new GLFW mouse.
 	 */
 	public FlounderMouse() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override
@@ -137,8 +137,8 @@ public class FlounderMouse extends IModule {
 	@Override
 	public void run() {
 		// Updates the mouses delta.
-		mouseDeltaX = FlounderEngine.getDelta() * (lastMousePositionX - mousePositionX);
-		mouseDeltaY = FlounderEngine.getDelta() * (lastMousePositionY - mousePositionY);
+		mouseDeltaX = FlounderFramework.getDelta() * (lastMousePositionX - mousePositionX);
+		mouseDeltaY = FlounderFramework.getDelta() * (lastMousePositionY - mousePositionY);
 
 		// Sets the last position of the current.
 		lastMousePositionX = mousePositionX;
@@ -154,7 +154,7 @@ public class FlounderMouse extends IModule {
 
 		// Updates the mouse wheel using a smooth scroll technique.
 		if (mouseWheel != 0.0f) {
-			mouseWheel -= FlounderEngine.getDelta() * ((mouseWheel < 0.0f) ? -1.0f : 1.0f);
+			mouseWheel -= FlounderFramework.getDelta() * ((mouseWheel < 0.0f) ? -1.0f : 1.0f);
 			mouseWheel = Maths.deadband(0.1f, mouseWheel);
 		}
 	}

@@ -1,6 +1,6 @@
 package flounder.devices;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import org.lwjgl.glfw.*;
 
@@ -20,7 +20,7 @@ public class FlounderKeyboard extends IModule {
 	 * Creates a new GLFW keyboard.
 	 */
 	public FlounderKeyboard() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override

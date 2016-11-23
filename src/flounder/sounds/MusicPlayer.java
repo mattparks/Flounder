@@ -1,6 +1,6 @@
 package flounder.sounds;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.maths.*;
 import flounder.visual.*;
 
@@ -96,14 +96,14 @@ public class MusicPlayer {
 			source.setInactive();
 
 			if (timeoutStart == 0.0f) {
-				timeoutStart = FlounderEngine.getDeltaTime();
+				timeoutStart = FlounderFramework.getDeltaTime();
 
 				if (selectedTimeout >= 0.0f) {
 					selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
 				}
 			}
 
-			if (FlounderEngine.getDeltaTime() - timeoutStart > selectedTimeout) {
+			if (FlounderFramework.getDeltaTime() - timeoutStart > selectedTimeout) {
 				timeoutStart = 0.0f;
 				selectedTimeout = 0.0f;
 				playNextTrack();

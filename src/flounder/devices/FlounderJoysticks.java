@@ -1,6 +1,6 @@
 package flounder.devices;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import org.lwjgl.*;
 
@@ -22,7 +22,7 @@ public class FlounderJoysticks extends IModule {
 	 * Creates a new GLFW joystick manager.
 	 */
 	public FlounderJoysticks() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class);
 	}
 
 	@Override

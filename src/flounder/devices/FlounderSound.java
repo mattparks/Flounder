@@ -1,7 +1,7 @@
 package flounder.devices;
 
-import flounder.engine.*;
-import flounder.engine.entrance.*;
+import flounder.camera.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.processing.*;
@@ -35,7 +35,7 @@ public class FlounderSound extends IModule {
 	 * Creates a new OpenGL sound manager.
 	 */
 	public FlounderSound() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -66,12 +66,12 @@ public class FlounderSound extends IModule {
 
 	@Override
 	public void run() {
-		ICamera camera = FlounderEngine.getCamera();
+		ICamera camera = FlounderCamera.getCamera();
 
 		if (camera != null && camera.getPosition() != null) {
 			cameraPosition.set(camera.getPosition());
 			alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
-			musicPlayer.update(FlounderEngine.getDelta());
+			musicPlayer.update(FlounderFramework.getDelta());
 			sourcePool.update();
 		}
 	}

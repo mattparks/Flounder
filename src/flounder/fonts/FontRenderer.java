@@ -1,11 +1,12 @@
 package flounder.fonts;
 
+import flounder.camera.*;
 import flounder.devices.*;
-import flounder.engine.entrance.*;
 import flounder.helpers.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
+import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 

@@ -1,6 +1,6 @@
 package flounder.guis;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.textures.*;
@@ -39,7 +39,7 @@ public class GuiTexture {
 	}
 
 	public void update() {
-		alpha = alphaDriver.update(FlounderEngine.getDelta());
+		alpha = alphaDriver.update(FlounderFramework.getDelta());
 	}
 
 	public Texture getTexture() {

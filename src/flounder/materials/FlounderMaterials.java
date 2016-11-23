@@ -1,6 +1,6 @@
 package flounder.materials;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
 import flounder.resources.*;
@@ -21,7 +21,7 @@ public class FlounderMaterials extends IModule {
 	 * Creates a new material loader class.
 	 */
 	public FlounderMaterials() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class);
 	}
 
 	@Override

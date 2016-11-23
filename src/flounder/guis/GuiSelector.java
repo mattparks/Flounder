@@ -1,7 +1,7 @@
 package flounder.guis;
 
 import flounder.devices.*;
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.inputs.*;
 import flounder.maths.*;
 import flounder.profiling.*;
@@ -45,8 +45,8 @@ public class GuiSelector {
 	protected void update() {
 		if (FlounderJoysticks.isConnected(selectedJoystick)) {
 			if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
-				cursorX += (joystickAxisX.getAmount()) * 0.75f * FlounderEngine.getDelta();
-				cursorY += (-joystickAxisY.getAmount()) * 0.75f * FlounderEngine.getDelta();
+				cursorX += (joystickAxisX.getAmount()) * 0.75f * FlounderFramework.getDelta();
+				cursorY += (-joystickAxisY.getAmount()) * 0.75f * FlounderFramework.getDelta();
 				cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
 				cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
 			}

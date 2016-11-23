@@ -1,6 +1,6 @@
 package flounder.fonts;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.loaders.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
@@ -113,7 +113,7 @@ public class Text {
 			newText = null;
 		}
 
-		float delta = FlounderEngine.getDelta();
+		float delta = FlounderFramework.getDelta();
 
 		currentScale = scaleDriver.update(delta);
 		currentX = positionXDriver.update(delta);

@@ -1,6 +1,6 @@
 package flounder.devices;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import flounder.profiling.*;
 import flounder.resources.*;
@@ -54,7 +54,7 @@ public class FlounderDisplay extends IModule {
 	 * Creates a new GLFW display.
 	 */
 	public FlounderDisplay() {
-		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class, FlounderDisplaySync.class);
 	}
 
 	/**
@@ -180,6 +180,7 @@ public class FlounderDisplay extends IModule {
 			@Override
 			public void invoke(long window) {
 				closed = true;
+				FlounderFramework.requestClose();
 			}
 		});
 
@@ -220,7 +221,7 @@ public class FlounderDisplay extends IModule {
 		// System logs.
 		FlounderLogger.log("");
 		FlounderLogger.log("===== This is not an error message, it is a system info log. =====");
-		FlounderLogger.log("Flounder Engine Version: " + FlounderEngine.getVersion().version);
+		FlounderLogger.log("Flounder Engine Version: " + FlounderFramework.getVersion().version);
 		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
 		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
@@ -308,7 +309,7 @@ public class FlounderDisplay extends IModule {
 	public static void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
 		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		File saveDirectory = new File(FlounderEngine.getRoamingFolder().getPath(), "screenshots");
+		File saveDirectory = new File(FlounderFramework.getRoamingFolder().getPath(), "screenshots");
 
 		if (!saveDirectory.exists()) {
 			try {

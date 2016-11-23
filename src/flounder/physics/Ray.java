@@ -1,7 +1,7 @@
 package flounder.physics;
 
+import flounder.camera.*;
 import flounder.devices.*;
-import flounder.engine.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 
@@ -77,13 +77,13 @@ public class Ray {
 	}
 
 	private void updateEyeCoords(Vector4f clipCoords) {
-		invertedProjection = Matrix4f.invert(FlounderEngine.getProjectionMatrix(), invertedProjection);
+		invertedProjection = Matrix4f.invert(FlounderCamera.getCamera().getProjectionMatrix(), invertedProjection);
 		Matrix4f.transform(invertedProjection, clipCoords, eyeCoords);
 		eyeCoords.set(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
 	}
 
 	private void updateWorldCoords(Vector4f eyeCoords) {
-		Matrix4f.invert(FlounderEngine.getCamera().getViewMatrix(), invertedView);
+		Matrix4f.invert(FlounderCamera.getCamera().getViewMatrix(), invertedView);
 		Matrix4f.transform(invertedView, eyeCoords, rayWorld);
 		currentRay.set(rayWorld.x, rayWorld.y, rayWorld.z);
 	}
@@ -136,8 +136,8 @@ public class Ray {
 		}
 
 		Vector4f coords = new Vector4f(position.x, position.y, position.z, 1.0f);
-		Matrix4f.transform(FlounderEngine.getCamera().getViewMatrix(), coords, coords);
-		Matrix4f.transform(FlounderEngine.getProjectionMatrix(), coords, coords);
+		Matrix4f.transform(FlounderCamera.getCamera().getViewMatrix(), coords, coords);
+		Matrix4f.transform(FlounderCamera.getCamera().getProjectionMatrix(), coords, coords);
 
 		if (coords.w < 0.0f) {
 			return null;

@@ -1,6 +1,6 @@
 package flounder.fonts;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.resources.*;
 
 import java.util.*;
@@ -26,7 +26,7 @@ public class FontType {
 		this.fontFile = fontFile;
 
 		// If the engine is initialized fonts can be loaded right away, otherwise add to pool.
-		if (!FlounderEngine.isInitialized()) {
+		if (!FlounderFramework.isInitialized()) {
 			NEEDS_TO_BE_CREATED.add(this);
 		} else {
 			createLoader();

@@ -1,6 +1,6 @@
 package flounder.models;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.materials.*;
@@ -26,7 +26,7 @@ public class FlounderModels extends IModule {
 	 * Creates a new model loader class.
 	 */
 	public FlounderModels() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class, FlounderMaterials.class);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package flounder.shaders;
 
-import flounder.engine.*;
-import flounder.exceptions.*;
+import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.processing.*;
@@ -29,7 +28,7 @@ public class FlounderShaders extends IModule {
 	 * Creates the engines shader loader.
 	 */
 	public FlounderShaders() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -171,7 +170,7 @@ public class FlounderShaders extends IModule {
 
 			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 				FlounderLogger.error(glGetShaderInfoLog(shaderID, 500));
-				throw new FlounderRuntimeException("Could not compile shader " + builder.getShaderName());
+				throw new RuntimeException("Could not compile shader " + builder.getShaderName());
 			}
 
 			shaderType.setShaderProgramID(shaderID);

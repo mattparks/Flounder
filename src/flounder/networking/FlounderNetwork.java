@@ -1,6 +1,6 @@
 package flounder.networking;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import flounder.networking.packets.*;
 
@@ -22,7 +22,7 @@ public class FlounderNetwork extends IModule {
 	 * Creates a new network manager.
 	 */
 	public FlounderNetwork() {
-		super(ModuleUpdate.AFTER_ENTRANCE, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_POST, FlounderLogger.class);
 	}
 
 	/**

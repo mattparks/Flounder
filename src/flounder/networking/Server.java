@@ -1,6 +1,6 @@
 package flounder.networking;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import flounder.networking.packets.*;
 
@@ -32,7 +32,7 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		while (FlounderEngine.isRunning()) {
+		while (FlounderFramework.isRunning()) {
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 

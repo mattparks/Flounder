@@ -1,9 +1,9 @@
 package flounder.guis;
 
 import flounder.devices.*;
-import flounder.engine.*;
 import flounder.events.*;
 import flounder.fonts.*;
+import flounder.framework.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.profiling.*;
@@ -21,6 +21,8 @@ public class FlounderGuis extends IModule {
 
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
+	private IGuiMaster guiMaster;
+
 	private GuiScreenContainer container;
 	private List<GuiTexture> guiTextures;
 	private GuiSelector selector;
@@ -29,11 +31,17 @@ public class FlounderGuis extends IModule {
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderEvents.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderEvents.class, FlounderLoader.class, FlounderFonts.class, FlounderShaders.class, FlounderTextures.class);
+		guiMaster = null;
 	}
 
 	@Override
 	public void init() {
+		if (guiMaster != null) {
+			guiMaster.init();
+			((IExtension) guiMaster).setInitialized(true);
+		}
+
 		this.container = new GuiScreenContainer();
 		this.guiTextures = new ArrayList<>();
 		this.selector = new GuiSelector();
@@ -41,14 +49,53 @@ public class FlounderGuis extends IModule {
 
 	@Override
 	public void run() {
+		List<IExtension> guiExtensions = null;
+
+		for (IExtension extension : FlounderFramework.getExtensions()) {
+			if (extension instanceof IGuiMaster) {
+				guiExtensions = new ArrayList<>();
+				guiExtensions.add(extension);
+			}
+		}
+
+		if (guiExtensions != null && !guiExtensions.isEmpty()) {
+			for (IExtension extension : guiExtensions) {
+				IGuiMaster newManager = (IGuiMaster) extension;
+
+				if (newManager.isActive() && !newManager.equals(guiMaster)) {
+					if (guiMaster != null) {
+						((IExtension) guiMaster).setInitialized(false);
+					}
+
+					guiMaster = newManager;
+
+					if (!extension.isInitialized()) {
+						guiMaster.init();
+						((IExtension) guiMaster).setInitialized(true);
+					}
+
+					break;
+				}
+			}
+		}
+
 		guiTextures.clear();
 		selector.update();
 		container.update(guiTextures, FlounderFonts.getTexts());
+
+		if (guiMaster != null) {
+			guiMaster.update();
+		}
 	}
 
 	@Override
 	public void profile() {
 		FlounderProfiler.add("GUIs", "Textures Count", guiTextures.size());
+		FlounderProfiler.add("GUIs", "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
+	}
+
+	public static IGuiMaster getGuiMaster() {
+		return instance.guiMaster;
 	}
 
 	/**
@@ -89,6 +136,11 @@ public class FlounderGuis extends IModule {
 
 	@Override
 	public void dispose() {
+		if (guiMaster != null) {
+			guiMaster.dispose();
+			((IExtension) guiMaster).setInitialized(false);
+		}
+
 		guiTextures.forEach(guiTexture -> {
 			if (guiTexture != null) {
 				guiTexture.getTexture().delete();

@@ -1,8 +1,7 @@
 package flounder.physics.bounding;
 
+import flounder.camera.*;
 import flounder.devices.*;
-import flounder.engine.*;
-import flounder.engine.entrance.*;
 import flounder.helpers.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
@@ -10,6 +9,7 @@ import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.physics.*;
 import flounder.profiling.*;
+import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
@@ -72,7 +72,7 @@ public class BoundingRenderer extends IRenderer {
 
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
 		shader.start();
-		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderEngine.getProjectionMatrix());
+		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.getCamera().getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 

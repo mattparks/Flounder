@@ -1,6 +1,6 @@
 package flounder.textures;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.logger.*;
 import flounder.processing.*;
 import flounder.profiling.*;
@@ -30,7 +30,7 @@ public class FlounderTextures extends IModule {
 	 * Creates a new texture manager.
 	 */
 	public FlounderTextures() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override

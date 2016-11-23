@@ -1,6 +1,6 @@
 package flounder.post.filters;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.post.*;
 import flounder.resources.*;
 
@@ -13,6 +13,6 @@ public class FilterWobble extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		shader.getUniformFloat("moveIt").loadFloat(wobbleAmount += 3 * FlounderEngine.getDelta());
+		shader.getUniformFloat("moveIt").loadFloat(wobbleAmount += 3 * FlounderFramework.getDelta());
 	}
 }

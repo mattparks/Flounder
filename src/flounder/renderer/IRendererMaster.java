@@ -1,21 +1,33 @@
-package flounder.engine.entrance;
+package flounder.renderer;
 
 /**
  * The engines main renderer, it organizes render objects passes of subtract renderer's.
  */
-public abstract class IRendererMaster {
+public interface IRendererMaster {
 	/**
 	 * Initializes the various renderer types and various functionality's.
 	 */
-	public abstract void init();
+	void init();
 
 	/**
 	 * Carries out the rendering of all components.
 	 */
-	public abstract void render();
+	void render();
+
+	/**
+	 * Profiles the module.
+	 */
+	void profile();
+
+	/**
+	 * Gets if the renderer is currently active, will disable the renderer if false.
+	 *
+	 * @return If the renderer is currently active.
+	 */
+	boolean isActive();
 
 	/**
 	 * Cleans up all of the render objects processes. Should be called when the game closes.
 	 */
-	public abstract void dispose();
+	void dispose();
 }

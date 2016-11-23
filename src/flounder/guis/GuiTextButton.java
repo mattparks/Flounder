@@ -1,9 +1,9 @@
 package flounder.guis;
 
 import flounder.devices.*;
-import flounder.engine.*;
 import flounder.events.*;
 import flounder.fonts.*;
+import flounder.framework.*;
 import flounder.maths.*;
 import flounder.resources.*;
 import flounder.sounds.*;
@@ -49,7 +49,7 @@ public class GuiTextButton extends GuiComponent {
 
 			@Override
 			public void onEvent() {
-				HOVER_COLOUR.set(titleColourX.update(FlounderEngine.getDelta()), titleColourY.update(FlounderEngine.getDelta()), 0.3f);
+				HOVER_COLOUR.set(titleColourX.update(FlounderFramework.getDelta()), titleColourY.update(FlounderFramework.getDelta()), 0.3f);
 			}
 		});
 	}

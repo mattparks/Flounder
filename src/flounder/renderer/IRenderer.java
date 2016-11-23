@@ -1,5 +1,6 @@
-package flounder.engine.entrance;
+package flounder.renderer;
 
+import flounder.camera.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 

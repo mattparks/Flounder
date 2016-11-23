@@ -1,6 +1,6 @@
 package flounder.loaders;
 
-import flounder.engine.*;
+import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.profiling.*;
 import org.lwjgl.*;
@@ -26,7 +26,7 @@ public class FlounderLoader extends IModule {
 	 * Creates a new OpenGL loader class.
 	 */
 	public FlounderLoader() {
-		super(ModuleUpdate.BEFORE_ENTRANCE, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_PRE, FlounderProfiler.class);
 	}
 
 	@Override

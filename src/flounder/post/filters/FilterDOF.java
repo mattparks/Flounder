@@ -1,6 +1,6 @@
 package flounder.post.filters;
 
-import flounder.engine.*;
+import flounder.camera.*;
 import flounder.post.*;
 import flounder.resources.*;
 
@@ -11,8 +11,8 @@ public class FilterDOF extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		//	shader.getUniformFloat("aimDistance").loadFloat(FlounderEngine.getCamera().getAimDistance());
-		shader.getUniformFloat("nearPlane").loadFloat(FlounderEngine.getCamera().getNearPlane());
-		shader.getUniformFloat("farPlane").loadFloat(FlounderEngine.getCamera().getFarPlane());
+		//	shader.getUniformFloat("aimDistance").loadFloat(FlounderFramework.getCamera().getAimDistance());
+		shader.getUniformFloat("nearPlane").loadFloat(FlounderCamera.getCamera().getNearPlane());
+		shader.getUniformFloat("farPlane").loadFloat(FlounderCamera.getCamera().getFarPlane());
 	}
 }
