@@ -87,12 +87,5 @@ public interface ICamera extends IAudioListener {
 	 * @param rotation The cameras new rotation.
 	 */
 	void setRotation(Vector3f rotation);
-
-	/**
-	 * Gets if the camera is currently active, will disable the camera if false.
-	 *
-	 * @return If the camera is currently active.
-	 */
-	boolean isActive();
 }
 

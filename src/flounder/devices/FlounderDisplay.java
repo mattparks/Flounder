@@ -167,6 +167,10 @@ public class FlounderDisplay extends IModule {
 		// Enables VSync if requested.
 		glfwSwapInterval(vsync ? 1 : 0);
 
+		if (vsync) {
+			FlounderFramework.setFpsLimit(60);
+		}
+
 		// Centres the window position.
 		if (!fullscreen) {
 			glfwSetWindowPos(window, (windowPosX = (mode.width() - windowWidth) / 2), (windowPosY = (mode.height() - windowHeight) / 2));
@@ -426,6 +430,10 @@ public class FlounderDisplay extends IModule {
 	public static void setVSync(boolean vsync) {
 		instance.vsync = vsync;
 		glfwSwapInterval(vsync ? 1 : 0);
+
+		if (vsync) {
+			FlounderFramework.setFpsLimit(-1);
+		}
 	}
 
 	/**

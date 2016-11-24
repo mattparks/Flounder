@@ -5,71 +5,50 @@ import flounder.framework.*;
 import flounder.logger.*;
 import flounder.profiling.*;
 
-import java.util.*;
-
 public class FlounderRenderer extends IModule {
 	private static final FlounderRenderer instance = new FlounderRenderer();
 
-	private IRendererMaster rendererMaster;
+	private IRendererMaster renderer;
 
 	public FlounderRenderer() {
 		super(ModuleUpdate.RENDER, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class);
-		this.rendererMaster = null;
+		this.renderer = null;
 	}
 
 	@Override
 	public void init() {
-		if (rendererMaster != null) {
-			rendererMaster.init();
-			((IExtension) rendererMaster).setInitialized(true);
-		}
 	}
 
 	@Override
 	public void run() {
-		List<IExtension> rendererExtensions = null;
+		IRendererMaster newRenderer = (IRendererMaster) FlounderFramework.getExtensionMatch(IRendererMaster.class, (IExtension) renderer, true);
 
-		for (IExtension extension : FlounderFramework.getExtensions()) {
-			if (extension instanceof IRendererMaster) {
-				rendererExtensions = new ArrayList<>();
-				rendererExtensions.add(extension);
+		if (newRenderer != null) {
+			if (renderer != null) {
+				renderer.dispose();
+				((IExtension) renderer).setInitialized(false);
 			}
+
+			renderer = newRenderer;
 		}
 
-		if (rendererExtensions != null && !rendererExtensions.isEmpty()) {
-			for (IExtension extension : rendererExtensions) {
-				IRendererMaster newRenderer = (IRendererMaster) extension;
-
-				if (newRenderer.isActive() && !newRenderer.equals(rendererMaster)) {
-					if (rendererMaster != null) {
-						rendererMaster.dispose();
-						((IExtension) rendererMaster).setInitialized(false);
-					}
-
-					rendererMaster = newRenderer;
-
-					if (!extension.isInitialized()) {
-						rendererMaster.init();
-						((IExtension) rendererMaster).setInitialized(true);
-					}
-
-					break;
-				}
+		if (renderer != null) {
+			if (!((IExtension) renderer).isInitialized()) {
+				renderer.init();
+				((IExtension) renderer).setInitialized(true);
 			}
-		}
 
-		if (rendererMaster != null) {
-			rendererMaster.render();
+			renderer.render();
 		}
 	}
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Renderer", "Selected", rendererMaster == null ? "NULL" : rendererMaster.getClass());
+		FlounderProfiler.add("Renderer", "Selected", renderer == null ? "NULL" : renderer.getClass());
 	}
 
 	public static IRendererMaster getRendererMaster() {
-		return instance.rendererMaster;
+		return instance.renderer;
 	}
 
 	@Override
@@ -79,9 +58,9 @@ public class FlounderRenderer extends IModule {
 
 	@Override
 	public void dispose() {
-		if (rendererMaster != null) {
-			rendererMaster.dispose();
-			((IExtension) rendererMaster).setInitialized(false);
+		if (renderer != null) {
+			renderer.dispose();
+			((IExtension) renderer).setInitialized(false);
 		}
 	}
 }

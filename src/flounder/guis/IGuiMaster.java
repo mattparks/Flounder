@@ -34,13 +34,6 @@ public interface IGuiMaster {
 	float getBlurFactor();
 
 	/**
-	 * Gets if the gui manager is currently active, will disable the gui manager if false.
-	 *
-	 * @return If the gui manager is currently active.
-	 */
-	boolean isActive();
-
-	/**
 	 * Cleans up all of the gui manager objects processes. Should be called when the game closes.
 	 */
 	void dispose();

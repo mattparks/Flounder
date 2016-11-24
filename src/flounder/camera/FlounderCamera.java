@@ -5,8 +5,6 @@ import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 
-import java.util.*;
-
 public class FlounderCamera extends IModule {
 	private static final FlounderCamera instance = new FlounderCamera();
 
@@ -16,7 +14,7 @@ public class FlounderCamera extends IModule {
 	private boolean gamePaused;
 
 	public FlounderCamera() {
-		super(ModuleUpdate.RENDER, FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_POST, FlounderLogger.class, FlounderProfiler.class);
 		this.camera = null;
 		this.focusPosition = new Vector3f();
 		this.focusRotation = new Vector3f();
@@ -33,37 +31,22 @@ public class FlounderCamera extends IModule {
 
 	@Override
 	public void run() {
-		List<IExtension> cameraExtensions = null;
+		ICamera newCamera = (ICamera) FlounderFramework.getExtensionMatch(ICamera.class, (IExtension) camera, true);
 
-		for (IExtension extension : FlounderFramework.getExtensions()) {
-			if (extension instanceof ICamera) {
-				cameraExtensions = new ArrayList<>();
-				cameraExtensions.add(extension);
+		if (newCamera != null) {
+			if (camera != null) {
+				((IExtension) camera).setInitialized(false);
 			}
-		}
 
-		if (cameraExtensions != null && !cameraExtensions.isEmpty()) {
-			for (IExtension extension : cameraExtensions) {
-				ICamera newCamera = (ICamera) extension;
-
-				if (newCamera.isActive() && !newCamera.equals(camera)) {
-					if (camera != null) {
-						((IExtension) camera).setInitialized(false);
-					}
-
-					camera = newCamera;
-
-					if (!extension.isInitialized()) {
-						camera.init();
-						((IExtension) camera).setInitialized(true);
-					}
-
-					break;
-				}
-			}
+			camera = newCamera;
 		}
 
 		if (camera != null) {
+			if (!((IExtension) camera).isInitialized()) {
+				camera.init();
+				((IExtension) camera).setInitialized(true);
+			}
+
 			camera.update(focusPosition, focusRotation, gamePaused);
 		}
 	}
