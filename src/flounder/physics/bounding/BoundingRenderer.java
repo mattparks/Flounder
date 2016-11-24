@@ -46,7 +46,7 @@ public class BoundingRenderer extends IRenderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, ICamera camera) {
-		if (!shader.isLoaded() || !FlounderBounding.renders()) {
+		if (!shader.isLoaded() || !FlounderBounding.renders() || FlounderBounding.getRenderShapes() == null) {
 			return;
 		}
 

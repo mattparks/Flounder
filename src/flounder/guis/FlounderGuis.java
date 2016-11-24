@@ -55,16 +55,20 @@ public class FlounderGuis extends IModule {
 			guiMaster = newManager;
 		}
 
+		FlounderFonts.getTexts().clear();
 		guiTextures.clear();
-		selector.update();
-		container.update(guiTextures, FlounderFonts.getTexts());
 
 		if (guiMaster != null) {
 			if (!((IExtension) guiMaster).isInitialized()) {
 				guiMaster.init();
 				((IExtension) guiMaster).setInitialized(true);
 			}
+		}
 
+		selector.update();
+		container.update(guiTextures, FlounderFonts.getTexts());
+
+		if (guiMaster != null) {
 			guiMaster.update();
 		}
 	}

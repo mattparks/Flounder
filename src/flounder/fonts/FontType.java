@@ -9,6 +9,7 @@ import java.util.*;
  * Represents a font type that can be used in any text.
  */
 public class FontType {
+	protected static final List<FontType> ALL_FONT_TYPES = new ArrayList<>();
 	protected static final List<FontType> NEEDS_TO_BE_CREATED = new ArrayList<>();
 
 	private MyFile textureAtlas;
@@ -31,6 +32,8 @@ public class FontType {
 		} else {
 			createLoader();
 		}
+
+		ALL_FONT_TYPES.add(this);
 	}
 
 	/**

@@ -12,11 +12,11 @@ public class FlounderRenderer extends IModule {
 
 	public FlounderRenderer() {
 		super(ModuleUpdate.RENDER, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class);
-		this.renderer = null;
 	}
 
 	@Override
 	public void init() {
+		this.renderer = null;
 	}
 
 	@Override

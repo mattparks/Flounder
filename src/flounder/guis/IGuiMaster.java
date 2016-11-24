@@ -19,7 +19,7 @@ public interface IGuiMaster {
 	 *
 	 * @return If the main menu is open.
 	 */
-	boolean isMenuIsOpen();
+	boolean isGamePaused();
 
 	/**
 	 * Forces the main GUI to open.

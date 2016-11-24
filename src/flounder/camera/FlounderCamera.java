@@ -11,22 +11,16 @@ public class FlounderCamera extends IModule {
 	private ICamera camera;
 	private Vector3f focusPosition;
 	private Vector3f focusRotation;
-	private boolean gamePaused;
 
 	public FlounderCamera() {
 		super(ModuleUpdate.UPDATE_POST, FlounderLogger.class, FlounderProfiler.class);
-		this.camera = null;
-		this.focusPosition = new Vector3f();
-		this.focusRotation = new Vector3f();
-		this.gamePaused = false;
 	}
 
 	@Override
 	public void init() {
-		if (camera != null) {
-			camera.init();
-			((IExtension) camera).setInitialized(true);
-		}
+		this.camera = null;
+		this.focusPosition = new Vector3f();
+		this.focusRotation = new Vector3f();
 	}
 
 	@Override
@@ -47,7 +41,7 @@ public class FlounderCamera extends IModule {
 				((IExtension) camera).setInitialized(true);
 			}
 
-			camera.update(focusPosition, focusRotation, gamePaused);
+			camera.update(focusPosition, focusRotation);
 		}
 	}
 
@@ -76,14 +70,6 @@ public class FlounderCamera extends IModule {
 		instance.focusRotation.set(focusRotation);
 	}
 
-	public static boolean isGamePaused() {
-		return instance.gamePaused;
-	}
-
-	public static void setGamePaused(boolean gamePaused) {
-		instance.gamePaused = gamePaused;
-	}
-
 	@Override
 	public IModule getInstance() {
 		return instance;
@@ -94,7 +80,5 @@ public class FlounderCamera extends IModule {
 		if (camera != null) {
 			((IExtension) camera).setInitialized(false);
 		}
-
-		gamePaused = true;
 	}
 }

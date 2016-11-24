@@ -34,9 +34,8 @@ public interface ICamera extends IAudioListener {
 	 *
 	 * @param focusPosition The position of the object the camera focuses on.
 	 * @param focusRotation The rotation of the object the camera focuses on.
-	 * @param gamePaused Is the game currently paused? Used to pause inputs to camera while in menus.
 	 */
-	void update(Vector3f focusPosition, Vector3f focusRotation, boolean gamePaused);
+	void update(Vector3f focusPosition, Vector3f focusRotation);
 
 	/**
 	 * Gets the view frustum created by the current camera position and rotation.

@@ -2,6 +2,7 @@ package flounder.fonts;
 
 import flounder.devices.*;
 import flounder.framework.*;
+import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.logger.*;
@@ -53,7 +54,9 @@ public class FlounderFonts extends IModule {
 
 	@Override
 	public void run() {
-		texts.clear();
+		if (!FlounderModules.containsModule(FlounderGuis.class)) {
+			texts.clear();
+		}
 	}
 
 	@Override
@@ -78,5 +81,7 @@ public class FlounderFonts extends IModule {
 	@Override
 	public void dispose() {
 		texts.clear();
+		FontType.NEEDS_TO_BE_CREATED.clear();
+		FontType.NEEDS_TO_BE_CREATED.addAll(FontType.ALL_FONT_TYPES);
 	}
 }
