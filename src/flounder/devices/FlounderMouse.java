@@ -15,7 +15,7 @@ import java.nio.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * Manages the creation, updating and destruction of the mouse.
+ * A module used for the creation, updating and destruction of the mouse.
  */
 public class FlounderMouse extends IModule {
 	private static final FlounderMouse instance = new FlounderMouse();
@@ -41,7 +41,7 @@ public class FlounderMouse extends IModule {
 	private GLFWCursorEnterCallback callbackCursorEnter;
 
 	/**
-	 * Creates a new GLFW mouse.
+	 * Creates a new GLFW mouse manager.
 	 */
 	public FlounderMouse() {
 		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);

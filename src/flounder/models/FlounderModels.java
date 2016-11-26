@@ -15,7 +15,7 @@ import java.util.*;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * Class capable of loading OBJ files into Models.
+ * A module used for loading and managing models.
  */
 public class FlounderModels extends IModule {
 	private static final FlounderModels instance = new FlounderModels();

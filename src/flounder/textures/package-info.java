@@ -1,4 +1,4 @@
 /**
- * Contains classes capable of loading and managing textures.
+ * Contains classes for loading and managing OpenGL textures.
  */
 package flounder.textures;

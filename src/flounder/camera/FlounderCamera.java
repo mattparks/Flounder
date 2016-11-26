@@ -5,6 +5,9 @@ import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 
+/**
+ * A module used for managing cameras in 2D and 3D worlds.
+ */
 public class FlounderCamera extends IModule {
 	private static final FlounderCamera instance = new FlounderCamera();
 
@@ -12,6 +15,9 @@ public class FlounderCamera extends IModule {
 	private Vector3f focusPosition;
 	private Vector3f focusRotation;
 
+	/**
+	 * Creates a new camera manager.
+	 */
 	public FlounderCamera() {
 		super(ModuleUpdate.UPDATE_POST, FlounderLogger.class, FlounderProfiler.class);
 	}

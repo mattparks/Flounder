@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL33.*;
 
 /**
- * Contains a lot of methods for VAO and VBO data management, and also keeps track of all currently active VAOs and VBOs.
+ * A module used for loading and managing OpenGL VAO's and VBO's.
  */
 public class FlounderLoader extends IModule {
 	private static final FlounderLoader instance = new FlounderLoader();

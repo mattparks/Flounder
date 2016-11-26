@@ -14,7 +14,7 @@ import flounder.textures.*;
 import java.util.*;
 
 /**
- * A manager that manages GUI textures in a container.
+ * A module used for that manages GUI textures in a container.
  */
 public class FlounderGuis extends IModule {
 	private static final FlounderGuis instance = new FlounderGuis();
@@ -55,7 +55,6 @@ public class FlounderGuis extends IModule {
 			guiMaster = newManager;
 		}
 
-		FlounderFonts.getTexts().clear();
 		guiTextures.clear();
 
 		if (guiMaster != null) {

@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * Manages the caches of textures.
+ * A module used for loading and managing OpenGL textures.
  */
 public class FlounderTextures extends IModule {
 	private static final FlounderTextures instance = new FlounderTextures();
@@ -27,7 +27,7 @@ public class FlounderTextures extends IModule {
 	private List<Integer> textureCache;
 
 	/**
-	 * Creates a new texture manager.
+	 * Creates a new OpenGL texture manager.
 	 */
 	public FlounderTextures() {
 		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);

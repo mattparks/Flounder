@@ -18,7 +18,7 @@ import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * An Sound Device implemented using OpenAL.
+ * A module used for loading, managing and playing a variety of different sound types.
  */
 public class FlounderSound extends IModule {
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
@@ -32,7 +32,7 @@ public class FlounderSound extends IModule {
 	private MusicPlayer musicPlayer;
 
 	/**
-	 * Creates a new OpenGL sound manager.
+	 * Creates a new OpenAL audio manager.
 	 */
 	public FlounderSound() {
 		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
@@ -146,7 +146,7 @@ public class FlounderSound extends IModule {
 	public void dispose() {
 		streamManager.kill();
 		sourcePool.dispose();
-		musicPlayer.cleanUp();
+		musicPlayer.dispose();
 		SoundLoader.dispose();
 		alcCloseDevice(device);
 	}

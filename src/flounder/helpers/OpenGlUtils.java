@@ -9,7 +9,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * Runs basic OpenGL rendering functions.
+ * A helper for basic OpenGL rendering functions.
  */
 public class OpenGlUtils {
 	private static boolean cullingBackFace = false;

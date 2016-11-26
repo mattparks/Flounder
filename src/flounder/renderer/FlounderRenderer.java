@@ -5,11 +5,17 @@ import flounder.framework.*;
 import flounder.logger.*;
 import flounder.profiling.*;
 
+/**
+ * A module used for OpenGL rendering and management.
+ */
 public class FlounderRenderer extends IModule {
 	private static final FlounderRenderer instance = new FlounderRenderer();
 
 	private IRendererMaster renderer;
 
+	/**
+	 * Creates a new OpenGL renderer manager.
+	 */
 	public FlounderRenderer() {
 		super(ModuleUpdate.RENDER, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class);
 	}

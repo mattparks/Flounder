@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * Class capable of loading OBJ files into shaders.
+ * A module used for creating shaders and loading {@link flounder.shaders.Uniform} variables to shaders.
  */
 public class FlounderShaders extends IModule {
 	private final static FlounderShaders instance = new FlounderShaders();

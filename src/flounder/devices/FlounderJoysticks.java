@@ -9,7 +9,7 @@ import java.nio.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * Manages the creation, updating and destruction of joysticks.
+ * A module used for the creation, updating and destruction of joysticks.
  */
 public class FlounderJoysticks extends IModule {
 	private static final FlounderJoysticks instance = new FlounderJoysticks();

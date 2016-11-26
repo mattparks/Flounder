@@ -7,7 +7,7 @@ import org.lwjgl.glfw.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * Manages the creation, updating and destruction of the keyboard keys.
+ * A module used for the creation, updating and destruction of the keyboard keys.
  */
 public class FlounderKeyboard extends IModule {
 	private static final FlounderKeyboard instance = new FlounderKeyboard();
@@ -17,7 +17,7 @@ public class FlounderKeyboard extends IModule {
 	private GLFWKeyCallback callbackKey;
 
 	/**
-	 * Creates a new GLFW keyboard.
+	 * Creates a new GLFW keyboard manager.
 	 */
 	public FlounderKeyboard() {
 		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);

@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * Manages the creation, updating and destruction of the display.
+ * A module used for the creation, updating and destruction of the display.
  */
 public class FlounderDisplay extends IModule {
 	private static final FlounderDisplay instance = new FlounderDisplay();
@@ -51,7 +51,7 @@ public class FlounderDisplay extends IModule {
 	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
 	/**
-	 * Creates a new GLFW display.
+	 * Creates a new GLFW display manager.
 	 */
 	public FlounderDisplay() {
 		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class, FlounderDisplaySync.class);

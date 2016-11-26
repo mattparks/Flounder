@@ -5,7 +5,7 @@ import flounder.logger.*;
 import flounder.networking.packets.*;
 
 /**
- * A manager that manages the current network connections of the engine.
+ * A module used for handling networking, servers, clients, and packets.
  */
 public class FlounderNetwork extends IModule {
 	private static final FlounderNetwork instance = new FlounderNetwork();

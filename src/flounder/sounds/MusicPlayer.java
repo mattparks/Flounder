@@ -193,6 +193,7 @@ public class MusicPlayer {
 		}
 
 		volumeDriver = new SlideDriver(source.getVolume(), 0.0f, FADE_TIME);
+		paused = true;
 	}
 
 	/**
@@ -242,7 +243,7 @@ public class MusicPlayer {
 	/**
 	 * Deletes the source being used to play music.
 	 */
-	public void cleanUp() {
+	public void dispose() {
 		if (source != null) {
 			source.delete();
 		}

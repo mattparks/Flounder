@@ -10,7 +10,7 @@ import java.lang.ref.*;
 import java.util.*;
 
 /**
- * Class capable of loading MTL files into Materials.
+ * A module used for loading materials for meshes.
  */
 public class FlounderMaterials extends IModule {
 	private static final FlounderMaterials instance = new FlounderMaterials();

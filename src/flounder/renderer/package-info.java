@@ -1,4 +1,4 @@
 /**
- * Contains classes for the implementation of the engine.
+ * Contains classes for OpenGL rendering and management.
  */
-package flounder.engine.entrance;
+package flounder.renderer;

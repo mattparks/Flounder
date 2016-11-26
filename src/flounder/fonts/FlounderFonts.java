@@ -2,7 +2,6 @@ package flounder.fonts;
 
 import flounder.devices.*;
 import flounder.framework.*;
-import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.logger.*;
@@ -14,7 +13,7 @@ import flounder.textures.*;
 import java.util.*;
 
 /**
- * A class that holds a list of available engine fonts and texts currently on the screen.
+ * A module used for holding a list of available engine fonts and texts currently on the screen.
  */
 public class FlounderFonts extends IModule {
 	private static final FlounderFonts instance = new FlounderFonts();
@@ -54,9 +53,7 @@ public class FlounderFonts extends IModule {
 
 	@Override
 	public void run() {
-		if (!FlounderModules.containsModule(FlounderGuis.class)) {
-			texts.clear();
-		}
+		texts.clear();
 	}
 
 	@Override
