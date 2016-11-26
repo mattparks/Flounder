@@ -1,41 +1,38 @@
 package flounder.shaders;
 
-import flounder.processing.*;
-import flounder.processing.glProcessing.*;
+import flounder.processing.opengl.*;
+import flounder.processing.resource.*;
 
 /**
  * A class that can process a request to load a model.
  */
-public class ShaderLoadRequest implements ResourceRequest, GlRequest {
+public class ShaderLoadRequest implements RequestResource, RequestOpenGL {
 	private Shader shader;
 	private ShaderBuilder builder;
 	private ShaderData data;
-	private boolean sendRequest;
 
 	/**
 	 * Creates a new shader load request.
 	 *
 	 * @param shader The shader object to load into.
 	 * @param builder The builder to load from.
-	 * @param sendRequest If a GL request should be sent, if false call {@link #executeGlRequest()} immediacy after {@link #doResourceRequest()}.
 	 */
-	protected ShaderLoadRequest(Shader shader, ShaderBuilder builder, boolean sendRequest) {
+	protected ShaderLoadRequest(Shader shader, ShaderBuilder builder) {
 		this.shader = shader;
 		this.builder = builder;
-		this.sendRequest = sendRequest;
 	}
 
 	@Override
-	public void doResourceRequest() {
+	public void executeRequestResource() {
 		data = FlounderShaders.loadShader(builder);
-
-		if (sendRequest) {
-			FlounderProcessors.sendGLRequest(this);
-		}
 	}
 
 	@Override
-	public void executeGlRequest() {
+	public void executeRequestGL() {
+		while (data == null) {
+			// Wait for resources to load into data...
+		}
+
 		FlounderShaders.loadShaderToOpenGL(shader, data, builder);
 	}
 }

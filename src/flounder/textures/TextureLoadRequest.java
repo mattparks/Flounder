@@ -1,41 +1,38 @@
 package flounder.textures;
 
-import flounder.processing.*;
-import flounder.processing.glProcessing.*;
+import flounder.processing.opengl.*;
+import flounder.processing.resource.*;
 
 /**
  * A class that can process a request to load a texture.
  */
-public class TextureLoadRequest implements ResourceRequest, GlRequest {
+public class TextureLoadRequest implements RequestResource, RequestOpenGL {
 	private Texture texture;
 	private TextureBuilder builder;
 	private TextureData data;
-	private boolean sendRequest;
 
 	/**
 	 * Creates a new texture load request.
 	 *
 	 * @param texture The texture object to load into.
 	 * @param builder The builder to load from.
-	 * @param sendRequest If a GL request should be sent, if false call {@link #executeGlRequest()} immediacy after {@link #doResourceRequest()}.
 	 */
-	protected TextureLoadRequest(Texture texture, TextureBuilder builder, boolean sendRequest) {
+	protected TextureLoadRequest(Texture texture, TextureBuilder builder) {
 		this.texture = texture;
 		this.builder = builder;
-		this.sendRequest = sendRequest;
 	}
 
 	@Override
-	public void doResourceRequest() {
+	public void executeRequestResource() {
 		data = FlounderTextures.decodeTextureFile(builder.getFile());
-
-		if (sendRequest) {
-			FlounderProcessors.sendGLRequest(this);
-		}
 	}
 
 	@Override
-	public void executeGlRequest() {
+	public void executeRequestGL() {
+		while (data == null) {
+			// Wait for resources to load into data...
+		}
+
 		int textureID = FlounderTextures.loadTextureToOpenGL(data, builder);
 		texture.setTextureID(textureID);
 		texture.setFile(builder.getFile());

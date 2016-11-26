@@ -45,51 +45,7 @@ public class ModelBuilder {
 			FlounderLogger.log(getPath() + " is being loaded into the model builder right now!");
 			FlounderModels.getLoaded().remove(getPath());
 			data = new Model();
-			ModelLoadRequest request = new ModelLoadRequest(data, this, false);
-			request.doResourceRequest();
-			request.executeGlRequest();
-			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(data));
-		}
-
-		return data;
-	}
-
-	/**
-	 * Creates a new model and sends it to be loaded by the loader thread.
-	 *
-	 * @return The model.
-	 */
-	public Model createInBackground() {
-		SoftReference<Model> ref = FlounderModels.getLoaded().get(getPath());
-		Model data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(getPath() + " is being loaded into the model builder in the background!");
-			FlounderModels.getLoaded().remove(getPath());
-			data = new Model();
-			FlounderProcessors.sendRequest(new ModelLoadRequest(data, this, true));
-			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(data));
-		}
-
-		return data;
-	}
-
-	/**
-	 * Creates a new model, carries out the CPU loading, and sends to the main thread for GL loading.
-	 *
-	 * @return The model.
-	 */
-	public Model createInSecondThread() {
-		SoftReference<Model> ref = FlounderModels.getLoaded().get(getPath());
-		Model data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(getPath() + " is being loaded into the model builder in separate thread!");
-			FlounderModels.getLoaded().remove(getPath());
-			data = new Model();
-			ModelLoadRequest request = new ModelLoadRequest(data, this, false);
-			request.doResourceRequest();
-			FlounderProcessors.sendGLRequest(request);
+			FlounderProcessors.sendRequest(new ModelLoadRequest(data, this));
 			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(data));
 		}
 

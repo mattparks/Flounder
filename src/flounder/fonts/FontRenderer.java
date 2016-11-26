@@ -31,7 +31,7 @@ public class FontRenderer extends IRenderer {
 		shader = Shader.newShader("fonts").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
-		).createInSecondThread();
+		).create();
 	}
 
 	@Override

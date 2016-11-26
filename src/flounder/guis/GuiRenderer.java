@@ -31,7 +31,7 @@ public class GuiRenderer extends IRenderer {
 		shader = Shader.newShader("guis").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
-		).createInSecondThread();
+		).create();
 		vaoID = FlounderLoader.createInterleavedVAO(POSITIONS, 2);
 	}
 

@@ -1,13 +1,13 @@
 package flounder.shaders;
 
-import flounder.processing.glProcessing.*;
+import flounder.processing.opengl.*;
 
 import static org.lwjgl.opengl.GL20.*;
 
 /**
  * A class that can process a request to delete a model.
  */
-public class ShaderDeleteRequest implements GlRequest {
+public class ShaderDeleteRequest implements RequestOpenGL {
 	private int shaderID;
 
 	/**
@@ -20,7 +20,7 @@ public class ShaderDeleteRequest implements GlRequest {
 	}
 
 	@Override
-	public void executeGlRequest() {
+	public void executeRequestGL() {
 		glUseProgram(0);
 		glDeleteProgram(shaderID);
 	}

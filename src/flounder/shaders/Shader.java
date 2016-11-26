@@ -307,7 +307,7 @@ public class Shader {
 	 * Deletes the shader, do not start after calling this.
 	 */
 	public void dispose() {
-		FlounderProcessors.sendGLRequest(new ShaderDeleteRequest(programID));
+		FlounderProcessors.sendRequest(new ShaderDeleteRequest(programID));
 		loaded = false;
 	}
 }

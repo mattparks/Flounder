@@ -26,7 +26,7 @@ public abstract class PostFilter {
 		this(Shader.newShader(filterName).setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
 				new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)
-		).createInSecondThread(), FBO.newFBO(1.0f).create());
+		).create(), FBO.newFBO(1.0f).create());
 	}
 
 	public PostFilter(Shader shader) {

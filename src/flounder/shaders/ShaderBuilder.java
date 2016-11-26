@@ -34,7 +34,7 @@ public class ShaderBuilder {
 	}
 
 	/**
-	 * Creates a new shader, carries out the CPU loading, and loads to OpenGL.
+	 * Creates a new shader, carries out the CPU loading, and loads to OpenGL from the loader thread.
 	 *
 	 * @return The shader that has been created.
 	 */
@@ -46,51 +46,7 @@ public class ShaderBuilder {
 			FlounderLogger.log(shaderName + " is being loaded into the shader builder right now!");
 			FlounderShaders.getLoaded().remove(shaderName);
 			data = new Shader();
-			ShaderLoadRequest request = new ShaderLoadRequest(data, this, false);
-			request.doResourceRequest();
-			request.executeGlRequest();
-			FlounderShaders.getLoaded().put(shaderName, new SoftReference<>(data));
-		}
-
-		return data;
-	}
-
-	/**
-	 * Creates a new shader and sends it to be loaded by the loader thread.
-	 *
-	 * @return The model.
-	 */
-	public Shader createInBackground() {
-		SoftReference<Shader> ref = FlounderShaders.getLoaded().get(shaderName);
-		Shader data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(shaderName + " is being loaded into the shader builder in the background!");
-			FlounderShaders.getLoaded().remove(shaderName);
-			data = new Shader();
-			FlounderProcessors.sendRequest(new ShaderLoadRequest(data, this, true));
-			FlounderShaders.getLoaded().put(shaderName, new SoftReference<>(data));
-		}
-
-		return data;
-	}
-
-	/**
-	 * Creates a new shader, carries out the CPU loading, and sends to the main thread for GL loading.
-	 *
-	 * @return The shader.
-	 */
-	public Shader createInSecondThread() {
-		SoftReference<Shader> ref = FlounderShaders.getLoaded().get(shaderName);
-		Shader data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(shaderName + " is being loaded into the shader builder in separate thread!");
-			FlounderShaders.getLoaded().remove(shaderName);
-			data = new Shader();
-			ShaderLoadRequest request = new ShaderLoadRequest(data, this, false);
-			request.doResourceRequest();
-			FlounderProcessors.sendGLRequest(request);
+			FlounderProcessors.sendRequest(new ShaderLoadRequest(data, this));
 			FlounderShaders.getLoaded().put(shaderName, new SoftReference<>(data));
 		}
 

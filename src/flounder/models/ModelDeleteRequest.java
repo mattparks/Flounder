@@ -1,12 +1,12 @@
 package flounder.models;
 
 import flounder.loaders.*;
-import flounder.processing.glProcessing.*;
+import flounder.processing.opengl.*;
 
 /**
  * A class that can process a request to delete a model.
  */
-public class ModelDeleteRequest implements GlRequest {
+public class ModelDeleteRequest implements RequestOpenGL {
 	private int modelID;
 
 	/**
@@ -19,7 +19,7 @@ public class ModelDeleteRequest implements GlRequest {
 	}
 
 	@Override
-	public void executeGlRequest() {
+	public void executeRequestGL() {
 		FlounderLoader.deleteVAOFromCache(modelID);
 	}
 }

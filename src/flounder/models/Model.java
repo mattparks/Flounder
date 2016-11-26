@@ -209,6 +209,6 @@ public class Model {
 	 */
 	public void delete() {
 		loaded = false;
-		FlounderProcessors.sendGLRequest(new ModelDeleteRequest(vaoID));
+		FlounderProcessors.sendRequest(new ModelDeleteRequest(vaoID));
 	}
 }

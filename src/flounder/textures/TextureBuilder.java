@@ -106,51 +106,7 @@ public class TextureBuilder {
 			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder right now!");
 			loadedTextures.remove(file.getPath());
 			data = new Texture();
-			TextureLoadRequest request = new TextureLoadRequest(data, this, false);
-			request.doResourceRequest();
-			request.executeGlRequest();
-			loadedTextures.put(file.getPath(), new SoftReference<>(data));
-		}
-
-		return data;
-	}
-
-	/**
-	 * Creates a new texture and sends it to be loadedTextures by the loader thread.
-	 *
-	 * @return The texture.
-	 */
-	public Texture createInBackground() {
-		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
-		Texture data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in the background!");
-			loadedTextures.remove(file.getPath());
-			data = new Texture();
-			FlounderProcessors.sendRequest(new TextureLoadRequest(data, this, true));
-			loadedTextures.put(file.getPath(), new SoftReference<>(data));
-		}
-
-		return data;
-	}
-
-	/**
-	 * Creates a new texture, carries out the CPU loading, and sends to the main thread for GL loading.
-	 *
-	 * @return The texture.
-	 */
-	public Texture createInSecondThread() {
-		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
-		Texture data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder in separate thread!");
-			loadedTextures.remove(file.getPath());
-			data = new Texture();
-			TextureLoadRequest request = new TextureLoadRequest(data, this, false);
-			request.doResourceRequest();
-			FlounderProcessors.sendGLRequest(request);
+			FlounderProcessors.sendRequest(new TextureLoadRequest(data, this));
 			loadedTextures.put(file.getPath(), new SoftReference<>(data));
 		}
 

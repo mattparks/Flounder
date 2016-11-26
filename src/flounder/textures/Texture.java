@@ -148,6 +148,6 @@ public class Texture {
 	 */
 	public void delete() {
 		loaded = false;
-		FlounderProcessors.sendGLRequest(new TextureDeleteRequest(textureID));
+		FlounderProcessors.sendRequest(new TextureDeleteRequest(textureID));
 	}
 }

@@ -39,7 +39,7 @@ public class BoundingRenderer extends IRenderer {
 		shader = Shader.newShader("bounding").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
-		).createInSecondThread();
+		).create();
 
 		lastWireframe = false;
 	}

@@ -1,11 +1,11 @@
 package flounder.textures;
 
-import flounder.processing.glProcessing.*;
+import flounder.processing.opengl.*;
 
 /**
  * A class that can process a request to delete a texture.
  */
-public class TextureDeleteRequest implements GlRequest {
+public class TextureDeleteRequest implements RequestOpenGL {
 	private int textureID;
 
 	/**
@@ -18,7 +18,7 @@ public class TextureDeleteRequest implements GlRequest {
 	}
 
 	@Override
-	public void executeGlRequest() {
+	public void executeRequestGL() {
 		FlounderTextures.deleteTexture(textureID);
 	}
 }
