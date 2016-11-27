@@ -147,7 +147,9 @@ public class Texture {
 	 * Sends a request to delete the texture.
 	 */
 	public void delete() {
-		loaded = false;
-		FlounderProcessors.sendRequest(new TextureDeleteRequest(textureID));
+		if (loaded) {
+			FlounderProcessors.sendRequest(new TextureDeleteRequest(textureID));
+			loaded = false;
+		}
 	}
 }

@@ -272,7 +272,7 @@ public class FlounderLoader extends IModule {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBindVertexArray(vao);
 		glVertexAttribPointer(attribute, dataSize, GL_FLOAT, false, instancedDataLength * 4, offset * 4);
-		glVertexAttribDivisor(attribute, 1); // TODO: Do not use this 3.3 function!
+		glVertexAttribDivisor(attribute, 1);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}

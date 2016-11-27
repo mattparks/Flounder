@@ -42,6 +42,7 @@ public class FlounderShaders extends IModule {
 
 	@Override
 	public void profile() {
+		FlounderProfiler.add("Shaders", "Loaded", loaded.size());
 	}
 
 	/**
@@ -280,7 +281,7 @@ public class FlounderShaders extends IModule {
 
 	@Override
 	public void dispose() {
-		// TODO: Delete shaders.
+		loaded.keySet().forEach(key -> loaded.get(key).get().dispose());
 		loaded.clear();
 	}
 }

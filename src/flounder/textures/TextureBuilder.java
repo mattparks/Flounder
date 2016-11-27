@@ -12,8 +12,6 @@ import java.util.*;
  * A class capable of setting up a {@link flounder.textures.Texture}.
  */
 public class TextureBuilder {
-	private static Map<String, SoftReference<Texture>> loadedTextures = new HashMap<>();
-
 	private Colour borderColour;
 	private boolean clampEdges;
 	private boolean clampToBorder;
@@ -99,15 +97,15 @@ public class TextureBuilder {
 	 * @return The texture that has been created.
 	 */
 	public Texture create() {
-		SoftReference<Texture> ref = loadedTextures.get(file.getPath());
+		SoftReference<Texture> ref = FlounderTextures.getLoaded().get(file.getPath());
 		Texture data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder right now!");
-			loadedTextures.remove(file.getPath());
+			FlounderTextures.getLoaded().remove(file.getPath());
 			data = new Texture();
 			FlounderProcessors.sendRequest(new TextureLoadRequest(data, this));
-			loadedTextures.put(file.getPath(), new SoftReference<>(data));
+			FlounderTextures.getLoaded().put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;

@@ -8,6 +8,7 @@ import flounder.resources.*;
 import org.lwjgl.*;
 
 import java.io.*;
+import java.lang.ref.*;
 import java.nio.*;
 import java.util.*;
 
@@ -24,6 +25,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class FlounderTextures extends IModule {
 	private static final FlounderTextures instance = new FlounderTextures();
 
+	private static Map<String, SoftReference<Texture>> loaded;
 	private List<Integer> textureCache;
 
 	/**
@@ -35,6 +37,7 @@ public class FlounderTextures extends IModule {
 
 	@Override
 	public void init() {
+		this.loaded = new HashMap<>();
 		this.textureCache = new ArrayList<>();
 	}
 
@@ -196,6 +199,15 @@ public class FlounderTextures extends IModule {
 		}
 	}
 
+	/**
+	 * Gets a list of loaded shaders.
+	 *
+	 * @return A list of loaded shaders.
+	 */
+	public static Map<String, SoftReference<Texture>> getLoaded() {
+		return instance.loaded;
+	}
+
 	@Override
 	public IModule getInstance() {
 		return instance;
@@ -203,6 +215,9 @@ public class FlounderTextures extends IModule {
 
 	@Override
 	public void dispose() {
+		loaded.keySet().forEach(key -> loaded.get(key).get().delete());
+		loaded.clear();
+
 		textureCache.forEach(cache -> glDeleteTextures(cache));
 		textureCache.clear();
 	}

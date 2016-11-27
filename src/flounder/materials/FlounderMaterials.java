@@ -150,7 +150,7 @@ public class FlounderMaterials extends IModule {
 
 	@Override
 	public void dispose() {
-		// TODO: Dispose materials.
+	//	loaded.keySet().forEach(key -> loaded.get(key).get().delete());
 		loaded.clear();
 	}
 }
