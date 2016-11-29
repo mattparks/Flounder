@@ -6,7 +6,6 @@ import flounder.processing.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
-import java.util.*;
 
 /**
  * A class capable of setting up a {@link flounder.textures.Texture}.

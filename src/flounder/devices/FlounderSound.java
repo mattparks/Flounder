@@ -12,8 +12,10 @@ import org.lwjgl.openal.*;
 
 import java.nio.*;
 
-import static org.lwjgl.openal.AL.*;
+import static org.lwjgl.openal.AL.createCapabilities;
 import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.AL11.*;
+import static org.lwjgl.openal.ALC.createCapabilities;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -44,7 +46,7 @@ public class FlounderSound extends IModule {
 
 		// Creates the OpenAL contexts.
 		this.device = alcOpenDevice((ByteBuffer) null);
-		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+		ALCCapabilities deviceCaps = createCapabilities(device);
 		alcMakeContextCurrent(alcCreateContext(device, (IntBuffer) null));
 		createCapabilities(deviceCaps);
 
@@ -56,7 +58,7 @@ public class FlounderSound extends IModule {
 		}
 
 		// Creates a new model and main objects.
-		alDistanceModel(AL11.AL_LINEAR_DISTANCE_CLAMPED);
+		alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
 		this.sourcePool = new SourcePoolManager();
 		this.streamManager = new StreamManager();
 		streamManager.start();

@@ -13,9 +13,6 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Flounder-Framework" exported="" />
-    <orderEntry type="library" exported="" name="lwjgl-glfw" level="project" />
-    <orderEntry type="library" exported="" name="lwjgl-openal" level="project" />
-    <orderEntry type="library" exported="" name="lwjgl-opengl" level="project" />
-    <orderEntry type="library" exported="" name="lwjgl" level="project" />
+    <orderEntry type="library" name="lwjgl" level="project" />
   </component>
 </module>
