@@ -144,8 +144,11 @@ public class FlounderLoader extends IModule {
 	 * @param vao The vao to be deleted.
 	 */
 	public static void deleteVAOFromCache(int vao) {
-		instance.vaoCache.remove(vao).forEach(cache -> glDeleteBuffers(cache));
-		glDeleteVertexArrays(vao);
+		if (instance.vaoCache.containsKey(vao)) {
+			instance.vaoCache.get(vao).forEach(cache -> glDeleteBuffers(cache));
+			instance.vaoCache.remove(vao);
+			glDeleteVertexArrays(vao);
+		}
 	}
 
 	/**
