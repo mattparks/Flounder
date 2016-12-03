@@ -30,7 +30,7 @@ public class FlounderMaterials extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 	}
 
 	@Override

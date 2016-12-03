@@ -67,7 +67,7 @@ public class FlounderSound extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		ICamera camera = FlounderCamera.getCamera();
 
 		if (camera != null && camera.getPosition() != null) {

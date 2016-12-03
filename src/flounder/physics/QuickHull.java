@@ -75,7 +75,7 @@ public class QuickHull {
 	 */
 	public final List<Vector3f> getHullPoints() {
 		if (hullPoints.size() == 0) {
-			// This is the first run with the maximum and minimum x value points. The points are definitive points of the convex hull.
+			// This is the first update with the maximum and minimum x value points. The points are definitive points of the convex hull.
 			Vector3f pointMaxX = getXPoint(false);
 			Vector3f pointMinX = getXPoint(true);
 

@@ -48,7 +48,7 @@ public class FlounderNetwork extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class SmoothFloat {
 	/**
 	 * Updates the driver with the passed time.
 	 *
-	 * @param delta The time between the last run.
+	 * @param delta The time between the last update.
 	 */
 	public void update(float delta) {
 		float offset = target - actual;

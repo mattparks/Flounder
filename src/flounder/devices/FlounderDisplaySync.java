@@ -20,7 +20,7 @@ public class FlounderDisplaySync extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		FlounderDisplay.swapBuffers();
 	}
 

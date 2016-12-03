@@ -42,7 +42,7 @@ public class FlounderTextures extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 	}
 
 	@Override

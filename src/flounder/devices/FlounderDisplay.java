@@ -277,7 +277,7 @@ public class FlounderDisplay extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		// Polls for window events. The key callback will only be invoked during this call.
 		glfwPollEvents();
 	}

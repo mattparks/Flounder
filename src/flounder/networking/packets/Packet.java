@@ -35,7 +35,7 @@ public abstract class Packet {
 	}
 
 	/**
-	 * This is run when the client receives the packet.
+	 * This is update when the client receives the packet.
 	 *
 	 * @param client The client that is processing the packet.
 	 * @param address The address where the data came from.
@@ -44,7 +44,7 @@ public abstract class Packet {
 	public abstract void clientHandlePacket(Client client, InetAddress address, int port);
 
 	/**
-	 * This is run when the server receives the packet.
+	 * This is update when the server receives the packet.
 	 *
 	 * @param server The server that is processing the packet.
 	 * @param address The address where the data came from.

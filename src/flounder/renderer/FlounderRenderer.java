@@ -26,7 +26,7 @@ public class FlounderRenderer extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		IRendererMaster newRenderer = (IRendererMaster) FlounderFramework.getExtensionMatch(IRendererMaster.class, (IExtension) renderer, true);
 
 		if (newRenderer != null) {

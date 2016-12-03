@@ -27,7 +27,7 @@ public class FlounderCamera extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		IPlayer newPlayer = (IPlayer) FlounderFramework.getExtensionMatch(IPlayer.class, (IExtension) player, true);
 		ICamera newCamera = (ICamera) FlounderFramework.getExtensionMatch(ICamera.class, (IExtension) camera, true);
 

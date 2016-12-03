@@ -41,7 +41,7 @@ public class FlounderKeyboard extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 	}
 
 	@Override

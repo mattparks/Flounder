@@ -43,7 +43,7 @@ public class FlounderGuis extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		IGuiMaster newManager = (IGuiMaster) FlounderFramework.getExtensionMatch(IGuiMaster.class, (IExtension) guiMaster, true);
 
 		if (newManager != null) {

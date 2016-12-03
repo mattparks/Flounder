@@ -135,7 +135,7 @@ public class FlounderMouse extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		// Updates the mouses delta.
 		mouseDeltaX = FlounderFramework.getDelta() * (lastMousePositionX - mousePositionX);
 		mouseDeltaY = FlounderFramework.getDelta() * (lastMousePositionY - mousePositionY);

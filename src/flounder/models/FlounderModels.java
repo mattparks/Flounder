@@ -35,7 +35,7 @@ public class FlounderModels extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 	}
 
 	@Override

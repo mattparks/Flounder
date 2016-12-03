@@ -35,7 +35,7 @@ public class FlounderLoader extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 	}
 
 	@Override
@@ -325,7 +325,7 @@ public class FlounderLoader extends IModule {
 	/**
 	 * Updates a FBO with a new set of data.
 	 *
-	 * @param vbo The FBO to run.
+	 * @param vbo The FBO to update.
 	 * @param data The data to add into the FBO.
 	 * @param buffer A buffer to use to store the data in.
 	 */

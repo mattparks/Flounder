@@ -52,7 +52,7 @@ public class FlounderFonts extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		texts.clear();
 	}
 

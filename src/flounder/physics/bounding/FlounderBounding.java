@@ -35,7 +35,7 @@ public class FlounderBounding extends IModule {
 	}
 
 	@Override
-	public void run() {
+	public void update() {
 		aabbCount = renderShapes.size();
 		clear(); // Clears before the next batch of rendering.
 	}
