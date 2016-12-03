@@ -32,10 +32,9 @@ public interface ICamera extends IAudioListener {
 	/**
 	 * Checks inputs and carries out smooth camera movement. Should be called every frame.
 	 *
-	 * @param focusPosition The position of the object the camera focuses on.
-	 * @param focusRotation The rotation of the object the camera focuses on.
+	 * @param player The movement and rotation controller to read from.
 	 */
-	void update(Vector3f focusPosition, Vector3f focusRotation);
+	void update(IPlayer player);
 
 	/**
 	 * Gets the view frustum created by the current camera position and rotation.
