@@ -60,6 +60,8 @@ public class FontRenderer extends IRenderer {
 		OpenGlUtils.disableDepthTesting();
 		OpenGlUtils.cullBackFaces(true);
 		OpenGlUtils.goWireframe(false);
+
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 	}
 
 	private void renderText(Text text) {
@@ -67,8 +69,9 @@ public class FontRenderer extends IRenderer {
 		OpenGlUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
-		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
-		shader.getUniformVec3("transform").loadVec3(textPosition.x, textPosition.y, text.getScale());
+		shader.getUniformVec2("size").loadVec2(text.getOriginalWidth() / 2.0f, text.getOriginalHeight() / 2.0f);
+		shader.getUniformVec3("transform").loadVec3(textPosition.x * FlounderDisplay.getAspectRatio(), textPosition.y, text.getScale());
+		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(text.getRotation()));
 		shader.getUniformVec4("colour").loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getCurrentAlpha());
 		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());
 		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());

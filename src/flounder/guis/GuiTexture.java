@@ -11,6 +11,7 @@ import flounder.visual.*;
  */
 public class GuiTexture {
 	private Vector2f position;
+	private float rotation;
 	private Vector2f scale;
 	private Vector2f textureOffset;
 	private Colour colourOffset;
@@ -26,36 +27,21 @@ public class GuiTexture {
 	}
 
 	public GuiTexture(Texture texture, boolean flip) {
+		this.position = new Vector2f();
+		this.rotation = 0.0f;
+		this.scale = new Vector2f();
+		this.textureOffset = new Vector2f();
+		this.colourOffset = new Colour();
+
 		this.texture = texture;
-		position = new Vector2f();
-		scale = new Vector2f();
-		textureOffset = new Vector2f();
-		colourOffset = new Colour();
+		this.alphaDriver = new ConstantDriver(1);
+		this.selectedRow = 1;
 
-		alphaDriver = new ConstantDriver(1);
-		selectedRow = 1;
-
-		flipTexture = flip;
+		this.flipTexture = flip;
 	}
 
 	public void update() {
 		alpha = alphaDriver.update(FlounderFramework.getDelta());
-	}
-
-	public Texture getTexture() {
-		return texture;
-	}
-
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-
-	public Colour getColourOffset() {
-		return colourOffset;
-	}
-
-	public void setColourOffset(Colour colour) {
-		colourOffset.set(colour);
 	}
 
 	public Vector2f getPosition() {
@@ -67,8 +53,32 @@ public class GuiTexture {
 		scale.set(width, height);
 	}
 
+	public float getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
+	}
+
 	public Vector2f getScale() {
 		return scale;
+	}
+
+	public Colour getColourOffset() {
+		return colourOffset;
+	}
+
+	public void setColourOffset(Colour colour) {
+		colourOffset.set(colour);
+	}
+
+	public Texture getTexture() {
+		return texture;
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 
 	public ValueDriver getAlphaDriver() {
@@ -83,20 +93,20 @@ public class GuiTexture {
 		return alpha;
 	}
 
-	public boolean isFlipTexture() {
-		return flipTexture;
-	}
-
-	public void setFlipTexture(boolean flipTexture) {
-		this.flipTexture = flipTexture;
-	}
-
 	public int getSelectedRow() {
 		return selectedRow;
 	}
 
 	public void setSelectedRow(int selectedRow) {
 		this.selectedRow = selectedRow;
+	}
+
+	public boolean isFlipTexture() {
+		return flipTexture;
+	}
+
+	public void setFlipTexture(boolean flipTexture) {
+		this.flipTexture = flipTexture;
 	}
 
 	/**
@@ -112,6 +122,6 @@ public class GuiTexture {
 
 	@Override
 	public String toString() {
-		return "GuiTexture{" + "texture=" + texture + ", position=" + position + ", scale=" + scale + ", alphaDriver=" + alphaDriver + ", alpha=" + alpha + ", flipTexture=" + flipTexture + "}";
+		return "GuiTexture{" + "texture=" + texture + ", position=" + position + ", rotation=" + rotation + ", scale=" + scale + ", alphaDriver=" + alphaDriver + ", alpha=" + alpha + ", flipTexture=" + flipTexture + "}";
 	}
 }

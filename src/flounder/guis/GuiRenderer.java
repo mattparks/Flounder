@@ -20,7 +20,9 @@ public class GuiRenderer extends IRenderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "guis", "guiVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "guis", "guiFragment.glsl");
 
-	private static final float[] POSITIONS = {0, 0, 0, 1, 1, 0, 1, 1};
+	private static final float POSITION_MIN = 0.0f;
+	private static final float POSITION_MAX = 1.0f;
+	private static final float[] POSITIONS = {POSITION_MIN, POSITION_MIN, POSITION_MIN, POSITION_MAX, POSITION_MAX, POSITION_MIN, POSITION_MAX, POSITION_MAX};
 
 	private Shader shader;
 	private int vaoID;
@@ -61,6 +63,8 @@ public class GuiRenderer extends IRenderer {
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 		OpenGlUtils.goWireframe(false);
+
+		shader.getUniformFloat("size").loadFloat((POSITION_MAX - POSITION_MIN) / 2.0f);
 	}
 
 	private void renderGui(GuiTexture gui) {
@@ -71,6 +75,7 @@ public class GuiRenderer extends IRenderer {
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
 		shader.getUniformVec4("transform").loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
+		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(gui.getRotation()));
 		shader.getUniformFloat("alpha").loadFloat(gui.getAlpha());
 		shader.getUniformBool("flipTexture").loadBoolean(gui.isFlipTexture());
 		shader.getUniformFloat("atlasRows").loadFloat(gui.getTexture().getNumberOfRows());

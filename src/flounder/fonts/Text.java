@@ -31,6 +31,7 @@ public class Text {
 	private Colour colour;
 	private Colour borderColour;
 	private Vector2f position;
+	private float rotation;
 
 	private boolean solidBorder;
 	private boolean glowBorder;
@@ -63,6 +64,7 @@ public class Text {
 		this.colour = new Colour(0.0f, 0.0f, 0.0f, 1.0f);
 		this.borderColour = new Colour(1.0f, 1.0f, 1.0f, 1.0f);
 		this.position = new Vector2f();
+		this.rotation = 0.0f;
 
 		this.solidBorder = false;
 		this.glowBorder = false;
@@ -210,6 +212,14 @@ public class Text {
 
 	public void setScaleDriver(ValueDriver scaleDriver) {
 		this.scaleDriver = scaleDriver;
+	}
+
+	public float getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
 	}
 
 	public void setBorder(ValueDriver driver) {

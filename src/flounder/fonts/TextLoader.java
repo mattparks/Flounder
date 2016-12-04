@@ -15,7 +15,7 @@ public class TextLoader {
 	private MetaFile metaData;
 
 	public TextLoader(MyFile fontSheet, MyFile metaFile) {
-		this.fontTexture = Texture.newTexture(fontSheet).noFiltering().create();
+		this.fontTexture = Texture.newTexture(fontSheet).noFiltering().clampEdges().create();
 		this.metaData = new MetaFile(metaFile);
 	}
 
