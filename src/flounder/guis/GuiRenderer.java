@@ -1,6 +1,7 @@
 package flounder.guis;
 
 import flounder.camera.*;
+import flounder.devices.*;
 import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.maths.vectors.*;
@@ -26,8 +27,6 @@ public class GuiRenderer extends IRenderer {
 
 	private Shader shader;
 	private int vaoID;
-
-	private boolean lastWireframe;
 
 	public GuiRenderer() {
 		shader = Shader.newShader("guis").setShaderTypes(
@@ -56,15 +55,13 @@ public class GuiRenderer extends IRenderer {
 	private void prepareRendering() {
 		shader.start();
 
-		lastWireframe = OpenGlUtils.isInWireframe();
-
 		OpenGlUtils.antialias(false);
 		OpenGlUtils.cullBackFaces(true);
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
-		OpenGlUtils.goWireframe(false);
 
-		shader.getUniformFloat("size").loadFloat((POSITION_MAX - POSITION_MIN) / 2.0f);
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
+		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
 	private void renderGui(GuiTexture gui) {
@@ -74,6 +71,7 @@ public class GuiRenderer extends IRenderer {
 
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
+		shader.getUniformVec2("size").loadVec2((POSITION_MAX - POSITION_MIN) / 2.0f, (POSITION_MAX - POSITION_MIN) / 2.0f);
 		shader.getUniformVec4("transform").loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
 		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(gui.getRotation()));
 		shader.getUniformFloat("alpha").loadFloat(gui.getAlpha());
@@ -86,7 +84,6 @@ public class GuiRenderer extends IRenderer {
 	}
 
 	private void endRendering() {
-		OpenGlUtils.goWireframe(lastWireframe);
 		shader.stop();
 	}
 

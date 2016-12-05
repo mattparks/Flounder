@@ -9,6 +9,7 @@ import java.util.*;
 
 public class TextLoader {
 	protected static final double LINE_HEIGHT = 0.04f;
+	protected static final int NEWLINE_ASCII = 10;
 	protected static final int SPACE_ASCII = 32;
 
 	private Texture fontTexture;
@@ -46,7 +47,12 @@ public class TextLoader {
 
 				currentWord = new Word(text.getFontSize());
 				continue;
-			}
+			}/* else if (c == NEWLINE_ASCII) {
+				currentLine.attemptToAddWord(currentWord);
+				lines.add(currentLine);
+				currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+				currentWord = new Word(text.getFontSize());
+			}*/
 
 			Character character = metaData.getCharacter(c);
 
@@ -56,6 +62,17 @@ public class TextLoader {
 				currentWord.addCharacter(character);
 			}
 		}
+
+		/*System.out.println();
+		for (Line l : lines) {
+			for (Word w : l.getWords()) {
+				for (Character c : w.getCharacters()) {
+					System.out.print(java.lang.Character.toString ((char) c.getId()));
+				}
+				System.out.print(" ");
+			}
+			System.out.println();
+		}*/
 
 		completeStructure(lines, currentLine, currentWord, text);
 		return lines;
@@ -79,6 +96,18 @@ public class TextLoader {
 		List<Float> textureCoords = new ArrayList<>();
 
 		for (Line line : lines) {
+			switch (text.getTextAlign()) {
+				case LEFT:
+					cursorX = 0.0;
+					break;
+				case CENTRE:
+					cursorX = (line.getMaxLength() - line.getLineLength()) / 2.0;
+					break;
+				case RIGHT:
+					cursorX = line.getMaxLength() - line.getLineLength();
+					break;
+			}
+
 			for (Word word : line.getWords()) {
 				for (Character letter : word.getCharacters()) {
 					addVerticesForCharacter(cursorX, cursorY, letter, text.getFontSize(), vertices);
@@ -117,7 +146,7 @@ public class TextLoader {
 	private void setTextSettings(Text text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 
-		if (lines.size() > 1.0f) {
+		if (text.getTextAlign().equals(TextAlign.CENTRE) || lines.size() > 1.0f) {
 			text.setOriginalWidth((float) lines.get(0).getMaxLength());
 		} else {
 			text.setOriginalWidth((float) lines.get(0).getLineLength());

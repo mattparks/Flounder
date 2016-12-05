@@ -22,8 +22,6 @@ public class FontRenderer extends IRenderer {
 
 	private Shader shader;
 
-	private boolean lastWireframe;
-
 	/**
 	 * Creates a new font renderer.
 	 */
@@ -53,15 +51,13 @@ public class FontRenderer extends IRenderer {
 	private void prepareRendering() {
 		shader.start();
 
-		lastWireframe = OpenGlUtils.isInWireframe();
-
 		OpenGlUtils.antialias(false);
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 		OpenGlUtils.cullBackFaces(true);
-		OpenGlUtils.goWireframe(false);
 
 		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
+		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
 	private void renderText(Text text) {
@@ -81,7 +77,6 @@ public class FontRenderer extends IRenderer {
 	}
 
 	private void endRendering() {
-		OpenGlUtils.goWireframe(lastWireframe);
 		shader.stop();
 	}
 

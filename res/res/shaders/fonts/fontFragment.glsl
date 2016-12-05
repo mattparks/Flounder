@@ -7,6 +7,7 @@ in vec2 pass_textureCoords;
 
 //---------UNIFORM------------
 layout(binding = 0) uniform sampler2D fontTexture;
+uniform bool polygonMode;
 uniform vec4 colour;
 uniform vec3 borderColour;
 uniform vec2 borderSizes;
@@ -25,4 +26,8 @@ void main(void) {
 
     out_colour = vec4(overallColour, overallAlpha);
     out_colour.a *= colour.a;
+
+	if (polygonMode) {
+	    out_colour = vec4(1.0, 0.0, 0.0, 1.0);
+	}
 }

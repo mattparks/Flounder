@@ -10,9 +10,11 @@ import flounder.visual.*;
  * A class that holds info about a text object.
  */
 public class Text {
-	private float fontSize;
-	private FontType fontType;
 	private String textString;
+	private FontType fontType;
+	private float fontSize;
+	private TextAlign textAlign;
+
 	private int textMesh;
 	private int vertexCount;
 	private float lineMaxSize;
@@ -51,11 +53,13 @@ public class Text {
 	 * @param text The inital text.
 	 * @param font The font family to use.
 	 * @param fontSize The font size to use.
+	 * @param textAlign How the text should be aligned.
 	 */
-	protected Text(String text, FontType font, float fontSize) {
+	protected Text(String text, FontType font, float fontSize, TextAlign textAlign) {
 		this.textString = text;
-		this.fontSize = fontSize;
 		this.fontType = font;
+		this.fontSize = fontSize;
+		this.textAlign = textAlign;
 
 		this.alphaDriver = new ConstantDriver(1.0f);
 		this.scaleDriver = new ConstantDriver(1.0f);
@@ -125,11 +129,41 @@ public class Text {
 		borderSize = borderDriver.update(delta);
 	}
 
+	public String getTextString() {
+		return textString;
+	}
+
+	public void setText(String newText) {
+		if (!textString.equals(newText)) {
+			this.newText = newText;
+		}
+	}
+
+	public float getFontSize() {
+		return fontSize;
+	}
+
+	public FontType getFontType() {
+		return fontType;
+	}
+
+	public TextAlign getTextAlign() {
+		return textAlign;
+	}
+
 	protected Vector2f getPosition() {
 		float scaleFactor = (currentScale - 1.0f) / 2.0f;
 		float xChange = scaleFactor * originalWidth;
 		float yChange = scaleFactor * originalHeight;
 		return position.set(currentX - xChange, currentY - yChange);
+	}
+
+	public float getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
 	}
 
 	protected float getTotalBorderSize() {
@@ -149,24 +183,6 @@ public class Text {
 	protected float calculateEdgeStart() {
 		float size = fontSize * currentScale;
 		return 1.0f / 300.0f * size + 137.0f / 300.0f;
-	}
-
-	public String getTextString() {
-		return textString;
-	}
-
-	public void setText(String newText) {
-		if (!textString.equals(newText)) {
-			this.newText = newText;
-		}
-	}
-
-	public float getFontSize() {
-		return fontSize;
-	}
-
-	public FontType getFontType() {
-		return fontType;
 	}
 
 	public int getMesh() {
@@ -212,14 +228,6 @@ public class Text {
 
 	public void setScaleDriver(ValueDriver scaleDriver) {
 		this.scaleDriver = scaleDriver;
-	}
-
-	public float getRotation() {
-		return rotation;
-	}
-
-	public void setRotation(float rotation) {
-		this.rotation = rotation;
 	}
 
 	public void setBorder(ValueDriver driver) {

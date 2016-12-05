@@ -8,6 +8,7 @@ public class TextBuilder {
 
 	private String text;
 	private float textSize;
+	private TextAlign textAlign;
 	private FontType font;
 
 	/**
@@ -18,6 +19,7 @@ public class TextBuilder {
 	protected TextBuilder(String text) {
 		this.text = text;
 		this.textSize = 1.0f;
+		this.textAlign = TextAlign.LEFT;
 		this.font = DEFAULT_TYPE;
 	}
 
@@ -27,7 +29,7 @@ public class TextBuilder {
 	 * @return The new text.
 	 */
 	public Text create() {
-		return new Text(text, font, textSize);
+		return new Text(text, font, textSize, textAlign);
 	}
 
 	/**
@@ -39,6 +41,16 @@ public class TextBuilder {
 	 */
 	public TextBuilder setFontSize(float size) {
 		textSize = size;
+		return this;
+	}
+
+	/**
+	 * Alights the text in a certain way, with relLineWidth in mind.
+	 *
+	 * @return this.
+	 */
+	public TextBuilder textAlign(TextAlign textAlign) {
+		this.textAlign = textAlign;
 		return this;
 	}
 
