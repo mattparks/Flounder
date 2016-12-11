@@ -12,9 +12,9 @@ Flounder Engine only has LWJGL as a requirement, once you completed those steps 
 https://equilibriumgames.github.io/Flounder-Engine/doc/
 
 # Creating A Testbed
-This a simple example of how The Flounder Engine can be setup within the main method.
+This a simple example of how The Flounder Engine can be setup within the omega method.
 <pre>
-	public static void main(String[] args) {
+	public static void omega(String[] args) {
 		Implementation implementation = new Implementation(new IGame() {
 			private final float FRONT_SPEED = 40.0f;
 			private final float UP_SPEED = 30.0f;

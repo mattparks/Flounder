@@ -20,7 +20,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class FlounderMouse extends IModule {
 	private static final FlounderMouse instance = new FlounderMouse();
 
-	private MyFile customMouse;
+	private static MyFile customMouse;
 
 	private int mouseButtons[];
 	private float lastMousePositionX;
@@ -47,9 +47,33 @@ public class FlounderMouse extends IModule {
 		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);
 	}
 
+	/**
+	 * A function called before initialization to configure the mouse.
+	 *
+	 * @param customMouse A png file containing a custom mouse cursor.
+	 */
+	public static void setup(MyFile customMouse) {
+		if (FlounderMouse.customMouse == customMouse) {
+			return;
+		}
+
+		FlounderMouse.customMouse = customMouse;
+
+		if (instance.isInitialized()) {
+			try {
+				instance.createCustomMouse();
+			} catch (IOException e) {
+				FlounderLogger.error("Could not load custom mouse!");
+				FlounderLogger.exception(e);
+			}
+		}
+	}
+
 	@Override
 	public void init() {
-		this.customMouse = new MyFile(MyFile.RES_FOLDER, "guis", "cursor.png");
+		if (FlounderMouse.customMouse == null) {
+			FlounderMouse.customMouse = new MyFile(MyFile.RES_FOLDER, "guis", "cursor.png");
+		}
 
 		this.mouseButtons = new int[GLFW_MOUSE_BUTTON_LAST];
 		this.displaySelected = true;

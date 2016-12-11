@@ -319,6 +319,10 @@ public class Text {
 		return currentAlpha;
 	}
 
+	public boolean isLoaded() {
+		return loaded;
+	}
+
 	/**
 	 * Deletes the text VAO from memory.
 	 */
