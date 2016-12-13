@@ -54,7 +54,7 @@ public class FlounderDisplay extends IModule {
 	 * Creates a new GLFW display manager.
 	 */
 	public FlounderDisplay() {
-		super(ModuleUpdate.ALWAYS, FlounderLogger.class, FlounderProfiler.class, FlounderDisplaySync.class);
+		super(ModuleUpdate.UPDATE_ALWAYS, FlounderLogger.class, FlounderProfiler.class, FlounderDisplaySync.class);
 	}
 
 	/**

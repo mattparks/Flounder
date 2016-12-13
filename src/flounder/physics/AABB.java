@@ -396,6 +396,73 @@ public class AABB extends IBounding<AABB> {
 	}
 
 	/**
+	 * Adjusts a movement amount so that after the move is performed, the {@code left} AABB will not intersect the {@code right}.
+	 * <p/>
+	 * This method assumes that {@code left} AABB can actually intersect {@code right} after some amount of movement,
+	 * even if it won't necessarily intersect it after the movement specified by {@code moveDelta}.
+	 *
+	 * @param left The left source (moving) AABB.
+	 * @param right The right source AABB.
+	 * @param positionDelta The delta movement for the left AABB.
+	 * @param destination Where the final resolved delta should be stored.
+	 *
+	 * @return The new, adjusted move delta that guarantees no intersection.
+	 */
+	public static Vector3f resolveCollision(AABB left, AABB right, Vector3f positionDelta, Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		float newAmountX = positionDelta.x;
+		float newAmountY = positionDelta.y;
+		float newAmountZ = positionDelta.z;
+
+		if (positionDelta.x != 0.0) {
+			if (positionDelta.x > 0) {
+				// Our max == their min
+				newAmountX = right.getMinExtents().getX() - left.getMaxExtents().getX();
+			} else {
+				// Our min == their max
+				newAmountX = right.getMaxExtents().getX() - left.getMinExtents().getX();
+			}
+
+			if (Math.abs(newAmountX) < Math.abs(positionDelta.x)) {
+				destination.x = newAmountX;
+			}
+		}
+
+		if (positionDelta.y != 0.0) {
+			if (positionDelta.y > 0) {
+				// Our max == their min
+				newAmountY = right.getMinExtents().getY() - left.getMaxExtents().getY();
+			} else {
+				// Our min == their max
+				newAmountY = right.getMaxExtents().getY() - left.getMinExtents().getY();
+			}
+
+			if (Math.abs(newAmountY) < Math.abs(positionDelta.y)) {
+				destination.y = newAmountY;
+			}
+		}
+
+		if (positionDelta.z != 0.0) {
+			if (positionDelta.z > 0) {
+				// Our max == their min
+				newAmountZ = right.getMinExtents().getZ() - left.getMaxExtents().getZ();
+			} else {
+				// Our min == their max
+				newAmountZ = right.getMaxExtents().getZ() - left.getMinExtents().getZ();
+			}
+
+			if (Math.abs(newAmountZ) < Math.abs(positionDelta.z)) {
+				destination.z = newAmountZ;
+			}
+		}
+
+		return destination;
+	}
+
+	/**
 	 * Calculates the centre of this AABB on the X axis.
 	 *
 	 * @return The centre location of this AABB on the X axis.

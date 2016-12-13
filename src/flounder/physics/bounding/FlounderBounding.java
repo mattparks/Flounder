@@ -24,7 +24,7 @@ public class FlounderBounding extends IModule {
 	 * Creates a new bounding manager.
 	 */
 	public FlounderBounding() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderLoader.class);
+		super(ModuleUpdate.UPDATE_POST, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class FlounderBounding extends IModule {
 		return instance.renders;
 	}
 
-	public static void setRenders(boolean renders) {
+	public static void toggle(boolean renders) {
 		instance.renders = renders;
 	}
 

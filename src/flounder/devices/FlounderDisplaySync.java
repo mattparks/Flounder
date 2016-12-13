@@ -12,7 +12,7 @@ public class FlounderDisplaySync extends IModule {
 	 * Creates a new GLFW display synchronizer.
 	 */
 	public FlounderDisplaySync() {
-		super(ModuleUpdate.RENDER, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_RENDER, FlounderDisplay.class);
 	}
 
 	@Override

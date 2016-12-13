@@ -17,7 +17,7 @@ public class FlounderRenderer extends IModule {
 	 * Creates a new OpenGL renderer manager.
 	 */
 	public FlounderRenderer() {
-		super(ModuleUpdate.RENDER, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_RENDER, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class);
 	}
 
 	@Override
