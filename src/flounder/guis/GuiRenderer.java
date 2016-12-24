@@ -47,11 +47,6 @@ public class GuiRenderer extends IRenderer {
 		endRendering();
 	}
 
-	@Override
-	public void profile() {
-		FlounderProfiler.add("GUIs", "Render Time", super.getRenderTimeMs());
-	}
-
 	private void prepareRendering() {
 		shader.start();
 
@@ -85,6 +80,11 @@ public class GuiRenderer extends IRenderer {
 
 	private void endRendering() {
 		shader.stop();
+	}
+
+	@Override
+	public void profile() {
+		FlounderProfiler.add("GUIs", "Render Time", super.getRenderTimeMs());
 	}
 
 	@Override

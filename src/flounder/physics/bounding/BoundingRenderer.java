@@ -3,6 +3,7 @@ package flounder.physics.bounding;
 import flounder.camera.*;
 import flounder.devices.*;
 import flounder.helpers.*;
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -65,11 +66,6 @@ public class BoundingRenderer extends IRenderer {
 		endRendering();
 	}
 
-	@Override
-	public void profile() {
-		FlounderProfiler.add("Boundings", "Render Time", super.getRenderTimeMs());
-	}
-
 	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
 		shader.start();
 		shader.getUniformMat4("projectionMatrix").loadMat4(camera.getProjectionMatrix());
@@ -110,6 +106,11 @@ public class BoundingRenderer extends IRenderer {
 	private void endRendering() {
 		OpenGlUtils.goWireframe(lastWireframe);
 		shader.stop();
+	}
+
+	@Override
+	public void profile() {
+		FlounderProfiler.add("Boundings", "Render Time", super.getRenderTimeMs());
 	}
 
 	@Override

@@ -43,11 +43,6 @@ public class FontRenderer extends IRenderer {
 		endRendering();
 	}
 
-	@Override
-	public void profile() {
-		FlounderProfiler.add("Fonts", "Render Time", super.getRenderTimeMs());
-	}
-
 	private void prepareRendering() {
 		shader.start();
 
@@ -78,6 +73,11 @@ public class FontRenderer extends IRenderer {
 
 	private void endRendering() {
 		shader.stop();
+	}
+
+	@Override
+	public void profile() {
+		FlounderProfiler.add("Fonts", "Render Time", super.getRenderTimeMs());
 	}
 
 	@Override
