@@ -4,6 +4,8 @@ package flounder.renderer;
  * The engines main renderer, it organizes render objects passes of subtract renderer's.
  */
 public interface IRendererMaster {
+	// TODO: Add module requirements to IRenderers!
+
 	/**
 	 * Initializes the various renderer types and various functionality's.
 	 */

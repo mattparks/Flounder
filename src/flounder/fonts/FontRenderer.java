@@ -66,7 +66,7 @@ public class FontRenderer extends IRenderer {
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
 		shader.getUniformVec2("size").loadVec2(text.getOriginalWidth() / 2.0f, text.getOriginalHeight() / 2.0f);
-		shader.getUniformVec3("transform").loadVec3(textPosition.x * FlounderDisplay.getAspectRatio(), textPosition.y, text.getScale());
+		shader.getUniformVec3("transform").loadVec3(textPosition.x, textPosition.y, text.getScale());
 		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(text.getRotation()));
 		shader.getUniformVec4("colour").loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getCurrentAlpha());
 		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());

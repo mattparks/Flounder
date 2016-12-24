@@ -8,7 +8,6 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
-import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.*;
@@ -36,6 +35,7 @@ public class FlounderDisplay extends IModule {
 	private boolean antialiasing;
 	private int samples;
 	private boolean fullscreen;
+	private boolean hiddenDisplay;
 
 	private long window;
 	private boolean closed;
@@ -68,8 +68,9 @@ public class FlounderDisplay extends IModule {
 	 * @param antialiasing If OpenGL will use antialiasing.
 	 * @param samples How many MFAA samples should be done before swapping buffers. Zero disables multisampling. GLFW_DONT_CARE means no preference.
 	 * @param fullscreen If the window will start fullscreen.
+	 * @param hiddenDisplay If the display should be hidden on start, should be true when {@link FlounderDisplayJPanel} is being used.
 	 */
-	public static void setup(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen) {
+	public static void setup(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay) {
 		if (!instance.isInitialized()) {
 			instance.windowWidth = width;
 			instance.windowHeight = height;
@@ -79,6 +80,7 @@ public class FlounderDisplay extends IModule {
 			instance.antialiasing = antialiasing;
 			instance.samples = samples;
 			instance.fullscreen = fullscreen;
+			instance.hiddenDisplay = hiddenDisplay;
 			instance.setup = true;
 		} else {
 			FlounderLogger.error("Flounder Display setup MUST be called before the instance is initialized.");
@@ -113,7 +115,7 @@ public class FlounderDisplay extends IModule {
 		// Configures the window.
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // The window will be resizable depending on if its createDisplay.
 		glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
@@ -177,7 +179,11 @@ public class FlounderDisplay extends IModule {
 		}
 
 		// Shows the OpenGl window.
-		glfwShowWindow(window);
+		if (hiddenDisplay) {
+			glfwHideWindow(window);
+		} else {
+			glfwShowWindow(window);
+		}
 
 		// Sets the displays callbacks.
 		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
@@ -334,7 +340,7 @@ public class FlounderDisplay extends IModule {
 
 		// Tries to create image.
 		try {
-			ImageIO.write(instance.createBufferedImage(), format, file);
+			ImageIO.write(getImage(null, null), format, file);
 		} catch (Exception e) {
 			FlounderLogger.error("Failed to take screenshot.");
 			FlounderLogger.exception(e);
@@ -344,29 +350,30 @@ public class FlounderDisplay extends IModule {
 	/**
 	 * Creates a buffered image from the OpenGL pixel buffer.
 	 *
+	 * @param destination The destination BufferedImage to store in, if null a new one will be created.
+	 * @param buffer The buffer to store OpenGL data into, if null a new one will be created.
+	 *
 	 * @return A new buffered image containing the displays data.
 	 */
-	private BufferedImage createBufferedImage() {
+	public static BufferedImage getImage(BufferedImage destination, ByteBuffer buffer) {
+		// Creates a new destination if it does not exist, or fixes a old one,
+		if (destination == null || buffer == null || destination.getWidth() != getWidth() || destination.getHeight() != getHeight()) {
+			destination = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+			buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 4);
+		}
+
 		// Creates a new buffer and stores the displays data into it.
-		ByteBuffer buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 4);
 		glReadPixels(0, 0, getWidth(), getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		// Transfers the data from the buffer into the image. This requires bit shifts to get the components data.
-		for (int x = 0; x < image.getWidth(); x++) {
-			for (int y = 0; y < image.getHeight(); y++) {
+		for (int x = destination.getWidth() - 1; x >= 0; x--) {
+			for (int y = destination.getHeight() - 1; y >= 0; y--) {
 				int i = (x + getWidth() * y) * 4;
-				image.setRGB(x, y, (((buffer.get(i) & 0xFF) & 0x0ff) << 16) | (((buffer.get(i + 1) & 0xFF) & 0x0ff) << 8) | ((buffer.get(i + 2) & 0xFF) & 0x0ff));
+				destination.setRGB(x, destination.getHeight() - 1 - y, (((buffer.get(i) & 0xFF) & 0x0ff) << 16) | (((buffer.get(i + 1) & 0xFF) & 0x0ff) << 8) | ((buffer.get(i + 2) & 0xFF) & 0x0ff));
 			}
 		}
 
-		// Creates the transformation direction (horizontal).
-		AffineTransform at = AffineTransform.getScaleInstance(1, -1);
-		at.translate(0, -image.getHeight(null));
-
-		// Applies transformation.
-		AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-		return opRotated.filter(image, null);
+		return destination;
 	}
 
 	/**

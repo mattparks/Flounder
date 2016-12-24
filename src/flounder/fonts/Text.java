@@ -1,6 +1,8 @@
 package flounder.fonts;
 
+import flounder.devices.*;
 import flounder.framework.*;
+import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
@@ -13,7 +15,7 @@ public class Text {
 	private String textString;
 	private FontType fontType;
 	private float fontSize;
-	private TextAlign textAlign;
+	private GuiAlign guiAlign;
 
 	private int textMesh;
 	private int vertexCount;
@@ -53,13 +55,13 @@ public class Text {
 	 * @param text The inital text.
 	 * @param font The font family to use.
 	 * @param fontSize The font size to use.
-	 * @param textAlign How the text should be aligned.
+	 * @param guiAlign How the text should be aligned.
 	 */
-	protected Text(String text, FontType font, float fontSize, TextAlign textAlign) {
+	protected Text(String text, FontType font, float fontSize, GuiAlign guiAlign) {
 		this.textString = text;
 		this.fontType = font;
 		this.fontSize = fontSize;
-		this.textAlign = textAlign;
+		this.guiAlign = guiAlign;
 
 		this.alphaDriver = new ConstantDriver(1.0f);
 		this.scaleDriver = new ConstantDriver(1.0f);
@@ -147,15 +149,25 @@ public class Text {
 		return fontType;
 	}
 
-	public TextAlign getTextAlign() {
-		return textAlign;
+	public GuiAlign getGuiAlign() {
+		return guiAlign;
 	}
 
 	protected Vector2f getPosition() {
 		float scaleFactor = (currentScale - 1.0f) / 2.0f;
 		float xChange = scaleFactor * originalWidth;
 		float yChange = scaleFactor * originalHeight;
-		return position.set(currentX - xChange, currentY - yChange);
+
+		switch(guiAlign) {
+			case LEFT:
+				return position.set((currentX - xChange), currentY - yChange);
+			case CENTRE:
+				return position.set((currentX - xChange) * FlounderDisplay.getAspectRatio(), currentY - yChange);
+			case RIGHT:
+				return position.set((currentX - xChange) * FlounderDisplay.getAspectRatio(), currentY - yChange);
+			default:
+				return position.set((currentX - xChange), currentY - yChange);
+		}
 	}
 
 	public float getRotation() {

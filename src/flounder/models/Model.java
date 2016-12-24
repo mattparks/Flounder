@@ -178,27 +178,27 @@ public class Model {
 	}
 
 	/**
-	 * Gets texture name this was stored in.
+	 * Gets model name this was stored in.
 	 *
-	 * @return The texture name.
+	 * @return The model name.
 	 */
 	public String getFile() {
 		return name;
 	}
 
 	/**
-	 * Sets the name this texture was loaded from.
+	 * Sets the name this model was loaded from.
 	 *
-	 * @param name The name this texture was loaded from.
+	 * @param name The name this model was loaded from.
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Gets if the texture is loaded.
+	 * Gets if the model is loaded.
 	 *
-	 * @return If the texture is loaded.
+	 * @return If the model is loaded.
 	 */
 	public boolean isLoaded() {
 		return loaded;

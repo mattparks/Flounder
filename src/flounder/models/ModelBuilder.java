@@ -39,17 +39,17 @@ public class ModelBuilder {
 	 */
 	public Model create() {
 		SoftReference<Model> ref = FlounderModels.getLoaded().get(getPath());
-		Model data = ref == null ? null : ref.get();
+		Model model = ref == null ? null : ref.get();
 
-		if (data == null) {
+		if (model == null) {
 			FlounderLogger.log(getPath() + " is being loaded into the model builder right now!");
 			FlounderModels.getLoaded().remove(getPath());
-			data = new Model();
-			FlounderProcessors.sendRequest(new ModelLoadRequest(data, this));
-			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(data));
+			model = new Model();
+			FlounderProcessors.sendRequest(new ModelLoadRequest(model, this));
+			FlounderModels.getLoaded().put(getPath(), new SoftReference<>(model));
 		}
 
-		return data;
+		return model;
 	}
 
 	private String getPath() {

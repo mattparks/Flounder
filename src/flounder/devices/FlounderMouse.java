@@ -185,7 +185,6 @@ public class FlounderMouse extends IModule {
 
 	@Override
 	public void profile() {
-
 	}
 
 	/**

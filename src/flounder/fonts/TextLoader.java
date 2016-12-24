@@ -1,5 +1,6 @@
 package flounder.fonts;
 
+import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.resources.*;
@@ -96,7 +97,7 @@ public class TextLoader {
 		List<Float> textureCoords = new ArrayList<>();
 
 		for (Line line : lines) {
-			switch (text.getTextAlign()) {
+			switch (text.getGuiAlign()) {
 				case LEFT:
 					cursorX = 0.0;
 					break;
@@ -146,7 +147,7 @@ public class TextLoader {
 	private void setTextSettings(Text text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 
-		if (text.getTextAlign().equals(TextAlign.CENTRE) || lines.size() > 1.0f) {
+		if (text.getGuiAlign().equals(GuiAlign.CENTRE) || lines.size() > 1.0f) {
 			text.setOriginalWidth((float) lines.get(0).getMaxLength());
 		} else {
 			text.setOriginalWidth((float) lines.get(0).getLineLength());
