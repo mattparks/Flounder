@@ -41,12 +41,21 @@ public class SmoothFloat {
 	}
 
 	/**
-	 * Instantly increases the actual reading.
+	 * Gets the smooth floats current target.
 	 *
-	 * @param increase How much to increase by.
+	 * @return The target.
 	 */
-	public void instantIncrease(float increase) {
-		actual += increase;
+	public float getTarget(){
+		return target;
+	}
+
+	/**
+	 * Increases the smooth floats target.
+	 *
+	 * @param increase How much to increase the target by.
+	 */
+	public void increaseTarget(float increase) {
+		target += increase;
 	}
 
 	/**
