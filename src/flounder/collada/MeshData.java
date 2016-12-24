@@ -37,7 +37,7 @@ public class MeshData {
 		return vertices;
 	}
 
-	public float[] getTextureCoords() {
+	public float[] getTextures() {
 		return textureCoords;
 	}
 

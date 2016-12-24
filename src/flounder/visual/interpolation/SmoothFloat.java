@@ -45,7 +45,7 @@ public class SmoothFloat {
 	 *
 	 * @return The target.
 	 */
-	public float getTarget(){
+	public float getTarget() {
 		return target;
 	}
 

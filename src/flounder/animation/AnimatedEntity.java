@@ -17,6 +17,7 @@ import flounder.textures.*;
 public class AnimatedEntity {
 
 	private final int modelVao;
+	private final int indexCount;
 	private final Texture texture;
 
 	private final Joint rootJoint;
@@ -37,8 +38,9 @@ public class AnimatedEntity {
 	 * "skeleton" of the entity.
 	 * @param jointCount The number of joints in the joint hierarchy for this entity.
 	 */
-	public AnimatedEntity(int modelVao, Texture texture, Joint rootJoint, int jointCount) {
+	public AnimatedEntity(int modelVao, int indexCount, Texture texture, Joint rootJoint, int jointCount) {
 		this.modelVao = modelVao;
+		this.indexCount = indexCount;
 		this.texture = texture;
 		this.rootJoint = rootJoint;
 		this.jointCount = jointCount;
@@ -51,6 +53,10 @@ public class AnimatedEntity {
 	 */
 	public int getModel() {
 		return modelVao;
+	}
+
+	public int getIndexCount() {
+		return indexCount;
 	}
 
 	/**
@@ -74,7 +80,7 @@ public class AnimatedEntity {
 	 * (VAO) and texture.
 	 */
 	public void delete() {
-	//	model.delete();
+		//	model.delete();
 		texture.delete();
 	}
 

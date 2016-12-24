@@ -322,6 +322,21 @@ public class FlounderLoader extends IModule {
 		return bufferObjectID;
 	}
 
+	private static final int BYTES_PER_FLOAT = 4;
+
+	public static void storeIntDataInVBO(int vaoID, int[] data, int attribute, int attrSize) {
+		int bufferObjectID = glGenBuffers();
+		instance.vaoCache.get(vaoID).add(bufferObjectID);
+		glBindBuffer(GL_ARRAY_BUFFER, bufferObjectID);
+		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
+		buffer.put(data);
+		buffer.flip();
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
+		GL30.glVertexAttribIPointer(attribute, attrSize, GL11.GL_INT, attrSize * BYTES_PER_FLOAT, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//dataVbos.add(bufferObjectID);
+	}
+
 	/**
 	 * Updates a FBO with a new set of data.
 	 *

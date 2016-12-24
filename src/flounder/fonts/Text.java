@@ -158,7 +158,7 @@ public class Text {
 		float xChange = scaleFactor * originalWidth;
 		float yChange = scaleFactor * originalHeight;
 
-		switch(guiAlign) {
+		switch (guiAlign) {
 			case LEFT:
 				return position.set((currentX - xChange), currentY - yChange);
 			case CENTRE:

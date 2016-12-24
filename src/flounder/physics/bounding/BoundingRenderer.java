@@ -3,7 +3,6 @@ package flounder.physics.bounding;
 import flounder.camera.*;
 import flounder.devices.*;
 import flounder.helpers.*;
-import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
