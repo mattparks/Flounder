@@ -322,19 +322,29 @@ public class FlounderLoader extends IModule {
 		return bufferObjectID;
 	}
 
-	private static final int BYTES_PER_FLOAT = 4;
+	/**
+	 * Stores a integer array of data into a FBO.
+	 *
+	 * @param vaoID The VAO to create a new FBO in.
+	 * @param data The data to store.
+	 * @param attributeNumber The attribute to create the FBO under.
+	 * @param coordSize The size of data being store.
+	 *
+	 * @return The new FBO's ID.
+	 */
+	public static int storeDataInVBO(int vaoID, int[] data, int attributeNumber, int coordSize) {
+		if (data == null) {
+			return 0;
+		}
 
-	public static void storeIntDataInVBO(int vaoID, int[] data, int attribute, int attrSize) {
 		int bufferObjectID = glGenBuffers();
 		instance.vaoCache.get(vaoID).add(bufferObjectID);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferObjectID);
-		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
-		buffer.put(data);
-		buffer.flip();
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
-		GL30.glVertexAttribIPointer(attribute, attrSize, GL11.GL_INT, attrSize * BYTES_PER_FLOAT, 0);
+		IntBuffer buffer = instance.storeDataInBuffer(data);
+		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
+		glVertexAttribIPointer(attributeNumber, coordSize, GL_INT, coordSize * ByteWork.BYTES_PER_FLOAT, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//dataVbos.add(bufferObjectID);
+		return bufferObjectID;
 	}
 
 	/**
@@ -416,6 +426,20 @@ public class FlounderLoader extends IModule {
 	 */
 	private FloatBuffer storeDataInBuffer(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+		buffer.put(data);
+		buffer.flip();
+		return buffer;
+	}
+
+	/**
+	 * Stores a int array into a new int buffer.
+	 *
+	 * @param data The data to store.
+	 *
+	 * @return The data in a int buffer.
+	 */
+	private IntBuffer storeDataInBuffer(int[] data) {
+		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;

@@ -29,7 +29,7 @@ public class MeshData {
 		return vertices.length / DIMENSIONS;
 	}
 
-	public float[] getTextureCoords() {
+	public float[] getTextures() {
 		return textureCoords;
 	}
 

@@ -99,16 +99,16 @@ public class GeometryLoader {
 
 	private void assembleVertices() {
 		XmlNode poly = meshData.getChild("polylist");
+		int typeCount = poly.getChildren("input").size();
 		String[] indexData = poly.getChild("p").getData().split(" ");
 
-		for (int i = 0; i < indexData.length / 3; i++) {
-			int positionIndex = Integer.parseInt(indexData[i * 3]);
-			int normalIndex = Integer.parseInt(indexData[i * 3 + 1]);
-			int texCoordIndex = Integer.parseInt(indexData[i * 3 + 2]);
+		for (int i = 0; i < indexData.length / typeCount; i++) {
+			int positionIndex = Integer.parseInt(indexData[i * typeCount]);
+			int normalIndex = Integer.parseInt(indexData[i * typeCount + 1]);
+			int texCoordIndex = Integer.parseInt(indexData[i * typeCount + 2]);
 			processVertex(positionIndex, normalIndex, texCoordIndex);
 		}
 	}
-
 
 	private Vertex processVertex(int posIndex, int normIndex, int texIndex) {
 		Vertex currentVertex = vertices.get(posIndex);
