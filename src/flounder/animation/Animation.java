@@ -1,7 +1,7 @@
 package flounder.animation;
 
 /**
- * Represents an animation that can be carried out by an  {@link AnimatedEntity}.
+ * Represents an animation that can be carried out by an animated entity.
  * It contains the length of the animation in seconds, and a list of {@link KeyFrame}s.
  */
 public class Animation {
@@ -12,8 +12,7 @@ public class Animation {
 	 * Creates a new animation.
 	 *
 	 * @param lengthInSeconds The length of the animation in seconds.
-	 * @param frames All the keyframes for the animation, ordered by time of
-	 * appearance in the animation.
+	 * @param frames All the keyframes for the animation, ordered by time of appearance in the animation.
 	 */
 	public Animation(float lengthInSeconds, KeyFrame[] frames) {
 		this.keyFrames = frames;

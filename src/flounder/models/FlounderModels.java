@@ -160,7 +160,7 @@ public class FlounderModels extends IModule {
 		model.setVaoID(FlounderLoader.createVAO());
 		FlounderLoader.createIndicesVBO(model.getVaoID(), model.getIndices());
 		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getTextures(), 1, 2);
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getTextureCoords(), 1, 2);
 		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getNormals(), 2, 3);
 		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getTangents(), 3, 3);
 		glBindVertexArray(0);

@@ -1,5 +1,7 @@
 package flounder.collada;
 
+import flounder.collada.animation.*;
+
 public class AnimationData {
 	public final float lengthSeconds;
 	public final KeyFrameData[] keyFrames;

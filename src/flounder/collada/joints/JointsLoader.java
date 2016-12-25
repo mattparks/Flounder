@@ -1,4 +1,4 @@
-package flounder.collada;
+package flounder.collada.joints;
 
 import flounder.maths.matrices.*;
 import flounder.parsing.xml.*;
@@ -30,9 +30,11 @@ public class JointsLoader {
 
 	private JointData loadJointData(XmlNode jointNode) {
 		JointData joint = extractMainJointData(jointNode);
+
 		for (XmlNode childNode : jointNode.getChildren("node")) {
 			joint.addChild(loadJointData(childNode));
 		}
+
 		return joint;
 	}
 

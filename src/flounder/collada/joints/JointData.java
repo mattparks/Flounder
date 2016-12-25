@@ -1,4 +1,4 @@
-package flounder.collada;
+package flounder.collada.joints;
 
 import flounder.maths.matrices.*;
 

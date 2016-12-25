@@ -1,5 +1,8 @@
 package flounder.collada;
 
+import flounder.collada.geometry.*;
+import flounder.collada.joints.*;
+
 public class AnimatedModelData {
 	private final JointsData joints;
 	private final MeshData mesh;

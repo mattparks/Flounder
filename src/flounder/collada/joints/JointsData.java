@@ -1,4 +1,4 @@
-package flounder.collada;
+package flounder.collada.joints;
 
 public class JointsData {
 	public final int jointCount;

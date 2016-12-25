@@ -1,4 +1,4 @@
-package flounder.collada;
+package flounder.collada.skin;
 
 import java.util.*;
 

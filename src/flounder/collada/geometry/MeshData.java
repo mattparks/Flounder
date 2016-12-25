@@ -1,4 +1,4 @@
-package flounder.collada;
+package flounder.collada.geometry;
 
 public class MeshData {
 	private static final int DIMENSIONS = 3;
@@ -11,7 +11,7 @@ public class MeshData {
 	private float[] vertexWeights;
 	private float furthestPoint;
 
-	public MeshData(float[] vertices, float[] textureCoords, float[] normals, int[] indices, int[] jointIds, float[] vertexWeights, float furthestPoint) {
+	protected MeshData(float[] vertices, float[] textureCoords, float[] normals, int[] indices, int[] jointIds, float[] vertexWeights, float furthestPoint) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;
 		this.normals = normals;
@@ -21,23 +21,15 @@ public class MeshData {
 		this.furthestPoint = furthestPoint;
 	}
 
-	public int[] getJointIds() {
-		return jointIds;
-	}
-
-	public float[] getVertexWeights() {
-		return vertexWeights;
+	public float[] getVertices() {
+		return vertices;
 	}
 
 	public int getVertexCount() {
 		return vertices.length / DIMENSIONS;
 	}
 
-	public float[] getVertices() {
-		return vertices;
-	}
-
-	public float[] getTextures() {
+	public float[] getTextureCoords() {
 		return textureCoords;
 	}
 
@@ -47,6 +39,14 @@ public class MeshData {
 
 	public int[] getIndices() {
 		return indices;
+	}
+
+	public int[] getJointIds() {
+		return jointIds;
+	}
+
+	public float[] getVertexWeights() {
+		return vertexWeights;
 	}
 
 	public float getFurthestPoint() {

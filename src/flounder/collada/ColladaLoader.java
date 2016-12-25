@@ -1,5 +1,9 @@
 package flounder.collada;
 
+import flounder.collada.animation.*;
+import flounder.collada.geometry.*;
+import flounder.collada.joints.*;
+import flounder.collada.skin.*;
 import flounder.parsing.xml.*;
 import flounder.resources.*;
 
@@ -22,7 +26,6 @@ public class ColladaLoader {
 	public static AnimationData loadColladaAnimation(MyFile colladaFile) {
 		XmlNode node = XmlParser.loadXmlFile(colladaFile);
 		AnimationLoader a = new AnimationLoader(node.getChild("library_animations"));
-		AnimationData animData = a.extractAnimation();
-		return animData;
+		return a.extractAnimation();
 	}
 }

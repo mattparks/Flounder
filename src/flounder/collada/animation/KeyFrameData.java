@@ -1,4 +1,4 @@
-package flounder.collada;
+package flounder.collada.animation;
 
 import java.util.*;
 

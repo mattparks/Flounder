@@ -141,7 +141,7 @@ public class Model {
 		return vertices;
 	}
 
-	public float[] getTextures() {
+	public float[] getTextureCoords() {
 		return textureCoords;
 	}
 

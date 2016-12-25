@@ -1,5 +1,6 @@
-package flounder.collada;
+package flounder.collada.geometry;
 
+import flounder.collada.skin.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.parsing.xml.*;
@@ -43,14 +44,6 @@ public class GeometryLoader {
 		convertDataToArrays();
 		convertIndicesListToArray();
 		return new MeshData(verticesArray, texturesArray, normalsArray, indicesArray, jointIdsArray, weightsArray, 1);
-	}
-
-	public void print() {
-		System.out.println(indices.size() + " texcoords");
-
-		for (int pos : indices) {
-			System.out.print(pos + ", ");
-		}
 	}
 
 	private void readRawData() {
@@ -130,14 +123,44 @@ public class GeometryLoader {
 		}
 	}
 
-	private int[] convertIndicesListToArray() {
-		this.indicesArray = new int[indices.size()];
+	private Vertex dealWithAlreadyProcessedVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex) {
+		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
+			indices.add(previousVertex.getIndex());
+			return previousVertex;
+		} else {
+			Vertex anotherVertex = previousVertex.getDuplicateVertex();
 
-		for (int i = 0; i < indicesArray.length; i++) {
-			indicesArray[i] = indices.get(i);
+			if (anotherVertex != null) {
+				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex);
+			} else {
+				Vertex duplicateVertex = new Vertex(vertices.size(), previousVertex.getPosition(), previousVertex.getWeightsData());
+				duplicateVertex.setTextureIndex(newTextureIndex);
+				duplicateVertex.setNormalIndex(newNormalIndex);
+				previousVertex.setDuplicateVertex(duplicateVertex);
+				vertices.add(duplicateVertex);
+				indices.add(duplicateVertex.getIndex());
+				return duplicateVertex;
+			}
 		}
+	}
 
-		return indicesArray;
+	private void removeUnusedVertices() {
+		for (Vertex vertex : vertices) {
+			vertex.averageTangents();
+
+			if (!vertex.isSet()) {
+				vertex.setTextureIndex(0);
+				vertex.setNormalIndex(0);
+			}
+		}
+	}
+
+	private void initArrays() {
+		this.verticesArray = new float[vertices.size() * 3];
+		this.texturesArray = new float[vertices.size() * 2];
+		this.normalsArray = new float[vertices.size() * 3];
+		this.jointIdsArray = new int[vertices.size() * 3];
+		this.weightsArray = new float[vertices.size() * 3];
 	}
 
 	private float convertDataToArrays() {
@@ -173,43 +196,13 @@ public class GeometryLoader {
 		return furthestPoint;
 	}
 
-	private Vertex dealWithAlreadyProcessedVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex) {
-		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
-			indices.add(previousVertex.getIndex());
-			return previousVertex;
-		} else {
-			Vertex anotherVertex = previousVertex.getDuplicateVertex();
+	private int[] convertIndicesListToArray() {
+		this.indicesArray = new int[indices.size()];
 
-			if (anotherVertex != null) {
-				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex);
-			} else {
-				Vertex duplicateVertex = new Vertex(vertices.size(), previousVertex.getPosition(), previousVertex.getWeightsData());
-				duplicateVertex.setTextureIndex(newTextureIndex);
-				duplicateVertex.setNormalIndex(newNormalIndex);
-				previousVertex.setDuplicateVertex(duplicateVertex);
-				vertices.add(duplicateVertex);
-				indices.add(duplicateVertex.getIndex());
-				return duplicateVertex;
-			}
+		for (int i = 0; i < indicesArray.length; i++) {
+			indicesArray[i] = indices.get(i);
 		}
-	}
 
-	private void initArrays() {
-		this.verticesArray = new float[vertices.size() * 3];
-		this.texturesArray = new float[vertices.size() * 2];
-		this.normalsArray = new float[vertices.size() * 3];
-		this.jointIdsArray = new int[vertices.size() * 3];
-		this.weightsArray = new float[vertices.size() * 3];
-	}
-
-	private void removeUnusedVertices() {
-		for (Vertex vertex : vertices) {
-			vertex.averageTangents();
-
-			if (!vertex.isSet()) {
-				vertex.setTextureIndex(0);
-				vertex.setNormalIndex(0);
-			}
-		}
+		return indicesArray;
 	}
 }

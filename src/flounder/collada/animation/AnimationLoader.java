@@ -1,5 +1,6 @@
-package flounder.collada;
+package flounder.collada.animation;
 
+import flounder.collada.*;
 import flounder.maths.matrices.*;
 import flounder.parsing.xml.*;
 import org.lwjgl.*;
