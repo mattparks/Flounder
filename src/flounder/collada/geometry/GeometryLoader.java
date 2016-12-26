@@ -1,6 +1,7 @@
 package flounder.collada.geometry;
 
 import flounder.collada.skin.*;
+import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.parsing.xml.*;
