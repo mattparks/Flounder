@@ -22,4 +22,17 @@ public class JointData {
 	public void addChild(JointData child) {
 		children.add(child);
 	}
+
+	/**
+	 * Adds this joint to an array, they for each child calls the same method.
+	 *
+	 * @param joints The array to add this and children into.
+	 */
+	public void addSelfAndChildren(List<JointData> joints) {
+		joints.add(this);
+
+		for (JointData child : children) {
+			child.addSelfAndChildren(joints);
+		}
+	}
 }

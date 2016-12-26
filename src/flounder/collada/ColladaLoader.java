@@ -27,7 +27,9 @@ public class ColladaLoader {
 	public static AnimationData loadColladaAnimation(MyFile colladaFile) {
 		XmlNode node = XmlParser.loadXmlFile(colladaFile);
 
-		AnimationLoader a = new AnimationLoader(node.getChild("library_animations"));
-		return a.extractAnimation();
+		AnimationLoader animationLoader = new AnimationLoader(node.getChild("library_animations"));
+		AnimationData animationData = animationLoader.extractAnimation();
+
+		return animationData;
 	}
 }
