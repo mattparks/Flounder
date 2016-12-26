@@ -196,7 +196,7 @@ public class OpenSimplexNoise {
 			value += attn0 * attn0 * extrapolate(xsb, ysb, dx0, dy0);
 		}
 
-		// Extra Vertex
+		// Extra VertexData
 		double attn_ext = 2 - dx_ext * dx_ext - dy_ext * dy_ext;
 		if (attn_ext > 0) {
 			attn_ext *= attn_ext;

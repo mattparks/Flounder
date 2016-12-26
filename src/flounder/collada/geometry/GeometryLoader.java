@@ -9,16 +9,18 @@ import java.util.*;
 
 public class GeometryLoader {
 	private final XmlNode meshData;
+
 	private final List<VertexSkinData> vertexWeights;
 
 	private float[] verticesArray;
-	private float[] normalsArray;
 	private float[] texturesArray;
+	private float[] normalsArray;
+	private float[] tangentsArray;
 	private int[] indicesArray;
 	private int[] jointIdsArray;
 	private float[] weightsArray;
 
-	private List<Vertex> vertices;
+	private List<VertexData> vertices;
 	private List<Vector2f> textures;
 	private List<Vector3f> normals;
 	private List<Integer> indices;
@@ -26,6 +28,7 @@ public class GeometryLoader {
 
 	public GeometryLoader(XmlNode geometryNode, List<VertexSkinData> vertexWeights) {
 		this.meshData = geometryNode.getChild("geometry").getChild("mesh");
+
 		this.vertexWeights = vertexWeights;
 
 		this.vertices = new ArrayList<>();
@@ -43,7 +46,7 @@ public class GeometryLoader {
 		initArrays();
 		convertDataToArrays();
 		convertIndicesListToArray();
-		return new MeshData(verticesArray, texturesArray, normalsArray, indicesArray, jointIdsArray, weightsArray, 1);
+		return new MeshData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, jointIdsArray, weightsArray, 1);
 	}
 
 	private void readRawData() {
@@ -64,7 +67,9 @@ public class GeometryLoader {
 			float z = Float.parseFloat(posData[i * 3 + 2]);
 			Vector4f position = new Vector4f(x, y, z, 1);
 			Matrix4f.transform(correction, position, position);
-			vertices.add(new Vertex(vertices.size(), new Vector3f(position.x, position.y, position.z), vertexWeights.get(vertices.size())));
+			VertexData vertexNew = new VertexData(vertices.size(), new Vector3f(position.x, position.y, position.z));
+			vertexNew.setWeightsData(vertexWeights.get(vertices.size()));
+			vertices.add(vertexNew);
 		}
 	}
 
@@ -110,8 +115,8 @@ public class GeometryLoader {
 		}
 	}
 
-	private Vertex processVertex(int posIndex, int normIndex, int texIndex) {
-		Vertex currentVertex = vertices.get(posIndex);
+	private VertexData processVertex(int posIndex, int normIndex, int texIndex) {
+		VertexData currentVertex = vertices.get(posIndex);
 
 		if (!currentVertex.isSet()) {
 			currentVertex.setTextureIndex(texIndex);
@@ -123,19 +128,20 @@ public class GeometryLoader {
 		}
 	}
 
-	private Vertex dealWithAlreadyProcessedVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex) {
+	private VertexData dealWithAlreadyProcessedVertex(VertexData previousVertex, int newTextureIndex, int newNormalIndex) {
 		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
 			indices.add(previousVertex.getIndex());
 			return previousVertex;
 		} else {
-			Vertex anotherVertex = previousVertex.getDuplicateVertex();
+			VertexData anotherVertex = previousVertex.getDuplicateVertex();
 
 			if (anotherVertex != null) {
 				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex);
 			} else {
-				Vertex duplicateVertex = new Vertex(vertices.size(), previousVertex.getPosition(), previousVertex.getWeightsData());
+				VertexData duplicateVertex = new VertexData(vertices.size(), previousVertex.getPosition());
 				duplicateVertex.setTextureIndex(newTextureIndex);
 				duplicateVertex.setNormalIndex(newNormalIndex);
+				duplicateVertex.setWeightsData(previousVertex.getWeightsData());
 				previousVertex.setDuplicateVertex(duplicateVertex);
 				vertices.add(duplicateVertex);
 				indices.add(duplicateVertex.getIndex());
@@ -145,7 +151,7 @@ public class GeometryLoader {
 	}
 
 	private void removeUnusedVertices() {
-		for (Vertex vertex : vertices) {
+		for (VertexData vertex : vertices) {
 			vertex.averageTangents();
 
 			if (!vertex.isSet()) {
@@ -159,6 +165,7 @@ public class GeometryLoader {
 		this.verticesArray = new float[vertices.size() * 3];
 		this.texturesArray = new float[vertices.size() * 2];
 		this.normalsArray = new float[vertices.size() * 3];
+		this.tangentsArray = new float[vertices.size() * 3];
 		this.jointIdsArray = new int[vertices.size() * 3];
 		this.weightsArray = new float[vertices.size() * 3];
 	}
@@ -167,7 +174,7 @@ public class GeometryLoader {
 		float furthestPoint = 0;
 
 		for (int i = 0; i < vertices.size(); i++) {
-			Vertex currentVertex = vertices.get(i);
+			VertexData currentVertex = vertices.get(i);
 
 			if (currentVertex.getLength() > furthestPoint) {
 				furthestPoint = currentVertex.getLength();

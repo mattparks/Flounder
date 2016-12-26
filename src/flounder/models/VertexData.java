@@ -6,55 +6,40 @@ import flounder.maths.vectors.*;
 import java.util.*;
 
 public class VertexData {
-	public static final int NO_INDEX = -1;
+	private static final int NO_INDEX = -1;
 
 	private Vector3f position;
-	private Material material;
+
 	private int textureIndex;
 	private int normalIndex;
+	private VertexData duplicateVertex;
+
 	private int index;
 	private float length;
+
 	private List<Vector3f> tangents;
 	private Vector3f averagedTangent;
-	private VertexData duplicateVertexData;
+
+	private Material material;
 
 	public VertexData(int index, Vector3f position) {
-		this.index = index;
 		this.position = position;
-		textureIndex = NO_INDEX;
-		normalIndex = NO_INDEX;
-		length = position.length();
-		tangents = new ArrayList<>();
-		averagedTangent = new Vector3f(0, 0, 0);
-		duplicateVertexData = null;
-	}
 
-	public int getIndex() {
-		return index;
-	}
+		this.textureIndex = NO_INDEX;
+		this.normalIndex = NO_INDEX;
+		this.duplicateVertex = null;
 
-	public float getLength() {
-		return length;
-	}
+		this.index = index;
+		this.length = position.length();
 
-	public boolean isSet() {
-		return (textureIndex != NO_INDEX) && (normalIndex != NO_INDEX);
-	}
+		this.tangents = new ArrayList<>();
+		this.averagedTangent = new Vector3f();
 
-	public boolean hasSameTextureAndNormal(int textureIndexOther, int normalIndexOther) {
-		return textureIndexOther == textureIndex && normalIndexOther == normalIndex;
+		this.material = null;
 	}
 
 	public Vector3f getPosition() {
 		return position;
-	}
-
-	public Material getMaterial() {
-		return material;
-	}
-
-	public void setMaterial(Material material) {
-		this.material = material;
 	}
 
 	public int getTextureIndex() {
@@ -73,6 +58,30 @@ public class VertexData {
 		this.normalIndex = normalIndex;
 	}
 
+	public boolean isSet() {
+		return (textureIndex != NO_INDEX) && (normalIndex != NO_INDEX);
+	}
+
+	public boolean hasSameTextureAndNormal(int textureIndexOther, int normalIndexOther) {
+		return textureIndexOther == textureIndex && normalIndexOther == normalIndex;
+	}
+
+	public VertexData getDuplicateVertex() {
+		return duplicateVertex;
+	}
+
+	public void setDuplicateVertex(VertexData duplicateVertex) {
+		this.duplicateVertex = duplicateVertex;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public float getLength() {
+		return length;
+	}
+
 	public void addTangent(Vector3f tangent) {
 		tangents.add(tangent);
 	}
@@ -88,20 +97,18 @@ public class VertexData {
 
 		if (averagedTangent.length() > 0) {
 			averagedTangent.normalize();
-		}// else {
-		//	FlounderLogger.error(averagedTangent.toString() + " average tangents zero length vector!");
-		//}
+		}
 	}
 
 	public Vector3f getAverageTangent() {
 		return averagedTangent;
 	}
 
-	public VertexData getDuplicateVertex() {
-		return duplicateVertexData;
+	public Material getMaterial() {
+		return material;
 	}
 
-	public void setDuplicateVertex(VertexData duplicateVertexData) {
-		this.duplicateVertexData = duplicateVertexData;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 }

@@ -5,14 +5,14 @@ import flounder.maths.vectors.*;
 
 import java.util.*;
 
-public class Vertex {
+public class VertexData {
 	private static final int NO_INDEX = -1;
 
 	private Vector3f position;
 
 	private int textureIndex;
 	private int normalIndex;
-	private Vertex duplicateVertex;
+	private VertexData duplicateVertex;
 
 	private int index;
 	private float length;
@@ -22,7 +22,7 @@ public class Vertex {
 
 	private VertexSkinData weightsData;
 
-	protected Vertex(int index, Vector3f position, VertexSkinData weightsData) {
+	protected VertexData(int index, Vector3f position) {
 		this.position = position;
 
 		this.textureIndex = NO_INDEX;
@@ -31,10 +31,11 @@ public class Vertex {
 
 		this.index = index;
 		this.length = position.length();
-		this.weightsData = weightsData;
 
 		this.tangents = new ArrayList<>();
 		this.averagedTangent = new Vector3f();
+
+		this.weightsData = null;
 	}
 
 	public Vector3f getPosition() {
@@ -65,11 +66,11 @@ public class Vertex {
 		return textureIndexOther == textureIndex && normalIndexOther == normalIndex;
 	}
 
-	public Vertex getDuplicateVertex() {
+	public VertexData getDuplicateVertex() {
 		return duplicateVertex;
 	}
 
-	public void setDuplicateVertex(Vertex duplicateVertex) {
+	public void setDuplicateVertex(VertexData duplicateVertex) {
 		this.duplicateVertex = duplicateVertex;
 	}
 
@@ -94,7 +95,9 @@ public class Vertex {
 			Vector3f.add(averagedTangent, tangent, averagedTangent);
 		}
 
-		averagedTangent.normalize();
+		if (averagedTangent.length() > 0) {
+			averagedTangent.normalize();
+		}
 	}
 
 	public Vector3f getAverageTangent() {
@@ -103,5 +106,9 @@ public class Vertex {
 
 	public VertexSkinData getWeightsData() {
 		return weightsData;
+	}
+
+	public void setWeightsData(VertexSkinData weightsData) {
+		this.weightsData = weightsData;
 	}
 }

@@ -12,8 +12,6 @@ import java.io.*;
 import java.lang.ref.*;
 import java.util.*;
 
-import static org.lwjgl.opengl.GL30.*;
-
 /**
  * A module used for loading and managing models.
  */
@@ -88,8 +86,8 @@ public class FlounderModels extends IModule {
 					case "v":
 						String[] currentLineV = line.split(" ");
 						Vector3f vertex = new Vector3f(Float.valueOf(currentLineV[1]), Float.valueOf(currentLineV[2]), Float.valueOf(currentLineV[3]));
-						VertexData newVertexData = new VertexData(modelData.vertices.size(), vertex);
-						modelData.vertices.add(newVertexData);
+						VertexData newVertex = new VertexData(modelData.vertices.size(), vertex);
+						modelData.vertices.add(newVertex);
 						break;
 					case "vt":
 						String[] currentLineVT = line.split(" ");
@@ -150,7 +148,8 @@ public class FlounderModels extends IModule {
 	 */
 	public static void loadModelToOpenGL(Model model, ModelBuilder.LoadManual loadManual) {
 		if (loadManual != null) {
-			model.loadData(loadManual.getVertices(), loadManual.getTextureCoords(), loadManual.getNormals(), loadManual.getTangents(), loadManual.getIndices(), loadManual.getMaterials());
+			MeshData meshData = new MeshData(loadManual.getVertices(), loadManual.getTextureCoords(), loadManual.getNormals(), loadManual.getTangents(), loadManual.getIndices(), loadManual.getMaterials(), loadManual.getAABB(), loadManual.getHull());
+			model.loadData(meshData);
 		}
 
 		instance.loadModelToOpenGL(model);
@@ -158,49 +157,49 @@ public class FlounderModels extends IModule {
 
 	private void loadModelToOpenGL(Model model) {
 		model.setVaoID(FlounderLoader.createVAO());
-		model.setVaoLength(model.getIndices() != null ? model.getIndices().length : (model.getVertices().length / 3));
-		FlounderLoader.createIndicesVBO(model.getVaoID(), model.getIndices());
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getVertices(), 0, 3);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getTextures(), 1, 2);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getNormals(), 2, 3);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getTangents(), 3, 3);
+		model.setVaoLength(model.getMeshData().getIndices() != null ? model.getMeshData().getIndices().length : (model.getMeshData().getVertices().length / 3));
+		FlounderLoader.createIndicesVBO(model.getVaoID(), model.getMeshData().getIndices());
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getVertices(), 0, 3);
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getTextures(), 1, 2);
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getNormals(), 2, 3);
+		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getTangents(), 3, 3);
 	}
 
 	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices, Material currentMaterial) {
 		int index = Integer.parseInt(vertex[0]) - 1;
-		VertexData currentVertexData = vertices.get(index);
+		VertexData currentVertex = vertices.get(index);
 		int textureIndex = Integer.parseInt(vertex[1]) - 1;
 		int normalIndex = Integer.parseInt(vertex[2]) - 1;
 
-		if (!currentVertexData.isSet()) {
-			currentVertexData.setTextureIndex(textureIndex);
-			currentVertexData.setNormalIndex(normalIndex);
-			currentVertexData.setMaterial(currentMaterial);
+		if (!currentVertex.isSet()) {
+			currentVertex.setTextureIndex(textureIndex);
+			currentVertex.setNormalIndex(normalIndex);
+			currentVertex.setMaterial(currentMaterial);
 			indices.add(index);
-			return currentVertexData;
+			return currentVertex;
 		} else {
-			return dealWithAlreadyProcessedDataVertex(currentVertexData, textureIndex, normalIndex, indices, vertices, currentMaterial);
+			return dealWithAlreadyProcessedDataVertex(currentVertex, textureIndex, normalIndex, indices, vertices, currentMaterial);
 		}
 	}
 
-	private VertexData dealWithAlreadyProcessedDataVertex(VertexData previousVertexData, int newTextureIndex, int newNormalIndex, List<Integer> indices, List<VertexData> vertices, Material currentMaterial) {
-		if (previousVertexData.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
-			indices.add(previousVertexData.getIndex());
-			return previousVertexData;
+	private VertexData dealWithAlreadyProcessedDataVertex(VertexData previousVertex, int newTextureIndex, int newNormalIndex, List<Integer> indices, List<VertexData> vertices, Material currentMaterial) {
+		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
+			indices.add(previousVertex.getIndex());
+			return previousVertex;
 		} else {
-			VertexData anotherVertexData = previousVertexData.getDuplicateVertex();
+			VertexData anotherVertex = previousVertex.getDuplicateVertex();
 
-			if (anotherVertexData != null) {
-				return dealWithAlreadyProcessedDataVertex(anotherVertexData, newTextureIndex, newNormalIndex, indices, vertices, currentMaterial);
+			if (anotherVertex != null) {
+				return dealWithAlreadyProcessedDataVertex(anotherVertex, newTextureIndex, newNormalIndex, indices, vertices, currentMaterial);
 			} else {
-				VertexData duplicateVertexData = new VertexData(vertices.size(), previousVertexData.getPosition());
-				duplicateVertexData.setTextureIndex(newTextureIndex);
-				duplicateVertexData.setNormalIndex(newNormalIndex);
-				duplicateVertexData.setMaterial(currentMaterial);
-				previousVertexData.setDuplicateVertex(duplicateVertexData);
-				vertices.add(duplicateVertexData);
-				indices.add(duplicateVertexData.getIndex());
-				return duplicateVertexData;
+				VertexData duplicateVertex = new VertexData(vertices.size(), previousVertex.getPosition());
+				duplicateVertex.setTextureIndex(newTextureIndex);
+				duplicateVertex.setNormalIndex(newNormalIndex);
+				duplicateVertex.setMaterial(currentMaterial);
+				previousVertex.setDuplicateVertex(duplicateVertex);
+				vertices.add(duplicateVertex);
+				indices.add(duplicateVertex.getIndex());
+				return duplicateVertex;
 			}
 		}
 	}

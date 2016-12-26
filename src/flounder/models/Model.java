@@ -1,29 +1,16 @@
 package flounder.models;
 
-import flounder.materials.*;
-import flounder.maths.vectors.*;
-import flounder.physics.*;
 import flounder.processing.*;
 import flounder.resources.*;
-
-import java.util.*;
 
 /**
  * Class that represents a loaded model.
  */
 public class Model {
-	private float[] vertices;
-	private float[] textureCoords;
-	private float[] normals;
-	private float[] tangents;
-	private int[] indices;
-	private Material[] materials;
+	private MeshData meshData;
 
 	private String name;
 	private boolean loaded;
-
-	private AABB aabb;
-	private QuickHull hull;
 
 	private int vaoID;
 	private int vaoLength;
@@ -71,94 +58,14 @@ public class Model {
 		data.destroy();
 	}
 
-	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, Material[] materials) {
-		this.vertices = vertices;
-		this.textureCoords = textureCoords;
-		this.normals = normals;
-		this.tangents = tangents;
-		this.indices = indices;
-		this.materials = materials;
+	protected void loadData(MeshData meshData) {
+		this.meshData = meshData;
 
 		this.loaded = true;
-
-		this.aabb = createAABB();
-		this.hull = createHull();
 	}
 
-	private AABB createAABB() {
-		float minX = 0, minY = 0, minZ = 0;
-		float maxX = 0, maxY = 0, maxZ = 0;
-		int tripleCount = 0;
-
-		for (float position : vertices) {
-			if (tripleCount == 0 && position < minX) {
-				minX = position;
-			} else if (tripleCount == 0 && position > maxX) {
-				maxX = position;
-			}
-
-			if (tripleCount == 1 && position < minY) {
-				minY = position;
-			} else if (tripleCount == 1 && position > maxY) {
-				maxY = position;
-			}
-
-			if (tripleCount == 2 && position < minZ) {
-				minZ = position;
-			} else if (tripleCount == 2 && position > maxZ) {
-				maxZ = position;
-			}
-
-			if (tripleCount >= 2) {
-				tripleCount = 0;
-			} else {
-				tripleCount++;
-			}
-		}
-
-		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
-	}
-
-	private QuickHull createHull() {
-		List<Vector3f> points = new ArrayList<>();
-
-		for (int v = 0; v < vertices.length; v += 3) {
-			points.add(new Vector3f(vertices[v], vertices[v + 1], vertices[v + 2]));
-		}
-
-		return new QuickHull(points);
-	}
-
-	public AABB getAABB() {
-		return aabb;
-	}
-
-	public QuickHull getHull() {
-		return hull;
-	}
-
-	public float[] getVertices() {
-		return vertices;
-	}
-
-	public float[] getTextures() {
-		return textureCoords;
-	}
-
-	public float[] getNormals() {
-		return normals;
-	}
-
-	public float[] getTangents() {
-		return tangents;
-	}
-
-	public int[] getIndices() {
-		return indices;
-	}
-
-	public Material[] getMaterials() {
-		return materials;
+	public MeshData getMeshData() {
+		return meshData;
 	}
 
 	public int getVaoID() {

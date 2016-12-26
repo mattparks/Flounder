@@ -2,6 +2,7 @@ package flounder.models;
 
 import flounder.logger.*;
 import flounder.materials.*;
+import flounder.physics.*;
 import flounder.processing.*;
 import flounder.resources.*;
 
@@ -130,5 +131,19 @@ public class ModelBuilder {
 		 * @return The manual model materials.
 		 */
 		Material[] getMaterials();
+
+		/**
+		 * Gets the surrounding AABB (without applied scale).
+		 *
+		 * @return The surrounding AABB.
+		 */
+		AABB getAABB();
+
+		/**
+		 * Gets the surrounding Hull (without applied scale).
+		 *
+		 * @return The surrounding Hull.
+		 */
+		QuickHull getHull();
 	}
 }

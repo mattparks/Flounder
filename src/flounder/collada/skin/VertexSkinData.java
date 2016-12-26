@@ -38,7 +38,7 @@ public class VertexSkinData {
 	private void fillEmptyWeights(int max) {
 		while (jointIds.size() < max) {
 			jointIds.add(0);
-			weights.add(0f);
+			weights.add(0.0f);
 		}
 	}
 

@@ -1,6 +1,4 @@
-package flounder.collada;
-
-import flounder.collada.animation.*;
+package flounder.collada.animation;
 
 public class AnimationData {
 	public final float lengthSeconds;

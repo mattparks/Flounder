@@ -2,12 +2,14 @@ package flounder.models;
 
 import flounder.materials.*;
 import flounder.maths.vectors.*;
+import flounder.physics.*;
 import flounder.resources.*;
 
 import java.util.*;
 
 public class ModelData {
 	public MyFile file;
+
 	public List<VertexData> vertices = new ArrayList<>();
 	public List<Vector2f> textures = new ArrayList<>();
 	public List<Vector3f> normals = new ArrayList<>();
@@ -36,12 +38,12 @@ public class ModelData {
 		Material[] materialsArray = new Material[vertices.size()];
 
 		for (int i = 0; i < vertices.size(); i++) {
-			VertexData currentVertexData = vertices.get(i);
-			Vector3f position = currentVertexData.getPosition();
-			Vector2f textureCoord = textures.get(currentVertexData.getTextureIndex());
-			Vector3f normalVector = normals.get(currentVertexData.getNormalIndex());
-			Vector3f tangent = currentVertexData.getAverageTangent();
-			Material material = currentVertexData.getMaterial();
+			VertexData currentVertex = vertices.get(i);
+			Vector3f position = currentVertex.getPosition();
+			Vector2f textureCoord = textures.get(currentVertex.getTextureIndex());
+			Vector3f normalVector = normals.get(currentVertex.getNormalIndex());
+			Vector3f tangent = currentVertex.getAverageTangent();
+			Material material = currentVertex.getMaterial();
 
 			materialsArray[i] = material;
 
@@ -67,7 +69,47 @@ public class ModelData {
 			indicesArray[i] = indices.get(i);
 		}
 
-		model.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, materialsArray);
+		MeshData modelData = new MeshData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, materialsArray, createAABB(), createHull());
+		model.loadData(modelData);
+	}
+
+	private AABB createAABB() {
+		float minX = 0, minY = 0, minZ = 0;
+		float maxX = 0, maxY = 0, maxZ = 0;
+
+		for (VertexData vertex : vertices) {
+			Vector3f vector = vertex.getPosition();
+
+			if (vector.x < minX) {
+				minX = vector.x;
+			} else if (vector.x > maxX) {
+				maxX = vector.x;
+			}
+
+			if (vector.y < minY) {
+				minY = vector.y;
+			} else if (vector.y > maxY) {
+				maxY = vector.y;
+			}
+
+			if (vector.z < minZ) {
+				minZ = vector.z;
+			} else if (vector.z > maxZ) {
+				maxZ = vector.z;
+			}
+		}
+
+		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
+	}
+
+	private QuickHull createHull() {
+		List<Vector3f> points = new ArrayList<>();
+
+		for (VertexData vertex : vertices) {
+			points.add(vertex.getPosition());
+		}
+
+		return new QuickHull(points);
 	}
 
 	public void destroy() {
@@ -76,5 +118,6 @@ public class ModelData {
 		normals = null;
 		indices = null;
 		materials = null;
+		enableSmoothShading = true;
 	}
 }

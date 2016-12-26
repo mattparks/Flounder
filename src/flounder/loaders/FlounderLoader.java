@@ -93,7 +93,7 @@ public class FlounderLoader extends IModule {
 	/**
 	 * Loads interleaved vertex data into a VBO which is stored in a newly created VAO (with index buffer).
 	 *
-	 * @param interleavedData Vertex data.
+	 * @param interleavedData VertexData data.
 	 * @param indices Index buffer data.
 	 * @param lengths The lengths of each data element.
 	 *

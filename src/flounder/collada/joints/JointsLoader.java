@@ -11,14 +11,12 @@ public class JointsLoader {
 	private XmlNode armatureData;
 
 	private List<String> boneOrder;
-
 	private int jointCount;
 
 	public JointsLoader(XmlNode visualSceneNode, List<String> boneOrder) {
 		this.armatureData = visualSceneNode.getChild("visual_scene").getChildWithAttribute("node", "id", "Armature");
 
 		this.boneOrder = boneOrder;
-
 		this.jointCount = 0;
 	}
 

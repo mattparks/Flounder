@@ -6,10 +6,12 @@ import java.util.*;
 
 public class SkinLoader {
 	private final XmlNode skinningData;
+
 	private final int maxWeights;
 
 	public SkinLoader(XmlNode controllersNode, int maxWeights) {
 		this.skinningData = controllersNode.getChild("controller").getChild("skin");
+
 		this.maxWeights = maxWeights;
 	}
 

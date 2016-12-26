@@ -1,4 +1,7 @@
-package flounder.collada.geometry;
+package flounder.models;
+
+import flounder.materials.*;
+import flounder.physics.*;
 
 public class MeshData {
 	private float[] vertices;
@@ -6,21 +9,21 @@ public class MeshData {
 	private float[] normals;
 	private float[] tangents;
 	private int[] indices;
-	private int[] jointIds;
-	private float[] vertexWeights;
+	private Material[] materials;
 
-	private float furthestPoint;
+	private AABB aabb;
+	private QuickHull hull;
 
-	protected MeshData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, int[] jointIds, float[] vertexWeights, float furthestPoint) {
+	protected MeshData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, Material[] materials, AABB aabb, QuickHull hull) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;
 		this.normals = normals;
 		this.tangents = tangents;
 		this.indices = indices;
-		this.jointIds = jointIds;
-		this.vertexWeights = vertexWeights;
+		this.materials = materials;
 
-		this.furthestPoint = furthestPoint;
+		this.aabb = aabb;
+		this.hull = hull;
 	}
 
 	public float[] getVertices() {
@@ -43,15 +46,15 @@ public class MeshData {
 		return indices;
 	}
 
-	public int[] getJointIds() {
-		return jointIds;
+	public Material[] getMaterials() {
+		return materials;
 	}
 
-	public float[] getVertexWeights() {
-		return vertexWeights;
+	public AABB getAABB() {
+		return aabb;
 	}
 
-	public float getFurthestPoint() {
-		return furthestPoint;
+	public QuickHull getHull() {
+		return hull;
 	}
 }
