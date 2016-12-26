@@ -20,6 +20,6 @@ vec3 toneMap(vec3 color) {
 
 //---------MAIN------------
 void main(void) {
-    vec3 colour = texture(originalTexture, pass_textureCoords).rgb;
+	vec3 colour = texture(originalTexture, pass_textureCoords).rgb;
 	out_colour = vec4(toneMap(colour * exposure) / toneMap(white), 1.0);
 }

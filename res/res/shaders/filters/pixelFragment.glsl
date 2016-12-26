@@ -26,6 +26,6 @@ void main(void) {
 		coord = pass_textureCoords;
 	}
 
-    vec3 colour = texture(originalTexture, coord).rgb;
-    out_colour = vec4(colour, 1.0);
+	vec3 colour = texture(originalTexture, coord).rgb;
+	out_colour = vec4(colour, 1.0);
 }

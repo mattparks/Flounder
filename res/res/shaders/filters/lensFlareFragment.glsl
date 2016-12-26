@@ -12,6 +12,6 @@ layout(location = 0) out vec4 out_colour;
 
 //---------MAIN------------
 void main(void) {
-    out_colour = texture(originalTexture, pass_textureCoords);
-    // TODO: Make effects!
+	out_colour = texture(originalTexture, pass_textureCoords);
+	// TODO: Make effects!
 }

@@ -15,7 +15,7 @@ const float BLOOM_BRIGHT = 0.652;
 //---------MAIN------------
 void main(void) {
 	vec3 colour = texture(originalTexture, pass_textureCoords).rgb;
-    float brightness = length(colour.rgb);
+	float brightness = length(colour.rgb);
 	out_colour = vec4(0.0);
 
 	if (brightness > BLOOM_BRIGHT){
