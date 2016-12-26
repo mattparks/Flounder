@@ -5,11 +5,12 @@ import flounder.maths.matrices.*;
 import java.util.*;
 
 public class Joint {
-	public final int index;
-	public final String name;
-	public final List<Joint> children;
+	protected final int index;
+	protected final String name;
 
 	private final Matrix4f localBindTransform;
+
+	protected final List<Joint> children;
 
 	private Matrix4f inverseBindTransform;
 	private Matrix4f animatedTransform;
@@ -17,9 +18,10 @@ public class Joint {
 	public Joint(int index, String name, Matrix4f bindLocalTransform) {
 		this.index = index;
 		this.name = name;
-		this.children = new ArrayList<>();
 
 		this.localBindTransform = bindLocalTransform;
+
+		this.children = new ArrayList<>();
 
 		this.inverseBindTransform = new Matrix4f();
 		this.animatedTransform = new Matrix4f();
@@ -81,5 +83,34 @@ public class Joint {
 		for (Joint child : children) {
 			child.calculateInverseBindTransform(bindTransform);
 		}
+	}
+
+	/**
+	 * Adds this joint to an array, they for each child calls the same method.
+	 *
+	 * @param joints The array to add this and children into.
+	 */
+	public void addSelfAndChildren(List<Joint> joints) {
+		joints.add(this);
+
+		for (Joint child : children) {
+			child.addSelfAndChildren(joints);
+		}
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Matrix4f getLocalBindTransform() {
+		return localBindTransform;
+	}
+
+	public List<Joint> getChildren() {
+		return children;
 	}
 }

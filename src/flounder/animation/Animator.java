@@ -199,4 +199,8 @@ public class Animator {
 		this.animationTime = 0;
 		this.currentAnimation = animation;
 	}
+
+	public Animation getCurrentAnimation() {
+		return currentAnimation;
+	}
 }

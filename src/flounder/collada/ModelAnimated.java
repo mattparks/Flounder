@@ -14,7 +14,7 @@ public class ModelAnimated {
 	private int vaoID;
 	private int vaoLength;
 
-	protected ModelAnimated(MeshData meshData, JointsData jointsData) {
+	public ModelAnimated(MeshData meshData, JointsData jointsData) {
 		this.meshData = meshData;
 
 		this.jointsData = jointsData;

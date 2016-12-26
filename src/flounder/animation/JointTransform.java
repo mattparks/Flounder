@@ -83,4 +83,12 @@ public class JointTransform {
 		float z = start.z + (end.z - start.z) * progression;
 		return new Vector3f(x, y, z);
 	}
+
+	public Vector3f getPosition() {
+		return position;
+	}
+
+	public Quaternion getRotation() {
+		return rotation;
+	}
 }

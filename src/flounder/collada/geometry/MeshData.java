@@ -11,7 +11,7 @@ public class MeshData {
 
 	private float furthestPoint;
 
-	protected MeshData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, int[] jointIds, float[] vertexWeights, float furthestPoint) {
+	public MeshData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, int[] jointIds, float[] vertexWeights, float furthestPoint) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;
 		this.normals = normals;

@@ -29,7 +29,7 @@ public class KeyFrame {
 	 *
 	 * @return The time in seconds.
 	 */
-	protected float getTimeStamp() {
+	public float getTimeStamp() {
 		return timeStamp;
 	}
 
@@ -39,7 +39,7 @@ public class KeyFrame {
 	 *
 	 * @return The desired local-space transforms.
 	 */
-	protected Map<String, JointTransform> getJointKeyFrames() {
+	public Map<String, JointTransform> getJointKeyFrames() {
 		return jointKeyFrames;
 	}
 }

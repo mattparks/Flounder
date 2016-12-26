@@ -11,7 +11,7 @@ public class JointData {
 
 	public final List<JointData> children;
 
-	protected JointData(int index, String nameId, Matrix4f bindLocalTransform) {
+	public JointData(int index, String nameId, Matrix4f bindLocalTransform) {
 		this.index = index;
 		this.nameId = nameId;
 		this.bindLocalTransform = bindLocalTransform;
