@@ -65,7 +65,7 @@ public class ModelAnimated {
 	 * Deletes the animated model from OpenGL memory.
 	 */
 	public void delete() {
-	//	loaded = false;
-	//	FlounderProcessors.sendRequest(new ModelDeleteRequest(vaoID));
+		//	loaded = false;
+		//	FlounderProcessors.sendRequest(new ModelDeleteRequest(vaoID));
 	}
 }
