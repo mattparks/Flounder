@@ -127,7 +127,7 @@ public class FlounderTextures extends IModule {
 			buffer.flip();
 			in.close();
 		} catch (Exception e) {
-			FlounderLogger.log("Tried to load texture '" + file + "', didn't work");
+			FlounderLogger.error("Tried to load texture '" + file + "', didn't work");
 			FlounderLogger.exception(e);
 			System.exit(-1);
 		}

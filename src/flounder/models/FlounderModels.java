@@ -72,9 +72,9 @@ public class FlounderModels extends IModule {
 
 				switch (prefix) {
 					case "mtllib":
-						String pathMTL = file.getPath().replace(file.getPath().split("/")[file.getPath().split("/").length - 1], "");
-						pathMTL = pathMTL.substring(1, pathMTL.length() - 1);
-						modelData.materials.addAll(FlounderMaterials.loadMTL(new MyFile(pathMTL, line.split(" ")[1])));
+						String mtlName = line.split(" ")[1];
+						String objFolder = file.getPath().substring(0, file.getPath().length() - file.getName().length());
+						modelData.materials.addAll(FlounderMaterials.loadMTL(new MyFile(objFolder + mtlName)));
 						break;
 					case "usemtl":
 						for (Material m : modelData.materials) {
@@ -121,6 +121,7 @@ public class FlounderModels extends IModule {
 			reader.close();
 		} catch (IOException e) {
 			FlounderLogger.error("Error reading the OBJ " + file);
+			FlounderLogger.exception(e);
 		}
 
 		return modelData;

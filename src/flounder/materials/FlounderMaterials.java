@@ -65,6 +65,7 @@ public class FlounderMaterials extends IModule {
 
 			if (reader == null) {
 				FlounderLogger.error("Error creating reader the MTL: " + file);
+				return new ArrayList<>();
 			}
 
 			try {
@@ -126,6 +127,7 @@ public class FlounderMaterials extends IModule {
 				data.add(parseMaterial);
 			} catch (IOException | NullPointerException e) {
 				FlounderLogger.error("Error reading the MTL: " + file);
+				FlounderLogger.exception(e);
 			}
 
 			instance.loaded.put(file.getPath(), new SoftReference<>(data));
