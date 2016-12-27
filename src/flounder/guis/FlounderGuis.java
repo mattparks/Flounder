@@ -44,12 +44,12 @@ public class FlounderGuis extends IModule {
 
 	@Override
 	public void update() {
-		IGuiMaster newManager = (IGuiMaster) FlounderFramework.getExtensionMatch(IGuiMaster.class, (IExtension) guiMaster, true);
+		IGuiMaster newManager = (IGuiMaster) FlounderModules.getExtensionMatch(getInstance(), guiMaster, true);
 
 		if (newManager != null) {
 			if (guiMaster != null) {
 				guiMaster.dispose();
-				((IExtension) guiMaster).setInitialized(false);
+				guiMaster.setInitialized(false);
 			}
 
 			guiMaster = newManager;
@@ -58,9 +58,9 @@ public class FlounderGuis extends IModule {
 		guiTextures.clear();
 
 		if (guiMaster != null) {
-			if (!((IExtension) guiMaster).isInitialized()) {
+			if (!guiMaster.isInitialized()) {
 				guiMaster.init();
-				((IExtension) guiMaster).setInitialized(true);
+				guiMaster.setInitialized(true);
 			}
 		}
 
@@ -122,7 +122,7 @@ public class FlounderGuis extends IModule {
 	public void dispose() {
 		if (guiMaster != null) {
 			guiMaster.dispose();
-			((IExtension) guiMaster).setInitialized(false);
+			guiMaster.setInitialized(false);
 		}
 
 		guiTextures.forEach(guiTexture -> {

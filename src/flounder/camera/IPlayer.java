@@ -1,32 +1,45 @@
 package flounder.camera;
 
+import flounder.framework.*;
 import flounder.maths.vectors.*;
 
 /**
  * This interface is used to move and add extra rotation to a camera.
  */
-public interface IPlayer {
+public abstract class IPlayer extends IExtension {
 	/**
-	 * Used to initialise the camera.
+	 * Creates a new standard.
+	 *
+	 * @param requires The classes that are extra requirements for this implementation.
 	 */
-	void init();
+	public IPlayer(Class... requires) {
+		super(FlounderCamera.class, requires);
+	}
+
+	/**
+	 * Used to initialise the player.
+	 */
+	public abstract void init();
 
 	/**
 	 * Checks inputs and carries out player movement. Should be called every frame.
 	 */
-	void update();
+	public abstract void update();
 
 	/**
 	 * Gets the players 3D position in the world.
 	 *
 	 * @return The players 3D position in the world.
 	 */
-	Vector3f getPosition();
+	public abstract Vector3f getPosition();
 
 	/**
 	 * Gets the players 3D rotation in the world, where x=pitch, y=yaw, z=roll.
 	 *
 	 * @return The players 3D rotation in the world, where x=pitch, y=yaw, z=roll.
 	 */
-	Vector3f getRotation();
+	public abstract Vector3f getRotation();
+
+	@Override
+	public abstract boolean isActive();
 }

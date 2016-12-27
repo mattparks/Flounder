@@ -27,21 +27,21 @@ public class FlounderRenderer extends IModule {
 
 	@Override
 	public void update() {
-		IRendererMaster newRenderer = (IRendererMaster) FlounderFramework.getExtensionMatch(IRendererMaster.class, (IExtension) renderer, true);
+		IRendererMaster newRenderer = (IRendererMaster) FlounderModules.getExtensionMatch(getInstance(), renderer, true);
 
 		if (newRenderer != null) {
 			if (renderer != null) {
 				renderer.dispose();
-				((IExtension) renderer).setInitialized(false);
+				renderer.setInitialized(false);
 			}
 
 			renderer = newRenderer;
 		}
 
 		if (renderer != null) {
-			if (!((IExtension) renderer).isInitialized()) {
+			if (!renderer.isInitialized()) {
 				renderer.init();
-				((IExtension) renderer).setInitialized(true);
+				renderer.setInitialized(true);
 			}
 
 			renderer.render();
@@ -66,7 +66,7 @@ public class FlounderRenderer extends IModule {
 	public void dispose() {
 		if (renderer != null) {
 			renderer.dispose();
-			((IExtension) renderer).setInitialized(false);
+			renderer.setInitialized(false);
 		}
 	}
 }

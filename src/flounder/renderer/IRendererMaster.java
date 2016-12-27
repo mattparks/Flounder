@@ -1,28 +1,40 @@
 package flounder.renderer;
 
+import flounder.framework.*;
+
 /**
- * The engines main renderer, it organizes render objects passes of subtract renderer's.
+ * A extension used with {@link flounder.renderer.FlounderRenderer} to define a master renderer.
  */
-public interface IRendererMaster {
-	// TODO: Add module requirements to IRenderers!
+public abstract class IRendererMaster extends IExtension {
+	/**
+	 * Creates a new master renderer.
+	 *
+	 * @param requires The classes that are extra requirements for this implementation.
+	 */
+	public IRendererMaster(Class... requires) {
+		super(FlounderRenderer.class, requires);
+	}
 
 	/**
-	 * Initializes the various renderer types and various functionality's.
+	 * Run when initializing the master renderer.
 	 */
-	void init();
+	public abstract void init();
 
 	/**
-	 * Carries out the rendering of all components.
+	 * Run when rendering the master renderer.
 	 */
-	void render();
+	public abstract void render();
 
 	/**
-	 * Profiles the module.
+	 * Run when profiling the master renderer.
 	 */
-	void profile();
+	public abstract void profile();
 
 	/**
-	 * Cleans up all of the render objects processes. Should be called when the game closes.
+	 * Run when disposing the master renderer.
 	 */
-	void dispose();
+	public abstract void dispose();
+
+	@Override
+	public abstract boolean isActive();
 }

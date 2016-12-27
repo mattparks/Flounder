@@ -1,40 +1,59 @@
 package flounder.guis;
 
+import flounder.framework.*;
+
 /**
  * A interface used to manage a main GUI system.
  */
-public interface IGuiMaster {
+public abstract class IGuiMaster extends IExtension {
 	/**
-	 * Creates the main GUI system.
+	 * Creates a new GUI master.
+	 *
+	 * @param requires The classes that are extra requirements for this implementation.
 	 */
-	void init();
+	public IGuiMaster(Class... requires) {
+		super(FlounderGuis.class, requires);
+	}
 
 	/**
-	 * Checks inputs and updates Guis.
+	 * Run when initializing the GUI master.
 	 */
-	void update();
+	public abstract void init();
+
+	/**
+	 * Run when updating the GUI master.
+	 */
+	public abstract void update();
+
+	/**
+	 * Run when profiling the GUI master.
+	 */
+	public abstract void profile();
 
 	/**
 	 * Gets if the main menu is open.
 	 *
 	 * @return If the main menu is open.
 	 */
-	boolean isGamePaused();
+	public abstract boolean isGamePaused();
 
 	/**
 	 * Forces the main GUI to open.
 	 */
-	void openMenu();
+	public abstract void openMenu();
 
 	/**
 	 * Gets the main menu's blur factor.
 	 *
 	 * @return The main menu's blur factor.
 	 */
-	float getBlurFactor();
+	public abstract float getBlurFactor();
 
 	/**
-	 * Cleans up all of the gui manager objects processes. Should be called when the game closes.
+	 * Run when disposing the GUI master.
 	 */
-	void dispose();
+	public abstract void dispose();
+
+	@Override
+	public abstract boolean isActive();
 }

@@ -15,6 +15,7 @@ public abstract class IRenderer {
 	 * Creates a new sub renderer in the engine.
 	 */
 	public IRenderer() {
+		// TODO: Have own internal Module requirements to render.
 		profileTimer = new ProfileTimer();
 		renderTimeMs = 0.0f;
 	}

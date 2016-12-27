@@ -28,12 +28,12 @@ public class FlounderCamera extends IModule {
 
 	@Override
 	public void update() {
-		IPlayer newPlayer = (IPlayer) FlounderFramework.getExtensionMatch(IPlayer.class, (IExtension) player, true);
-		ICamera newCamera = (ICamera) FlounderFramework.getExtensionMatch(ICamera.class, (IExtension) camera, true);
+		IPlayer newPlayer = (IPlayer) FlounderModules.getExtensionMatch(getInstance(), player, true);
+		ICamera newCamera = (ICamera) FlounderModules.getExtensionMatch(getInstance(), camera, true);
 
 		if (newPlayer != null) {
 			if (player != null) {
-				((IExtension) player).setInitialized(false);
+				player.setInitialized(false);
 			}
 
 			player = newPlayer;
@@ -41,25 +41,25 @@ public class FlounderCamera extends IModule {
 
 		if (newCamera != null) {
 			if (camera != null) {
-				((IExtension) camera).setInitialized(false);
+				camera.setInitialized(false);
 			}
 
 			camera = newCamera;
 		}
 
 		if (player != null) {
-			if (!((IExtension) player).isInitialized()) {
+			if (!player.isInitialized()) {
 				player.init();
-				((IExtension) player).setInitialized(true);
+				player.setInitialized(true);
 			}
 
 			player.update();
 		}
 
 		if (camera != null) {
-			if (!((IExtension) camera).isInitialized()) {
+			if (!camera.isInitialized()) {
 				camera.init();
-				((IExtension) camera).setInitialized(true);
+				camera.setInitialized(true);
 			}
 
 			camera.update(player);
@@ -88,7 +88,7 @@ public class FlounderCamera extends IModule {
 	@Override
 	public void dispose() {
 		if (camera != null) {
-			((IExtension) camera).setInitialized(false);
+			camera.setInitialized(false);
 		}
 	}
 }
