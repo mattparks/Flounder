@@ -3,7 +3,6 @@ package flounder.collada;
 import flounder.animation.*;
 import flounder.collada.geometry.*;
 import flounder.collada.joints.*;
-import flounder.loaders.*;
 
 public class ModelAnimated {
 	private final MeshData meshData;
@@ -18,23 +17,15 @@ public class ModelAnimated {
 		this.meshData = meshData;
 
 		this.jointsData = jointsData;
-		this.headJoint = createJoints(jointsData.headJoint);
+		this.headJoint = createJoints(jointsData.getHeadJoint());
 
-		vaoID = FlounderLoader.createVAO();
-		vaoLength = meshData.getIndices().length;
-		FlounderLoader.createIndicesVBO(vaoID, meshData.getIndices());
-		FlounderLoader.storeDataInVBO(vaoID, meshData.getVertices(), 0, 3);
-		FlounderLoader.storeDataInVBO(vaoID, meshData.getTextures(), 1, 2);
-		FlounderLoader.storeDataInVBO(vaoID, meshData.getNormals(), 2, 3);
-		FlounderLoader.storeDataInVBO(vaoID, meshData.getTangents(), 3, 3);
-		FlounderLoader.storeDataInVBO(vaoID, meshData.getJointIds(), 4, 3);
-		FlounderLoader.storeDataInVBO(vaoID, meshData.getVertexWeights(), 5, 3);
+		FlounderCollada.loadModelToOpenGL(this);
 	}
 
 	private static Joint createJoints(JointData data) {
-		Joint j = new Joint(data.index, data.nameId, data.bindLocalTransform);
+		Joint j = new Joint(data.getIndex(), data.getNameId(), data.getBindLocalTransform());
 
-		for (JointData child : data.children) {
+		for (JointData child : data.getChildren()) {
 			j.addChild(createJoints(child));
 		}
 
@@ -57,8 +48,16 @@ public class ModelAnimated {
 		return vaoID;
 	}
 
+	public void setVaoID(int vaoID) {
+		this.vaoID = vaoID;
+	}
+
 	public int getVaoLength() {
 		return vaoLength;
+	}
+
+	public void setVaoLength(int vaoLength) {
+		this.vaoLength = vaoLength;
 	}
 
 	/**

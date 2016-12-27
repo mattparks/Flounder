@@ -192,12 +192,12 @@ public class GeometryLoader {
 			normalsArray[i * 3 + 1] = normalVector.y;
 			normalsArray[i * 3 + 2] = normalVector.z;
 			VertexSkinData weights = currentVertex.getWeightsData();
-			jointIdsArray[i * 3] = weights.jointIds.get(0);
-			jointIdsArray[i * 3 + 1] = weights.jointIds.get(1);
-			jointIdsArray[i * 3 + 2] = weights.jointIds.get(2);
-			weightsArray[i * 3] = weights.weights.get(0);
-			weightsArray[i * 3 + 1] = weights.weights.get(1);
-			weightsArray[i * 3 + 2] = weights.weights.get(2);
+			jointIdsArray[i * 3] = weights.getJointIds().get(0);
+			jointIdsArray[i * 3 + 1] = weights.getJointIds().get(1);
+			jointIdsArray[i * 3 + 2] = weights.getJointIds().get(2);
+			weightsArray[i * 3] = weights.getWeights().get(0);
+			weightsArray[i * 3 + 1] = weights.getWeights().get(1);
+			weightsArray[i * 3 + 2] = weights.getWeights().get(2);
 		}
 
 		return furthestPoint;

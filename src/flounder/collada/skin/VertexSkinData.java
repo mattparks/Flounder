@@ -3,8 +3,8 @@ package flounder.collada.skin;
 import java.util.*;
 
 public class VertexSkinData {
-	public final List<Integer> jointIds;
-	public final List<Float> weights;
+	private final List<Integer> jointIds;
+	private final List<Float> weights;
 
 	protected VertexSkinData() {
 		this.jointIds = new ArrayList<>();
@@ -65,5 +65,13 @@ public class VertexSkinData {
 		while (jointIds.size() > max) {
 			jointIds.remove(jointIds.size() - 1);
 		}
+	}
+
+	public List<Integer> getJointIds() {
+		return jointIds;
+	}
+
+	public List<Float> getWeights() {
+		return weights;
 	}
 }

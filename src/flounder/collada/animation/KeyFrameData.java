@@ -3,12 +3,20 @@ package flounder.collada.animation;
 import java.util.*;
 
 public class KeyFrameData {
-	public final float time;
-	public final List<JointTransformData> jointTransforms;
+	private final float time;
+	private final List<JointTransformData> jointTransforms;
 
 	protected KeyFrameData(float time) {
 		this.time = time;
 		this.jointTransforms = new ArrayList<>();
+	}
+
+	public float getTime() {
+		return time;
+	}
+
+	public List<JointTransformData> getJointTransforms() {
+		return jointTransforms;
 	}
 
 	protected void addJointTransform(JointTransformData transform) {

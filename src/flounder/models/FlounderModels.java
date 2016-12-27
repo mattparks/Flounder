@@ -41,11 +41,11 @@ public class FlounderModels extends IModule {
 	}
 
 	/**
-	 * Loads a OBJ file into a ModelRaw object.
+	 * Loads a OBJ file into a model object.
 	 *
-	 * @param file The file to be loaded.
+	 * @param file The OBJ file to be loaded.
 	 *
-	 * @return The data loaded.
+	 * @return The loaded model.
 	 */
 	public static ModelData loadOBJ(MyFile file) {
 		BufferedReader reader;

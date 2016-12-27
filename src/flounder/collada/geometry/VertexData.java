@@ -38,55 +38,55 @@ public class VertexData {
 		this.weightsData = null;
 	}
 
-	public Vector3f getPosition() {
+	protected Vector3f getPosition() {
 		return position;
 	}
 
-	public int getTextureIndex() {
+	protected int getTextureIndex() {
 		return textureIndex;
 	}
 
-	public void setTextureIndex(int textureIndex) {
+	protected void setTextureIndex(int textureIndex) {
 		this.textureIndex = textureIndex;
 	}
 
-	public int getNormalIndex() {
+	protected int getNormalIndex() {
 		return normalIndex;
 	}
 
-	public void setNormalIndex(int normalIndex) {
+	protected void setNormalIndex(int normalIndex) {
 		this.normalIndex = normalIndex;
 	}
 
-	public boolean isSet() {
+	protected boolean isSet() {
 		return textureIndex != NO_INDEX && normalIndex != NO_INDEX;
 	}
 
-	public boolean hasSameTextureAndNormal(int textureIndexOther, int normalIndexOther) {
+	protected boolean hasSameTextureAndNormal(int textureIndexOther, int normalIndexOther) {
 		return textureIndexOther == textureIndex && normalIndexOther == normalIndex;
 	}
 
-	public VertexData getDuplicateVertex() {
+	protected VertexData getDuplicateVertex() {
 		return duplicateVertex;
 	}
 
-	public void setDuplicateVertex(VertexData duplicateVertex) {
+	protected void setDuplicateVertex(VertexData duplicateVertex) {
 		this.duplicateVertex = duplicateVertex;
 	}
 
-	public int getIndex() {
+	protected int getIndex() {
 		return index;
 	}
 
-	public float getLength() {
+	protected float getLength() {
 		return length;
 	}
 
-	public void addTangent(Vector3f tangent) {
+	protected void addTangent(Vector3f tangent) {
 		tangents.add(tangent);
 	}
 
-	public void averageTangents() {
+	protected void averageTangents() {
 		if (tangents.isEmpty()) {
 			return;
 		}
@@ -100,15 +100,15 @@ public class VertexData {
 		}
 	}
 
-	public Vector3f getAverageTangent() {
+	protected Vector3f getAverageTangent() {
 		return averagedTangent;
 	}
 
-	public VertexSkinData getWeightsData() {
+	protected VertexSkinData getWeightsData() {
 		return weightsData;
 	}
 
-	public void setWeightsData(VertexSkinData weightsData) {
+	protected void setWeightsData(VertexSkinData weightsData) {
 		this.weightsData = weightsData;
 	}
 }
