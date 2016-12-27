@@ -61,7 +61,7 @@ public abstract class PostFilter {
 		OpenGlUtils.bindVAO(VAO, 0);
 
 		for (int i = 0; i < textures.length; i++) {
-			OpenGlUtils.bindTextureToBank(textures[i], i);
+			OpenGlUtils.bindTexture(textures[i], GL_TEXTURE_2D, i);
 		}
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length); // Render post filter.

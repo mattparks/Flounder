@@ -1,6 +1,7 @@
 package flounder.helpers;
 
 import flounder.maths.*;
+import flounder.textures.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
@@ -174,33 +175,34 @@ public class OpenGlUtils {
 	/**
 	 * Binds a OpenGL texture to a blank ID.
 	 *
-	 * @param textureID The texture to bind.
-	 * @param bankID The blank ID to bind to.
+	 * @param texture The texture to bind.
+	 * @param bankID The shaders blank ID to bind to.
 	 */
-	public static void bindTextureToBank(int textureID, int bankID) {
+	public static void bindTexture(Texture texture, int bankID) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(texture.getGlType(), texture.getTextureID());
 	}
 
 	/**
-	 * Binds a OpenGL cubemap to a blank ID.
+	 * Binds a OpenGL texture to a blank ID.
 	 *
-	 * @param cubemapID The cubemap to bind.
-	 * @param bankID The blank ID to bind to.
+	 * @param textureID The texture to bind.
+	 * @param glTarget The OpenGL texture type to bind to. {@code GL_TEXTURE_CUBE_MAP}, and {@code GL_TEXTURE_2D} are the most common types.
+	 * @param bankID The shaders blank ID to bind to.
 	 */
-	public static void bindCubemapToBank(int cubemapID, int bankID) {
+	public static void bindTexture(int textureID, int glTarget, int bankID) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapID);
+		glBindTexture(glTarget, textureID);
 	}
 
 	/**
 	 * Binds the OpenGL texture to a blank ID.
 	 *
 	 * @param textureID The texture to bind.
-	 * @param bankID The blank ID to bind to.
 	 * @param lodBias The LOD to load to texture at.
+	 * @param bankID The shaders blank ID to bind to.
 	 */
-	public static void bindTextureToBank(int textureID, int bankID, int lodBias) {
+	public static void bindTextureLOD(int textureID, int lodBias, int bankID) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, lodBias);

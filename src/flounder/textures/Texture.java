@@ -81,6 +81,15 @@ public class Texture {
 	}
 
 	/**
+	 * The OpenGL type of texture loaded.
+	 *
+	 * @return The OpenGL texture type.
+	 */
+	public int getGlType() {
+		return glType;
+	}
+
+	/**
 	 * Gets if the texture has transparency.
 	 *
 	 * @return If the texture has transparency.

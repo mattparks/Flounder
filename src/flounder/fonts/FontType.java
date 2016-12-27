@@ -2,6 +2,7 @@ package flounder.fonts;
 
 import flounder.framework.*;
 import flounder.resources.*;
+import flounder.textures.*;
 
 import java.util.*;
 
@@ -53,11 +54,11 @@ public class FontType {
 	}
 
 	/**
-	 * Gets the texture atlas.
+	 * Gets the font family's texture.
 	 *
-	 * @return The texture atlas.
+	 * @return The texture.
 	 */
-	protected int getTextureAtlas() {
-		return loader.getFontTextureAtlas();
+	protected Texture getTexture() {
+		return loader.getFontTexture();
 	}
 }

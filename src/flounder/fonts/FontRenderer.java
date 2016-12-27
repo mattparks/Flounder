@@ -57,7 +57,7 @@ public class FontRenderer extends IRenderer {
 
 	private void renderText(Text text) {
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
-		OpenGlUtils.bindTextureToBank(text.getFontType().getTextureAtlas(), 0);
+		OpenGlUtils.bindTexture(text.getFontType().getTexture(), 0);
 		Vector2f textPosition = text.getPosition();
 		Colour textColour = text.getColour();
 		shader.getUniformVec2("size").loadVec2(text.getOriginalWidth() / 2.0f, text.getOriginalHeight() / 2.0f);

@@ -65,7 +65,7 @@ public class GuiRenderer extends IRenderer {
 		}
 
 		OpenGlUtils.bindVAO(vaoID, 0);
-		OpenGlUtils.bindTextureToBank(gui.getTexture().getTextureID(), 0);
+		OpenGlUtils.bindTexture(gui.getTexture(), 0);
 		shader.getUniformVec2("size").loadVec2((POSITION_MAX - POSITION_MIN) / 2.0f, (POSITION_MAX - POSITION_MIN) / 2.0f);
 		shader.getUniformVec4("transform").loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
 		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(gui.getRotation()));

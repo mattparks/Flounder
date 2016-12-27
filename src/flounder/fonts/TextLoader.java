@@ -21,8 +21,8 @@ public class TextLoader {
 		this.metaData = new MetaFile(metaFile);
 	}
 
-	public int getFontTextureAtlas() {
-		return fontTexture.getTextureID();
+	public Texture getFontTexture() {
+		return fontTexture;
 	}
 
 	public void loadTextIntoMemory(Text text) {
