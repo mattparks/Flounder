@@ -27,23 +27,26 @@ public class FlounderRenderer extends IModule {
 
 	@Override
 	public void update() {
-		IRendererMaster newRenderer = (IRendererMaster) FlounderModules.getExtensionMatch(getInstance(), renderer, true);
+		// Gets a new renderer, if available.
+		IRendererMaster newRenderer = (IRendererMaster) FlounderModules.getExtensionMatch(getInstance(), renderer, IRendererMaster.class, true);
 
+		// If there is a new renderer, disable the old one and start to use the new one.
 		if (newRenderer != null) {
 			if (renderer != null) {
 				renderer.dispose();
 				renderer.setInitialized(false);
 			}
 
+			if (!newRenderer.isInitialized()) {
+				newRenderer.init();
+				newRenderer.setInitialized(true);
+			}
+
 			renderer = newRenderer;
 		}
 
+		// Runs updates for the renderer.
 		if (renderer != null) {
-			if (!renderer.isInitialized()) {
-				renderer.init();
-				renderer.setInitialized(true);
-			}
-
 			renderer.render();
 		}
 	}
@@ -53,6 +56,11 @@ public class FlounderRenderer extends IModule {
 		FlounderProfiler.add("Renderer", "Selected", renderer == null ? "NULL" : renderer.getClass());
 	}
 
+	/**
+	 * Gets the current renderer extension.
+	 *
+	 * @return The current renderer.
+	 */
 	public static IRendererMaster getRendererMaster() {
 		return instance.renderer;
 	}
@@ -64,6 +72,7 @@ public class FlounderRenderer extends IModule {
 
 	@Override
 	public void dispose() {
+		// Disposes the renderer with the module.
 		if (renderer != null) {
 			renderer.dispose();
 			renderer.setInitialized(false);

@@ -44,7 +44,7 @@ public class FlounderGuis extends IModule {
 
 	@Override
 	public void update() {
-		IGuiMaster newManager = (IGuiMaster) FlounderModules.getExtensionMatch(getInstance(), guiMaster, true);
+		IGuiMaster newManager = (IGuiMaster) FlounderModules.getExtensionMatch(getInstance(), guiMaster, IGuiMaster.class, true);
 
 		if (newManager != null) {
 			if (guiMaster != null) {

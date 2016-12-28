@@ -35,7 +35,7 @@ public class Light implements ISpatialObject {
 		this.colour = colour;
 		this.position = position;
 		this.attenuation = attenuation;
-		this.lightDistance = new Sphere((float) (Math.sqrt(Math.pow(attenuation.linear, 2) - (4.0f * attenuation.constant * attenuation.exponent)) + attenuation.linear) / (2.0f * attenuation.exponent), position); // TODO: Test radius.
+		this.lightDistance = new Sphere((float) (Math.sqrt(Math.pow(attenuation.linear, 2) - (4.0f * attenuation.constant * attenuation.exponent)) + attenuation.linear) / (2.0f * attenuation.exponent), position); // TODO: ModelObject radius.
 	}
 
 	/**

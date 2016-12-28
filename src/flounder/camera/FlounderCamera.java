@@ -28,40 +28,45 @@ public class FlounderCamera extends IModule {
 
 	@Override
 	public void update() {
-		IPlayer newPlayer = (IPlayer) FlounderModules.getExtensionMatch(getInstance(), player, true);
-		ICamera newCamera = (ICamera) FlounderModules.getExtensionMatch(getInstance(), camera, true);
+		// Gets a new player and camera, if available.
+		IPlayer newPlayer = (IPlayer) FlounderModules.getExtensionMatch(getInstance(), player, IPlayer.class, true);
+		ICamera newCamera = (ICamera) FlounderModules.getExtensionMatch(getInstance(), camera, ICamera.class, true);
 
+		// If there is a new player, disable the old one and start to use the new one.
 		if (newPlayer != null) {
 			if (player != null) {
 				player.setInitialized(false);
 			}
 
+			if (!newPlayer.isInitialized()) {
+				newPlayer.init();
+				newPlayer.setInitialized(true);
+			}
+
 			player = newPlayer;
 		}
 
+		// If there is a new camera, disable the old one and start to use the new one.
 		if (newCamera != null) {
 			if (camera != null) {
 				camera.setInitialized(false);
 			}
 
+			if (!newCamera.isInitialized()) {
+				newCamera.init();
+				newCamera.setInitialized(true);
+			}
+
 			camera = newCamera;
 		}
 
+		// Runs updates for the player.
 		if (player != null) {
-			if (!player.isInitialized()) {
-				player.init();
-				player.setInitialized(true);
-			}
-
 			player.update();
 		}
 
+		// Runs updates for the camera.
 		if (camera != null) {
-			if (!camera.isInitialized()) {
-				camera.init();
-				camera.setInitialized(true);
-			}
-
 			camera.update(player);
 		}
 	}
@@ -72,10 +77,20 @@ public class FlounderCamera extends IModule {
 		FlounderProfiler.add("Camera", "Player Selected", player == null ? "NULL" : player.getClass());
 	}
 
+	/**
+	 * Gets the current player extension.
+	 *
+	 * @return The current player.
+	 */
 	public static IPlayer getPlayer() {
 		return instance.player;
 	}
 
+	/**
+	 * Gets the current camera extension.
+	 *
+	 * @return The current camera.
+	 */
 	public static ICamera getCamera() {
 		return instance.camera;
 	}
@@ -87,6 +102,12 @@ public class FlounderCamera extends IModule {
 
 	@Override
 	public void dispose() {
+		// Disposes the player with the module.
+		if (player != null) {
+			player.setInitialized(false);
+		}
+
+		// Disposes the camera with the module.
 		if (camera != null) {
 			camera.setInitialized(false);
 		}
