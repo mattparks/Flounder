@@ -1,4 +1,4 @@
 /**
- * Contains classes for managing cameras in 2D and 3D worlds.
+ * Contains classes for managing cameras.
  */
 package flounder.camera;
