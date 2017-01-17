@@ -43,16 +43,16 @@ public class FlounderFonts extends IModule {
 	@Override
 	public void init() {
 		this.texts = new HashMap<>();
+	}
 
+	@Override
+	public void update() {
 		// Creates all font family's that have not been loaded.
 		if (FontType.NEEDS_TO_BE_CREATED.size() > 0) {
 			FontType.NEEDS_TO_BE_CREATED.forEach(FontType::createLoader);
 			FontType.NEEDS_TO_BE_CREATED.clear();
 		}
-	}
 
-	@Override
-	public void update() {
 		texts.clear();
 	}
 

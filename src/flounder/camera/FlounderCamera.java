@@ -29,8 +29,8 @@ public class FlounderCamera extends IModule {
 	@Override
 	public void update() {
 		// Gets a new player and camera, if available.
-		IPlayer newPlayer = (IPlayer) FlounderModules.getExtensionMatch(getInstance(), player, IPlayer.class, true);
-		ICamera newCamera = (ICamera) FlounderModules.getExtensionMatch(getInstance(), camera, ICamera.class, true);
+		IPlayer newPlayer = (IPlayer) getExtensionMatch(player, IPlayer.class, true);
+		ICamera newCamera = (ICamera) getExtensionMatch(camera, ICamera.class, true);
 
 		// If there is a new player, disable the old one and start to use the new one.
 		if (newPlayer != null) {

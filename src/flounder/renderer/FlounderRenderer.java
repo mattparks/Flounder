@@ -28,7 +28,7 @@ public class FlounderRenderer extends IModule {
 	@Override
 	public void update() {
 		// Gets a new renderer, if available.
-		IRendererMaster newRenderer = (IRendererMaster) FlounderModules.getExtensionMatch(getInstance(), renderer, IRendererMaster.class, true);
+		IRendererMaster newRenderer = (IRendererMaster) getExtensionMatch(renderer, IRendererMaster.class, true);
 
 		// If there is a new renderer, disable the old one and start to use the new one.
 		if (newRenderer != null) {
