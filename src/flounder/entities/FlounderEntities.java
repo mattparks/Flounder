@@ -18,7 +18,8 @@ import java.util.*;
  * A class that manages game entities.
  */
 public class FlounderEntities extends IModule {
-	private static final FlounderEntities instance = new FlounderEntities();
+	private static final FlounderEntities INSTANCE = new FlounderEntities();
+	public static final String PROFILE_TAB_NAME = "Entities";
 
 	public static final MyFile ENTITIES_FOLDER = new MyFile(MyFile.RES_FOLDER, "entities");
 
@@ -29,7 +30,7 @@ public class FlounderEntities extends IModule {
 	 * Creates a new game manager for entities.
 	 */
 	public FlounderEntities() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderBounding.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderBounding.class);
 	}
 
 	@Override
@@ -47,14 +48,14 @@ public class FlounderEntities extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Entities", "Count", entityStructure.getSize());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Count", entityStructure.getSize());
 	}
 
 	/**
 	 * Clears the world of all entities.
 	 */
 	public static void clear() {
-		instance.entityStructure.getAll(new ArrayList<>()).forEach(Entity::forceRemove);
+		INSTANCE.entityStructure.getAll(new ArrayList<>()).forEach(Entity::forceRemove);
 	}
 
 	/**
@@ -65,12 +66,12 @@ public class FlounderEntities extends IModule {
 	 * @return The loaded entity template.
 	 */
 	public static EntityTemplate load(String name) {
-		SoftReference<EntityTemplate> ref = instance.loaded.get(name);
+		SoftReference<EntityTemplate> ref = INSTANCE.loaded.get(name);
 		EntityTemplate data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(name + " is being loaded into a entity template right now!");
-			instance.loaded.remove(name);
+			INSTANCE.loaded.remove(name);
 
 			// Creates the file reader.
 			MyFile saveFile = new MyFile(MyFile.RES_FOLDER, "entities", name, name + ".entity");
@@ -163,7 +164,7 @@ public class FlounderEntities extends IModule {
 				return null;
 			}
 
-			instance.loaded.put(name, new SoftReference<>(data));
+			INSTANCE.loaded.put(name, new SoftReference<>(data));
 		}
 
 		return data;
@@ -257,12 +258,12 @@ public class FlounderEntities extends IModule {
 	 * @return A list of entities.
 	 */
 	public static StructureBasic<Entity> getEntities() {
-		return instance.entityStructure;
+		return INSTANCE.entityStructure;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

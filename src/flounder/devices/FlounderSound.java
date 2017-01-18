@@ -23,8 +23,10 @@ import static org.lwjgl.opengl.GL11.*;
  * A module used for loading, managing and playing a variety of different sound types.
  */
 public class FlounderSound extends IModule {
+	private static final FlounderSound INSTANCE = new FlounderSound();
+	public static final String PROFILE_TAB_NAME = "Sound";
+
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
-	private static final FlounderSound instance = new FlounderSound();
 
 	private Vector3f cameraPosition;
 	private long device;
@@ -37,7 +39,7 @@ public class FlounderSound extends IModule {
 	 * Creates a new OpenAL audio manager.
 	 */
 	public FlounderSound() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class FlounderSound extends IModule {
 	 * @return The cameras position.
 	 */
 	public static Vector3f getCameraPosition() {
-		return instance.cameraPosition;
+		return INSTANCE.cameraPosition;
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class FlounderSound extends IModule {
 			return null;
 		}
 
-		return instance.sourcePool.play(playRequest);
+		return INSTANCE.sourcePool.play(playRequest);
 	}
 
 	/**
@@ -118,7 +120,7 @@ public class FlounderSound extends IModule {
 			return null;
 		}
 
-		return instance.sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
+		return INSTANCE.sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
 	}
 
 	/**
@@ -127,7 +129,7 @@ public class FlounderSound extends IModule {
 	 * @return The sound stream manager.
 	 */
 	public static StreamManager getStreamManager() {
-		return instance.streamManager;
+		return INSTANCE.streamManager;
 	}
 
 	/**
@@ -136,12 +138,12 @@ public class FlounderSound extends IModule {
 	 * @return The background music player.
 	 */
 	public static MusicPlayer getMusicPlayer() {
-		return instance.musicPlayer;
+		return INSTANCE.musicPlayer;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

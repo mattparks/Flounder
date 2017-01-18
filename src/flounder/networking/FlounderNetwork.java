@@ -3,14 +3,16 @@ package flounder.networking;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.networking.packets.*;
+import flounder.profiling.*;
 
 /**
  * A module used for handling networking, servers, clients, and packets.
  */
 public class FlounderNetwork extends IModule {
-	private static final FlounderNetwork instance = new FlounderNetwork();
+	private static final FlounderNetwork INSTANCE = new FlounderNetwork();
+	public static final String PROFILE_TAB_NAME = "Network";
 
-	private static final int PORT = 2266;
+	private static final int DEFAULT_PORT = 2266;
 
 	private Server socketServer;
 	private Client socketClient;
@@ -22,7 +24,7 @@ public class FlounderNetwork extends IModule {
 	 * Creates a new network manager.
 	 */
 	public FlounderNetwork() {
-		super(ModuleUpdate.UPDATE_POST, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderLogger.class);
 	}
 
 	/**
@@ -31,16 +33,16 @@ public class FlounderNetwork extends IModule {
 	 * @param port The networks port.
 	 */
 	public static void setup(int port) {
-		if (!instance.setup) {
-			instance.port = port;
-			instance.setup = true;
+		if (!INSTANCE.setup) {
+			INSTANCE.port = port;
+			INSTANCE.setup = true;
 		}
 	}
 
 	@Override
 	public void init() {
 		if (!setup) {
-			this.port = PORT;
+			this.port = DEFAULT_PORT;
 			this.setup = true;
 		}
 
@@ -53,6 +55,8 @@ public class FlounderNetwork extends IModule {
 
 	@Override
 	public void profile() {
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Username", username);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Port", port);
 	}
 
 	/**
@@ -60,8 +64,8 @@ public class FlounderNetwork extends IModule {
 	 */
 	public static void startServer() {
 		FlounderLogger.log("Starting server!");
-		instance.socketServer = new Server(instance.port);
-		instance.socketServer.start();
+		INSTANCE.socketServer = new Server(INSTANCE.port);
+		INSTANCE.socketServer.start();
 	}
 
 	/**
@@ -69,23 +73,23 @@ public class FlounderNetwork extends IModule {
 	 */
 	public static void startClient() {
 		FlounderLogger.log("Starting Client!");
-		instance.socketClient = new Client("localhost", instance.port);
-		instance.socketClient.start();
+		INSTANCE.socketClient = new Client("localhost", INSTANCE.port);
+		INSTANCE.socketClient.start();
 
-		PacketLogin loginPacket = new PacketLogin(instance.username);
-		loginPacket.writeData(instance.socketClient);
+		PacketLogin loginPacket = new PacketLogin(INSTANCE.username);
+		loginPacket.writeData(INSTANCE.socketClient);
 	}
 
 	/**
 	 * Closes the server.
 	 */
 	public static void closeServer() {
-		if (instance.socketServer != null) {
+		if (INSTANCE.socketServer != null) {
 			FlounderLogger.log("Closing server!");
 
-			new PacketDisconnect("server").writeData(instance.socketServer);
-			instance.socketServer.dispose();
-			instance.socketServer = null;
+			new PacketDisconnect("server").writeData(INSTANCE.socketServer);
+			INSTANCE.socketServer.dispose();
+			INSTANCE.socketServer = null;
 		}
 	}
 
@@ -93,12 +97,12 @@ public class FlounderNetwork extends IModule {
 	 * Closes the client.
 	 */
 	public static void closeClient() {
-		if (instance.socketClient != null) {
+		if (INSTANCE.socketClient != null) {
 			FlounderLogger.log("Closing client!");
 
-			new PacketDisconnect(instance.username).writeData(instance.socketClient);
-			instance.socketClient.dispose();
-			instance.socketClient = null;
+			new PacketDisconnect(INSTANCE.username).writeData(INSTANCE.socketClient);
+			INSTANCE.socketClient.dispose();
+			INSTANCE.socketClient = null;
 		}
 	}
 
@@ -108,7 +112,7 @@ public class FlounderNetwork extends IModule {
 	 * @return The server running from this server.
 	 */
 	public static Server getSocketServer() {
-		return instance.socketServer;
+		return INSTANCE.socketServer;
 	}
 
 	/**
@@ -117,16 +121,16 @@ public class FlounderNetwork extends IModule {
 	 * @return The client running.
 	 */
 	public static Client getSocketClient() {
-		return instance.socketClient;
+		return INSTANCE.socketClient;
 	}
 
 	public static String getUsername() {
-		return instance.username;
+		return INSTANCE.username;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

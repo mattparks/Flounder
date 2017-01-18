@@ -20,7 +20,8 @@ import static org.lwjgl.opengl.GL30.*;
  * A module used for creating shaders and loading {@link flounder.shaders.Uniform} variables to shaders.
  */
 public class FlounderShaders extends IModule {
-	private final static FlounderShaders instance = new FlounderShaders();
+	private final static FlounderShaders INSTANCE = new FlounderShaders();
+	public static final String PROFILE_TAB_NAME = "Shaders";
 
 	private Map<String, SoftReference<Shader>> loaded;
 
@@ -28,7 +29,7 @@ public class FlounderShaders extends IModule {
 	 * Creates the engines shader loader.
 	 */
 	public FlounderShaders() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class FlounderShaders extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Shaders", "Loaded", loaded.size());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class FlounderShaders extends IModule {
 					String line;
 
 					while ((line = reader.readLine()) != null) {
-						shaderType.getShaderBuilder().append(instance.processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
+						shaderType.getShaderBuilder().append(INSTANCE.processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
 					}
 				} catch (Exception e) {
 					FlounderLogger.error("Could not read file " + file.getName());
@@ -75,7 +76,7 @@ public class FlounderShaders extends IModule {
 				String string = shaderType.getShaderString().get();
 
 				for (String line : string.split("\n")) {
-					shaderType.getShaderBuilder().append(instance.processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
+					shaderType.getShaderBuilder().append(INSTANCE.processShaderLine(line.trim(), data, shaderType.getShaderType()) + "\n");
 				}
 			}
 		}
@@ -178,7 +179,7 @@ public class FlounderShaders extends IModule {
 			glAttachShader(programID, shaderID);
 		}
 
-		instance.loadLocations(programID, data);
+		INSTANCE.loadLocations(programID, data);
 		glLinkProgram(programID);
 
 		for (ShaderType shaderType : builder.getShaderTypes()) {
@@ -187,9 +188,9 @@ public class FlounderShaders extends IModule {
 			shaderType.setShaderProgramID(-1);
 		}
 
-		instance.loadBindings(programID, data);
+		INSTANCE.loadBindings(programID, data);
 
-		shader.loadData(programID, builder.getShaderName(), builder.getShaderTypes(), instance.createUniforms(programID, data));
+		shader.loadData(programID, builder.getShaderName(), builder.getShaderTypes(), INSTANCE.createUniforms(programID, data));
 		data.destroy();
 	}
 
@@ -271,12 +272,12 @@ public class FlounderShaders extends IModule {
 	 * @return A list of loaded shaders.
 	 */
 	public static Map<String, SoftReference<Shader>> getLoaded() {
-		return instance.loaded;
+		return INSTANCE.loaded;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

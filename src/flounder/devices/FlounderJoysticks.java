@@ -12,7 +12,8 @@ import static org.lwjgl.glfw.GLFW.*;
  * A module used for the creation, updating and destruction of joysticks.
  */
 public class FlounderJoysticks extends IModule {
-	private static final FlounderJoysticks instance = new FlounderJoysticks();
+	private static final FlounderJoysticks INSTANCE = new FlounderJoysticks();
+	public static final String PROFILE_TAB_NAME = "Joysticks";
 
 	private FloatBuffer joystickAxes[];
 	private ByteBuffer joystickButtons[];
@@ -22,7 +23,7 @@ public class FlounderJoysticks extends IModule {
 	 * Creates a new GLFW joystick manager.
 	 */
 	public FlounderJoysticks() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class FlounderJoysticks extends IModule {
 	 * @return If the joystick is connected.
 	 */
 	public static boolean isConnected(int joystick) {
-		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && instance.joystickNames[joystick] != null;
+		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && INSTANCE.joystickNames[joystick] != null;
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class FlounderJoysticks extends IModule {
 	 * @return The joysticks name.
 	 */
 	public static String getName(int joystick) {
-		return instance.joystickNames[joystick];
+		return INSTANCE.joystickNames[joystick];
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class FlounderJoysticks extends IModule {
 	 * @return The value of the joystick's axis.
 	 */
 	public static float getAxis(int joystick, int axis) {
-		return instance.joystickAxes[joystick].get(axis);
+		return INSTANCE.joystickAxes[joystick].get(axis);
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class FlounderJoysticks extends IModule {
 	 * @return Whether a button on a joystick is pressed.
 	 */
 	public static boolean getButton(int joystick, int button) {
-		return instance.joystickButtons[joystick].get(button) != 0;
+		return INSTANCE.joystickButtons[joystick].get(button) != 0;
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class FlounderJoysticks extends IModule {
 	 * @return The number of axes the joystick offers.
 	 */
 	public static int getCountAxes(int joystick) {
-		return instance.joystickAxes[joystick].capacity();
+		return INSTANCE.joystickAxes[joystick].capacity();
 	}
 
 	/**
@@ -132,12 +133,12 @@ public class FlounderJoysticks extends IModule {
 	 * @return The number of buttons the joystick offers.
 	 */
 	public static int getCountButtons(int joystick) {
-		return instance.joystickButtons[joystick].capacity();
+		return INSTANCE.joystickButtons[joystick].capacity();
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

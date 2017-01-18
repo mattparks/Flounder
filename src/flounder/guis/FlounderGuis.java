@@ -17,7 +17,8 @@ import java.util.*;
  * A module used for that manages GUI textures in a container.
  */
 public class FlounderGuis extends IModule {
-	private static final FlounderGuis instance = new FlounderGuis();
+	private static final FlounderGuis INSTANCE = new FlounderGuis();
+	public static final String PROFILE_TAB_NAME = "Guis";
 
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
@@ -31,7 +32,7 @@ public class FlounderGuis extends IModule {
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderFonts.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderFonts.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
 		guiMaster = null;
 	}
 
@@ -74,12 +75,12 @@ public class FlounderGuis extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("GUIs", "Textures Count", guiTextures.size());
-		FlounderProfiler.add("GUIs", "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Textures Count", guiTextures.size());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
 	}
 
 	public static IGuiMaster getGuiMaster() {
-		return instance.guiMaster;
+		return INSTANCE.guiMaster;
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class FlounderGuis extends IModule {
 	 * @param relScaleY The Y scale relative to the container.
 	 */
 	public static void addComponent(GuiComponent component, float relX, float relY, float relScaleX, float relScaleY) {
-		instance.container.addComponent(component, relX, relY, relScaleX, relScaleY);
+		INSTANCE.container.addComponent(component, relX, relY, relScaleX, relScaleY);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class FlounderGuis extends IModule {
 	 * @return List of GUI textures.
 	 */
 	public static List<GuiTexture> getGuiTextures() {
-		return instance.guiTextures;
+		return INSTANCE.guiTextures;
 	}
 
 	/**
@@ -110,12 +111,12 @@ public class FlounderGuis extends IModule {
 	 * @return The GUI selector.
 	 */
 	public static GuiSelector getSelector() {
-		return instance.selector;
+		return INSTANCE.selector;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

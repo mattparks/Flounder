@@ -77,7 +77,7 @@ public class FontRenderer extends IRenderer {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Fonts", "Render Time", super.getRenderTimeMs());
+		FlounderProfiler.add(FlounderFonts.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
 	}
 
 	@Override

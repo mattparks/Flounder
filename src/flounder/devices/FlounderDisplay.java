@@ -22,7 +22,8 @@ import static org.lwjgl.system.MemoryUtil.*;
  * A module used for the creation, updating and destruction of the display.
  */
 public class FlounderDisplay extends IModule {
-	private static final FlounderDisplay instance = new FlounderDisplay();
+	private static final FlounderDisplay INSTANCE = new FlounderDisplay();
+	public static final String PROFILE_TAB_NAME = "Display";
 
 	private int windowWidth;
 	private int windowHeight;
@@ -54,7 +55,7 @@ public class FlounderDisplay extends IModule {
 	 * Creates a new GLFW display manager.
 	 */
 	public FlounderDisplay() {
-		super(ModuleUpdate.UPDATE_ALWAYS, FlounderLogger.class, FlounderProfiler.class, FlounderDisplaySync.class);
+		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplaySync.class);
 	}
 
 	/**
@@ -71,19 +72,19 @@ public class FlounderDisplay extends IModule {
 	 * @param hiddenDisplay If the display should be hidden on start, should be true when {@link FlounderDisplayJPanel} is being used.
 	 */
 	public static void setup(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay) {
-		if (!instance.isInitialized()) {
-			instance.windowWidth = width;
-			instance.windowHeight = height;
-			instance.title = title;
-			instance.icons = icons;
-			instance.vsync = vsync;
-			instance.antialiasing = antialiasing;
-			instance.samples = samples;
-			instance.fullscreen = fullscreen;
-			instance.hiddenDisplay = hiddenDisplay;
-			instance.setup = true;
+		if (!INSTANCE.isInitialized()) {
+			INSTANCE.windowWidth = width;
+			INSTANCE.windowHeight = height;
+			INSTANCE.title = title;
+			INSTANCE.icons = icons;
+			INSTANCE.vsync = vsync;
+			INSTANCE.antialiasing = antialiasing;
+			INSTANCE.samples = samples;
+			INSTANCE.fullscreen = fullscreen;
+			INSTANCE.hiddenDisplay = hiddenDisplay;
+			INSTANCE.setup = true;
 		} else {
-			FlounderLogger.error("Flounder Display setup MUST be called before the instance is initialized.");
+			FlounderLogger.error("Flounder Display setup MUST be called before the INSTANCE is initialized.");
 		}
 	}
 
@@ -153,7 +154,7 @@ public class FlounderDisplay extends IModule {
 			FlounderLogger.exception(e);
 		}
 
-		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
+		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities INSTANCE and makes the OpenGL bindings available for use.
 		createCapabilities(true);
 
 		// Gets any OpenGL errors.
@@ -292,25 +293,25 @@ public class FlounderDisplay extends IModule {
 	 * Updates the display image by swapping the colour buffers.
 	 */
 	public static void swapBuffers() {
-		if (instance.window != 0) {
-			glfwSwapBuffers(instance.window);
+		if (INSTANCE.window != 0) {
+			glfwSwapBuffers(INSTANCE.window);
 		}
 	}
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Display", "Width", windowWidth);
-		FlounderProfiler.add("Display", "Height", windowHeight);
-		FlounderProfiler.add("Display", "Title", title);
-		FlounderProfiler.add("Display", "VSync", vsync);
-		FlounderProfiler.add("Display", "Antialiasing", antialiasing);
-		FlounderProfiler.add("Display", "Samples", samples);
-		FlounderProfiler.add("Display", "Fullscreen", fullscreen);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Width", windowWidth);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Height", windowHeight);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Title", title);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "VSync", vsync);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Antialiasing", antialiasing);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Samples", samples);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Fullscreen", fullscreen);
 
-		FlounderProfiler.add("Display", "Closed", closed);
-		FlounderProfiler.add("Display", "Focused", focused);
-		FlounderProfiler.add("Display", "Window Pos.X", windowPosX);
-		FlounderProfiler.add("Display", "Window Pos.Y", windowPosY);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Closed", closed);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Focused", focused);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Window Pos.X", windowPosX);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Window Pos.Y", windowPosY);
 	}
 
 	/**
@@ -382,11 +383,11 @@ public class FlounderDisplay extends IModule {
 	 * @return The width of the display.
 	 */
 	public static int getWidth() {
-		return instance.fullscreen ? instance.fullscreenWidth : instance.windowWidth;
+		return INSTANCE.fullscreen ? INSTANCE.fullscreenWidth : INSTANCE.windowWidth;
 	}
 
 	public static int getWindowWidth() {
-		return instance.windowWidth;
+		return INSTANCE.windowWidth;
 	}
 
 	/**
@@ -395,11 +396,11 @@ public class FlounderDisplay extends IModule {
 	 * @return The height of the display.
 	 */
 	public static int getHeight() {
-		return instance.fullscreen ? instance.fullscreenHeight : instance.windowHeight;
+		return INSTANCE.fullscreen ? INSTANCE.fullscreenHeight : INSTANCE.windowHeight;
 	}
 
 	public static int getWindowHeight() {
-		return instance.windowHeight;
+		return INSTANCE.windowHeight;
 	}
 
 	/**
@@ -417,7 +418,7 @@ public class FlounderDisplay extends IModule {
 	 * @return The window's title.
 	 */
 	public static String getTitle() {
-		return instance.title;
+		return INSTANCE.title;
 	}
 
 	/**
@@ -426,7 +427,7 @@ public class FlounderDisplay extends IModule {
 	 * @return If VSync is enabled.
 	 */
 	public static boolean isVSync() {
-		return instance.vsync;
+		return INSTANCE.vsync;
 	}
 
 	/**
@@ -435,7 +436,7 @@ public class FlounderDisplay extends IModule {
 	 * @param vsync Weather or not to use vSync.
 	 */
 	public static void setVSync(boolean vsync) {
-		instance.vsync = vsync;
+		INSTANCE.vsync = vsync;
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		if (vsync) {
@@ -449,7 +450,7 @@ public class FlounderDisplay extends IModule {
 	 * @return If using antialiased images.
 	 */
 	public static boolean isAntialiasing() {
-		return instance.antialiasing;
+		return INSTANCE.antialiasing;
 	}
 
 	/**
@@ -458,7 +459,7 @@ public class FlounderDisplay extends IModule {
 	 * @param antialiasing If the display should antialias.
 	 */
 	public static void setAntialiasing(boolean antialiasing) {
-		instance.antialiasing = antialiasing;
+		INSTANCE.antialiasing = antialiasing;
 	}
 
 	/**
@@ -467,7 +468,7 @@ public class FlounderDisplay extends IModule {
 	 * @return Amount of MFAA samples.
 	 */
 	public static int getSamples() {
-		return instance.samples;
+		return INSTANCE.samples;
 	}
 
 	/**
@@ -476,7 +477,7 @@ public class FlounderDisplay extends IModule {
 	 * @param samples The amount of MFSS samples.
 	 */
 	public static void setSamples(int samples) {
-		instance.samples = samples;
+		INSTANCE.samples = samples;
 		glfwWindowHint(GLFW_SAMPLES, samples);
 	}
 
@@ -486,7 +487,7 @@ public class FlounderDisplay extends IModule {
 	 * @return Fullscreen or windowed.
 	 */
 	public static boolean isFullscreen() {
-		return instance.fullscreen;
+		return INSTANCE.fullscreen;
 	}
 
 	/**
@@ -495,24 +496,24 @@ public class FlounderDisplay extends IModule {
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
 	public static void setFullscreen(boolean fullscreen) {
-		if (instance.fullscreen == fullscreen) {
+		if (INSTANCE.fullscreen == fullscreen) {
 			return;
 		}
 
-		instance.fullscreen = fullscreen;
+		INSTANCE.fullscreen = fullscreen;
 		long monitor = glfwGetPrimaryMonitor();
 		GLFWVidMode mode = glfwGetVideoMode(monitor);
 
 		FlounderLogger.log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
 
 		if (fullscreen) {
-			instance.fullscreenWidth = mode.width();
-			instance.fullscreenHeight = mode.height();
-			glfwSetWindowMonitor(instance.window, monitor, 0, 0, instance.fullscreenWidth, instance.fullscreenHeight, GLFW_DONT_CARE);
+			INSTANCE.fullscreenWidth = mode.width();
+			INSTANCE.fullscreenHeight = mode.height();
+			glfwSetWindowMonitor(INSTANCE.window, monitor, 0, 0, INSTANCE.fullscreenWidth, INSTANCE.fullscreenHeight, GLFW_DONT_CARE);
 		} else {
-			instance.windowPosX = (mode.width() - instance.windowWidth) / 2;
-			instance.windowPosY = (mode.height() - instance.windowHeight) / 2;
-			glfwSetWindowMonitor(instance.window, NULL, instance.windowPosX, instance.windowPosY, instance.windowWidth, instance.windowHeight, GLFW_DONT_CARE);
+			INSTANCE.windowPosX = (mode.width() - INSTANCE.windowWidth) / 2;
+			INSTANCE.windowPosY = (mode.height() - INSTANCE.windowHeight) / 2;
+			glfwSetWindowMonitor(INSTANCE.window, NULL, INSTANCE.windowPosX, INSTANCE.windowPosY, INSTANCE.windowWidth, INSTANCE.windowHeight, GLFW_DONT_CARE);
 		}
 	}
 
@@ -522,7 +523,7 @@ public class FlounderDisplay extends IModule {
 	 * @return The current GLFW window.
 	 */
 	public static long getWindow() {
-		return instance.window;
+		return INSTANCE.window;
 	}
 
 	/**
@@ -531,7 +532,7 @@ public class FlounderDisplay extends IModule {
 	 * @return If the GLFW display is closed.
 	 */
 	public static boolean isClosed() {
-		return instance.closed;
+		return INSTANCE.closed;
 	}
 
 	/**
@@ -540,7 +541,7 @@ public class FlounderDisplay extends IModule {
 	 * @return If the GLFW display is selected.
 	 */
 	public static boolean isFocused() {
-		return instance.focused;
+		return INSTANCE.focused;
 	}
 
 	/**
@@ -549,7 +550,7 @@ public class FlounderDisplay extends IModule {
 	 * @return The windows x position.
 	 */
 	public static int getWindowXPos() {
-		return instance.windowPosX;
+		return INSTANCE.windowPosX;
 	}
 
 	/**
@@ -558,7 +559,7 @@ public class FlounderDisplay extends IModule {
 	 * @return The windows Y position.
 	 */
 	public static int getWindowYPos() {
-		return instance.windowPosY;
+		return INSTANCE.windowPosY;
 	}
 
 	/**
@@ -570,7 +571,7 @@ public class FlounderDisplay extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override
@@ -585,7 +586,7 @@ public class FlounderDisplay extends IModule {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 
-		instance.closed = false;
-		instance.setup = false;
+		INSTANCE.closed = false;
+		INSTANCE.setup = false;
 	}
 }

@@ -14,7 +14,8 @@ import static org.lwjgl.glfw.GLFW.*;
  * A module used for rendering a invisible display into a JPanel.
  */
 public class FlounderDisplayJPanel extends IModule {
-	private static final FlounderDisplayJPanel instance = new FlounderDisplayJPanel();
+	private static final FlounderDisplayJPanel INSTANCE = new FlounderDisplayJPanel();
+	public static final String PROFILE_TAB_NAME = "Display-JPanel";
 
 	private JPanel panel;
 	private BufferedImage image;
@@ -24,7 +25,7 @@ public class FlounderDisplayJPanel extends IModule {
 	 * Creates a new JPanel renderer.
 	 */
 	public FlounderDisplayJPanel() {
-		super(ModuleUpdate.UPDATE_ALWAYS, FlounderDisplay.class, FlounderEvents.class);
+		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderEvents.class);
 	}
 
 	@Override
@@ -35,26 +36,26 @@ public class FlounderDisplayJPanel extends IModule {
 	}
 
 	/**
-	 * Creates a new JPanel for the instance to render into.
+	 * Creates a new JPanel for the INSTANCE to render into.
 	 *
 	 * @return The new JPanel.
 	 */
 	public static JPanel createPanel() {
-		instance.panel = new JPanel() {
+		INSTANCE.panel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				// Sets to paint with a new Graphics.
 				super.paintComponent(g);
 
 				// Draws the BufferedImage.
-				g.drawImage(instance.image, 0, 0, null);
+				g.drawImage(INSTANCE.image, 0, 0, null);
 
 				// Draws the current engine FPS.
 				g.drawString("FPS: " + (1.0f / FlounderFramework.getDeltaRender()), 10, 15);
 			}
 		};
-		instance.panel.setSize(FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
-		return instance.panel;
+		INSTANCE.panel.setSize(FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
+		return INSTANCE.panel;
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public class FlounderDisplayJPanel extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

@@ -14,36 +14,37 @@ import java.util.*;
  * A manager for Boundings that want to be renderer.
  */
 public class FlounderBounding extends IModule {
-	private static final FlounderBounding instance = new FlounderBounding();
+	private static final FlounderBounding INSTANCE = new FlounderBounding();
+	public static final String PROFILE_TAB_NAME = "Bounding";
 
 	private Map<Model, List<IBounding>> renderShapes;
 	private boolean renders;
-	private int aabbCount;
+	private int boundingCount;
 
 	/**
 	 * Creates a new bounding manager.
 	 */
 	public FlounderBounding() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
 	}
 
 	@Override
 	public void init() {
 		this.renderShapes = new HashMap<>();
 		this.renders = true;
-		this.aabbCount = 0;
+		this.boundingCount = 0;
 	}
 
 	@Override
 	public void update() {
-		FlounderProfiler.add("Boundings", "Enabled", renders);
-		aabbCount = renderShapes.size();
+		boundingCount = renderShapes.size();
 		clear(); // Clears before the next batch of rendering.
 	}
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Boundings", "Renderable", aabbCount);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Enabled", renders);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Count", boundingCount);
 	}
 
 	/**
@@ -52,16 +53,16 @@ public class FlounderBounding extends IModule {
 	 * @param shape The shape to add.
 	 */
 	public static void addShapeRender(IBounding shape) {
-		for (Model model : instance.renderShapes.keySet()) {
+		for (Model model : INSTANCE.renderShapes.keySet()) {
 			if (model.equals(shape.getRenderModel())) {
-				instance.renderShapes.get(model).add(shape);
+				INSTANCE.renderShapes.get(model).add(shape);
 				return;
 			}
 		}
 
 		List<IBounding> list = new ArrayList<>();
 		list.add(shape);
-		instance.renderShapes.put(shape.getRenderModel(), list);
+		INSTANCE.renderShapes.put(shape.getRenderModel(), list);
 	}
 
 	/**
@@ -70,27 +71,27 @@ public class FlounderBounding extends IModule {
 	 * @return The renderable shapes.
 	 */
 	protected static Map<Model, List<IBounding>> getRenderShapes() {
-		return instance.renderShapes;
+		return INSTANCE.renderShapes;
 	}
 
 	public static boolean renders() {
-		return instance.renders;
+		return INSTANCE.renders;
 	}
 
 	public static void toggle(boolean renders) {
-		instance.renders = renders;
+		INSTANCE.renders = renders;
 	}
 
 	/**
 	 * Clears the renderable Boundings.
 	 */
 	protected static void clear() {
-		instance.renderShapes.clear();
+		INSTANCE.renderShapes.clear();
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

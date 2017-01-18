@@ -8,7 +8,8 @@ import flounder.profiling.*;
  * A module used for managing cameras in 2D and 3D worlds.
  */
 public class FlounderCamera extends IModule {
-	private static final FlounderCamera instance = new FlounderCamera();
+	private static final FlounderCamera INSTANCE = new FlounderCamera();
+	public static final String PROFILE_TAB_NAME = "Camera";
 
 	private IPlayer player;
 	private ICamera camera;
@@ -17,7 +18,7 @@ public class FlounderCamera extends IModule {
 	 * Creates a new camera manager.
 	 */
 	public FlounderCamera() {
-		super(ModuleUpdate.UPDATE_POST, FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override
@@ -73,8 +74,8 @@ public class FlounderCamera extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Camera", "Camera Selected", camera == null ? "NULL" : camera.getClass());
-		FlounderProfiler.add("Camera", "Player Selected", player == null ? "NULL" : player.getClass());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Camera Selected", camera == null ? "NULL" : camera.getClass());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Player Selected", player == null ? "NULL" : player.getClass());
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class FlounderCamera extends IModule {
 	 * @return The current player.
 	 */
 	public static IPlayer getPlayer() {
-		return instance.player;
+		return INSTANCE.player;
 	}
 
 	/**
@@ -92,12 +93,12 @@ public class FlounderCamera extends IModule {
 	 * @return The current camera.
 	 */
 	public static ICamera getCamera() {
-		return instance.camera;
+		return INSTANCE.camera;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

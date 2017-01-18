@@ -6,13 +6,14 @@ import flounder.framework.*;
  * A module used for synchronizing to the display after rendering.
  */
 public class FlounderDisplaySync extends IModule {
-	private static final FlounderDisplaySync instance = new FlounderDisplaySync();
+	private static final FlounderDisplaySync INSTANCE = new FlounderDisplaySync();
+	public static final String PROFILE_TAB_NAME = "Display-Sync";
 
 	/**
 	 * Creates a new GLFW display synchronizer.
 	 */
 	public FlounderDisplaySync() {
-		super(ModuleUpdate.UPDATE_RENDER, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderDisplay.class);
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class FlounderDisplaySync extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

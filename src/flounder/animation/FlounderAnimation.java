@@ -14,13 +14,14 @@ import java.util.*;
  * A module used for loading the information from a collada, and then creates an animation from the extracted data.
  */
 public class FlounderAnimation extends IModule {
-	private static final FlounderAnimation instance = new FlounderAnimation();
+	private static final FlounderAnimation INSTANCE = new FlounderAnimation();
+	public static final String PROFILE_TAB_NAME = "Animation";
 
 	/**
 	 * Creates a new animation loader class.
 	 */
 	public FlounderAnimation() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProcessors.class, FlounderCollada.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProcessors.class, FlounderCollada.class);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class FlounderAnimation extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

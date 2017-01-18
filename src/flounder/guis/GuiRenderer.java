@@ -84,7 +84,7 @@ public class GuiRenderer extends IRenderer {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("GUIs", "Render Time", super.getRenderTimeMs());
+		FlounderProfiler.add(FlounderGuis.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
 	}
 
 	@Override

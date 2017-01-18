@@ -18,7 +18,8 @@ import static org.lwjgl.opengl.GL30.*;
  * A module used for loading and managing OpenGL VAO's and VBO's.
  */
 public class FlounderLoader extends IModule {
-	private static final FlounderLoader instance = new FlounderLoader();
+	private static final FlounderLoader INSTANCE = new FlounderLoader();
+	public static final String PROFILE_TAB_NAME = "Loader";
 
 	private Map<Integer, List<Integer>> vaoCache;
 
@@ -26,7 +27,7 @@ public class FlounderLoader extends IModule {
 	 * Creates a new OpenGL loader class.
 	 */
 	public FlounderLoader() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProfiler.class);
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class FlounderLoader extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Loader", "Loaded Count", vaoCache.size());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", vaoCache.size());
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class FlounderLoader extends IModule {
 	public static int createVAO() {
 		int vertexArrayID = glGenVertexArrays();
 		glBindVertexArray(vertexArrayID);
-		instance.vaoCache.put(vertexArrayID, new ArrayList<>());
+		INSTANCE.vaoCache.put(vertexArrayID, new ArrayList<>());
 		return vertexArrayID;
 	}
 
@@ -114,9 +115,9 @@ public class FlounderLoader extends IModule {
 	 * @param lengths The lengths in floats of each of the data elements associated with any given vertex.
 	 */
 	public static void storeInterleavedDataInVAO(int vaoID, float[] data, int... lengths) {
-		FloatBuffer interleavedData = instance.storeDataInBuffer(data);
+		FloatBuffer interleavedData = INSTANCE.storeDataInBuffer(data);
 		int bufferObjectID = glGenBuffers();
-		instance.vaoCache.get(vaoID).add(bufferObjectID);
+		INSTANCE.vaoCache.get(vaoID).add(bufferObjectID);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferObjectID);
 		glBufferData(GL_ARRAY_BUFFER, interleavedData, GL_STATIC_DRAW);
 
@@ -144,9 +145,9 @@ public class FlounderLoader extends IModule {
 	 * @param vao The vao to be deleted.
 	 */
 	public static void deleteVAOFromCache(int vao) {
-		if (instance.vaoCache.containsKey(vao)) {
-			instance.vaoCache.get(vao).forEach(cache -> glDeleteBuffers(cache));
-			instance.vaoCache.remove(vao);
+		if (INSTANCE.vaoCache.containsKey(vao)) {
+			INSTANCE.vaoCache.get(vao).forEach(cache -> glDeleteBuffers(cache));
+			INSTANCE.vaoCache.remove(vao);
 			glDeleteVertexArrays(vao);
 		}
 	}
@@ -227,7 +228,7 @@ public class FlounderLoader extends IModule {
 		indicesBuffer.put(indices);
 		indicesBuffer.flip();
 		int indicesBufferId = glGenBuffers();
-		instance.vaoCache.get(vaoID).add(indicesBufferId);
+		INSTANCE.vaoCache.get(vaoID).add(indicesBufferId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesBufferId);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
 		return indicesBufferId;
@@ -244,7 +245,7 @@ public class FlounderLoader extends IModule {
 	 * @return The ID of the newly created VBO.
 	 */
 	public static int createInterleavedInstancedVBO(int vaoID, int maxVertexCount, int startingAttribute, int... lengths) {
-		return instance.createVBO(vaoID, maxVertexCount, startingAttribute, true, lengths);
+		return INSTANCE.createVBO(vaoID, maxVertexCount, startingAttribute, true, lengths);
 	}
 
 	/**
@@ -258,7 +259,7 @@ public class FlounderLoader extends IModule {
 	 * @return The ID of the newly created VBO.
 	 */
 	public static int createEmptyInterleavedVBO(int vaoID, int maxInstanceCount, int startingAttribute, int... lengths) {
-		return instance.createVBO(vaoID, maxInstanceCount, startingAttribute, false, lengths);
+		return INSTANCE.createVBO(vaoID, maxInstanceCount, startingAttribute, false, lengths);
 	}
 
 	/**
@@ -313,9 +314,9 @@ public class FlounderLoader extends IModule {
 		}
 
 		int bufferObjectID = glGenBuffers();
-		instance.vaoCache.get(vaoID).add(bufferObjectID);
+		INSTANCE.vaoCache.get(vaoID).add(bufferObjectID);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferObjectID);
-		FloatBuffer buffer = instance.storeDataInBuffer(data);
+		FloatBuffer buffer = INSTANCE.storeDataInBuffer(data);
 		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
 		glVertexAttribPointer(attributeNumber, coordSize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -338,9 +339,9 @@ public class FlounderLoader extends IModule {
 		}
 
 		int bufferObjectID = glGenBuffers();
-		instance.vaoCache.get(vaoID).add(bufferObjectID);
+		INSTANCE.vaoCache.get(vaoID).add(bufferObjectID);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferObjectID);
-		IntBuffer buffer = instance.storeDataInBuffer(data);
+		IntBuffer buffer = INSTANCE.storeDataInBuffer(data);
 		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
 		glVertexAttribIPointer(attributeNumber, coordSize, GL_INT, coordSize * ByteWork.BYTES_PER_FLOAT, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -447,7 +448,7 @@ public class FlounderLoader extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

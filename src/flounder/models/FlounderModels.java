@@ -6,6 +6,7 @@ import flounder.logger.*;
 import flounder.materials.*;
 import flounder.maths.vectors.*;
 import flounder.processing.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -16,7 +17,8 @@ import java.util.*;
  * A module used for loading and managing models.
  */
 public class FlounderModels extends IModule {
-	private static final FlounderModels instance = new FlounderModels();
+	private static final FlounderModels INSTANCE = new FlounderModels();
+	public static final String PROFILE_TAB_NAME = "Models";
 
 	private Map<String, SoftReference<Model>> loaded;
 
@@ -24,7 +26,7 @@ public class FlounderModels extends IModule {
 	 * Creates a new model loader class.
 	 */
 	public FlounderModels() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProcessors.class, FlounderLoader.class, FlounderMaterials.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProcessors.class, FlounderLoader.class, FlounderMaterials.class);
 	}
 
 	@Override
@@ -38,6 +40,7 @@ public class FlounderModels extends IModule {
 
 	@Override
 	public void profile() {
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
 	}
 
 	/**
@@ -107,10 +110,10 @@ public class FlounderModels extends IModule {
 						String[] vertex1 = currentLineF[1].split("/");
 						String[] vertex2 = currentLineF[2].split("/");
 						String[] vertex3 = currentLineF[3].split("/");
-						VertexData v0 = instance.processDataVertex(vertex1, modelData.vertices, modelData.indices, currentMaterial);
-						VertexData v1 = instance.processDataVertex(vertex2, modelData.vertices, modelData.indices, currentMaterial);
-						VertexData v2 = instance.processDataVertex(vertex3, modelData.vertices, modelData.indices, currentMaterial);
-						instance.calculateTangents(v0, v1, v2, modelData.textures);
+						VertexData v0 = INSTANCE.processDataVertex(vertex1, modelData.vertices, modelData.indices, currentMaterial);
+						VertexData v1 = INSTANCE.processDataVertex(vertex2, modelData.vertices, modelData.indices, currentMaterial);
+						VertexData v2 = INSTANCE.processDataVertex(vertex3, modelData.vertices, modelData.indices, currentMaterial);
+						INSTANCE.calculateTangents(v0, v1, v2, modelData.textures);
 						break;
 					default:
 						FlounderLogger.warning("[OBJ " + file.getName() + "] Unknown Line: " + line);
@@ -138,7 +141,7 @@ public class FlounderModels extends IModule {
 			model.loadData(data);
 		}
 
-		instance.loadModelToOpenGL(model);
+		INSTANCE.loadModelToOpenGL(model);
 	}
 
 	/**
@@ -153,7 +156,7 @@ public class FlounderModels extends IModule {
 			model.loadData(meshData);
 		}
 
-		instance.loadModelToOpenGL(model);
+		INSTANCE.loadModelToOpenGL(model);
 	}
 
 	private void loadModelToOpenGL(Model model) {
@@ -230,12 +233,12 @@ public class FlounderModels extends IModule {
 	 * @return A list of loaded models.
 	 */
 	public static Map<String, SoftReference<Model>> getLoaded() {
-		return instance.loaded;
+		return INSTANCE.loaded;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.parsing.xml.*;
 import flounder.processing.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
@@ -19,7 +20,8 @@ import java.util.*;
  * A module used for loading and managing collada models and animations.
  */
 public class FlounderCollada extends IModule {
-	private static final FlounderCollada instance = new FlounderCollada();
+	private static final FlounderCollada INSTANCE = new FlounderCollada();
+	public static final String PROFILE_TAB_NAME = "Collada";
 
 	private Map<String, SoftReference<ModelAnimated>> loaded;
 
@@ -27,7 +29,7 @@ public class FlounderCollada extends IModule {
 	 * Creates a new collada loader class.
 	 */
 	public FlounderCollada() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProcessors.class, FlounderLoader.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProcessors.class, FlounderLoader.class);
 	}
 
 	@Override
@@ -41,6 +43,7 @@ public class FlounderCollada extends IModule {
 
 	@Override
 	public void profile() {
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
 	}
 
 	/**
@@ -95,7 +98,7 @@ public class FlounderCollada extends IModule {
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

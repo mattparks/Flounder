@@ -16,7 +16,8 @@ import java.util.*;
  * A module used for holding a list of available engine fonts and texts currently on the screen.
  */
 public class FlounderFonts extends IModule {
-	private static final FlounderFonts instance = new FlounderFonts();
+	private static final FlounderFonts INSTANCE = new FlounderFonts();
+	public static final String PROFILE_TAB_NAME = "Fonts";
 
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
@@ -37,7 +38,7 @@ public class FlounderFonts extends IModule {
 	 * Creates a new font manager.
 	 */
 	public FlounderFonts() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class FlounderFonts extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Fonts", "Used Family's", ArrayUtils.totalSecondaryCount(texts));
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Used Family's", ArrayUtils.totalSecondaryCount(texts));
 	}
 
 	/**
@@ -67,12 +68,12 @@ public class FlounderFonts extends IModule {
 	 * @return The current texts.
 	 */
 	public static Map<FontType, List<Text>> getTexts() {
-		return instance.texts;
+		return INSTANCE.texts;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

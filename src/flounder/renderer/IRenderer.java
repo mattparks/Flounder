@@ -9,7 +9,6 @@ import flounder.profiling.*;
  */
 public abstract class IRenderer {
 	private ProfileTimer profileTimer;
-	private float renderTimeMs;
 
 	/**
 	 * Creates a new sub renderer in the engine.
@@ -17,7 +16,6 @@ public abstract class IRenderer {
 	public IRenderer() {
 		// TODO: Have own internal Module requirements to render.
 		profileTimer = new ProfileTimer();
-		renderTimeMs = 0.0f;
 	}
 
 	/**
@@ -30,9 +28,10 @@ public abstract class IRenderer {
 		profileTimer.startInvocation();
 		renderObjects(clipPlane, camera);
 		profileTimer.stopInvocation();
-		renderTimeMs = profileTimer.reset();
+		profileTimer.reset();
 
 		if (FlounderProfiler.isOpen()) {
+			// TODO: Limit profile speed.
 			profile();
 		}
 	}
@@ -51,10 +50,10 @@ public abstract class IRenderer {
 	public abstract void profile();
 
 	/**
-	 * @return The last render time (in Ms).
+	 * @return The last render time (in seconds).
 	 */
-	public float getRenderTimeMs() {
-		return renderTimeMs;
+	public double getRenderTime() {
+		return profileTimer.getFinalTime();
 	}
 
 	/**

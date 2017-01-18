@@ -10,7 +10,8 @@ import static org.lwjgl.glfw.GLFW.*;
  * A module used for the creation, updating and destruction of the keyboard keys.
  */
 public class FlounderKeyboard extends IModule {
-	private static final FlounderKeyboard instance = new FlounderKeyboard();
+	private static final FlounderKeyboard INSTANCE = new FlounderKeyboard();
+	public static final String PROFILE_TAB_NAME = "Keyboard";
 
 	private int keyboardKeys[];
 
@@ -20,7 +21,7 @@ public class FlounderKeyboard extends IModule {
 	 * Creates a new GLFW keyboard manager.
 	 */
 	public FlounderKeyboard() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Override
@@ -57,12 +58,12 @@ public class FlounderKeyboard extends IModule {
 	 * @return If the key is currently pressed.
 	 */
 	public static boolean getKey(int key) {
-		return instance.keyboardKeys[key] != GLFW_RELEASE;
+		return INSTANCE.keyboardKeys[key] != GLFW_RELEASE;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

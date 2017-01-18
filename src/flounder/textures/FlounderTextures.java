@@ -23,7 +23,8 @@ import static org.lwjgl.opengl.GL30.*;
  * A module used for loading and managing OpenGL textures.
  */
 public class FlounderTextures extends IModule {
-	private static final FlounderTextures instance = new FlounderTextures();
+	private static final FlounderTextures INSTANCE = new FlounderTextures();
+	public static final String PROFILE_TAB_NAME = "Textures";
 
 	private static Map<String, SoftReference<Texture>> loaded;
 	private List<Integer> textureCache;
@@ -32,7 +33,7 @@ public class FlounderTextures extends IModule {
 	 * Creates a new OpenGL texture manager.
 	 */
 	public FlounderTextures() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class FlounderTextures extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Textures", "Loaded", textureCache.size());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", textureCache.size());
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class FlounderTextures extends IModule {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		instance.textureCache.add(texID);
+		INSTANCE.textureCache.add(texID);
 		return texID;
 	}
 
@@ -99,7 +100,7 @@ public class FlounderTextures extends IModule {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		instance.textureCache.add(texID);
+		INSTANCE.textureCache.add(texID);
 		return texID;
 	}
 
@@ -183,7 +184,7 @@ public class FlounderTextures extends IModule {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		}
 
-		instance.textureCache.add(texID);
+		INSTANCE.textureCache.add(texID);
 		return texID;
 	}
 
@@ -193,8 +194,8 @@ public class FlounderTextures extends IModule {
 	 * @param textureID The texture to delete.
 	 */
 	public static void deleteTexture(int textureID) {
-		if (instance.textureCache.contains(textureID)) {
-			instance.textureCache.remove((Integer) textureID);
+		if (INSTANCE.textureCache.contains(textureID)) {
+			INSTANCE.textureCache.remove((Integer) textureID);
 			glDeleteTextures(textureID);
 		}
 	}
@@ -205,12 +206,12 @@ public class FlounderTextures extends IModule {
 	 * @return A list of loaded shaders.
 	 */
 	public static Map<String, SoftReference<Texture>> getLoaded() {
-		return instance.loaded;
+		return INSTANCE.loaded;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

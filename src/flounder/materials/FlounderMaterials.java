@@ -3,6 +3,7 @@ package flounder.materials;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.io.*;
@@ -13,7 +14,8 @@ import java.util.*;
  * A module used for loading materials for meshes.
  */
 public class FlounderMaterials extends IModule {
-	private static final FlounderMaterials instance = new FlounderMaterials();
+	private static final FlounderMaterials INSTANCE = new FlounderMaterials();
+	public static final String PROFILE_TAB_NAME = "Materials";
 
 	private Map<String, SoftReference<List<Material>>> loaded;
 
@@ -21,7 +23,7 @@ public class FlounderMaterials extends IModule {
 	 * Creates a new material loader class.
 	 */
 	public FlounderMaterials() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class);
 	}
 
 	@Override
@@ -35,6 +37,7 @@ public class FlounderMaterials extends IModule {
 
 	@Override
 	public void profile() {
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
 	}
 
 	/**
@@ -45,7 +48,7 @@ public class FlounderMaterials extends IModule {
 	 * @return Returns a loaded list of MTLMaterials.
 	 */
 	public static List<Material> loadMTL(MyFile file) {
-		SoftReference<List<Material>> ref = instance.loaded.get(file.getPath());
+		SoftReference<List<Material>> ref = INSTANCE.loaded.get(file.getPath());
 		List<Material> data = ref == null ? null : ref.get();
 
 		if (data == null) {
@@ -130,7 +133,7 @@ public class FlounderMaterials extends IModule {
 				FlounderLogger.exception(e);
 			}
 
-			instance.loaded.put(file.getPath(), new SoftReference<>(data));
+			INSTANCE.loaded.put(file.getPath(), new SoftReference<>(data));
 		}
 
 		return data;
@@ -142,12 +145,12 @@ public class FlounderMaterials extends IModule {
 	 * @return A list of loaded models.
 	 */
 	public static Map<String, SoftReference<List<Material>>> getLoaded() {
-		return instance.loaded;
+		return INSTANCE.loaded;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

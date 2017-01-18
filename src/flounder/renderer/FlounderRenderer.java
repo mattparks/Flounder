@@ -9,7 +9,8 @@ import flounder.profiling.*;
  * A module used for OpenGL rendering and management.
  */
 public class FlounderRenderer extends IModule {
-	private static final FlounderRenderer instance = new FlounderRenderer();
+	private static final FlounderRenderer INSTANCE = new FlounderRenderer();
+	public static final String PROFILE_TAB_NAME = "Renderer";
 
 	private IRendererMaster renderer;
 
@@ -17,7 +18,7 @@ public class FlounderRenderer extends IModule {
 	 * Creates a new OpenGL renderer manager.
 	 */
 	public FlounderRenderer() {
-		super(ModuleUpdate.UPDATE_RENDER, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class);
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class FlounderRenderer extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Renderer", "Selected", renderer == null ? "NULL" : renderer.getClass());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected", renderer == null ? "NULL" : renderer.getClass());
 	}
 
 	/**
@@ -62,12 +63,12 @@ public class FlounderRenderer extends IModule {
 	 * @return The current renderer.
 	 */
 	public static IRendererMaster getRendererMaster() {
-		return instance.renderer;
+		return INSTANCE.renderer;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

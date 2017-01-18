@@ -3,6 +3,7 @@ package flounder.devices;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -18,7 +19,8 @@ import static org.lwjgl.glfw.GLFW.*;
  * A module used for the creation, updating and destruction of the mouse.
  */
 public class FlounderMouse extends IModule {
-	private static final FlounderMouse instance = new FlounderMouse();
+	private static final FlounderMouse INSTANCE = new FlounderMouse();
+	public static final String PROFILE_TAB_NAME = "Mouse";
 
 	private static MyFile customMouse;
 
@@ -29,7 +31,7 @@ public class FlounderMouse extends IModule {
 	private float mousePositionY;
 	private float mouseDeltaX;
 	private float mouseDeltaY;
-	private float mouseWheel;
+	private float mouseDeltaWheel;
 	private boolean displaySelected;
 
 	private boolean cursorDisabled;
@@ -44,7 +46,7 @@ public class FlounderMouse extends IModule {
 	 * Creates a new GLFW mouse manager.
 	 */
 	public FlounderMouse() {
-		super(ModuleUpdate.UPDATE_PRE, FlounderLogger.class, FlounderDisplay.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	/**
@@ -59,9 +61,9 @@ public class FlounderMouse extends IModule {
 
 		FlounderMouse.customMouse = customMouse;
 
-		if (instance.isInitialized()) {
+		if (INSTANCE.isInitialized()) {
 			try {
-				instance.createCustomMouse();
+				INSTANCE.createCustomMouse();
 			} catch (IOException e) {
 				FlounderLogger.error("Could not load custom mouse!");
 				FlounderLogger.exception(e);
@@ -87,7 +89,7 @@ public class FlounderMouse extends IModule {
 		glfwSetScrollCallback(FlounderDisplay.getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
-				mouseWheel = (float) yoffset;
+				mouseDeltaWheel = (float) yoffset;
 			}
 		});
 
@@ -177,14 +179,20 @@ public class FlounderMouse extends IModule {
 		}
 
 		// Updates the mouse wheel using a smooth scroll technique.
-		if (mouseWheel != 0.0f) {
-			mouseWheel -= FlounderFramework.getDelta() * ((mouseWheel < 0.0f) ? -1.0f : 1.0f);
-			mouseWheel = Maths.deadband(0.1f, mouseWheel);
+		if (mouseDeltaWheel != 0.0f) {
+			mouseDeltaWheel -= FlounderFramework.getDelta() * ((mouseDeltaWheel < 0.0f) ? -1.0f : 1.0f);
+			mouseDeltaWheel = Maths.deadband(0.1f, mouseDeltaWheel);
 		}
 	}
 
 	@Override
 	public void profile() {
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Position X", mousePositionX);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Position Y", mousePositionY);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta X", mouseDeltaX);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta Y", mouseDeltaY);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta Wheel", mouseDeltaWheel);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected Display", displaySelected);
 	}
 
 	/**
@@ -195,11 +203,11 @@ public class FlounderMouse extends IModule {
 	public static void setCursorHidden(boolean disabled) {
 		glfwSetInputMode(FlounderDisplay.getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 
-		if (!disabled && instance.cursorDisabled) {
-			glfwSetCursorPos(FlounderDisplay.getWindow(), instance.mousePositionX * FlounderDisplay.getWidth(), instance.mousePositionY * FlounderDisplay.getHeight());
+		if (!disabled && INSTANCE.cursorDisabled) {
+			glfwSetCursorPos(FlounderDisplay.getWindow(), INSTANCE.mousePositionX * FlounderDisplay.getWidth(), INSTANCE.mousePositionY * FlounderDisplay.getHeight());
 		}
 
-		instance.cursorDisabled = disabled;
+		INSTANCE.cursorDisabled = disabled;
 	}
 
 	/**
@@ -211,7 +219,7 @@ public class FlounderMouse extends IModule {
 	 * @return If the mouse button is currently pressed.
 	 */
 	public static boolean getMouse(int button) {
-		return instance.mouseButtons[button] != GLFW_RELEASE;
+		return INSTANCE.mouseButtons[button] != GLFW_RELEASE;
 	}
 
 	/**
@@ -220,7 +228,7 @@ public class FlounderMouse extends IModule {
 	 * @return The mouses x position.
 	 */
 	public static float getPositionX() {
-		return instance.mousePositionX;
+		return INSTANCE.mousePositionX;
 	}
 
 	/**
@@ -229,7 +237,7 @@ public class FlounderMouse extends IModule {
 	 * @return The mouses y position.
 	 */
 	public static float getPositionY() {
-		return instance.mousePositionY;
+		return INSTANCE.mousePositionY;
 	}
 
 	/**
@@ -238,7 +246,7 @@ public class FlounderMouse extends IModule {
 	 * @return The mouses delta x.
 	 */
 	public static float getDeltaX() {
-		return instance.mouseDeltaX;
+		return INSTANCE.mouseDeltaX;
 	}
 
 	/**
@@ -247,7 +255,7 @@ public class FlounderMouse extends IModule {
 	 * @return The mouses delta y.
 	 */
 	public static float getDeltaY() {
-		return instance.mouseDeltaY;
+		return INSTANCE.mouseDeltaY;
 	}
 
 	/**
@@ -256,7 +264,7 @@ public class FlounderMouse extends IModule {
 	 * @return The mouses wheel delta.
 	 */
 	public static float getDeltaWheel() {
-		return instance.mouseWheel;
+		return INSTANCE.mouseDeltaWheel;
 	}
 
 	/**
@@ -265,12 +273,12 @@ public class FlounderMouse extends IModule {
 	 * @return If the display is selected.
 	 */
 	public static boolean isDisplaySelected() {
-		return instance.displaySelected;
+		return INSTANCE.displaySelected;
 	}
 
 	@Override
 	public IModule getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	@Override

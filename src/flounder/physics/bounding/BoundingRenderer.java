@@ -109,7 +109,7 @@ public class BoundingRenderer extends IRenderer {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Boundings", "Render Time", super.getRenderTimeMs());
+		FlounderProfiler.add(FlounderBounding.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
 	}
 
 	@Override
