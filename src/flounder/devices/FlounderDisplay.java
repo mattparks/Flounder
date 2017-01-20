@@ -154,7 +154,7 @@ public class FlounderDisplay extends IModule {
 			FlounderLogger.exception(e);
 		}
 
-		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities INSTANCE and makes the OpenGL bindings available for use.
+		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
 		createCapabilities(true);
 
 		// Gets any OpenGL errors.

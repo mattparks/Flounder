@@ -7,6 +7,9 @@ import flounder.parsing.xml.*;
 
 import java.util.*;
 
+/**
+ * Loads the mesh data for a model from a collada XML file.
+ */
 public class GeometryLoader {
 	private final XmlNode meshData;
 

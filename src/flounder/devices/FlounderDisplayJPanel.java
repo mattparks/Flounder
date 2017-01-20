@@ -36,7 +36,7 @@ public class FlounderDisplayJPanel extends IModule {
 	}
 
 	/**
-	 * Creates a new JPanel for the INSTANCE to render into.
+	 * Creates a new JPanel for the instance to render into.
 	 *
 	 * @return The new JPanel.
 	 */
