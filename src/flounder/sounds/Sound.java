@@ -18,6 +18,7 @@ public class Sound {
 	private int bufferID;
 	private MyFile file;
 	private float volume;
+	private float pitch;
 	private boolean loaded;
 
 	private int totalBytes;
@@ -26,12 +27,14 @@ public class Sound {
 	/**
 	 * Creates a new sound. Note the sound hasn't been loaded at this stage.
 	 *
-	 * @param soundFile The sound's file.
+	 * @param file The sound's file.
 	 * @param volume Used to change the base volume of a sound effect.
+	 * @param pitch Used to change the base pitch of a sound effect.
 	 */
-	private Sound(MyFile soundFile, float volume) {
-		this.file = soundFile;
+	private Sound(MyFile file, float volume, float pitch) {
+		this.file = file;
 		this.volume = volume;
+		this.pitch = pitch;
 		this.loaded = false;
 
 		this.totalBytes = 0;
@@ -41,19 +44,20 @@ public class Sound {
 	/**
 	 * Loads a sound file and loads some (possibly all for short sounds) of the sound data into an OpenAL buffer.
 	 *
-	 * @param file The sound file.
+	 * @param file The sound's file.
 	 * @param volume Used to change the base volume of a sound effect.
+	 * @param pitch Used to change the base pitch of a sound effect.
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static Sound loadSoundNow(MyFile file, float volume) {
+	public static Sound loadSoundNow(MyFile file, float volume, float pitch) {
 		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(file.getPath() + " is being loaded into the sound builder right now!");
 			loadedSounds.remove(file.getPath());
-			data = new Sound(file, volume);
+			data = new Sound(file, volume, pitch);
 			SoundLoader.doInitialSoundLoad(data);
 			loadedSounds.put(file.getPath(), new SoftReference<>(data));
 		}
@@ -64,19 +68,20 @@ public class Sound {
 	/**
 	 * Sends a request to the resource loading thread for the sound to be loaded.
 	 *
-	 * @param file The sound file.
+	 * @param file The sound's file.
 	 * @param volume Used to change the base volume of a sound effect.
+	 * @param pitch Used to change the base pitch of a sound effect.
 	 *
 	 * @return A new sound object which represents the loaded sound.
 	 */
-	public static Sound loadSoundInBackground(MyFile file, float volume) {
+	public static Sound loadSoundInBackground(MyFile file, float volume, float pitch) {
 		SoftReference<Sound> ref = loadedSounds.get(file.getPath());
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
 			FlounderLogger.log(file.getPath() + " is being loaded into the sound builder in the background!");
 			loadedSounds.remove(file.getPath());
-			Sound data2 = new Sound(file, volume);
+			Sound data2 = new Sound(file, volume, pitch);
 			FlounderProcessors.sendRequest((RequestResource) () -> SoundLoader.doInitialSoundLoad(data2));
 			data = data2;
 			loadedSounds.put(file.getPath(), new SoftReference<>(data));
@@ -115,6 +120,8 @@ public class Sound {
 	}
 
 	/**
+	 * Gets the sound file.
+	 *
 	 * @return The sound file.
 	 */
 	public MyFile getSoundFile() {
@@ -122,6 +129,8 @@ public class Sound {
 	}
 
 	/**
+	 * Gets the base volume of the sound.
+	 *
 	 * @return The base volume of the sound.
 	 */
 	public float getVolume() {
@@ -129,6 +138,17 @@ public class Sound {
 	}
 
 	/**
+	 * Gets the base pitch of the sound.
+	 *
+	 * @return The base pitch of the sound.
+	 */
+	public float getPitch() {
+		return pitch;
+	}
+
+	/**
+	 * Gets whether the sound is loaded or not.
+	 *
 	 * @return Whether the sound is loaded or not.
 	 */
 	public boolean isLoaded() {

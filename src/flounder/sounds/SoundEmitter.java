@@ -15,6 +15,7 @@ public class SoundEmitter {
 	private Vector3f position;
 	private Map<SoundEffect, AudioController> playingSounds;
 	private float volume;
+	private float pitch;
 
 	/**
 	 * Creates a 3D sound emitter.
@@ -23,8 +24,9 @@ public class SoundEmitter {
 	 */
 	public SoundEmitter(Vector3f position) {
 		this.position = position;
-		volume = 1;
-		playingSounds = new HashMap<>();
+		this.playingSounds = new HashMap<>();
+		this.volume = 1.0f;
+		this.pitch = 1.0f;
 	}
 
 	/**
@@ -112,6 +114,22 @@ public class SoundEmitter {
 	}
 
 	/**
+	 * @return The pitch of the sound emitter.
+	 */
+	public float getPitch() {
+		return pitch;
+	}
+
+	/**
+	 * Sets the pitch of this emitter.
+	 *
+	 * @param pitch The new pitch.
+	 */
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	/**
 	 * Checks if this emitter is currently playing any sounds.
 	 *
 	 * @return {@code true} if any sounds are currently being played by this emitter.
@@ -130,7 +148,7 @@ public class SoundEmitter {
 			return;
 		}
 
-		PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, position, 0, soundEffect.getRange());
+		PlayRequest request = PlayRequest.new3dSoundPlayRequest(soundEffect.getSound(), volume, pitch, position, 0.0f, soundEffect.getRange());
 		AudioController controller = FlounderSound.play3DSound(request);
 
 		if (controller != null) {

@@ -14,16 +14,18 @@ public class PlayRequest {
 	private boolean systemSound;
 	private boolean loop;
 
-	private float volume;
 	private Sound sound;
+	private float volume;
+	private float pitch;
 
 	/**
 	 * Creates a new sound play request.
 	 *
 	 * @param sound The sound that needs to be played.
 	 * @param volume The volume that the sound should be played at.
+	 * @param pitch The pitch that the sound should be played at.
 	 */
-	private PlayRequest(Sound sound, float volume) {
+	private PlayRequest(Sound sound, float volume, float pitch) {
 		this.position = new Vector3f();
 		this.innerRange = 1.0f;
 		this.outerRange = 1.0f;
@@ -31,8 +33,9 @@ public class PlayRequest {
 		this.systemSound = true;
 		this.loop = false;
 
-		this.volume = volume * MusicPlayer.SOUND_VOLUME;
 		this.sound = sound;
+		this.volume = volume * MusicPlayer.SOUND_VOLUME;
+		this.pitch = pitch;
 	}
 
 	/**
@@ -43,7 +46,7 @@ public class PlayRequest {
 	 * @return The newly created play request.
 	 */
 	public static PlayRequest newSystemPlayRequest(Sound systemSound) {
-		return new PlayRequest(systemSound, 1);
+		return new PlayRequest(systemSound, 1.0f, 1.0f);
 	}
 
 	/**
@@ -51,14 +54,15 @@ public class PlayRequest {
 	 *
 	 * @param sound The sound to be played.
 	 * @param volume The volume of the sound.
+	 * @param pitch The pitch of the sound.
 	 * @param position The position from where the sound should be emitted.
 	 * @param innerRange The inner range of the sound. Within this range of the sound's position the sound is played at full volume.
 	 * @param outerRange The outer range of the sound. Outside this range from the sound's position the sound can't be heard at all.
 	 *
 	 * @return The newly created request.
 	 */
-	public static PlayRequest new3dSoundPlayRequest(Sound sound, float volume, Vector3f position, float innerRange, float outerRange) {
-		PlayRequest request = new PlayRequest(sound, volume);
+	public static PlayRequest new3dSoundPlayRequest(Sound sound, float volume, float pitch, Vector3f position, float innerRange, float outerRange) {
+		PlayRequest request = new PlayRequest(sound, volume, pitch);
 		request.systemSound = false;
 		request.innerRange = innerRange < 1 ? 1 : innerRange;
 		request.outerRange = outerRange;
@@ -114,6 +118,13 @@ public class PlayRequest {
 	 * @return The volume at which this sound should be played.
 	 */
 	public float getVolume() {
+		return volume;
+	}
+
+	/**
+	 * @return The pitch at which this sound should be played.
+	 */
+	public float getPitch() {
 		return volume;
 	}
 

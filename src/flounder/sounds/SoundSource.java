@@ -12,6 +12,7 @@ import static org.lwjgl.openal.AL10.*;
 public class SoundSource {
 	private int sourceID;
 	private float volume;
+	private float pitch;
 	private boolean active;
 
 	private AudioController currentController;
@@ -22,12 +23,14 @@ public class SoundSource {
 	protected SoundSource() {
 		sourceID = createSource();
 		volume = 1.0f;
+		pitch = 1.0f;
 		active = false;
 
 		alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
 		alSource3f(sourceID, AL_VELOCITY, 1.0f, 0.0f, 0.0f);
 		alSourcef(sourceID, AL_ROLLOFF_FACTOR, 0.0f);
 		alSourcef(sourceID, AL_GAIN, volume);
+		alSourcef(sourceID, AL_PITCH, pitch);
 	}
 
 	/**
@@ -88,6 +91,18 @@ public class SoundSource {
 		if (newVolume != volume) {
 			alSourcef(sourceID, AL_GAIN, newVolume);
 			volume = newVolume;
+		}
+	}
+
+	/**
+	 * Sets the pitch of the source. Any sounds played on this source will be played at this pitch.
+	 *
+	 * @param newPitch The new pitch.
+	 */
+	protected void setPitch(float newPitch) {
+		if (newPitch != pitch) {
+			alSourcef(sourceID, AL_PITCH, newPitch);
+			pitch = newPitch;
 		}
 	}
 

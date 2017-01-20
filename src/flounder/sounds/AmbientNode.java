@@ -16,10 +16,13 @@ public class AmbientNode {
 	private static final float RANGE_THRESHOLD = 1.2f;
 
 	private Vector3f position;
-	private List<Sound> sounds;
+
 	private SmoothFloat innerRadius;
 	private SmoothFloat fadeOutRadius;
+
+	private List<Sound> sounds;
 	private float volume;
+	private float pitch;
 
 	private boolean active;
 	private AudioController controller;
@@ -36,11 +39,13 @@ public class AmbientNode {
 	 */
 	public AmbientNode(Vector3f position, float innerRange, float fadeOutRange, List<Sound> sounds) {
 		this.position = position;
+
 		this.innerRadius = new SmoothFloat(innerRange, RADIUS_CHANGE_AGIL);
 		this.fadeOutRadius = new SmoothFloat(fadeOutRange, RADIUS_CHANGE_AGIL);
 
 		this.sounds = sounds;
 		this.volume = 1.0f;
+		this.pitch = 1.0f;
 
 		this.active = false;
 	}
@@ -83,7 +88,7 @@ public class AmbientNode {
 	 */
 	private void playNewSound() {
 		Sound sound = chooseNextSound();
-		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, position, innerRadius.get(), getRange());
+		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, pitch, position, innerRadius.get(), getRange());
 		controller = FlounderSound.play3DSound(request);
 		active = controller != null;
 	}
@@ -195,5 +200,14 @@ public class AmbientNode {
 	 */
 	public void setVolume(float targetVolume) {
 		volume = targetVolume;
+	}
+
+	/**
+	 * Sets the pitch of this node.
+	 *
+	 * @param targetPitch The desired pitch.
+	 */
+	public void setPitch(float targetPitch) {
+		volume = targetPitch;
 	}
 }

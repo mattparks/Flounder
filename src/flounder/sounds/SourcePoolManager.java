@@ -63,6 +63,7 @@ public class SourcePoolManager {
 
 			Sound sound = playRequest.getSound();
 			source.setVolume(playRequest.getVolume() * sound.getVolume());
+			source.setPitch(playRequest.getPitch() * sound.getPitch());
 			return source.playSound(sound);
 		}
 
