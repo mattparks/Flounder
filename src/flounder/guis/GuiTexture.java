@@ -1,5 +1,6 @@
 package flounder.guis;
 
+import flounder.devices.*;
 import flounder.framework.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
@@ -42,6 +43,25 @@ public class GuiTexture {
 
 	public void update() {
 		alpha = alphaDriver.update(FlounderFramework.getDelta());
+	}
+
+	/**
+	 * @return {@code true} if the mouse cursor is currently over this GUI texture.
+	 */
+	public boolean isMouseOver() {
+		// TODO: Fix maths?
+		float positionX = position.x / FlounderDisplay.getAspectRatio();
+		float positionY = position.y;
+
+		//	if (FlounderMouse.isDisplaySelected() && FlounderDisplay.isFocused()) {
+		if (FlounderGuis.getSelector().getCursorX() >= positionX - (scale.x / 2.0f) && FlounderGuis.getSelector().getCursorX() <= positionX + (scale.x / 2.0f)) {
+			if (FlounderGuis.getSelector().getCursorY() >= positionY - (scale.y / 2.0f) && FlounderGuis.getSelector().getCursorY() <= positionY + (scale.y / 2.0f)) {
+				return true;
+			}
+		}
+		//	}
+
+		return false;
 	}
 
 	public Vector2f getPosition() {

@@ -61,6 +61,10 @@ public class FlounderKeyboard extends IModule {
 		return INSTANCE.keyboardKeys[key] != GLFW_RELEASE;
 	}
 
+	public static int[] getKeyboardKeys() {
+		return INSTANCE.keyboardKeys;
+	}
+
 	@Override
 	public IModule getInstance() {
 		return INSTANCE;
