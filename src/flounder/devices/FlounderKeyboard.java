@@ -14,8 +14,10 @@ public class FlounderKeyboard extends IModule {
 	public static final String PROFILE_TAB_NAME = "Keyboard";
 
 	private int keyboardKeys[];
+	private int keyboardChar;
 
 	private GLFWKeyCallback callbackKey;
+	private GLFWCharCallback callbackChar;
 
 	/**
 	 * Creates a new GLFW keyboard manager.
@@ -27,6 +29,7 @@ public class FlounderKeyboard extends IModule {
 	@Override
 	public void init() {
 		this.keyboardKeys = new int[GLFW_KEY_LAST + 1];
+		this.keyboardChar = 0;
 
 		// Sets the keyboards callbacks.
 		glfwSetKeyCallback(FlounderDisplay.getWindow(), callbackKey = new GLFWKeyCallback() {
@@ -37,6 +40,13 @@ public class FlounderKeyboard extends IModule {
 				} else {
 					keyboardKeys[key] = action;
 				}
+			}
+		});
+
+		glfwSetCharCallback(FlounderDisplay.getWindow(), callbackChar = new GLFWCharCallback() {
+			@Override
+			public void invoke(long window, int codepoint) {
+				keyboardChar = codepoint;
 			}
 		});
 	}
@@ -61,8 +71,13 @@ public class FlounderKeyboard extends IModule {
 		return INSTANCE.keyboardKeys[key] != GLFW_RELEASE;
 	}
 
-	public static int[] getKeyboardKeys() {
-		return INSTANCE.keyboardKeys;
+	/**
+	 * Gets the current user input, ASCII Dec value.
+	 *
+	 * @return The current keyboard char.
+	 */
+	public static int getKeyboardChar() {
+		return INSTANCE.keyboardChar;
 	}
 
 	@Override
@@ -73,5 +88,6 @@ public class FlounderKeyboard extends IModule {
 	@Override
 	public void dispose() {
 		callbackKey.free();
+		callbackChar.free();
 	}
 }
