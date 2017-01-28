@@ -1,7 +1,7 @@
 #version 130
 
 //---------INCLUDE------------
-#include "flounder/shaders/maths.glsl"
+#include "maths.glsl"
 
 //---------IN------------
 in vec2 pass_textureCoords;

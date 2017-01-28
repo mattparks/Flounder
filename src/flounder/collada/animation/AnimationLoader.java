@@ -17,7 +17,7 @@ public class AnimationLoader {
 	public AnimationData extractAnimation() {
 		float[] times = getKeyTimes();
 		float duration = times[times.length - 1];
-		KeyFrameData[] keyFrames = initKeyFrames(times);
+		AnimationKeyFrameData[] keyFrames = initKeyFrames(times);
 		List<XmlNode> animationNodes = animationData.getChildren("animation");
 
 		for (XmlNode jointNode : animationNodes) {
@@ -39,17 +39,17 @@ public class AnimationLoader {
 		return times;
 	}
 
-	private KeyFrameData[] initKeyFrames(float[] times) {
-		KeyFrameData[] frames = new KeyFrameData[times.length];
+	private AnimationKeyFrameData[] initKeyFrames(float[] times) {
+		AnimationKeyFrameData[] frames = new AnimationKeyFrameData[times.length];
 
 		for (int i = 0; i < frames.length; i++) {
-			frames[i] = new KeyFrameData(times[i]);
+			frames[i] = new AnimationKeyFrameData(times[i]);
 		}
 
 		return frames;
 	}
 
-	private void loadJointTransforms(KeyFrameData[] frames, XmlNode jointData) {
+	private void loadJointTransforms(AnimationKeyFrameData[] frames, XmlNode jointData) {
 		String jointNameId = getJointName(jointData);
 		String dataId = getDataId(jointData);
 		XmlNode transformData = jointData.getChildWithAttribute("source", "id", dataId);
@@ -68,7 +68,7 @@ public class AnimationLoader {
 		return data.split("/")[0];
 	}
 
-	private void processTransforms(String jointName, String[] rawData, KeyFrameData[] keyFrames) {
+	private void processTransforms(String jointName, String[] rawData, AnimationKeyFrameData[] keyFrames) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
 		float[] matrixData = new float[16];
 

@@ -2,9 +2,9 @@ package flounder.collada.animation;
 
 public class AnimationData {
 	private final float lengthSeconds;
-	private final KeyFrameData[] keyFrames;
+	private final AnimationKeyFrameData[] keyFrames;
 
-	public AnimationData(float lengthSeconds, KeyFrameData[] keyFrames) {
+	public AnimationData(float lengthSeconds, AnimationKeyFrameData[] keyFrames) {
 		this.lengthSeconds = lengthSeconds;
 		this.keyFrames = keyFrames;
 	}
@@ -13,7 +13,7 @@ public class AnimationData {
 		return lengthSeconds;
 	}
 
-	public KeyFrameData[] getKeyFrames() {
+	public AnimationKeyFrameData[] getKeyFrames() {
 		return keyFrames;
 	}
 }

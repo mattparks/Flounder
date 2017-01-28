@@ -9,7 +9,7 @@ import java.util.*;
  * It also contains the desired local-space transforms of all of the joints in the animated entity at this keyframe in the animation.
  * The joint transforms are stored in a map, indexed by the name of the joint that they should be applied to.
  */
-public class KeyFrame {
+public class KeyFrameJoints {
 	private final float timeStamp;
 	private final Map<String, JointTransform> jointKeyFrames;
 
@@ -19,7 +19,7 @@ public class KeyFrame {
 	 * @param timeStamp The time (in seconds) that this keyframe occurs during the animation.
 	 * @param jointKeyFrames The local-space transforms for all the joints at this keyframe, indexed by the name of the joint that they should be applied to.
 	 */
-	public KeyFrame(float timeStamp, Map<String, JointTransform> jointKeyFrames) {
+	public KeyFrameJoints(float timeStamp, Map<String, JointTransform> jointKeyFrames) {
 		this.timeStamp = timeStamp;
 		this.jointKeyFrames = jointKeyFrames;
 	}

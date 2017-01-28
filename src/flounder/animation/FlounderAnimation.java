@@ -44,17 +44,17 @@ public class FlounderAnimation extends IModule {
 	 * @return The animation made from the data in the file.
 	 */
 	public static Animation loadAnimation(AnimationData animationData) {
-		KeyFrame[] frames = new KeyFrame[animationData.getKeyFrames().length];
+		KeyFrameJoints[] frames = new KeyFrameJoints[animationData.getKeyFrames().length];
 		int pointer = 0;
 
-		for (KeyFrameData frameData : animationData.getKeyFrames()) {
+		for (AnimationKeyFrameData frameData : animationData.getKeyFrames()) {
 			frames[pointer++] = createKeyFrame(frameData);
 		}
 
 		return new Animation(animationData.getLengthSeconds(), frames);
 	}
 
-	private static KeyFrame createKeyFrame(KeyFrameData data) {
+	private static KeyFrameJoints createKeyFrame(AnimationKeyFrameData data) {
 		Map<String, JointTransform> map = new HashMap<>();
 
 		for (JointTransformData jointData : data.getJointTransforms()) {
@@ -62,7 +62,7 @@ public class FlounderAnimation extends IModule {
 			map.put(jointData.getJointNameId(), jointTransform);
 		}
 
-		return new KeyFrame(data.getTime(), map);
+		return new KeyFrameJoints(data.getTime(), map);
 	}
 
 	private static JointTransform createTransform(JointTransformData data) {

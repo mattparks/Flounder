@@ -83,7 +83,7 @@ public class Animator {
 	 * The transforms are indexed by the name ID of the joint that they should be applied to.
 	 */
 	private Map<String, Matrix4f> getCurrentAnimationPose() {
-		KeyFrame[] frames = getPreviousAndNextFrames();
+		KeyFrameJoints[] frames = getPreviousAndNextFrames();
 		float progression = calculateProgression(frames[0], frames[1]);
 		return calculateCurrentPose(frames[0], frames[1], progression);
 	}
@@ -95,11 +95,11 @@ public class Animator {
 	 *
 	 * @return The previous and next keyframes, in an array which therefore will always have a length of 2.
 	 */
-	private KeyFrame[] getPreviousAndNextFrames() {
-		KeyFrame previousFrame = null;
-		KeyFrame nextFrame = null;
+	private KeyFrameJoints[] getPreviousAndNextFrames() {
+		KeyFrameJoints previousFrame = null;
+		KeyFrameJoints nextFrame = null;
 
-		for (KeyFrame frame : currentAnimation.getKeyFrames()) {
+		for (KeyFrameJoints frame : currentAnimation.getKeyFrameJointss()) {
 			if (frame.getTimeStamp() > animationTime) {
 				nextFrame = frame;
 				break;
@@ -114,7 +114,7 @@ public class Animator {
 			nextFrame = previousFrame;
 		}
 
-		return new KeyFrame[]{previousFrame, nextFrame};
+		return new KeyFrameJoints[]{previousFrame, nextFrame};
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class Animator {
 	 *
 	 * @return A number between 0 and 1 indicating how far between the two keyframes the current animation time is.
 	 */
-	private float calculateProgression(KeyFrame previousFrame, KeyFrame nextFrame) {
+	private float calculateProgression(KeyFrameJoints previousFrame, KeyFrameJoints nextFrame) {
 		float timeDifference = nextFrame.getTimeStamp() - previousFrame.getTimeStamp();
 		return (animationTime - previousFrame.getTimeStamp()) / timeDifference;
 	}
@@ -141,7 +141,7 @@ public class Animator {
 	 * @return The local-space transforms for all the joints for the desired current pose.
 	 * They are returned in a map, indexed by the name of the joint to which they should be applied.
 	 */
-	private Map<String, Matrix4f> calculateCurrentPose(KeyFrame previousFrame, KeyFrame nextFrame, float progression) {
+	private Map<String, Matrix4f> calculateCurrentPose(KeyFrameJoints previousFrame, KeyFrameJoints nextFrame, float progression) {
 		Map<String, Matrix4f> currentPose = new HashMap<>();
 
 		for (String jointName : previousFrame.getJointKeyFrames().keySet()) {

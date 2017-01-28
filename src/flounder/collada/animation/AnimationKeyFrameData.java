@@ -2,11 +2,11 @@ package flounder.collada.animation;
 
 import java.util.*;
 
-public class KeyFrameData {
+public class AnimationKeyFrameData {
 	private final float time;
 	private final List<JointTransformData> jointTransforms;
 
-	protected KeyFrameData(float time) {
+	protected AnimationKeyFrameData(float time) {
 		this.time = time;
 		this.jointTransforms = new ArrayList<>();
 	}
