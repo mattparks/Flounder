@@ -12,6 +12,6 @@ layout(location = 0) out vec4 out_colour;
 //---------MAIN------------
 void main(void) {
 	vec3 colour = texture(originalTexture, pass_textureCoords).rgb;
-	float gray = dot(colour, vec3(0.299, 0.587, 0.114));
-	out_colour = vec4(gray, gray, gray, 1.0);
+	float grey = dot(colour, vec3(0.299, 0.587, 0.114));
+	out_colour = vec4(grey, grey, grey, 1.0);
 }
