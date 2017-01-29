@@ -31,7 +31,6 @@ public class FlounderBounding extends IModule {
 	@Override
 	public void init() {
 		this.renderShapes = new HashMap<>();
-		this.renders = true;
 		this.boundingCount = 0;
 	}
 
@@ -96,6 +95,7 @@ public class FlounderBounding extends IModule {
 
 	@Override
 	public void dispose() {
+		this.renders = true;
 		clear();
 	}
 }

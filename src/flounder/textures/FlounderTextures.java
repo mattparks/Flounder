@@ -28,6 +28,7 @@ public class FlounderTextures extends IModule {
 
 	private static Map<String, SoftReference<Texture>> loaded;
 	private List<Integer> textureCache;
+	private float anisotropyLevel = -1;
 
 	/**
 	 * Creates a new OpenGL texture manager.
@@ -40,6 +41,14 @@ public class FlounderTextures extends IModule {
 	public void init() {
 		this.loaded = new HashMap<>();
 		this.textureCache = new ArrayList<>();
+
+		float maxAnisotropy = glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+
+		if (anisotropyLevel == -1 || anisotropyLevel > maxAnisotropy) {
+			anisotropyLevel = maxAnisotropy;
+		}
+
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Max Anisotropy", maxAnisotropy);
 	}
 
 	@Override
@@ -49,6 +58,7 @@ public class FlounderTextures extends IModule {
 	@Override
 	public void profile() {
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", textureCache.size());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Current Anisotropy", anisotropyLevel);
 	}
 
 	/**
@@ -158,8 +168,7 @@ public class FlounderTextures extends IModule {
 
 			if (builder.isAnisotropic()) {
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
-				float maxAnisotropy = glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, INSTANCE.anisotropyLevel);
 			}
 		} else if (builder.isNearest()) {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -209,6 +218,24 @@ public class FlounderTextures extends IModule {
 		return INSTANCE.loaded;
 	}
 
+	/**
+	 * Gets the current anisotropy level for textures with anisotropy enabled to use.
+	 *
+	 * @return The current anisotropy level.
+	 */
+	public static float getAnisotropyLevel() {
+		return INSTANCE.anisotropyLevel;
+	}
+
+	/**
+	 * Sets the current anisotropy level.
+	 *
+	 * @param anisotropyLevel The new anisotropy level to be used in textures with anisotropy enabled.
+	 */
+	public static void setAnisotropyLevel(float anisotropyLevel) {
+		INSTANCE.anisotropyLevel = anisotropyLevel;
+	}
+
 	@Override
 	public IModule getInstance() {
 		return INSTANCE;
@@ -216,6 +243,7 @@ public class FlounderTextures extends IModule {
 
 	@Override
 	public void dispose() {
+		anisotropyLevel = -1;
 		loaded.keySet().forEach(key -> loaded.get(key).get().delete());
 		loaded.clear();
 
