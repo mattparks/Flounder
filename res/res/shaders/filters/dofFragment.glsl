@@ -1,7 +1,16 @@
 #version 130
 
-//---------INCLUDE------------
+//---------INCLUDES------------
 #include "maths.glsl"
+
+//---------CONSTANT------------
+const float NEAR_FIELD = 0.4;
+const float NEAR_TRANS = 0.2;
+const float NEAR_END = NEAR_FIELD + NEAR_TRANS;
+
+const float FAR_FIELD = 2.5;
+const float FAR_TRANS = 0.6;
+const float FAR_START = FAR_FIELD - FAR_TRANS;
 
 //---------IN------------
 in vec2 pass_textureCoords;
@@ -16,15 +25,6 @@ uniform float farPlane;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
-
-//---------CONSTANT------------
-const float NEAR_FIELD = 0.4;
-const float NEAR_TRANS = 0.2;
-const float NEAR_END = NEAR_FIELD + NEAR_TRANS;
-
-const float FAR_FIELD = 2.5;
-const float FAR_TRANS = 0.6;
-const float FAR_START = FAR_FIELD - FAR_TRANS;
 
 //---------GET DEPTH FACTOR------------
 float getDepthFactor(float depth, float upperLimit){

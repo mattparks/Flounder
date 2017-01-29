@@ -1,5 +1,9 @@
 #version 130
 
+//---------CONSTANT------------
+const float width = 800.0;
+const float height = 600.0;
+
 //---------IN------------
 in vec2 pass_textureCoords;
 
@@ -8,10 +12,6 @@ layout(binding = 0) uniform sampler2D originalTexture;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
-
-//---------CONSTANT------------
-const float width = 800.0;
-const float height = 600.0;
 
 //---------MAIN------------
 void main(void) {

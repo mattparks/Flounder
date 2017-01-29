@@ -1,5 +1,9 @@
 #version 130
 
+//---------CONSTANT------------
+const float exposure = 1.3;
+const vec3 white = vec3(1.0, 1.0, 1.0);
+
 //---------IN------------
 in vec2 pass_textureCoords;
 
@@ -8,10 +12,6 @@ layout(binding = 0) uniform sampler2D originalTexture;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
-
-//---------CONSTANT------------
-const float exposure = 1.3;
-const vec3 white = vec3(1.0, 1.0, 1.0);
 
 //---------TONE MAP------------
 vec3 toneMap(vec3 color) {
