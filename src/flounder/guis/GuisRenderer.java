@@ -13,7 +13,7 @@ import flounder.shaders.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-public class GuiRenderer extends IRenderer {
+public class GuisRenderer extends IRenderer {
 	public enum GuiRenderType {
 		GUI, CURSOR
 	}
@@ -28,7 +28,7 @@ public class GuiRenderer extends IRenderer {
 	private Shader shader;
 	private int vaoID;
 
-	public GuiRenderer() {
+	public GuisRenderer() {
 		shader = Shader.newShader("guis").setShaderTypes(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
 				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
