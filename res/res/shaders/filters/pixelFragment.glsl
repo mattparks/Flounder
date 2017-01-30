@@ -1,14 +1,12 @@
 #version 130
 
-//---------CONSTANT------------
-const float width = 800.0;
-const float height = 600.0;
-
 //---------IN------------
 in vec2 pass_textureCoords;
 
 //---------UNIFORM------------
 layout(binding = 0) uniform sampler2D originalTexture;
+uniform float pixelSize;
+uniform vec2 displaySize;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
@@ -17,12 +15,12 @@ layout(location = 0) out vec4 out_colour;
 void main(void) {
 	vec2 coord;
 
-	if (pass_textureCoords.x < (1.0 - 0.005)) {
-		float dx = 8.0 * (1.0 / width);
-		float dy = 8.0 * (1.0 / height);
+	if (pass_textureCoords.x < 1.0) {
+		float dx = pixelSize * (1.0 / displaySize.x);
+		float dy = pixelSize * (1.0 / displaySize.y);
 		coord.x = dx * floor(pass_textureCoords.x / dx);
 		coord.y = dy * floor(pass_textureCoords.y / dy);
-	} else if (pass_textureCoords.x > (1.0 + 0.005)) {
+	} else if (pass_textureCoords.x > 1.0) {
 		coord = pass_textureCoords;
 	}
 
