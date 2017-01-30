@@ -14,6 +14,8 @@ public class FlounderRenderer extends IModule {
 
 	private IRendererMaster renderer;
 
+	private Thread renderThread;
+
 	/**
 	 * Creates a new OpenGL renderer manager.
 	 */
@@ -24,6 +26,15 @@ public class FlounderRenderer extends IModule {
 	@Override
 	public void init() {
 		this.renderer = null;
+		this.renderThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// Runs updates for the renderer.
+				if (renderer != null) {
+					renderer.render();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -47,9 +58,7 @@ public class FlounderRenderer extends IModule {
 		}
 
 		// Runs updates for the renderer.
-		if (renderer != null) {
-			renderer.render();
-		}
+		renderThread.run();
 	}
 
 	@Override

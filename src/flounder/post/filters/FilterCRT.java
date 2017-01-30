@@ -1,5 +1,6 @@
 package flounder.post.filters;
 
+import flounder.framework.*;
 import flounder.maths.*;
 import flounder.post.*;
 import flounder.resources.*;
@@ -36,5 +37,7 @@ public class FilterCRT extends PostFilter {
 		shader.getUniformFloat("curveAmountY").loadFloat(curveAmountY);
 		shader.getUniformFloat("scanLineSize").loadFloat(scanLineSize);
 		shader.getUniformFloat("scanIntensity").loadFloat(scanIntensity);
+
+		shader.getUniformFloat("moveTime").loadFloat(FlounderFramework.getTimeSec() / 100.0f);
 	}
 }
