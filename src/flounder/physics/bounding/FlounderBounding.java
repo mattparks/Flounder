@@ -52,6 +52,10 @@ public class FlounderBounding extends IModule {
 	 * @param shape The shape to add.
 	 */
 	public static void addShapeRender(IBounding shape) {
+		if (!renders()) {
+			return;
+		}
+
 		for (Model model : INSTANCE.renderShapes.keySet()) {
 			if (model.equals(shape.getRenderModel())) {
 				INSTANCE.renderShapes.get(model).add(shape);
