@@ -52,7 +52,7 @@ public class FlounderBounding extends IModule {
 	 * @param shape The shape to add.
 	 */
 	public static void addShapeRender(IBounding shape) {
-		if (!renders()) {
+		if (!renders() || shape == null) {
 			return;
 		}
 
