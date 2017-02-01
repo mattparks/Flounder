@@ -23,15 +23,18 @@ public class GuiSelector {
 	private JoystickAxis joystickAxisY;
 	private JoystickButton joystickLeft;
 	private JoystickButton joystickRight;
+	private boolean joysticksInitalized;
 
 	public GuiSelector() {
-		cursorX = 0.0f;
-		cursorY = 0.0f;
-		leftClick = false;
-		rightClick = false;
+		this.cursorX = 0.0f;
+		this.cursorY = 0.0f;
+		this.leftClick = false;
+		this.rightClick = false;
 
-		mouseLeft = new MouseButton(GLFW_MOUSE_BUTTON_LEFT);
-		mouseRight = new MouseButton(GLFW_MOUSE_BUTTON_RIGHT);
+		this.mouseLeft = new MouseButton(GLFW_MOUSE_BUTTON_LEFT);
+		this.mouseRight = new MouseButton(GLFW_MOUSE_BUTTON_RIGHT);
+
+		this.joysticksInitalized = false;
 	}
 
 	public void initJoysticks(int joystick, int joystickLeftClick, int joystickRightClick, int joystickAxisX, int joystickAxisY) {
@@ -40,10 +43,11 @@ public class GuiSelector {
 		this.joystickAxisY = new JoystickAxis(joystick, joystickAxisY);
 		this.joystickLeft = new JoystickButton(joystick, joystickLeftClick);
 		this.joystickRight = new JoystickButton(joystick, joystickRightClick);
+		this.joysticksInitalized = true;
 	}
 
 	protected void update() {
-		if (FlounderJoysticks.isConnected(selectedJoystick)) {
+		if (joysticksInitalized && FlounderJoysticks.isConnected(selectedJoystick)) {
 			if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
 				cursorX += (joystickAxisX.getAmount()) * 0.75f * FlounderFramework.getDelta();
 				cursorY += (-joystickAxisY.getAmount()) * 0.75f * FlounderFramework.getDelta();

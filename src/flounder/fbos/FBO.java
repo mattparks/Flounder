@@ -6,6 +6,7 @@ import org.lwjgl.*;
 
 import java.nio.*;
 
+import static org.lwjgl.opengl.EXTFramebufferObject.GL_MAX_RENDERBUFFER_SIZE_EXT;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL14.*;
@@ -103,6 +104,7 @@ public class FBO {
 	 */
 	private void initializeFBO() {
 		createFBO();
+		limitFBOSize();
 
 		if (!antialiased) {
 			if (useColourBuffer) {
@@ -270,12 +272,18 @@ public class FBO {
 			if (width != reverseWidth || height != reverseHeight) {
 				width = (int) (displayWidth * sizeScalar);
 				height = (int) (displayHeight * sizeScalar);
+				limitFBOSize();
 
 				delete();
 				FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 				initializeFBO();
 			}
 		}
+	}
+
+	private void limitFBOSize() {
+		width = Math.min(getMaxFBOSize(), width);
+		height = Math.min(getMaxFBOSize(), height);
 	}
 
 	/**
@@ -329,6 +337,10 @@ public class FBO {
 	 */
 	public int getDepthTexture() {
 		return depthTexture;
+	}
+
+	public static int getMaxFBOSize() {
+		return glGetInteger(GL_MAX_RENDERBUFFER_SIZE_EXT);
 	}
 
 	/**

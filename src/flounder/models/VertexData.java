@@ -22,7 +22,7 @@ public class VertexData {
 
 	private Material material;
 
-	protected VertexData(int index, Vector3f position) {
+	public VertexData(int index, Vector3f position) {
 		this.position = position;
 
 		this.textureIndex = NO_INDEX;

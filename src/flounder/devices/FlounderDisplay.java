@@ -1,5 +1,6 @@
 package flounder.devices;
 
+import flounder.fbos.*;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.profiling.*;
@@ -239,6 +240,7 @@ public class FlounderDisplay extends IModule {
 		FlounderLogger.log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
 		FlounderLogger.log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
 		FlounderLogger.log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
+		FlounderLogger.log("Flounder Maximum FBO Size: " + FBO.getMaxFBOSize());
 		FlounderLogger.log("===== End of system info log. =====\n");
 	}
 
