@@ -206,35 +206,14 @@ public class Frustum {
 	 */
 	public boolean cubeFullyInFrustum(float x1, float y1, float z1, float x2, float y2, float z2) {
 		for (int i = 0; i < 6; i++) {
-			if (frustum[i][0] * x1 + frustum[i][1] * y1 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-
-			if (frustum[i][0] * x2 + frustum[i][1] * y1 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-
-			if (frustum[i][0] * x1 + frustum[i][1] * y2 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-
-			if (frustum[i][0] * x2 + frustum[i][1] * y2 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-
-			if (frustum[i][0] * x1 + frustum[i][1] * y1 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-
-			if (frustum[i][0] * x2 + frustum[i][1] * y1 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-
-			if (frustum[i][0] * x1 + frustum[i][1] * y2 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-
-			if (frustum[i][0] * x2 + frustum[i][1] * y2 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f) {
+			if (frustum[i][0] * x1 + frustum[i][1] * y1 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
+					frustum[i][0] * x2 + frustum[i][1] * y1 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
+					frustum[i][0] * x1 + frustum[i][1] * y2 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
+					frustum[i][0] * x2 + frustum[i][1] * y2 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
+					frustum[i][0] * x1 + frustum[i][1] * y1 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f &&
+					frustum[i][0] * x2 + frustum[i][1] * y1 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f &&
+					frustum[i][0] * x1 + frustum[i][1] * y2 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f &&
+					frustum[i][0] * x2 + frustum[i][1] * y2 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f) {
 				return false;
 			}
 		}
