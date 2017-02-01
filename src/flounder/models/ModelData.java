@@ -45,8 +45,6 @@ public class ModelData {
 			Vector3f tangent = currentVertex.getAverageTangent();
 			Material material = currentVertex.getMaterial();
 
-			materialsArray[i] = material;
-
 			verticesArray[i * 3] = position.x;
 			verticesArray[i * 3 + 1] = position.y;
 			verticesArray[i * 3 + 2] = position.z;
@@ -61,6 +59,8 @@ public class ModelData {
 			tangentsArray[i * 3] = tangent.x;
 			tangentsArray[i * 3 + 1] = tangent.y;
 			tangentsArray[i * 3 + 2] = tangent.z;
+
+			materialsArray[i] = material;
 		}
 
 		int[] indicesArray = new int[indices.size()];
