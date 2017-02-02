@@ -6,7 +6,7 @@ import org.lwjgl.*;
 
 import java.nio.*;
 
-import static org.lwjgl.opengl.EXTFramebufferObject.GL_MAX_RENDERBUFFER_SIZE_EXT;
+import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL14.*;
@@ -20,6 +20,7 @@ public class FBO {
 	private DepthBufferType depthBufferType;
 	private boolean useColourBuffer;
 	private boolean linearFiltering;
+	private boolean wrapTextures;
 	private boolean clampEdge;
 	private boolean alphaChannel;
 	private boolean antialiased;
@@ -49,17 +50,19 @@ public class FBO {
 	 * @param depthBufferType The type of depth buffer to use in the FBO.
 	 * @param useColourBuffer If a colour buffer should be created.
 	 * @param linearFiltering If linear filtering should be used.
+	 * @param wrapTextures If textures will even be bothered with wrapping.
 	 * @param clampEdge If the image should be clamped to the edges.
 	 * @param alphaChannel If alpha should be supported.
 	 * @param antialiased If the image will be antialiased.
 	 * @param samples How many MFAA samples should be used on the FBO. Zero disables multisampling.
 	 */
-	protected FBO(int width, int height, int attachments, boolean fitToScreen, float sizeScalar, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
+	protected FBO(int width, int height, int attachments, boolean fitToScreen, float sizeScalar, DepthBufferType depthBufferType, boolean useColourBuffer, boolean linearFiltering, boolean wrapTextures, boolean clampEdge, boolean alphaChannel, boolean antialiased, int samples) {
 		this.fitToScreen = fitToScreen;
 		this.sizeScalar = sizeScalar;
 		this.depthBufferType = depthBufferType;
 		this.useColourBuffer = useColourBuffer;
 		this.linearFiltering = linearFiltering;
+		this.wrapTextures = wrapTextures;
 		this.clampEdge = clampEdge;
 		this.alphaChannel = alphaChannel;
 		this.antialiased = antialiased;
@@ -157,8 +160,12 @@ public class FBO {
 		glTexImage2D(GL_TEXTURE_2D, 0, alphaChannel ? GL_RGBA : GL_RGB, width, height, 0, alphaChannel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+
+		if (wrapTextures) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+		}
+
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, colourTexture[attachment - GL_COLOR_ATTACHMENT0], 0);
 	}
 

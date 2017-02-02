@@ -7,6 +7,7 @@ public class FBOBuilder {
 	private DepthBufferType depthBufferType;
 	private boolean useColourBuffer;
 	private boolean linearFiltering;
+	private boolean wrapTextures;
 	private boolean clampEdge;
 	private boolean alphaChannel;
 	private boolean antialiased;
@@ -27,6 +28,7 @@ public class FBOBuilder {
 		this.depthBufferType = DepthBufferType.NONE;
 		this.useColourBuffer = true;
 		this.linearFiltering = true;
+		this.wrapTextures = true;
 		this.clampEdge = true;
 		this.alphaChannel = false;
 		this.antialiased = false;
@@ -44,7 +46,7 @@ public class FBOBuilder {
 	 * @return Returns a newly created FBO off of the builders parameters.
 	 */
 	public FBO create() {
-		return new FBO(width, height, attachments, fitToScreen, sizeScalar, depthBufferType, useColourBuffer, linearFiltering, clampEdge, alphaChannel, antialiased, samples);
+		return new FBO(width, height, attachments, fitToScreen, sizeScalar, depthBufferType, useColourBuffer, linearFiltering, wrapTextures, clampEdge, alphaChannel, antialiased, samples);
 	}
 
 	/**
@@ -76,6 +78,16 @@ public class FBOBuilder {
 	 */
 	public FBOBuilder nearestFiltering() {
 		linearFiltering = false;
+		return this;
+	}
+
+	/**
+	 * Sets if the textures will even be bothered with wrapping.
+	 *
+	 * @return this.
+	 */
+	public FBOBuilder disableTextureWrap() {
+		this.wrapTextures = false;
 		return this;
 	}
 
