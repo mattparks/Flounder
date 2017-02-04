@@ -12,7 +12,7 @@ uniform bool flareHidden;
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
 
-vec3 lensflare(vec2 uv,vec2 pos) {
+vec3 lensflare(vec2 uv, vec2 pos) {
 	vec2 main = uv - pos;
 	vec2 uvd = uv * (length(uv));
 
