@@ -26,9 +26,8 @@ public class FilterLensFlare extends PostFilter {
 		point.x /= point.z;
 		point.y /= point.z;
 
-
-	//	point.x = (point.x + 1) * FlounderDisplay.getWidth() / 2;
-	//	point.y = (point.y + 1) * FlounderDisplay.getHeight() / 2;
+		// point.x = (point.x + 1) * FlounderDisplay.getWidth() / 2;
+		// point.y = (point.y + 1) * FlounderDisplay.getHeight() / 2;
 
 		this.sunPositon.set(point.x, point.y);
 		this.flareHidden = point.z <= 0.0f;
