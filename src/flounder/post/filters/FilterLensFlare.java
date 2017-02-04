@@ -18,7 +18,7 @@ public class FilterLensFlare extends PostFilter {
 	}
 
 	public void setSunPositon(Vector3f sunPositon) {
-		Vector4f point4 = new Vector4f(sunPositon.x, sunPositon.y, sunPositon.z, 1);
+		Vector4f point4 = new Vector4f(sunPositon.x, sunPositon.y, sunPositon.z, 1.0f);
 		point4 = Matrix4f.transform(FlounderCamera.getCamera().getViewMatrix(), point4, null);
 		point4 = Matrix4f.transform(FlounderCamera.getCamera().getProjectionMatrix(), point4, null);
 		Vector3f point = new Vector3f(point4);

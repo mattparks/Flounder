@@ -64,7 +64,7 @@ vec3 cc(vec3 colour, float factor,float factor2) {
 
 //---------MAIN------------
 void main(void) {
-	vec3 colour = vec3(0, 0, 0);
+	vec3 colour = vec3(0.0, 0.0, 0.0);
 
 	if (!flareHidden) {
 	    vec2 uv = (pass_textureCoords - 0.5) * aspectRatio;
