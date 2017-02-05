@@ -1,7 +1,6 @@
 package flounder.renderer;
 
 import flounder.devices.*;
-import flounder.fbos.*;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.profiling.*;
