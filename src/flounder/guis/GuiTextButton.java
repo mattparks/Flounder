@@ -77,7 +77,7 @@ public class GuiTextButton extends GuiComponent {
 			FlounderGuis.getSelector().cancelWasEvent();
 		}
 
-		setRelativeX(FlounderDisplay.getAspectRatio() * 0.5f);
+	//	setRelativeX(FlounderDisplay.getAspectRatio() * 0.5f);
 	}
 
 	@Override
