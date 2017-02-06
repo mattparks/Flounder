@@ -181,7 +181,7 @@ public class Text {
 			case LEFT:
 				return position.set((currentX - xChange) + (currentScale * originalWidth * 0.5f), currentY - yChange);
 			case CENTRE:
-				return position.set((currentX - xChange) * FlounderDisplay.getAspectRatio(), currentY - yChange);
+				return position.set((currentX - xChange) * (currentScale * FlounderDisplay.getAspectRatio()), currentY - yChange);
 			case RIGHT:
 				return position.set((currentX - xChange) * FlounderDisplay.getAspectRatio(), currentY - yChange);
 			default:
