@@ -153,6 +153,25 @@ public class Text {
 		return guiAlign;
 	}
 
+	/**
+	 * @return {@code true} if the mouse cursor is currently over this component.
+	 */
+	public boolean isMouseOver() {
+		// TODO: Fix maths?
+		float positionX = position.x / FlounderDisplay.getAspectRatio();
+		float positionY = position.y;
+
+		//	if (FlounderMouse.isDisplaySelected() && FlounderDisplay.isFocused()) {
+		if (FlounderGuis.getSelector().getCursorX() >= positionX - (getCurrentWidth() / 2.0f) && FlounderGuis.getSelector().getCursorX() <= positionX + (getCurrentWidth() / 2.0f)) {
+			if (FlounderGuis.getSelector().getCursorY() >= positionY - (getCurrentHeight() / 2.0f) && FlounderGuis.getSelector().getCursorY() <= positionY + (getCurrentHeight() / 2.0f)) {
+				return true;
+			}
+		}
+		//	}
+
+		return false;
+	}
+
 	protected Vector2f getPosition() {
 		float scaleFactor = (currentScale - 1.0f) / 2.0f;
 		float xChange = scaleFactor * originalWidth;
