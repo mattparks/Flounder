@@ -28,8 +28,6 @@ public class GuiTextButton extends GuiComponent {
 
 		this.listenerLeft = null;
 		this.listenerRight = null;
-
-		addText(text, 0.0f, 0.0f, 1.0f);
 	}
 
 	public Text getText() {
