@@ -73,8 +73,4 @@ public abstract class ModelLoadManual {
 	 * @return The surrounding Hull.
 	 */
 	public abstract QuickHull getHull();
-
-	public ModelData toData() {
-		return new ModelData(getVertices(), getTextureCoords(), getNormals(), getTangents(), getIndices(), getAABB(), getHull(), isSmoothShading(), getName());
-	}
 }

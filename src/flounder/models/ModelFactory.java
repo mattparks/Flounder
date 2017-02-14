@@ -34,38 +34,35 @@ public class ModelFactory extends Factory {
 
 	@Override
 	public void loadData(FactoryObject object, FactoryBuilder builder, String name) {
-		ModelData data = null;
-
 		if (((ModelBuilder) builder).getManual() != null) {
-			data = ((ModelBuilder) builder).getManual();
+			ModelLoadManual b = ((ModelBuilder) builder).getManual();
+			((ModelObject) object).loadData(b.getVertices(), b.getTextureCoords(), b.getNormals(), b.getTangents(), b.getIndices(), b.isSmoothShading(), b.getAABB(), b.getHull(), name);
 		} else if (((ModelBuilder) builder).getFile() != null) {
-			data = loadOBJ(((ModelBuilder) builder).getFile(), name);
+			loadOBJ((ModelObject) object, ((ModelBuilder) builder).getFile(), name);
 		}
-
-		((ModelObject) object).loadData(data, name);
 	}
 
-	private ModelData loadOBJ(MyFile file, String name) {
+	private void loadOBJ(ModelObject object, MyFile file, String name) {
 		BufferedReader reader;
 
 		try {
 			reader = file.getReader();
 		} catch (Exception e) {
 			FlounderLogger.log(e);
-			return null;
+			return;
 		}
 
 		List<Integer> indices = new ArrayList<>();
 		List<VertexData> vertices = new ArrayList<>();
 		List<Vector2f> textures = new ArrayList<>();
 		List<Vector3f> normals = new ArrayList<>();
-		boolean enableSmoothShading = true;
+		boolean smoothShading = true;
 
 		String line;
 
 		if (reader == null) {
 			FlounderLogger.error("Error creating reader the OBJ: " + file);
-			return null;
+			return;
 		}
 
 		try {
@@ -94,7 +91,7 @@ public class ModelFactory extends Factory {
 						normals.add(normal);
 						break;
 					case "s":
-						enableSmoothShading = !line.contains("off");
+						smoothShading = !line.contains("off");
 						break;
 					case "o":
 						break;
@@ -165,7 +162,7 @@ public class ModelFactory extends Factory {
 		}
 
 		// Takes OpenGL comparable data and loads it into a data object.
-		return new ModelData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, createAABB(vertices), createHull(vertices), enableSmoothShading, name);
+		object.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, smoothShading, createAABB(vertices), createHull(vertices), name);
 	}
 
 	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices) {
@@ -266,14 +263,14 @@ public class ModelFactory extends Factory {
 	@Override
 	protected void create(FactoryObject object, FactoryBuilder builder) {
 		// Takes OpenGL compatible data and loads it to the GPU and factory object.
-		ModelData data = ((ModelObject) object).getData();
+		ModelObject o = ((ModelObject) object);
 		int vaoID = FlounderLoader.createVAO();
-		FlounderLoader.createIndicesVBO(vaoID, data.getIndices());
-		FlounderLoader.storeDataInVBO(vaoID, data.getVertices(), 0, 3);
-		FlounderLoader.storeDataInVBO(vaoID, data.getTextures(), 1, 2);
-		FlounderLoader.storeDataInVBO(vaoID, data.getNormals(), 2, 3);
-		FlounderLoader.storeDataInVBO(vaoID, data.getTangents(), 3, 3);
-		int vaoLength = data.getIndices() != null ? data.getIndices().length : (data.getVertices().length / 3);
+		FlounderLoader.createIndicesVBO(vaoID, o.getIndices());
+		FlounderLoader.storeDataInVBO(vaoID, o.getVertices(), 0, 3);
+		FlounderLoader.storeDataInVBO(vaoID, o.getTextures(), 1, 2);
+		FlounderLoader.storeDataInVBO(vaoID, o.getNormals(), 2, 3);
+		FlounderLoader.storeDataInVBO(vaoID, o.getTangents(), 3, 3);
+		int vaoLength = o.getIndices() != null ? o.getIndices().length : (o.getVertices().length / 3);
 		((ModelObject) object).loadGL(vaoID, vaoLength);
 	}
 

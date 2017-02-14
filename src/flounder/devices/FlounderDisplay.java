@@ -233,7 +233,7 @@ public class FlounderDisplay extends IModule {
 		// System logs.
 		FlounderLogger.log("");
 		FlounderLogger.log("===== This is not an error message, it is a system info log. =====");
-		FlounderLogger.log("Flounder Engine Version: " + FlounderFramework.getVersion().version);
+		FlounderLogger.log("Flounder Engine Version: " + FlounderFramework.getVersion().getVersion());
 		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
 		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());

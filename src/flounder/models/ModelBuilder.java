@@ -5,7 +5,7 @@ import flounder.resources.*;
 
 public class ModelBuilder extends FactoryBuilder {
 	private MyFile file;
-	private ModelData manual;
+	private ModelLoadManual manual;
 
 	public ModelBuilder(Factory factory) {
 		super(factory);
@@ -13,21 +13,45 @@ public class ModelBuilder extends FactoryBuilder {
 		this.manual = null;
 	}
 
+	/**
+	 * Sets the models source file.
+	 *
+	 * @param file The source file.
+	 *
+	 * @return this.
+	 */
 	public ModelBuilder setFile(MyFile file) {
 		this.file = file;
 		return this;
 	}
 
-	public ModelBuilder setManual(ModelData manual) {
+	/**
+	 * Sets the models manual source data.
+	 *
+	 * @param manual The manual source data.
+	 *
+	 * @return this.
+	 */
+	public ModelBuilder setManual(ModelLoadManual manual) {
 		this.manual = manual;
 		return this;
 	}
 
+	/**
+	 * Gets the source file.
+	 *
+	 * @return The source file.
+	 */
 	public MyFile getFile() {
 		return file;
 	}
 
-	public ModelData getManual() {
+	/**
+	 * Gets the manual source data.
+	 *
+	 * @return The manual source data.
+	 */
+	public ModelLoadManual getManual() {
 		return manual;
 	}
 
