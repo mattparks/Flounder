@@ -58,7 +58,7 @@ public class FontType {
 	 *
 	 * @return The texture.
 	 */
-	protected Texture getTexture() {
+	protected TextureObject getTexture() {
 		return loader.getFontTexture();
 	}
 }

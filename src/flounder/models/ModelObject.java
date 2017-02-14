@@ -4,6 +4,9 @@ import flounder.factory.*;
 import flounder.physics.*;
 import flounder.processing.*;
 
+/**
+ * Class that represents a loaded model.
+ */
 public class ModelObject extends FactoryObject {
 	private float[] vertices;
 	private float[] textures;
@@ -107,7 +110,9 @@ public class ModelObject extends FactoryObject {
 	 * Deletes the model from OpenGL memory.
 	 */
 	public void delete() {
-		FlounderProcessors.sendRequest(new ModelDeleteRequest(vaoID));
-		this.loaded = false;
+		if (loaded) {
+			FlounderProcessors.sendRequest(new ModelDeleteRequest(vaoID));
+			this.loaded = false;
+		}
 	}
 }

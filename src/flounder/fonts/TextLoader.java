@@ -13,15 +13,15 @@ public class TextLoader {
 	protected static final int NEWLINE_ASCII = 10;
 	protected static final int SPACE_ASCII = 32;
 
-	private Texture fontTexture;
+	private TextureObject fontTexture;
 	private MetaFile metaData;
 
 	public TextLoader(MyFile fontSheet, MyFile metaFile) {
-		this.fontTexture = Texture.newTexture(fontSheet).noFiltering().clampEdges().create();
+		this.fontTexture = TextureFactory.newBuilder().setFile(fontSheet).noFiltering().clampEdges().create();
 		this.metaData = new MetaFile(metaFile);
 	}
 
-	public Texture getFontTexture() {
+	public TextureObject getFontTexture() {
 		return fontTexture;
 	}
 

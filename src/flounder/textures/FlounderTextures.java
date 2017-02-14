@@ -1,54 +1,53 @@
 package flounder.textures;
 
+import flounder.factory.*;
 import flounder.framework.*;
-import flounder.logger.*;
+import flounder.loaders.*;
 import flounder.processing.*;
 import flounder.profiling.*;
-import flounder.resources.*;
-import org.lwjgl.*;
 
-import java.io.*;
 import java.lang.ref.*;
-import java.nio.*;
 import java.util.*;
 
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL30.*;
 
 /**
- * A module used for loading and managing OpenGL textures.
+ * A module used for loading texture files.
  */
 public class FlounderTextures extends IModule {
 	private static final FlounderTextures INSTANCE = new FlounderTextures();
 	public static final String PROFILE_TAB_NAME = "Textures";
 
-	private static Map<String, SoftReference<Texture>> loaded;
-	private List<Integer> textureCache;
+	private Map<String, SoftReference<FactoryObject>> loaded;
+
 	private float anisotropyLevel = -1;
 
 	/**
-	 * Creates a new OpenGL texture manager.
+	 * A function called before initialization to configure the textures.
+	 *
+	 * @param anisotropyLevel The new anisotropy target level.
+	 */
+	public static void setup(float anisotropyLevel) {
+		INSTANCE.anisotropyLevel = anisotropyLevel;
+	}
+
+	/**
+	 * Creates a new model loader class.
 	 */
 	public FlounderTextures() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLoader.class, FlounderProcessors.class);
 	}
 
 	@Override
 	public void init() {
 		this.loaded = new HashMap<>();
-		this.textureCache = new ArrayList<>();
 
 		float maxAnisotropy = glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
 
 		if (anisotropyLevel == -1 || anisotropyLevel > maxAnisotropy) {
 			anisotropyLevel = maxAnisotropy;
 		}
-
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Max Anisotropy", maxAnisotropy);
 	}
 
 	@Override
@@ -57,164 +56,16 @@ public class FlounderTextures extends IModule {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", textureCache.size());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Current Anisotropy", anisotropyLevel);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Max Anisotropy", glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
 	}
 
 	/**
-	 * Creates a empty cubemap.
+	 * Gets a list of loaded models.
 	 *
-	 * @param size The size of the cubemaps faces.
-	 *
-	 * @return A empty cubemap.
+	 * @return A list of loaded models.
 	 */
-	public static int createEmptyCubeMap(int size) {
-		int texID = glGenTextures();
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
-
-		for (int i = 0; i < 6; i++) {
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-		}
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		INSTANCE.textureCache.add(texID);
-		return texID;
-	}
-
-	/**
-	 * Loads a list of textures into a cube map
-	 *
-	 * @param textureFiles The list of files to load.
-	 *
-	 * @return The textureID for the cube map.
-	 */
-	public static int loadCubeMap(MyFile... textureFiles) {
-		int texID = glGenTextures();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-		for (int i = 0; i < textureFiles.length; i++) {
-			FlounderLogger.log(textureFiles[i].getPath() + " is being loaded into the texture cube map!");
-			TextureData data = decodeTextureFile(textureFiles[i]);
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, data.getBuffer());
-		}
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		INSTANCE.textureCache.add(texID);
-		return texID;
-	}
-
-	/**
-	 * Decodes a texture file into a data class.
-	 *
-	 * @param file The file to decode.
-	 *
-	 * @return The decoded data in a class.
-	 */
-	public static TextureData decodeTextureFile(MyFile file) {
-		int width = 0;
-		int height = 0;
-		boolean hasAlpha = false;
-		ByteBuffer buffer = null;
-
-		try {
-			InputStream in = file.getInputStream();
-			TextureDecoder decoder = new TextureDecoder(in);
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			hasAlpha = decoder.hasAlpha();
-			buffer = ByteBuffer.allocateDirect(4 * width * height);
-			decoder.decode(buffer, width * 4, TextureDecoder.Format.BGRA);
-			buffer.flip();
-			in.close();
-		} catch (Exception e) {
-			FlounderLogger.error("Tried to load texture '" + file + "', didn't work");
-			FlounderLogger.exception(e);
-			System.exit(-1);
-		}
-
-		return new TextureData(buffer, width, height, hasAlpha);
-	}
-
-	/**
-	 * Loads decoded texture data and builder parameters into a OpenGL texture.
-	 *
-	 * @param data Decoded texture data.
-	 * @param builder The builder with parameters.
-	 *
-	 * @return A OpenGL texture ID.
-	 */
-	public static int loadTextureToOpenGL(TextureData data, TextureBuilder builder) {
-		int texID = glGenTextures();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, data.getBuffer());
-
-		if (builder.isMipmap()) {
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-			if (builder.isAnisotropic()) {
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, INSTANCE.anisotropyLevel);
-			}
-		} else if (builder.isNearest()) {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		} else {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		}
-
-		if (builder.isClampEdges()) {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		} else if (builder.isClampToBorder()) {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
-			builder.getBorderColour().store(buffer);
-			buffer.flip();
-			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, buffer);
-		} else {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		}
-
-		INSTANCE.textureCache.add(texID);
-		return texID;
-	}
-
-	/**
-	 * Deletes the texture from the cache and OpenGL memory.
-	 *
-	 * @param textureID The texture to delete.
-	 */
-	public static void deleteTexture(int textureID) {
-		if (INSTANCE.textureCache.contains(textureID)) {
-			INSTANCE.textureCache.remove((Integer) textureID);
-			glDeleteTextures(textureID);
-		}
-	}
-
-	/**
-	 * Gets a list of loaded shaders.
-	 *
-	 * @return A list of loaded shaders.
-	 */
-	public static Map<String, SoftReference<Texture>> getLoaded() {
+	public static Map<String, SoftReference<FactoryObject>> getLoaded() {
 		return INSTANCE.loaded;
 	}
 
@@ -227,15 +78,6 @@ public class FlounderTextures extends IModule {
 		return INSTANCE.anisotropyLevel;
 	}
 
-	/**
-	 * Sets the current anisotropy level.
-	 *
-	 * @param anisotropyLevel The new anisotropy level to be used in textures with anisotropy enabled.
-	 */
-	public static void setAnisotropyLevel(float anisotropyLevel) {
-		INSTANCE.anisotropyLevel = anisotropyLevel;
-	}
-
 	@Override
 	public IModule getInstance() {
 		return INSTANCE;
@@ -243,11 +85,7 @@ public class FlounderTextures extends IModule {
 
 	@Override
 	public void dispose() {
-		anisotropyLevel = -1;
-		loaded.keySet().forEach(key -> loaded.get(key).get().delete());
+		loaded.keySet().forEach(key -> ((TextureObject) loaded.get(key).get()).delete());
 		loaded.clear();
-
-		textureCache.forEach(cache -> glDeleteTextures(cache));
-		textureCache.clear();
 	}
 }

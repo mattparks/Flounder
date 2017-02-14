@@ -1,6 +1,17 @@
+/*
+ * Copyright (C) 2017, Equilibrium Games - All Rights Reserved
+ *
+ * This source file is part of New Kosmos
+ *
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
 package flounder.textures;
 
 import flounder.processing.opengl.*;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * A class that can process a request to delete a texture.
@@ -19,6 +30,6 @@ public class TextureDeleteRequest implements RequestOpenGL {
 
 	@Override
 	public void executeRequestGL() {
-		FlounderTextures.deleteTexture(textureID);
+		glDeleteTextures(textureID);
 	}
 }

@@ -1,47 +1,51 @@
+/*
+ * Copyright (C) 2017, Equilibrium Games - All Rights Reserved
+ *
+ * This source file is part of New Kosmos
+ *
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
 package flounder.textures;
 
-import flounder.logger.*;
+import flounder.factory.*;
 import flounder.maths.*;
-import flounder.processing.*;
 import flounder.resources.*;
 
-import java.lang.ref.*;
+public class TextureBuilder extends FactoryBuilder {
+	private MyFile file;
 
-/**
- * A class capable of setting up a {@link flounder.textures.Texture}.
- */
-public class TextureBuilder {
 	private Colour borderColour;
-	private boolean clampEdges;
 	private boolean clampToBorder;
+	private boolean clampEdges;
 	private boolean mipmap;
 	private boolean anisotropic;
 	private boolean nearest;
-	private MyFile file;
+	private int numberOfRows;
 
-	/**
-	 * Creates a class to setup a Texture.
-	 *
-	 * @param textureFile The textures source file.
-	 */
-	protected TextureBuilder(MyFile textureFile) {
-		this.clampEdges = false;
+	public TextureBuilder(Factory factory) {
+		super(factory);
+		this.file = null;
+
+		this.borderColour = new Colour();
 		this.clampToBorder = false;
+		this.clampEdges = false;
 		this.mipmap = true;
 		this.anisotropic = true;
 		this.nearest = false;
-		this.borderColour = new Colour(0, 0, 0, 0);
-		this.file = textureFile;
+		this.numberOfRows = 1;
 	}
 
 	/**
-	 * Clamps the texture to the edges.
+	 * Sets the textures source file.
+	 *
+	 * @param file The source file.
 	 *
 	 * @return this.
 	 */
-	public TextureBuilder clampEdges() {
-		clampEdges = true;
-		clampToBorder = false;
+	public TextureBuilder setFile(MyFile file) {
+		this.file = file;
 		return this;
 	}
 
@@ -53,9 +57,20 @@ public class TextureBuilder {
 	 * @return this.
 	 */
 	public TextureBuilder clampToBorder(Colour colour) {
-		clampEdges = false;
-		clampToBorder = true;
-		borderColour.set(colour);
+		this.borderColour.set(colour);
+		this.clampToBorder = true;
+		this.clampEdges = false;
+		return this;
+	}
+
+	/**
+	 * Clamps the texture to the edges.
+	 *
+	 * @return this.
+	 */
+	public TextureBuilder clampEdges() {
+		this.clampToBorder = false;
+		this.clampEdges = true;
 		return this;
 	}
 
@@ -65,7 +80,7 @@ public class TextureBuilder {
 	 * @return this.
 	 */
 	public TextureBuilder nearestFiltering() {
-		nearest = true;
+		this.nearest = true;
 		return noMipmap();
 	}
 
@@ -75,8 +90,8 @@ public class TextureBuilder {
 	 * @return this.
 	 */
 	public TextureBuilder noMipmap() {
-		mipmap = true;
-		anisotropic = false;
+		this.mipmap = true;
+		this.anisotropic = false;
 		return this;
 	}
 
@@ -86,37 +101,38 @@ public class TextureBuilder {
 	 * @return this.
 	 */
 	public TextureBuilder noFiltering() {
-		anisotropic = false;
+		this.anisotropic = false;
 		return this;
 	}
 
 	/**
-	 * Creates a new texture, carries out the CPU loading, and loads to OpenGL.
+	 * Sets the starting number of texture rows (default = 1).
 	 *
-	 * @return The texture that has been created.
+	 * @param numberOfRows The new number of rows.
+	 *
+	 * @return this.
 	 */
-	public Texture create() {
-		SoftReference<Texture> ref = FlounderTextures.getLoaded().get(file.getPath());
-		Texture data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(file.getPath() + " is being loaded into the texture builder right now!");
-			FlounderTextures.getLoaded().remove(file.getPath());
-			data = new Texture();
-			FlounderProcessors.sendRequest(new TextureLoadRequest(data, this));
-			FlounderTextures.getLoaded().put(file.getPath(), new SoftReference<>(data));
-		}
-
-		return data;
+	public TextureBuilder setNumberOfRows(int numberOfRows) {
+		this.numberOfRows = numberOfRows;
+		return this;
 	}
 
 	/**
-	 * Gets if clamping to edges.
+	 * Gets the source file.
 	 *
-	 * @return If clamping to edges.
+	 * @return The source file.
 	 */
-	public boolean isClampEdges() {
-		return clampEdges;
+	public MyFile getFile() {
+		return file;
+	}
+
+	/**
+	 * Gets the border colour.
+	 *
+	 * @return The border colour.
+	 */
+	public Colour getBorderColour() {
+		return borderColour;
 	}
 
 	/**
@@ -126,6 +142,15 @@ public class TextureBuilder {
 	 */
 	public boolean isClampToBorder() {
 		return clampToBorder;
+	}
+
+	/**
+	 * Gets if clamping to edges.
+	 *
+	 * @return If clamping to edges.
+	 */
+	public boolean isClampEdges() {
+		return clampEdges;
 	}
 
 	/**
@@ -156,20 +181,34 @@ public class TextureBuilder {
 	}
 
 	/**
-	 * Gets the border colour.
+	 * Gets the number of rows.
 	 *
-	 * @return The border colour.
+	 * @return The number of rows.
 	 */
-	public Colour getBorderColour() {
-		return borderColour;
+	public int getNumberOfRows() {
+		return numberOfRows;
 	}
 
-	/**
-	 * Gets the source file.
-	 *
-	 * @return The source file.
-	 */
-	public MyFile getFile() {
-		return file;
+	@Override
+	public TextureObject create() {
+		if (file != null) {
+			return (TextureObject) builderCreate(file.getName());
+		}
+
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "TextureBuilder{" +
+				"file=" + file +
+				", borderColour=" + borderColour +
+				", clampToBorder=" + clampToBorder +
+				", clampEdges=" + clampEdges +
+				", mipmap=" + mipmap +
+				", anisotropic=" + anisotropic +
+				", nearest=" + nearest +
+				", numberOfRows=" + numberOfRows +
+				'}';
 	}
 }

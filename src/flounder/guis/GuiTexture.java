@@ -17,17 +17,17 @@ public class GuiTexture {
 	private Vector2f textureOffset;
 	private Colour colourOffset;
 
-	private Texture texture;
+	private TextureObject texture;
 	private ValueDriver alphaDriver;
 	private int selectedRow;
 	private float alpha;
 	private boolean flipTexture;
 
-	public GuiTexture(Texture texture) {
+	public GuiTexture(TextureObject texture) {
 		this(texture, false);
 	}
 
-	public GuiTexture(Texture texture, boolean flip) {
+	public GuiTexture(TextureObject texture, boolean flip) {
 		this.position = new Vector2f();
 		this.rotation = 0.0f;
 		this.scale = new Vector2f();
@@ -93,11 +93,11 @@ public class GuiTexture {
 		colourOffset.set(colour);
 	}
 
-	public Texture getTexture() {
+	public TextureObject getTexture() {
 		return texture;
 	}
 
-	public void setTexture(Texture texture) {
+	public void setTexture(TextureObject texture) {
 		this.texture = texture;
 	}
 

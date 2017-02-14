@@ -178,7 +178,7 @@ public class OpenGlUtils {
 	 * @param texture The texture to bind.
 	 * @param bankID The shaders blank ID to bind to.
 	 */
-	public static void bindTexture(Texture texture, int bankID) {
+	public static void bindTexture(TextureObject texture, int bankID) {
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(texture.getGlType(), texture.getTextureID());
 	}
