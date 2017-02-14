@@ -52,7 +52,7 @@ public class BoundingRenderer extends IRenderer {
 
 		prepareRendering(clipPlane, camera);
 
-		for (Model model : FlounderBounding.getRenderShapes().keySet()) {
+		for (ModelObject model : FlounderBounding.getRenderShapes().keySet()) {
 			prepareModel(model);
 
 			for (IBounding shape : FlounderBounding.getRenderShapes().get(model)) {
@@ -79,11 +79,11 @@ public class BoundingRenderer extends IRenderer {
 		OpenGlUtils.enableDepthTesting();
 	}
 
-	private void prepareModel(Model model) {
+	private void prepareModel(ModelObject model) {
 		OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3);
 	}
 
-	private void renderShape(Model model, IBounding shape) {
+	private void renderShape(ModelObject model, IBounding shape) {
 		POSITION_REUSABLE.set(0.0f, 0.0f, 0.0f);
 		ROTATION_REUSABLE.set(0.0f, 0.0f, 0.0f);
 		SCALE_REUSABLE.set(0.0f, 0.0f, 0.0f);

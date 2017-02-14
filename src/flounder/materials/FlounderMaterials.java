@@ -57,7 +57,8 @@ public class FlounderMaterials extends IModule {
 			try {
 				reader = file.getReader();
 			} catch (Exception e) {
-				e.printStackTrace();
+				FlounderLogger.log(e);
+				return null;
 			}
 
 			data = new ArrayList<>();
@@ -68,7 +69,7 @@ public class FlounderMaterials extends IModule {
 
 			if (reader == null) {
 				FlounderLogger.error("Error creating reader the MTL: " + file);
-				return new ArrayList<>();
+				return null;
 			}
 
 			try {
@@ -140,9 +141,9 @@ public class FlounderMaterials extends IModule {
 	}
 
 	/**
-	 * Gets a list of loaded models.
+	 * Gets a list of loaded materials.
 	 *
-	 * @return A list of loaded models.
+	 * @return A list of loaded materials.
 	 */
 	public static Map<String, SoftReference<List<Material>>> getLoaded() {
 		return INSTANCE.loaded;

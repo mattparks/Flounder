@@ -17,7 +17,7 @@ public class FlounderBounding extends IModule {
 	private static final FlounderBounding INSTANCE = new FlounderBounding();
 	public static final String PROFILE_TAB_NAME = "Bounding";
 
-	private Map<Model, List<IBounding>> renderShapes;
+	private Map<ModelObject, List<IBounding>> renderShapes;
 	private boolean renders;
 	private int boundingCount;
 
@@ -56,7 +56,7 @@ public class FlounderBounding extends IModule {
 			return;
 		}
 
-		for (Model model : INSTANCE.renderShapes.keySet()) {
+		for (ModelObject model : INSTANCE.renderShapes.keySet()) {
 			if (model.equals(shape.getRenderModel())) {
 				INSTANCE.renderShapes.get(model).add(shape);
 				return;
@@ -73,7 +73,7 @@ public class FlounderBounding extends IModule {
 	 *
 	 * @return The renderable shapes.
 	 */
-	protected static Map<Model, List<IBounding>> getRenderShapes() {
+	protected static Map<ModelObject, List<IBounding>> getRenderShapes() {
 		return INSTANCE.renderShapes;
 	}
 

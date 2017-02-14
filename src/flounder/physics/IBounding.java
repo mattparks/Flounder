@@ -92,7 +92,7 @@ public abstract class IBounding<T extends IBounding> {
 	 *
 	 * @return A model that can be used to render this shape.
 	 */
-	public abstract Model getRenderModel();
+	public abstract ModelObject getRenderModel();
 
 	/**
 	 * Gets the centre for the rendered model.

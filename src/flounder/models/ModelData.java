@@ -1,123 +1,88 @@
 package flounder.models;
 
 import flounder.materials.*;
-import flounder.maths.vectors.*;
 import flounder.physics.*;
-import flounder.resources.*;
 
 import java.util.*;
 
 public class ModelData {
-	public MyFile file;
+	private float[] vertices;
+	private float[] textureCoords;
+	private float[] normals;
+	private float[] tangents;
+	private int[] indices;
+	private Material[] materials;
+	private boolean enableSmoothShading;
 
-	public List<VertexData> vertices = new ArrayList<>();
-	public List<Vector2f> textures = new ArrayList<>();
-	public List<Vector3f> normals = new ArrayList<>();
-	public List<Integer> indices = new ArrayList<>();
-	public List<Material> materials = new ArrayList<>();
-	public boolean enableSmoothShading = true;
+	private String name;
 
-	public ModelData(MyFile file) {
-		this.file = file;
+	private AABB aabb;
+	private QuickHull hull;
+
+	public ModelData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, Material[] materials, AABB aabb, QuickHull hull, boolean enableSmoothShading, String name) {
+		this.vertices = vertices;
+		this.textureCoords = textureCoords;
+		this.normals = normals;
+		this.tangents = tangents;
+		this.indices = indices;
+		this.materials = materials;
+		this.enableSmoothShading = enableSmoothShading;
+
+		this.name = name;
+
+		this.aabb = aabb;
+		this.hull = hull;
 	}
 
-	public void createRaw(Model model) {
-		for (VertexData vertex : vertices) {
-			vertex.averageTangents();
-
-			if (!vertex.isSet()) {
-				vertex.setTextureIndex(0);
-				vertex.setNormalIndex(0);
-			}
-		}
-
-		float[] verticesArray = new float[vertices.size() * 3];
-		float[] texturesArray = new float[vertices.size() * 2];
-		float[] normalsArray = new float[vertices.size() * 3];
-		float[] tangentsArray = new float[vertices.size() * 3];
-		Material[] materialsArray = new Material[vertices.size()];
-
-		for (int i = 0; i < vertices.size(); i++) {
-			VertexData currentVertex = vertices.get(i);
-			Vector3f position = currentVertex.getPosition();
-			Vector2f textureCoord = textures.get(currentVertex.getTextureIndex());
-			Vector3f normalVector = normals.get(currentVertex.getNormalIndex());
-			Vector3f tangent = currentVertex.getAverageTangent();
-			Material material = currentVertex.getMaterial();
-
-			verticesArray[i * 3] = position.x;
-			verticesArray[i * 3 + 1] = position.y;
-			verticesArray[i * 3 + 2] = position.z;
-
-			texturesArray[i * 2] = textureCoord.x;
-			texturesArray[i * 2 + 1] = 1 - textureCoord.y;
-
-			normalsArray[i * 3] = normalVector.x;
-			normalsArray[i * 3 + 1] = normalVector.y;
-			normalsArray[i * 3 + 2] = normalVector.z;
-
-			tangentsArray[i * 3] = tangent.x;
-			tangentsArray[i * 3 + 1] = tangent.y;
-			tangentsArray[i * 3 + 2] = tangent.z;
-
-			materialsArray[i] = material;
-		}
-
-		int[] indicesArray = new int[indices.size()];
-
-		for (int i = 0; i < indicesArray.length; i++) {
-			indicesArray[i] = indices.get(i);
-		}
-
-		MeshData modelData = new MeshData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, materialsArray, createAABB(), createHull());
-		model.loadData(modelData);
+	public float[] getVertices() {
+		return vertices;
 	}
 
-	private AABB createAABB() {
-		float minX = 0, minY = 0, minZ = 0;
-		float maxX = 0, maxY = 0, maxZ = 0;
-
-		for (VertexData vertex : vertices) {
-			Vector3f vector = vertex.getPosition();
-
-			if (vector.x < minX) {
-				minX = vector.x;
-			} else if (vector.x > maxX) {
-				maxX = vector.x;
-			}
-
-			if (vector.y < minY) {
-				minY = vector.y;
-			} else if (vector.y > maxY) {
-				maxY = vector.y;
-			}
-
-			if (vector.z < minZ) {
-				minZ = vector.z;
-			} else if (vector.z > maxZ) {
-				maxZ = vector.z;
-			}
-		}
-
-		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
+	public float[] getTextures() {
+		return textureCoords;
 	}
 
-	private QuickHull createHull() {
-		List<Vector3f> points = new ArrayList<>();
-
-		for (VertexData vertex : vertices) {
-			points.add(vertex.getPosition());
-		}
-
-		return new QuickHull(points);
+	public float[] getNormals() {
+		return normals;
 	}
 
-	public void destroy() {
-		vertices = null;
-		textures = null;
-		normals = null;
-		indices = null;
-		materials = null;
-		enableSmoothShading = true;
+	public float[] getTangents() {
+		return tangents;
+	}
+
+	public int[] getIndices() {
+		return indices;
+	}
+
+	public Material[] getMaterials() {
+		return materials;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public AABB getAABB() {
+		return aabb;
+	}
+
+	public QuickHull getHull() {
+		return hull;
+	}
+
+	@Override
+	public String toString() {
+		return "ModelData{" +
+				"vertices=" + Arrays.toString(vertices) +
+				", textureCoords=" + Arrays.toString(textureCoords) +
+				", normals=" + Arrays.toString(normals) +
+				", tangents=" + Arrays.toString(tangents) +
+				", indices=" + Arrays.toString(indices) +
+				", materials=" + Arrays.toString(materials) +
+				", enableSmoothShading=" + enableSmoothShading +
+				", name=" + name +
+				", aabb=" + aabb +
+				", hull=" + hull +
+				'}';
 	}
 }

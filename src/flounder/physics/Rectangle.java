@@ -112,8 +112,8 @@ public class Rectangle extends IBounding<Rectangle> {
 	}
 
 	@Override
-	public Model getRenderModel() {
-		return Model.newModel(MODEL_FILE).create();
+	public ModelObject getRenderModel() {
+		return ModelFactory.newBuilder().setFile(MODEL_FILE).create();
 	}
 
 	@Override

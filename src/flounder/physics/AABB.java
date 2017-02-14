@@ -13,7 +13,7 @@ import java.util.*;
  * A 3D axis-aligned bounding box.
  */
 public class AABB extends IBounding<AABB> {
-	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
+	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "flounder.models", "aabb.obj");
 
 	private Vector3f minExtents;
 	private Vector3f maxExtents;
@@ -541,8 +541,8 @@ public class AABB extends IBounding<AABB> {
 	}
 
 	@Override
-	public Model getRenderModel() {
-		return Model.newModel(MODEL_FILE).create();
+	public ModelObject getRenderModel() {
+		return ModelFactory.newBuilder().setFile(MODEL_FILE).create();
 	}
 
 	@Override
