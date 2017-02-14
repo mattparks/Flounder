@@ -3,7 +3,6 @@ package flounder.models;
 import flounder.factory.*;
 import flounder.framework.*;
 import flounder.loaders.*;
-import flounder.logger.*;
 import flounder.processing.*;
 import flounder.profiling.*;
 
@@ -11,7 +10,7 @@ import java.lang.ref.*;
 import java.util.*;
 
 /**
- * A module used for loading materials for meshes.
+ * A module used for loading OBJ files into models.
  */
 public class FlounderModels extends IModule {
 	private static final FlounderModels INSTANCE = new FlounderModels();
@@ -20,10 +19,10 @@ public class FlounderModels extends IModule {
 	private Map<String, SoftReference<FactoryObject>> loaded;
 
 	/**
-	 * Creates a new material loader class.
+	 * Creates a new model loader class.
 	 */
 	public FlounderModels() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderLoader.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLoader.class, FlounderProcessors.class);
 	}
 
 	@Override

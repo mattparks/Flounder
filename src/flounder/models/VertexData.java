@@ -1,10 +1,12 @@
 package flounder.models;
 
-import flounder.materials.*;
 import flounder.maths.vectors.*;
 
 import java.util.*;
 
+/**
+ * A class that represents a single model vertex, used when loading OBJ files.
+ */
 public class VertexData {
 	private static final int NO_INDEX = -1;
 
@@ -20,9 +22,7 @@ public class VertexData {
 	private List<Vector3f> tangents;
 	private Vector3f averagedTangent;
 
-	private Material material;
-
-	public VertexData(int index, Vector3f position) {
+	protected VertexData(int index, Vector3f position) {
 		this.position = position;
 
 		this.textureIndex = NO_INDEX;
@@ -34,8 +34,6 @@ public class VertexData {
 
 		this.tangents = new ArrayList<>();
 		this.averagedTangent = new Vector3f();
-
-		this.material = null;
 	}
 
 	protected Vector3f getPosition() {
@@ -102,13 +100,5 @@ public class VertexData {
 
 	protected Vector3f getAverageTangent() {
 		return averagedTangent;
-	}
-
-	protected Material getMaterial() {
-		return material;
-	}
-
-	protected void setMaterial(Material material) {
-		this.material = material;
 	}
 }

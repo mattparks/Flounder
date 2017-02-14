@@ -1,6 +1,5 @@
 package flounder.models;
 
-import flounder.materials.*;
 import flounder.physics.*;
 
 import java.util.*;
@@ -11,7 +10,6 @@ public class ModelData {
 	private float[] normals;
 	private float[] tangents;
 	private int[] indices;
-	private Material[] materials;
 	private boolean enableSmoothShading;
 
 	private String name;
@@ -19,13 +17,12 @@ public class ModelData {
 	private AABB aabb;
 	private QuickHull hull;
 
-	public ModelData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, Material[] materials, AABB aabb, QuickHull hull, boolean enableSmoothShading, String name) {
+	public ModelData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, AABB aabb, QuickHull hull, boolean enableSmoothShading, String name) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;
 		this.normals = normals;
 		this.tangents = tangents;
 		this.indices = indices;
-		this.materials = materials;
 		this.enableSmoothShading = enableSmoothShading;
 
 		this.name = name;
@@ -54,10 +51,6 @@ public class ModelData {
 		return indices;
 	}
 
-	public Material[] getMaterials() {
-		return materials;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -78,7 +71,6 @@ public class ModelData {
 				", normals=" + Arrays.toString(normals) +
 				", tangents=" + Arrays.toString(tangents) +
 				", indices=" + Arrays.toString(indices) +
-				", materials=" + Arrays.toString(materials) +
 				", enableSmoothShading=" + enableSmoothShading +
 				", name=" + name +
 				", aabb=" + aabb +

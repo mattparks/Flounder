@@ -1,6 +1,5 @@
 package flounder.models;
 
-import flounder.materials.*;
 import flounder.physics.*;
 
 public abstract class ModelLoadManual {
@@ -55,13 +54,6 @@ public abstract class ModelLoadManual {
 	public abstract int[] getIndices();
 
 	/**
-	 * Gets the manual model materials.
-	 *
-	 * @return The manual model materials.
-	 */
-	public abstract Material[] getMaterials();
-
-	/**
 	 * Gets if the model will render with smooth shading.
 	 *
 	 * @return If the model uses smooth shading.
@@ -83,6 +75,6 @@ public abstract class ModelLoadManual {
 	public abstract QuickHull getHull();
 
 	public ModelData toData() {
-		return new ModelData(getVertices(), getTextureCoords(), getNormals(), getTangents(), getIndices(), getMaterials(), getAABB(), getHull(), isSmoothShading(), getName());
+		return new ModelData(getVertices(), getTextureCoords(), getNormals(), getTangents(), getIndices(), getAABB(), getHull(), isSmoothShading(), getName());
 	}
 }
