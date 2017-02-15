@@ -1,4 +1,4 @@
 /**
- * Contains classes for loading and managing flounder.models.
+ * Contains classes for loading and managing models.
  */
 package flounder.models;

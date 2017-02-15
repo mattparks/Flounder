@@ -16,10 +16,13 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL30.*;
 
+/**
+ * A class that represents a factory for loading textures.
+ */
 public class TextureFactory extends Factory {
 	private static final TextureFactory INSTANCE = new TextureFactory();
 
-	public TextureFactory() {
+	private TextureFactory() {
 		super("texture");
 	}
 

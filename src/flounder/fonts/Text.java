@@ -121,7 +121,7 @@ public class Text {
 			newText = null;
 		}
 
-		float delta = FlounderFramework.getDelta();
+		float delta = Framework.getDelta();
 
 		currentScale = scaleDriver.update(delta);
 		currentX = positionXDriver.update(delta);

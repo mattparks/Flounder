@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * A module used for loading OBJ files into models.
  */
-public class FlounderModels extends IModule {
+public class FlounderModels extends Module {
 	private static final FlounderModels INSTANCE = new FlounderModels();
 	public static final String PROFILE_TAB_NAME = "Models";
 
@@ -49,7 +49,7 @@ public class FlounderModels extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * A module used for the creation, updating and destruction of joysticks.
  */
-public class FlounderJoysticks extends IModule {
+public class FlounderJoysticks extends Module {
 	private static final FlounderJoysticks INSTANCE = new FlounderJoysticks();
 	public static final String PROFILE_TAB_NAME = "Joysticks";
 
@@ -137,7 +137,7 @@ public class FlounderJoysticks extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

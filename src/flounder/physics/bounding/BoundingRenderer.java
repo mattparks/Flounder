@@ -20,8 +20,8 @@ import static org.lwjgl.opengl.GL20.*;
  * A renderer that is used to render Boundings.
  */
 public class BoundingRenderer extends IRenderer {
-	private static final MyFile VERTEX_SHADER = new MyFile(Shader.SHADERS_LOC, "bounding", "boundingVertex.glsl");
-	private static final MyFile FRAGMENT_SHADER = new MyFile(Shader.SHADERS_LOC, "bounding", "boundingFragment.glsl");
+	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "bounding", "boundingVertex.glsl");
+	private static final MyFile FRAGMENT_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "bounding", "boundingFragment.glsl");
 
 	private static Vector3f POSITION_REUSABLE = new Vector3f();
 	private static Vector3f ROTATION_REUSABLE = new Vector3f();
@@ -29,23 +29,19 @@ public class BoundingRenderer extends IRenderer {
 	private static Matrix4f MODEL_MATRIX_REUSABLE = new Matrix4f();
 	private static Colour COLOUR_REUSABLE = new Colour();
 
-	private Shader shader;
+	private ShaderObject shader;
 	private boolean lastWireframe;
 
 	/**
 	 * Creates a new Boundings renderer.
 	 */
 	public BoundingRenderer() {
-		shader = Shader.newShader("bounding").setShaderTypes(
-				new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER),
-				new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
-		).create();
-
+		shader = ShaderFactory.newBuilder().setName("bounding").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		lastWireframe = false;
 	}
 
 	@Override
-	public void renderObjects(Vector4f clipPlane, ICamera camera) {
+	public void renderObjects(Vector4f clipPlane, Camera camera) {
 		if (!shader.isLoaded() || !FlounderBounding.renders() || FlounderBounding.getRenderShapes() == null) {
 			return;
 		}
@@ -65,7 +61,7 @@ public class BoundingRenderer extends IRenderer {
 		endRendering();
 	}
 
-	private void prepareRendering(Vector4f clipPlane, ICamera camera) {
+	private void prepareRendering(Vector4f clipPlane, Camera camera) {
 		shader.start();
 		shader.getUniformMat4("projectionMatrix").loadMat4(camera.getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
@@ -114,6 +110,6 @@ public class BoundingRenderer extends IRenderer {
 
 	@Override
 	public void dispose() {
-		shader.dispose();
+		shader.delete();
 	}
 }

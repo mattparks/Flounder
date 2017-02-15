@@ -14,8 +14,8 @@ public class UniformVec3 extends Uniform {
 	private float currentY;
 	private float currentZ;
 
-	public UniformVec3(String name) {
-		super(name);
+	public UniformVec3(String name, ShaderObject shader) {
+		super(name, shader);
 	}
 
 	/**

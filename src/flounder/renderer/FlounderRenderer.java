@@ -8,11 +8,11 @@ import flounder.profiling.*;
 /**
  * A module used for OpenGL rendering and management.
  */
-public class FlounderRenderer extends IModule {
+public class FlounderRenderer extends Module {
 	private static final FlounderRenderer INSTANCE = new FlounderRenderer();
 	public static final String PROFILE_TAB_NAME = "Renderer";
 
-	private IRendererMaster renderer;
+	private RendererMaster renderer;
 
 	private Thread renderThread;
 
@@ -40,7 +40,7 @@ public class FlounderRenderer extends IModule {
 	@Override
 	public void update() {
 		// Gets a new renderer, if available.
-		IRendererMaster newRenderer = (IRendererMaster) getExtensionMatch(renderer, IRendererMaster.class, true);
+		RendererMaster newRenderer = (RendererMaster) getExtensionMatch(renderer, RendererMaster.class, true);
 
 		// If there is a new renderer, disable the old one and start to use the new one.
 		if (newRenderer != null) {
@@ -71,12 +71,12 @@ public class FlounderRenderer extends IModule {
 	 *
 	 * @return The current renderer.
 	 */
-	public static IRendererMaster getRendererMaster() {
+	public static RendererMaster getRendererMaster() {
 		return INSTANCE.renderer;
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

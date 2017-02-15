@@ -16,13 +16,13 @@ import java.util.*;
 /**
  * A module used for that manages GUI textures in a container.
  */
-public class FlounderGuis extends IModule {
+public class FlounderGuis extends Module {
 	private static final FlounderGuis INSTANCE = new FlounderGuis();
 	public static final String PROFILE_TAB_NAME = "Guis";
 
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
-	private IGuiMaster guiMaster;
+	private GuiMaster guiMaster;
 
 	private GuiScreenContainer container;
 	private List<GuiTexture> guiTextures;
@@ -45,7 +45,7 @@ public class FlounderGuis extends IModule {
 
 	@Override
 	public void update() {
-		IGuiMaster newManager = (IGuiMaster) getExtensionMatch(guiMaster, IGuiMaster.class, true);
+		GuiMaster newManager = (GuiMaster) getExtensionMatch(guiMaster, GuiMaster.class, true);
 
 		if (newManager != null) {
 			if (guiMaster != null) {
@@ -79,7 +79,7 @@ public class FlounderGuis extends IModule {
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
 	}
 
-	public static IGuiMaster getGuiMaster() {
+	public static GuiMaster getGuiMaster() {
 		return INSTANCE.guiMaster;
 	}
 
@@ -115,7 +115,7 @@ public class FlounderGuis extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * A module used for rendering a invisible display into a JPanel.
  */
-public class FlounderDisplayJPanel extends IModule {
+public class FlounderDisplayJPanel extends Module {
 	private static final FlounderDisplayJPanel INSTANCE = new FlounderDisplayJPanel();
 	public static final String PROFILE_TAB_NAME = "Display-JPanel";
 
@@ -51,7 +51,7 @@ public class FlounderDisplayJPanel extends IModule {
 				g.drawImage(INSTANCE.image, 0, 0, null);
 
 				// Draws the current engine FPS.
-				g.drawString("FPS: " + (1.0f / FlounderFramework.getDeltaRender()), 10, 15);
+				g.drawString("FPS: " + (1.0f / Framework.getDeltaRender()), 10, 15);
 			}
 		};
 		INSTANCE.panel.setSize(FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
@@ -82,7 +82,7 @@ public class FlounderDisplayJPanel extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

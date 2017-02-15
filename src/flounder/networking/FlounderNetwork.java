@@ -8,7 +8,7 @@ import flounder.profiling.*;
 /**
  * A module used for handling networking, servers, clients, and packets.
  */
-public class FlounderNetwork extends IModule {
+public class FlounderNetwork extends Module {
 	private static final FlounderNetwork INSTANCE = new FlounderNetwork();
 	public static final String PROFILE_TAB_NAME = "Network";
 
@@ -129,7 +129,7 @@ public class FlounderNetwork extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

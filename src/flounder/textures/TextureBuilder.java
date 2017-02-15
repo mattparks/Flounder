@@ -4,6 +4,9 @@ import flounder.factory.*;
 import flounder.maths.*;
 import flounder.resources.*;
 
+/**
+ * A builder used to set texture parameters for loading.
+ */
 public class TextureBuilder extends FactoryBuilder {
 	private MyFile file;
 
@@ -15,7 +18,7 @@ public class TextureBuilder extends FactoryBuilder {
 	private boolean nearest;
 	private int numberOfRows;
 
-	public TextureBuilder(Factory factory) {
+	protected TextureBuilder(Factory factory) {
 		super(factory);
 		this.file = null;
 

@@ -8,8 +8,8 @@ import static org.lwjgl.opengl.GL20.*;
 public class UniformFloat extends Uniform {
 	private float currentValue;
 
-	public UniformFloat(String name) {
-		super(name);
+	public UniformFloat(String name, ShaderObject shader) {
+		super(name, shader);
 	}
 
 	/**

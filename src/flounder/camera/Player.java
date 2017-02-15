@@ -6,13 +6,13 @@ import flounder.maths.vectors.*;
 /**
  * This interface is used to move and add extra rotation to a camera.
  */
-public abstract class IPlayer extends IExtension {
+public abstract class Player extends Extension {
 	/**
-	 * Creates a new standard.
+	 * Creates a new standards.
 	 *
 	 * @param requires The classes that are extra requirements for this implementation.
 	 */
-	public IPlayer(Class... requires) {
+	public Player(Class... requires) {
 		super(FlounderCamera.class, requires);
 	}
 

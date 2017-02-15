@@ -1,73 +1,74 @@
 package flounder.shaders;
 
-import flounder.logger.*;
-import flounder.processing.*;
+import flounder.factory.*;
 
-import java.lang.ref.*;
+import java.util.*;
 
 /**
- * A class capable of setting up a {@link flounder.shaders.Shader}.
+ * A builder used to set shader parameters for loading.
  */
-public class ShaderBuilder {
-	private String shaderName;
-	private ShaderType[] shaderTypes;
+public class ShaderBuilder extends FactoryBuilder {
+	private String name;
+	private List<ShaderType> types;
 
-	/**
-	 * Creates a class to setup a Shader.
-	 *
-	 * @param shaderName The name of the shader to be loaded.
-	 */
-	protected ShaderBuilder(String shaderName) {
-		this.shaderName = shaderName;
+	public ShaderBuilder(Factory factory) {
+		super(factory);
+		this.name = null;
+		this.types = new ArrayList<>();
 	}
 
 	/**
-	 * Sets the source shader file.
+	 * Sets the shaders name.
 	 *
-	 * @param shaderTypes The list of source shader file.
+	 * @param name The name.
 	 *
 	 * @return this.
 	 */
-	public ShaderBuilder setShaderTypes(ShaderType... shaderTypes) {
-		this.shaderTypes = shaderTypes;
+	public ShaderBuilder setName(String name) {
+		this.name = name;
 		return this;
 	}
 
 	/**
-	 * Creates a new shader, carries out the CPU loading, and loads to OpenGL from the loader thread.
+	 * Adds a new shader type to the load pool.
 	 *
-	 * @return The shader that has been created.
+	 * @param type The shader type to add.
+	 *
+	 * @return this.
 	 */
-	public Shader create() {
-		SoftReference<Shader> ref = FlounderShaders.getLoaded().get(shaderName);
-		Shader data = ref == null ? null : ref.get();
-
-		if (data == null) {
-			FlounderLogger.log(shaderName + " is being loaded into the shader builder right now!");
-			FlounderShaders.getLoaded().remove(shaderName);
-			data = new Shader();
-			FlounderProcessors.sendRequest(new ShaderLoadRequest(data, this));
-			FlounderShaders.getLoaded().put(shaderName, new SoftReference<>(data));
-		}
-
-		return data;
+	public ShaderBuilder addType(ShaderType type) {
+		this.types.add(type);
+		return this;
 	}
 
 	/**
-	 * Gets the name of the shader to be loaded.
+	 * Gets the shaders name.
 	 *
-	 * @return The name of the shader to be loaded.
+	 * @return The name.
 	 */
-	public String getShaderName() {
-		return shaderName;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * Gets the array of shader types.
+	 * Gets the shader types to be loaded.
 	 *
-	 * @return The array of shader types.
+	 * @return The shader types to load.
 	 */
-	public ShaderType[] getShaderTypes() {
-		return shaderTypes;
+	public List<ShaderType> getTypes() {
+		return types;
+	}
+
+	@Override
+	public ShaderObject create() {
+		return (ShaderObject) builderCreate(name);
+	}
+
+	@Override
+	public String toString() {
+		return "ShaderBuilder{" +
+				"name='" + name + '\'' +
+				", types=" + types +
+				'}';
 	}
 }

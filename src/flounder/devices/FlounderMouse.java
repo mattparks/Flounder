@@ -18,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * A module used for the creation, updating and destruction of the mouse.
  */
-public class FlounderMouse extends IModule {
+public class FlounderMouse extends Module {
 	private static final FlounderMouse INSTANCE = new FlounderMouse();
 	public static final String PROFILE_TAB_NAME = "Mouse";
 
@@ -163,8 +163,8 @@ public class FlounderMouse extends IModule {
 	@Override
 	public void update() {
 		// Updates the mouses delta.
-		mouseDeltaX = FlounderFramework.getDelta() * (lastMousePositionX - mousePositionX);
-		mouseDeltaY = FlounderFramework.getDelta() * (lastMousePositionY - mousePositionY);
+		mouseDeltaX = Framework.getDelta() * (lastMousePositionX - mousePositionX);
+		mouseDeltaY = Framework.getDelta() * (lastMousePositionY - mousePositionY);
 
 		// Sets the last position of the current.
 		lastMousePositionX = mousePositionX;
@@ -180,7 +180,7 @@ public class FlounderMouse extends IModule {
 
 		// Updates the mouse wheel using a smooth scroll technique.
 		if (mouseDeltaWheel != 0.0f) {
-			mouseDeltaWheel -= FlounderFramework.getDelta() * ((mouseDeltaWheel < 0.0f) ? -1.0f : 1.0f);
+			mouseDeltaWheel -= Framework.getDelta() * ((mouseDeltaWheel < 0.0f) ? -1.0f : 1.0f);
 			mouseDeltaWheel = Maths.deadband(0.1f, mouseDeltaWheel);
 		}
 	}
@@ -277,7 +277,7 @@ public class FlounderMouse extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

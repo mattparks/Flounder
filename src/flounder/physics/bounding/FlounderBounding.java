@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * A manager for Boundings that want to be renderer.
  */
-public class FlounderBounding extends IModule {
+public class FlounderBounding extends Module {
 	private static final FlounderBounding INSTANCE = new FlounderBounding();
 	public static final String PROFILE_TAB_NAME = "Bounding";
 
@@ -93,7 +93,7 @@ public class FlounderBounding extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

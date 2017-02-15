@@ -5,13 +5,13 @@ import flounder.framework.*;
 /**
  * A interface used to manage a main GUI system.
  */
-public abstract class IGuiMaster extends IExtension {
+public abstract class GuiMaster extends Extension {
 	/**
 	 * Creates a new GUI master.
 	 *
 	 * @param requires The classes that are extra requirements for this implementation.
 	 */
-	public IGuiMaster(Class... requires) {
+	public GuiMaster(Class... requires) {
 		super(FlounderGuis.class, requires);
 	}
 

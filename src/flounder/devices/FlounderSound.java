@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * A module used for loading, managing and playing a variety of different sound types.
  */
-public class FlounderSound extends IModule {
+public class FlounderSound extends Module {
 	private static final FlounderSound INSTANCE = new FlounderSound();
 	public static final String PROFILE_TAB_NAME = "Sound";
 
@@ -70,12 +70,12 @@ public class FlounderSound extends IModule {
 
 	@Override
 	public void update() {
-		ICamera camera = FlounderCamera.getCamera();
+		Camera camera = FlounderCamera.getCamera();
 
 		if (camera != null && camera.getPosition() != null) {
 			cameraPosition.set(camera.getPosition());
 			alListener3f(AL10.AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
-			musicPlayer.update(FlounderFramework.getDelta());
+			musicPlayer.update(Framework.getDelta());
 			sourcePool.update();
 		}
 	}
@@ -142,7 +142,7 @@ public class FlounderSound extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

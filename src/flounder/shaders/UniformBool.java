@@ -8,8 +8,8 @@ import static org.lwjgl.opengl.GL20.*;
 public class UniformBool extends Uniform {
 	private boolean currentValue;
 
-	public UniformBool(String name) {
-		super(name);
+	public UniformBool(String name, ShaderObject shader) {
+		super(name, shader);
 	}
 
 	/**

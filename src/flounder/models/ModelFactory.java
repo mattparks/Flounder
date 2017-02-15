@@ -6,12 +6,14 @@ import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;
-import flounder.textures.*;
 
 import java.io.*;
 import java.lang.ref.*;
 import java.util.*;
 
+/**
+ * A class that represents a factory for loading models.
+ */
 public class ModelFactory extends Factory {
 	private static final ModelFactory INSTANCE = new ModelFactory();
 

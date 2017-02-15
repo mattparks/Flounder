@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * A module used for loading and managing collada models and animations.
  */
-public class FlounderCollada extends IModule {
+public class FlounderCollada extends Module {
 	private static final FlounderCollada INSTANCE = new FlounderCollada();
 	public static final String PROFILE_TAB_NAME = "Collada";
 
@@ -97,7 +97,7 @@ public class FlounderCollada extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

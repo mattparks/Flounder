@@ -8,8 +8,8 @@ import static org.lwjgl.opengl.GL20.*;
 public class UniformSampler2D extends Uniform {
 	private int currentValue;
 
-	public UniformSampler2D(String name) {
-		super(name);
+	public UniformSampler2D(String name, ShaderObject shader) {
+		super(name, shader);
 	}
 
 	/**

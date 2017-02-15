@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * A module used for holding a list of available engine fonts and texts currently on the screen.
  */
-public class FlounderFonts extends IModule {
+public class FlounderFonts extends Module {
 	private static final FlounderFonts INSTANCE = new FlounderFonts();
 	public static final String PROFILE_TAB_NAME = "Fonts";
 
@@ -72,7 +72,7 @@ public class FlounderFonts extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

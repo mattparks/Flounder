@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL30.*;
 /**
  * A module used for loading and managing OpenGL VAO's and VBO's.
  */
-public class FlounderLoader extends IModule {
+public class FlounderLoader extends Module {
 	private static final FlounderLoader INSTANCE = new FlounderLoader();
 	public static final String PROFILE_TAB_NAME = "Loader";
 
@@ -447,7 +447,7 @@ public class FlounderLoader extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

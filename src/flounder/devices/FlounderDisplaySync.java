@@ -5,7 +5,7 @@ import flounder.framework.*;
 /**
  * A module used for synchronizing to the display after rendering.
  */
-public class FlounderDisplaySync extends IModule {
+public class FlounderDisplaySync extends Module {
 	private static final FlounderDisplaySync INSTANCE = new FlounderDisplaySync();
 	public static final String PROFILE_TAB_NAME = "Display-Sync";
 
@@ -30,7 +30,7 @@ public class FlounderDisplaySync extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * A module used for the creation, updating and destruction of the display.
  */
-public class FlounderDisplay extends IModule {
+public class FlounderDisplay extends Module {
 	private static final FlounderDisplay INSTANCE = new FlounderDisplay();
 	public static final String PROFILE_TAB_NAME = "Display";
 
@@ -172,7 +172,7 @@ public class FlounderDisplay extends IModule {
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		if (vsync) {
-			FlounderFramework.setFpsLimit(60);
+			Framework.setFpsLimit(60);
 		}
 
 		// Centres the window position.
@@ -192,7 +192,7 @@ public class FlounderDisplay extends IModule {
 			@Override
 			public void invoke(long window) {
 				closed = true;
-				FlounderFramework.requestClose();
+				Framework.requestClose();
 			}
 		});
 
@@ -233,7 +233,7 @@ public class FlounderDisplay extends IModule {
 		// System logs.
 		FlounderLogger.log("");
 		FlounderLogger.log("===== This is not an error message, it is a system info log. =====");
-		FlounderLogger.log("Flounder Engine Version: " + FlounderFramework.getVersion().getVersion());
+		FlounderLogger.log("Flounder Engine Version: " + Framework.getVersion().getVersion());
 		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
 		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
@@ -322,7 +322,7 @@ public class FlounderDisplay extends IModule {
 	public static void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
 		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		File saveDirectory = new File(FlounderFramework.getRoamingFolder().getPath(), "screenshots");
+		File saveDirectory = new File(Framework.getRoamingFolder().getPath(), "screenshots");
 
 		if (!saveDirectory.exists()) {
 			try {
@@ -442,7 +442,7 @@ public class FlounderDisplay extends IModule {
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		if (vsync) {
-			FlounderFramework.setFpsLimit(-1);
+			Framework.setFpsLimit(-1);
 		}
 	}
 
@@ -572,7 +572,7 @@ public class FlounderDisplay extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

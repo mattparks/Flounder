@@ -14,8 +14,8 @@ public class UniformMat3 extends Uniform {
 	private Matrix3f currentValue;
 	private FloatBuffer floatBuffer;
 
-	public UniformMat3(String name) {
-		super(name);
+	public UniformMat3(String name, ShaderObject shader) {
+		super(name, shader);
 		currentValue = new Matrix3f();
 		floatBuffer = BufferUtils.createFloatBuffer(9);
 	}

@@ -9,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
 /**
  * A module used for the creation, updating and destruction of the keyboard keys.
  */
-public class FlounderKeyboard extends IModule {
+public class FlounderKeyboard extends Module {
 	private static final FlounderKeyboard INSTANCE = new FlounderKeyboard();
 	public static final String PROFILE_TAB_NAME = "Keyboard";
 
@@ -81,7 +81,7 @@ public class FlounderKeyboard extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

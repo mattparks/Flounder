@@ -42,7 +42,7 @@ public class GuiTexture {
 	}
 
 	public void update() {
-		alpha = alphaDriver.update(FlounderFramework.getDelta());
+		alpha = alphaDriver.update(Framework.getDelta());
 	}
 
 	/**

@@ -28,7 +28,7 @@ public class FontType {
 		this.fontFile = fontFile;
 
 		// If the engine is initialized fonts can be loaded right away, otherwise add to pool.
-		if (!FlounderFramework.isInitialized()) {
+		if (!Framework.isInitialized()) {
 			NEEDS_TO_BE_CREATED.add(this);
 		} else {
 			createLoader();

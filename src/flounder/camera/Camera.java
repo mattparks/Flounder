@@ -10,13 +10,13 @@ import flounder.space.*;
  * A extension used with {@link flounder.camera.FlounderCamera} to define a camera.
  * This class is used throughout the engine wherever the camera is involved, so that the engine doesn't rely at all on the camera's implementation.
  */
-public abstract class ICamera extends IExtension implements IAudioListener {
+public abstract class Camera extends Extension implements IAudioListener {
 	/**
 	 * Creates a new camera.
 	 *
 	 * @param requires The classes that are extra requirements for this implementation.
 	 */
-	public ICamera(Class... requires) {
+	public Camera(Class... requires) {
 		super(FlounderCamera.class, requires);
 	}
 
@@ -45,7 +45,7 @@ public abstract class ICamera extends IExtension implements IAudioListener {
 	 *
 	 * @param player The movement and rotation controller to read from.
 	 */
-	public abstract void update(IPlayer player);
+	public abstract void update(Player player);
 
 	/**
 	 * Gets the view frustum created by the current camera position and rotation.

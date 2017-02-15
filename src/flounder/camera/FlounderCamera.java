@@ -7,12 +7,12 @@ import flounder.profiling.*;
 /**
  * A module used for managing cameras in 2D and 3D worlds.
  */
-public class FlounderCamera extends IModule {
+public class FlounderCamera extends Module {
 	private static final FlounderCamera INSTANCE = new FlounderCamera();
 	public static final String PROFILE_TAB_NAME = "Camera";
 
-	private IPlayer player;
-	private ICamera camera;
+	private Player player;
+	private Camera camera;
 
 	/**
 	 * Creates a new camera manager.
@@ -30,8 +30,8 @@ public class FlounderCamera extends IModule {
 	@Override
 	public void update() {
 		// Gets a new player and camera, if available.
-		IPlayer newPlayer = (IPlayer) getExtensionMatch(player, IPlayer.class, true);
-		ICamera newCamera = (ICamera) getExtensionMatch(camera, ICamera.class, true);
+		Player newPlayer = (Player) getExtensionMatch(player, Player.class, true);
+		Camera newCamera = (Camera) getExtensionMatch(camera, Camera.class, true);
 
 		// If there is a new player, disable the old one and start to use the new one.
 		if (newPlayer != null) {
@@ -83,7 +83,7 @@ public class FlounderCamera extends IModule {
 	 *
 	 * @return The current player.
 	 */
-	public static IPlayer getPlayer() {
+	public static Player getPlayer() {
 		return INSTANCE.player;
 	}
 
@@ -92,12 +92,12 @@ public class FlounderCamera extends IModule {
 	 *
 	 * @return The current camera.
 	 */
-	public static ICamera getCamera() {
+	public static Camera getCamera() {
 		return INSTANCE.camera;
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

@@ -13,6 +13,6 @@ public class FilterWobble extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		shader.getUniformFloat("moveIt").loadFloat(wobbleAmount += 3 * FlounderFramework.getDelta());
+		shader.getUniformFloat("moveIt").loadFloat(wobbleAmount += 3 * Framework.getDelta());
 	}
 }

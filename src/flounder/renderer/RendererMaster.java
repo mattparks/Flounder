@@ -5,13 +5,13 @@ import flounder.framework.*;
 /**
  * A extension used with {@link flounder.renderer.FlounderRenderer} to define a master renderer.
  */
-public abstract class IRendererMaster extends IExtension {
+public abstract class RendererMaster extends Extension {
 	/**
 	 * Creates a new master renderer.
 	 *
 	 * @param requires The classes that are extra requirements for this implementation.
 	 */
-	public IRendererMaster(Class... requires) {
+	public RendererMaster(Class... requires) {
 		super(FlounderRenderer.class, requires);
 	}
 

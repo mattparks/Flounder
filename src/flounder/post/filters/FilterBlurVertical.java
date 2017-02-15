@@ -15,18 +15,18 @@ public class FilterBlurVertical extends PostFilter {
 	private float sizeScalar;
 
 	public FilterBlurVertical(float sizeScalar) {
-		super(Shader.newShader("filterBlurVertical").setShaderTypes(
-				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
+		super(ShaderFactory.newBuilder().setName("filterBlurVertical").addType(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(
 				new ShaderType(GL_FRAGMENT_SHADER, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl"))
-		).create(), FBO.newFBO(FlounderDisplay.getWidth(), FlounderDisplay.getHeight()).fitToScreen(1.0f).create());
+		).create(), FBO.newFBO(sizeScalar).create());
 		this.fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
-		init((int) (FlounderDisplay.getHeight() * sizeScalar));
+		init((int) (FlounderDisplay.getWidth() * sizeScalar));
 	}
 
 	public FilterBlurVertical(int widthValue, int heightValue) {
-		super(Shader.newShader("filterBlurVertical").setShaderTypes(
-				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
+		super(ShaderFactory.newBuilder().setName("filterBlurVertical").addType(
+				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(
 				new ShaderType(GL_FRAGMENT_SHADER, new MyFile(PostFilter.POST_LOC, "blurVerticalFragment.glsl"))
 		).create(), FBO.newFBO(widthValue, heightValue).create());
 		this.fitToDisplay = false;

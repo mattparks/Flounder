@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * A module used for loading the information from a collada, and then creates an animation from the extracted data.
  */
-public class FlounderAnimation extends IModule {
+public class FlounderAnimation extends Module {
 	private static final FlounderAnimation INSTANCE = new FlounderAnimation();
 	public static final String PROFILE_TAB_NAME = "Animation";
 
@@ -73,7 +73,7 @@ public class FlounderAnimation extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

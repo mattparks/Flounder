@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * A module used for loading texture files.
  */
-public class FlounderTextures extends IModule {
+public class FlounderTextures extends Module {
 	private static final FlounderTextures INSTANCE = new FlounderTextures();
 	public static final String PROFILE_TAB_NAME = "Textures";
 
@@ -33,7 +33,7 @@ public class FlounderTextures extends IModule {
 	}
 
 	/**
-	 * Creates a new model loader class.
+	 * Creates a new texture loader class.
 	 */
 	public FlounderTextures() {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLoader.class, FlounderProcessors.class);
@@ -61,9 +61,9 @@ public class FlounderTextures extends IModule {
 	}
 
 	/**
-	 * Gets a list of loaded models.
+	 * Gets a list of loaded textures.
 	 *
-	 * @return A list of loaded models.
+	 * @return A list of loaded textures.
 	 */
 	public static Map<String, SoftReference<FactoryObject>> getLoaded() {
 		return INSTANCE.loaded;
@@ -79,7 +79,7 @@ public class FlounderTextures extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

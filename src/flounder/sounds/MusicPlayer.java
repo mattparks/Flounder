@@ -96,14 +96,14 @@ public class MusicPlayer {
 			source.setInactive();
 
 			if (timeoutStart == 0.0f) {
-				timeoutStart = FlounderFramework.getTimeSec();
+				timeoutStart = Framework.getTimeSec();
 
 				if (selectedTimeout >= 0.0f) {
 					selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
 				}
 			}
 
-			if (FlounderFramework.getTimeSec() - timeoutStart > selectedTimeout) {
+			if (Framework.getTimeSec() - timeoutStart > selectedTimeout) {
 				timeoutStart = 0.0f;
 				selectedTimeout = 0.0f;
 				playNextTrack();

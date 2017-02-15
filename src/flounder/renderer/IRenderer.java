@@ -24,7 +24,7 @@ public abstract class IRenderer {
 	 * @param clipPlane The current clip plane.
 	 * @param camera The camera to be used when rendering.
 	 */
-	public void render(Vector4f clipPlane, ICamera camera) {
+	public void render(Vector4f clipPlane, Camera camera) {
 		profileTimer.startInvocation();
 		renderObjects(clipPlane, camera);
 		profileTimer.stopInvocation();
@@ -42,7 +42,7 @@ public abstract class IRenderer {
 	 * @param clipPlane The current clip plane.
 	 * @param camera The camera to be used when rendering.
 	 */
-	public abstract void renderObjects(Vector4f clipPlane, ICamera camera);
+	public abstract void renderObjects(Vector4f clipPlane, Camera camera);
 
 	/**
 	 * A internal render method for profiling render times and other values.

@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * A class that manages game entities.
  */
-public class FlounderEntities extends IModule {
+public class FlounderEntities extends Module {
 	private static final FlounderEntities INSTANCE = new FlounderEntities();
 	public static final String PROFILE_TAB_NAME = "Entities";
 
@@ -262,7 +262,7 @@ public class FlounderEntities extends IModule {
 	}
 
 	@Override
-	public IModule getInstance() {
+	public Module getInstance() {
 		return INSTANCE;
 	}
 

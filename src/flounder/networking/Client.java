@@ -34,7 +34,7 @@ public class Client extends Thread {
 
 	@Override
 	public void run() {
-		while (FlounderFramework.isRunning()) {
+		while (Framework.isRunning()) {
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 

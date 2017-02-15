@@ -7,7 +7,7 @@ import flounder.processing.*;
 /**
  * Class that represents a loaded model.
  */
-public class ModelObject extends FactoryObject {
+public class ModelObject extends FactoryObject { // TODO: Document more!
 	private float[] vertices;
 	private float[] textures;
 	private float[] normals;
@@ -24,7 +24,10 @@ public class ModelObject extends FactoryObject {
 	private int vaoID;
 	private int vaoLength;
 
-	public ModelObject() {
+	/**
+	 * A new OpenGL model object.
+	 */
+	protected ModelObject() {
 		super();
 		this.vertices = null;
 		this.textures = null;
@@ -81,6 +84,11 @@ public class ModelObject extends FactoryObject {
 		return smoothShading;
 	}
 
+	/**
+	 * Gets the loaded name for the model.
+	 *
+	 * @return The models name.
+	 */
 	public String getName() {
 		return name;
 	}

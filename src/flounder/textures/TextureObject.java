@@ -26,7 +26,7 @@ public class TextureObject extends FactoryObject {
 	private int glType;
 
 	/**
-	 * A new OpenGL FBO object.
+	 * A new OpenGL texture object.
 	 */
 	protected TextureObject() {
 		super();
@@ -66,14 +66,29 @@ public class TextureObject extends FactoryObject {
 		return file;
 	}
 
+	/**
+	 * Gets the buffer the texture was loaded into.
+	 *
+	 * @return The texture buffer.
+	 */
 	public ByteBuffer getBuffer() {
 		return buffer;
 	}
 
+	/**
+	 * Gets the width of the texture.
+	 *
+	 * @return The textures width.
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * Gets the height of the texture.
+	 *
+	 * @return The textures height.
+	 */
 	public int getHeight() {
 		return height;
 	}
@@ -96,6 +111,11 @@ public class TextureObject extends FactoryObject {
 		return numberOfRows;
 	}
 
+	/**
+	 * Gets the loaded name for the texture.
+	 *
+	 * @return The textures name.
+	 */
 	public String getName() {
 		return name;
 	}
@@ -124,7 +144,7 @@ public class TextureObject extends FactoryObject {
 	}
 
 	/**
-	 * Sends a request to delete the texture.
+	 * Deletes the texture from OpenGL memory.
 	 */
 	public void delete() {
 		if (loaded) {

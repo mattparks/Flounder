@@ -5,7 +5,7 @@ import flounder.processing.opengl.*;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * A class that can process a request to delete a model.
+ * A class that can process a request to delete a shader.
  */
 public class ShaderDeleteRequest implements RequestOpenGL {
 	private int shaderID;

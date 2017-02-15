@@ -3,11 +3,14 @@ package flounder.models;
 import flounder.factory.*;
 import flounder.resources.*;
 
+/**
+ * A builder used to set model parameters for loading.
+ */
 public class ModelBuilder extends FactoryBuilder {
 	private MyFile file;
 	private ModelLoadManual manual;
 
-	public ModelBuilder(Factory factory) {
+	protected ModelBuilder(Factory factory) {
 		super(factory);
 		this.file = null;
 		this.manual = null;

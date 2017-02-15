@@ -13,27 +13,24 @@ import static org.lwjgl.opengl.GL20.*;
  * Represents a post effect shader and on application saves the result into a FBO.
  */
 public abstract class PostFilter {
-	public static final MyFile POST_LOC = new MyFile(Shader.SHADERS_LOC, "filters");
+	public static final MyFile POST_LOC = new MyFile(FlounderShaders.SHADERS_LOC, "filters");
 	public static final MyFile VERTEX_LOCATION = new MyFile(POST_LOC, "defaultVertex.glsl");
 
 	private static float[] POSITIONS = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
 	private static int VAO = FlounderLoader.createInterleavedVAO(POSITIONS, 2);
 
-	public Shader shader;
+	public ShaderObject shader;
 	public FBO fbo;
 
 	public PostFilter(String filterName, MyFile fragmentShader) {
-		this(Shader.newShader(filterName).setShaderTypes(
-				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION),
-				new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)
-		).create(), FBO.newFBO(1.0f).create());
+		this(ShaderFactory.newBuilder().setName(filterName).addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)).create(), FBO.newFBO(1.0f).create());
 	}
 
-	public PostFilter(Shader shader) {
+	public PostFilter(ShaderObject shader) {
 		this(shader, FBO.newFBO(1.0f).create());
 	}
 
-	public PostFilter(Shader shader, FBO fbo) {
+	public PostFilter(ShaderObject shader, FBO fbo) {
 		this.shader = shader;
 		this.fbo = fbo;
 	}
@@ -84,6 +81,6 @@ public abstract class PostFilter {
 	 */
 	public void dispose() {
 		fbo.delete();
-		shader.dispose();
+		shader.delete();
 	}
 }

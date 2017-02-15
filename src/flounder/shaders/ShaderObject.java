@@ -1,8 +1,9 @@
 package flounder.shaders;
 
+import flounder.factory.*;
+import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.processing.*;
-import flounder.resources.*;
 
 import java.util.*;
 
@@ -11,57 +12,81 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Class that represents a loaded shader.
  */
-public class Shader {
-	public static final MyFile SHADERS_LOC = new MyFile(MyFile.RES_FOLDER, "shaders");
+public class ShaderObject extends FactoryObject {
+	private List<Pair<String, String>> constantValues;
+	private List<String> layoutLocations;
+	private List<String> layoutBindings;
+	private List<Pair<Uniform.Uniforms, String>> shaderUniforms;
 
-	private String shaderName;
+	private String name;
 	private boolean loaded;
 
-	private ShaderType[] shaderTypes;
+	private List<ShaderType> shaderTypes;
 	private Map<String, Uniform> uniforms;
+
 	private int programID;
 
 	/**
-	 * Creates a new OpenGL shader object.
+	 * A new OpenGL shader object.
 	 */
-	protected Shader() {
+	protected ShaderObject() {
+		super();
+		this.shaderTypes = null;
+		this.uniforms = null;
+
+		this.name = null;
 		this.loaded = false;
 	}
 
-	/**
-	 * Creates a new Shader Builder.
-	 *
-	 * @param shaderName The name of the shader to be loaded.
-	 *
-	 * @return A new Shader Builder.
-	 */
-	public static ShaderBuilder newShader(String shaderName) {
-		return new ShaderBuilder(shaderName);
+	protected void loadData(List<Pair<String, String>> constantValues, List<String> layoutLocations, List<String> layoutBindings, List<Pair<Uniform.Uniforms, String>> shaderUniforms, String name) {
+		this.constantValues = constantValues;
+		this.layoutLocations = layoutLocations;
+		this.layoutBindings = layoutBindings;
+		this.shaderUniforms = shaderUniforms;
+
+		this.name = name;
+		this.loaded = true;
 	}
 
-	/**
-	 * Creates a new empty Shader.
-	 *
-	 * @return A new empty Shader.
-	 */
-	public static Shader getEmptyShader() {
-		return new Shader();
-	}
-
-	/**
-	 * Loads data into this shader program.
-	 *
-	 * @param programID The shader programs OpenGL ID.
-	 * @param shaderName The shaders name.
-	 * @param shaderTypes The list of shader types.
-	 * @param uniforms The uniforms loaded from the shaders.
-	 */
-	protected void loadData(int programID, String shaderName, ShaderType[] shaderTypes, Map<String, Uniform> uniforms) {
-		this.programID = programID;
-		this.shaderName = shaderName;
+	protected void loadGL(List<ShaderType> shaderTypes, Map<String, Uniform> uniforms, int shaderID) {
 		this.shaderTypes = shaderTypes;
 		this.uniforms = uniforms;
-		this.loaded = true;
+
+		this.programID = shaderID;
+	}
+
+	public List<Pair<String, String>> getConstantValues() {
+		return constantValues;
+	}
+
+	public List<String> getLayoutLocations() {
+		return layoutLocations;
+	}
+
+	public List<String> getLayoutBindings() {
+		return layoutBindings;
+	}
+
+	public List<Pair<Uniform.Uniforms, String>> getShaderUniforms() {
+		return shaderUniforms;
+	}
+
+	/**
+	 * Gets the loaded name for the shader.
+	 *
+	 * @return The shaders name.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public int getProgramID() {
+		return programID;
 	}
 
 	/**
@@ -76,24 +101,6 @@ public class Shader {
 	 */
 	public void stop() {
 		glUseProgram(0);
-	}
-
-	/**
-	 * Gets the shaders name.
-	 *
-	 * @return The shaders name.
-	 */
-	public String getShaderName() {
-		return shaderName;
-	}
-
-	/**
-	 * Gets if the texture is loaded.
-	 *
-	 * @return If the texture is loaded.
-	 */
-	public boolean isLoaded() {
-		return loaded;
 	}
 
 	/**
@@ -304,12 +311,12 @@ public class Shader {
 	}
 
 	/**
-	 * Deletes the shader, do not start after calling this.
+	 * Deletes the shader from OpenGL memory.
 	 */
-	public void dispose() {
+	public void delete() {
 		if (loaded) {
 			FlounderProcessors.sendRequest(new ShaderDeleteRequest(programID));
-			loaded = false;
+			this.loaded = false;
 		}
 	}
 }
