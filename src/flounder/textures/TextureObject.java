@@ -20,7 +20,6 @@ public class TextureObject extends FactoryObject {
 	private int numberOfRows;
 
 	private String name;
-	private boolean loaded;
 
 	private int textureID;
 	private int glType;
@@ -35,7 +34,6 @@ public class TextureObject extends FactoryObject {
 		this.numberOfRows = 1;
 
 		this.name = null;
-		this.loaded = false;
 
 		this.glType = GL_TEXTURE_2D;
 	}
@@ -49,7 +47,6 @@ public class TextureObject extends FactoryObject {
 		this.numberOfRows = numberOfRows;
 
 		this.name = name;
-		this.loaded = true;
 	}
 
 	protected void loadGL(int textureID, int glType) {
@@ -120,11 +117,6 @@ public class TextureObject extends FactoryObject {
 		return name;
 	}
 
-	@Override
-	public boolean isLoaded() {
-		return loaded;
-	}
-
 	/**
 	 * Gets the textures ID.
 	 *
@@ -147,9 +139,9 @@ public class TextureObject extends FactoryObject {
 	 * Deletes the texture from OpenGL memory.
 	 */
 	public void delete() {
-		if (loaded) {
+		if (isLoaded()) {
 			FlounderProcessors.sendRequest(new TextureDeleteRequest(textureID));
-			loaded = false;
+			setFullyLoaded(false);
 		}
 	}
 }

@@ -19,7 +19,6 @@ public class ShaderObject extends FactoryObject {
 	private List<Pair<Uniform.Uniforms, String>> shaderUniforms;
 
 	private String name;
-	private boolean loaded;
 
 	private List<ShaderType> shaderTypes;
 	private Map<String, Uniform> uniforms;
@@ -35,7 +34,6 @@ public class ShaderObject extends FactoryObject {
 		this.uniforms = null;
 
 		this.name = null;
-		this.loaded = false;
 	}
 
 	protected void loadData(List<Pair<String, String>> constantValues, List<String> layoutLocations, List<String> layoutBindings, List<Pair<Uniform.Uniforms, String>> shaderUniforms, String name) {
@@ -45,7 +43,6 @@ public class ShaderObject extends FactoryObject {
 		this.shaderUniforms = shaderUniforms;
 
 		this.name = name;
-		this.loaded = true;
 	}
 
 	protected void loadGL(List<ShaderType> shaderTypes, Map<String, Uniform> uniforms, int shaderID) {
@@ -78,11 +75,6 @@ public class ShaderObject extends FactoryObject {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public boolean isLoaded() {
-		return loaded;
 	}
 
 	public int getProgramID() {
@@ -314,9 +306,9 @@ public class ShaderObject extends FactoryObject {
 	 * Deletes the shader from OpenGL memory.
 	 */
 	public void delete() {
-		if (loaded) {
+		if (isLoaded()) {
 			FlounderProcessors.sendRequest(new ShaderDeleteRequest(programID));
-			this.loaded = false;
+			setFullyLoaded(false);
 		}
 	}
 }

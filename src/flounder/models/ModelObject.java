@@ -16,7 +16,6 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 	private boolean smoothShading;
 
 	private String name;
-	private boolean loaded;
 
 	private AABB aabb;
 	private QuickHull hull;
@@ -37,7 +36,6 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		this.smoothShading = false;
 
 		this.name = null;
-		this.loaded = false;
 	}
 
 	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, AABB aabb, QuickHull hull, String name) {
@@ -49,7 +47,6 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		this.smoothShading = smoothShading;
 
 		this.name = name;
-		this.loaded = true;
 
 		this.aabb = aabb;
 		this.hull = hull;
@@ -93,11 +90,6 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		return name;
 	}
 
-	@Override
-	public boolean isLoaded() {
-		return loaded;
-	}
-
 	public AABB getAABB() {
 		return aabb;
 	}
@@ -118,9 +110,9 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 	 * Deletes the model from OpenGL memory.
 	 */
 	public void delete() {
-		if (loaded) {
+		if (isLoaded()) {
 			FlounderProcessors.sendRequest(new ModelDeleteRequest(vaoID));
-			this.loaded = false;
+			setFullyLoaded(false);
 		}
 	}
 }

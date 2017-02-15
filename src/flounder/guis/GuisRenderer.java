@@ -25,8 +25,8 @@ public class GuisRenderer extends IRenderer {
 	private int vaoID;
 
 	public GuisRenderer() {
-		shader = ShaderFactory.newBuilder().setName("guis").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
-		vaoID = FlounderLoader.createInterleavedVAO(POSITIONS, 2);
+		this.shader = ShaderFactory.newBuilder().setName("guis").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.vaoID = FlounderLoader.createInterleavedVAO(POSITIONS, 2);
 	}
 
 	@Override
