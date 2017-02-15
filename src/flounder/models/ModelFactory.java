@@ -6,6 +6,7 @@ import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;
+import flounder.textures.*;
 
 import java.io.*;
 import java.lang.ref.*;
@@ -34,11 +35,14 @@ public class ModelFactory extends Factory {
 
 	@Override
 	public void loadData(FactoryObject object, FactoryBuilder builder, String name) {
+		ModelBuilder b = (ModelBuilder) builder;
+		ModelObject o = (ModelObject) object;
+
 		if (((ModelBuilder) builder).getManual() != null) {
-			ModelLoadManual b = ((ModelBuilder) builder).getManual();
-			((ModelObject) object).loadData(b.getVertices(), b.getTextureCoords(), b.getNormals(), b.getTangents(), b.getIndices(), b.isSmoothShading(), b.getAABB(), b.getHull(), name);
+			ModelLoadManual m = b.getManual();
+			o.loadData(m.getVertices(), m.getTextureCoords(), m.getNormals(), m.getTangents(), m.getIndices(), m.isSmoothShading(), m.getAABB(), m.getHull(), name);
 		} else if (((ModelBuilder) builder).getFile() != null) {
-			loadOBJ((ModelObject) object, ((ModelBuilder) builder).getFile(), name);
+			loadOBJ(o, b.getFile(), name);
 		}
 	}
 
@@ -263,7 +267,9 @@ public class ModelFactory extends Factory {
 	@Override
 	protected void create(FactoryObject object, FactoryBuilder builder) {
 		// Takes OpenGL compatible data and loads it to the GPU and factory object.
-		ModelObject o = ((ModelObject) object);
+		ModelBuilder b = (ModelBuilder) builder;
+		ModelObject o = (ModelObject) object;
+
 		int vaoID = FlounderLoader.createVAO();
 		FlounderLoader.createIndicesVBO(vaoID, o.getIndices());
 		FlounderLoader.storeDataInVBO(vaoID, o.getVertices(), 0, 3);
