@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * A renderer that is used to render Boundings.
  */
-public class BoundingRenderer extends IRenderer {
+public class BoundingRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "bounding", "boundingVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "bounding", "boundingFragment.glsl");
 

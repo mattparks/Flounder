@@ -7,13 +7,13 @@ import flounder.profiling.*;
 /**
  * Represents a sub renderer in the engine.
  */
-public abstract class IRenderer {
+public abstract class Renderer {
 	private ProfileTimer profileTimer;
 
 	/**
 	 * Creates a new sub renderer in the engine.
 	 */
-	public IRenderer() {
+	public Renderer() {
 		// TODO: Have own internal Module requirements to render.
 		profileTimer = new ProfileTimer();
 	}

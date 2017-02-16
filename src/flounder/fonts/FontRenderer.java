@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * A renderer capable of rendering fonts.
  */
-public class FontRenderer extends IRenderer {
+public class FontRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "fonts", "fontVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "fonts", "fontFragment.glsl");
 
