@@ -326,6 +326,14 @@ public class FBO {
 		this.samples = samples;
 	}
 
+	public boolean isFitToScreen() {
+		return fitToScreen;
+	}
+
+	public float getSizeScalar() {
+		return sizeScalar;
+	}
+
 	/**
 	 * Gets a colour buffer.
 	 *
