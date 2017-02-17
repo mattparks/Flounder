@@ -12,7 +12,7 @@ public class FilterLensFlare extends PostFilter {
 	private boolean flareHidden;
 
 	public FilterLensFlare() {
-		super("filterLensFlare", new MyFile(PostFilter.POST_LOC, "lensFlare2Fragment.glsl"));
+		super("filterLensFlare", new MyFile(PostFilter.POST_LOC, "lensFlare0Fragment.glsl"));
 		sunPositon = new Vector2f();
 		flareHidden = false;
 	}
