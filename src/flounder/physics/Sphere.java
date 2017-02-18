@@ -13,7 +13,7 @@ import java.util.*;
  * Represents a sphere in a 3d space.
  */
 public class Sphere extends IBounding<Sphere> {
-	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "flounder.models", "sphere.obj");
+	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "sphere.obj");
 
 	private float radius;
 	private Vector3f position;
