@@ -30,6 +30,13 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	void clear();
 
 	/**
+	 * Gets the size of this structure.
+	 *
+	 * @return The structures size.
+	 */
+	int getSize();
+
+	/**
 	 * Returns a set of all objects in the spatial structure.
 	 *
 	 * @param result The list to store results into.

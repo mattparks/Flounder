@@ -23,7 +23,7 @@ public class FlounderEntities extends Module {
 
 	public static final MyFile ENTITIES_FOLDER = new MyFile(MyFile.RES_FOLDER, "entities");
 
-	private StructureBasic<Entity> entityStructure;
+	private ISpatialStructure<Entity> entityStructure;
 	private Map<String, SoftReference<EntityTemplate>> loaded;
 
 	/**
@@ -257,7 +257,7 @@ public class FlounderEntities extends Module {
 	 *
 	 * @return A list of entities.
 	 */
-	public static StructureBasic<Entity> getEntities() {
+	public static ISpatialStructure<Entity> getEntities() {
 		return INSTANCE.entityStructure;
 	}
 

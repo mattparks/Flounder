@@ -100,6 +100,15 @@ public class TextureObject extends FactoryObject {
 	}
 
 	/**
+	 * Sets if the texture has alpha.
+	 *
+	 * @param hasAlpha If the texture has alpha.
+	 */
+	public void setHasAlpha(boolean hasAlpha) {
+		this.hasAlpha = hasAlpha;
+	}
+
+	/**
 	 * Gets the number of texture rows.
 	 *
 	 * @return The number of texture rows.

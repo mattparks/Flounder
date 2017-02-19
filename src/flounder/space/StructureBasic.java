@@ -33,6 +33,11 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
+	public int getSize() {
+		return objects.size();
+	}
+
+	@Override
 	public List<T> getAll(List<T> result) {
 		objects.iterator().forEachRemaining(result::add);
 		return result;
@@ -81,14 +86,5 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	 */
 	public T get(int index) {
 		return objects.get(index);
-	}
-
-	/**
-	 * Gets the size of this structure.
-	 *
-	 * @return The structures size.
-	 */
-	public int getSize() {
-		return objects.size();
 	}
 }
