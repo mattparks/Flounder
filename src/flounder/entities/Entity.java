@@ -165,6 +165,13 @@ public class Entity implements ISpatialObject {
 	}
 
 	/**
+	 * Tells the entity components that the entity has moved.
+	 */
+	public void setMoved() {
+		this.hasMoved = true;
+	}
+
+	/**
 	 * Changes the structure this object is contained in.
 	 *
 	 * @param structure The new structure too be contained in.
