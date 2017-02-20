@@ -18,7 +18,7 @@ public class FlounderCamera extends Module {
 	 * Creates a new camera manager.
 	 */
 	public FlounderCamera() {
-		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override
