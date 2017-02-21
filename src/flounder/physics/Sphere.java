@@ -40,6 +40,14 @@ public class Sphere extends IBounding<Sphere> {
 	}
 
 	/**
+	 * Creates a new unit Sphere
+	 */
+	public Sphere() {
+		this.radius = 1.0f;
+		this.position = new Vector3f();
+	}
+
+	/**
 	 * Creates a new Sphere from another Sphere source.
 	 *
 	 * @param source The source to create off of.

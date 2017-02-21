@@ -224,8 +224,10 @@ public class AABB extends IBounding<AABB> {
 		destination.maxExtents.set(source.maxExtents);
 
 		// Scales the dimensions for the AABB.
-		destination.setMinExtents(destination.minExtents.x * scale, destination.minExtents.y * scale, destination.minExtents.z * scale);
-		destination.setMaxExtents(destination.maxExtents.x * scale, destination.maxExtents.y * scale, destination.maxExtents.z * scale);
+		if (scale != 1.0f) {
+			destination.setMinExtents(destination.minExtents.x * scale, destination.minExtents.y * scale, destination.minExtents.z * scale);
+			destination.setMaxExtents(destination.maxExtents.x * scale, destination.maxExtents.y * scale, destination.maxExtents.z * scale);
+		}
 
 		// Creates the 8 AABB corners and rotates them.
 		if (rotation.lengthSquared() != 0.0f) {

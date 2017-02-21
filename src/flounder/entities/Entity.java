@@ -188,10 +188,15 @@ public class Entity implements ISpatialObject {
 
 	/**
 	 * Forcibly removes this entity from the spatial structure without triggering remove actions. Use with caution; this function may fail or cause errors if used inappropriately.
+	 *
+	 * @param structureRemove If the entity will be removed from the structure from this method.
 	 */
-	public void forceRemove() {
+	public void forceRemove(boolean structureRemove) {
 		removed = true;
-		structure.remove(this);
+
+		if (structureRemove) {
+			structure.remove(this);
+		}
 
 		for (IComponentEntity component : components) {
 			component.dispose();
@@ -205,10 +210,6 @@ public class Entity implements ISpatialObject {
 	 */
 	public boolean isRemoved() {
 		return removed;
-	}
-
-	public void setRemoved(boolean removed) {
-		this.removed = removed;
 	}
 
 	public Vector3f getPosition() {
