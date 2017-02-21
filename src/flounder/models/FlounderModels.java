@@ -55,7 +55,13 @@ public class FlounderModels extends Module {
 
 	@Override
 	public void dispose() {
-		loaded.keySet().forEach(key -> ((ModelObject) loaded.get(key).get()).delete());
+		loaded.keySet().forEach(key -> {
+			ModelObject model = ((ModelObject) loaded.get(key).get());
+
+			if (model != null && model.isLoaded()) {
+				model.delete();
+			}
+		});
 		loaded.clear();
 	}
 }

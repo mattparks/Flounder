@@ -39,29 +39,34 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	/**
 	 * Returns a set of all objects in the spatial structure.
 	 *
-	 * @param result The list to store results into.
-	 *
 	 * @return The list specified by of all objects.
 	 */
-	List<T> getAll(List<T> result);
+	List<T> getAll();
 
 	/**
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
-	 * @param result The list to store results into.
 	 * @param range The frustum range of space being queried.
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInFrustum(List<T> result, Frustum range);
+	List<T> queryInFrustum(Frustum range);
 
 	/**
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
-	 * @param result The list to store results into.
 	 * @param range The shape range of space being queried.
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInBounding(List<T> result, IBounding range);
+	List<T> queryInBounding(IBounding range);
+
+	/**
+	 * If the structure contains the object.
+	 *
+	 * @param object The object to check for.
+	 *
+	 * @returns If the structure contains the object.
+	 */
+	boolean contains(ISpatialObject object);
 }

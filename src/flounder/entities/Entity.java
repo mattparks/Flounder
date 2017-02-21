@@ -94,7 +94,7 @@ public class Entity implements ISpatialObject {
 	 * @param visitor The visitor that will be executed for every entity visited.
 	 */
 	public void visitInRange(int id, AABB range, IComponentVisitor visitor) {
-		for (Entity entity : structure.queryInBounding(new ArrayList<>(), range)) {
+		for (Entity entity : structure.queryInBounding(range)) {
 			if (entity.removed) {
 				continue;
 			}

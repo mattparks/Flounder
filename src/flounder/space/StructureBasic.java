@@ -8,13 +8,13 @@ import java.util.*;
  * Represents a 3D space.
  */
 public class StructureBasic<T extends ISpatialObject> implements ISpatialStructure<T> {
-	private Vector<T> objects;
+	private List<T> objects;
 
 	/**
 	 * Initializes a new Basic 3D Structure.
 	 */
 	public StructureBasic() {
-		this.objects = new Vector<>();
+		this.objects = new ArrayList<T>();
 	}
 
 	@Override
@@ -38,13 +38,13 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public List<T> getAll(List<T> result) {
-		objects.iterator().forEachRemaining(result::add);
-		return result;
+	public List<T> getAll() {
+		return objects;
 	}
 
 	@Override
-	public List<T> queryInFrustum(List<T> result, Frustum range) {
+	public List<T> queryInFrustum(Frustum range) {
+		List<T> result = new ArrayList<>();
 		Iterator<T> it = objects.iterator();
 
 		while (it.hasNext()) {
@@ -59,7 +59,8 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public List<T> queryInBounding(List<T> result, IBounding range) {
+	public List<T> queryInBounding(IBounding range) {
+		List<T> result = new ArrayList<>();
 		Iterator<T> it = objects.iterator();
 
 		while (it.hasNext()) {
@@ -75,6 +76,11 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		}
 
 		return result;
+	}
+
+	@Override
+	public boolean contains(ISpatialObject object) {
+		return objects.contains(object);
 	}
 
 	/**

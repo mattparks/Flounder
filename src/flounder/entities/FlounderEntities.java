@@ -43,7 +43,7 @@ public class FlounderEntities extends Module {
 	@Override
 	public void update() {
 		if (entityStructure != null) {
-			entityStructure.getAll(new ArrayList<>()).forEach(Entity::update);
+			entityStructure.getAll().forEach(Entity::update);
 		}
 	}
 
@@ -56,7 +56,7 @@ public class FlounderEntities extends Module {
 	 * Clears the world of all entities.
 	 */
 	public static void clear() {
-		INSTANCE.entityStructure.getAll(new ArrayList<>()).forEach(Entity::forceRemove);
+		INSTANCE.entityStructure.getAll().forEach(Entity::forceRemove);
 	}
 
 	/**
