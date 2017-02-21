@@ -228,32 +228,34 @@ public class AABB extends IBounding<AABB> {
 		destination.setMaxExtents(destination.maxExtents.x * scale, destination.maxExtents.y * scale, destination.maxExtents.z * scale);
 
 		// Creates the 8 AABB corners and rotates them.
-		Vector3f fll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.minExtents.z);
-		Vector3f.rotate(fll, rotation, fll);
+		if (rotation.lengthSquared() != 0.0f) {
+			Vector3f fll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.minExtents.z);
+			Vector3f.rotate(fll, rotation, fll);
 
-		Vector3f flr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.minExtents.z);
-		Vector3f.rotate(flr, rotation, flr);
+			Vector3f flr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.minExtents.z);
+			Vector3f.rotate(flr, rotation, flr);
 
-		Vector3f ful = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.minExtents.z);
-		Vector3f.rotate(ful, rotation, ful);
+			Vector3f ful = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.minExtents.z);
+			Vector3f.rotate(ful, rotation, ful);
 
-		Vector3f fur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.minExtents.z);
-		Vector3f.rotate(fur, rotation, fur);
+			Vector3f fur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.minExtents.z);
+			Vector3f.rotate(fur, rotation, fur);
 
-		Vector3f bur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(bur, rotation, bur);
+			Vector3f bur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+			Vector3f.rotate(bur, rotation, bur);
 
-		Vector3f bul = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(bul, rotation, bul);
+			Vector3f bul = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+			Vector3f.rotate(bul, rotation, bul);
 
-		Vector3f blr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(blr, rotation, blr);
+			Vector3f blr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.maxExtents.z);
+			Vector3f.rotate(blr, rotation, blr);
 
-		Vector3f bll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.maxExtents.z);
-		Vector3f.rotate(bll, rotation, bll);
+			Vector3f bll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.maxExtents.z);
+			Vector3f.rotate(bll, rotation, bll);
 
-		destination.minExtents = Maths.min(fll, Maths.min(flr, Maths.min(ful, Maths.min(fur, Maths.min(bur, Maths.min(bul, Maths.min(blr, bll)))))));
-		destination.maxExtents = Maths.max(fll, Maths.max(flr, Maths.max(ful, Maths.max(fur, Maths.max(bur, Maths.max(bul, Maths.max(blr, bll)))))));
+			destination.minExtents = Maths.min(fll, Maths.min(flr, Maths.min(ful, Maths.min(fur, Maths.min(bur, Maths.min(bul, Maths.min(blr, bll)))))));
+			destination.maxExtents = Maths.max(fll, Maths.max(flr, Maths.max(ful, Maths.max(fur, Maths.max(bur, Maths.max(bul, Maths.max(blr, bll)))))));
+		}
 
 		// Transforms the AABB.
 		Vector3f.add(destination.minExtents, position, destination.minExtents);

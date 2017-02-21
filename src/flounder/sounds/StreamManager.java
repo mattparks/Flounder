@@ -21,6 +21,7 @@ public class StreamManager extends Thread {
 	 * Creates a new object that updates audio streams in a separate thread.
 	 */
 	public StreamManager() {
+		super.setName("music");
 		streamers = new ArrayList<>();
 		toRemove = new ArrayList<>();
 		alive = true;
@@ -39,8 +40,10 @@ public class StreamManager extends Thread {
 	@Override
 	public void run() {
 		while (alive) {
-			List<Streamer> safeCopy = new ArrayList<>(streamers);
-			safeCopy.forEach(this::updateStreamer);
+			for (Streamer streamer : streamers) {
+				streamer.update();
+			}
+
 			removeFinishedStreamers();
 			pause();
 		}
@@ -63,7 +66,7 @@ public class StreamManager extends Thread {
 	 */
 	private void pause() {
 		try {
-			Thread.sleep(SLEEP_TIME);
+			sleep(SLEEP_TIME);
 		} catch (InterruptedException e) {
 			FlounderLogger.error("Thread could not sleep!");
 			FlounderLogger.exception(e);

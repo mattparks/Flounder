@@ -36,6 +36,7 @@ public class FlounderRenderer extends Module {
 				}
 			}
 		});
+		this.renderThread.setName("rendering");
 	}
 
 	@Override

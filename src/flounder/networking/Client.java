@@ -24,6 +24,7 @@ public class Client extends Thread {
 	 */
 	public Client(String ipAddress, int port) {
 		try {
+			super.setName("client");
 			this.socket = new DatagramSocket();
 			this.ipAddress = InetAddress.getByName(ipAddress);
 			this.port = port;

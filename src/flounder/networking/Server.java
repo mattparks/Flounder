@@ -23,6 +23,7 @@ public class Server extends Thread {
 	 */
 	public Server(int port) {
 		try {
+			super.setName("server");
 			this.socket = new DatagramSocket(port);
 			this.connected = new ArrayList<>();
 		} catch (SocketException e) {
