@@ -80,7 +80,7 @@ public class BoundingRenderer extends Renderer {
 	}
 
 	private void renderShape(ModelObject model, IBounding shape) {
-		if (model == null || model.isLoaded()) {
+		if (model == null || !model.isLoaded()) {
 			return;
 		}
 
