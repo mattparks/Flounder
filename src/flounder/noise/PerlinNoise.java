@@ -38,6 +38,7 @@ public class PerlinNoise {
 	/**
 	 * Not too random randomness.
 	 */
+	private int seed;
 	private Random random;
 
 	/**
@@ -49,6 +50,10 @@ public class PerlinNoise {
 		setSeed(seed);
 	}
 
+	public int getSeed() {
+		return seed;
+	}
+
 	/**
 	 * Sets the seed to the noise generator.
 	 *
@@ -58,6 +63,7 @@ public class PerlinNoise {
 		p_imp = new int[DEFAULT_SAMPLE_SIZE << 1];
 
 		int i, j, k;
+		this.seed = seed;
 		random = new Random(seed);
 
 		// Calculate the table of psuedo-random coefficients

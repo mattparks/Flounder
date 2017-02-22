@@ -185,7 +185,7 @@ public class QuickHull {
 	}
 
 	/**
-	 * Rund the algorithm as a recursive variant.
+	 * Runs the algorithm as a recursive variant.
 	 *
 	 * @param points The set of points to analyze.
 	 * @param first The first point of the line which is left of the right one.
@@ -266,14 +266,14 @@ public class QuickHull {
 	 * Creates an QuickHull equivalent to this, but in a new position and rotation.
 	 *
 	 * @param source The source QuickHull.
-	 * @param destination The destination QuickHull or null if a new QuickHull is to be created.
 	 * @param position The amount to move.
 	 * @param rotation The amount to rotate.
 	 * @param scale The amount to scale the object.
+	 * @param destination The destination QuickHull or null if a new QuickHull is to be created.
 	 *
 	 * @return An QuickHull equivalent to this, but in a new position.
 	 */
-	public static QuickHull recalculate(QuickHull source, QuickHull destination, Vector3f position, Vector3f rotation, float scale) {
+	public static QuickHull recalculate(QuickHull source, Vector3f position, Vector3f rotation, float scale, QuickHull destination) {
 		if (destination == null) {
 			destination = new QuickHull();
 		}

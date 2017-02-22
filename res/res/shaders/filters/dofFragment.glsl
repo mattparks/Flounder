@@ -5,11 +5,11 @@
 
 //---------CONSTANT------------
 const float NEAR_FIELD = 0.4;
-const float NEAR_TRANS = 0.2;
+const float NEAR_TRANS = 0.8;
 const float NEAR_END = NEAR_FIELD + NEAR_TRANS;
 
 const float FAR_FIELD = 2.5;
-const float FAR_TRANS = 0.6;
+const float FAR_TRANS = 1.2;
 const float FAR_START = FAR_FIELD - FAR_TRANS;
 
 //---------IN------------
