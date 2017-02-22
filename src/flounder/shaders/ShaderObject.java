@@ -20,7 +20,6 @@ public class ShaderObject extends FactoryObject {
 
 	private String name;
 
-	private List<ShaderType> shaderTypes;
 	private Map<String, Uniform> uniforms;
 
 	private int programID;
@@ -30,7 +29,6 @@ public class ShaderObject extends FactoryObject {
 	 */
 	protected ShaderObject() {
 		super();
-		this.shaderTypes = null;
 		this.uniforms = null;
 
 		this.name = null;
@@ -45,8 +43,7 @@ public class ShaderObject extends FactoryObject {
 		this.name = name;
 	}
 
-	protected void loadGL(List<ShaderType> shaderTypes, Map<String, Uniform> uniforms, int shaderID) {
-		this.shaderTypes = shaderTypes;
+	protected void loadGL(Map<String, Uniform> uniforms, int shaderID) {
 		this.uniforms = uniforms;
 
 		this.programID = shaderID;
@@ -307,7 +304,7 @@ public class ShaderObject extends FactoryObject {
 	 */
 	public void delete() {
 		if (isLoaded()) {
-			FlounderProcessors.sendRequest(new ShaderDeleteRequest(programID));
+			FlounderProcessors.sendRequest(new ShaderDeleteRequest(this));
 			setFullyLoaded(false);
 		}
 	}

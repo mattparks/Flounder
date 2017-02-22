@@ -8,19 +8,20 @@ import static org.lwjgl.opengl.GL11.*;
  * A class that can process a request to delete a texture.
  */
 public class TextureDeleteRequest implements RequestOpenGL {
-	private int textureID;
+	private TextureObject texture;
 
 	/**
 	 * Creates a new texture delete request.
 	 *
-	 * @param textureID The OpenGL texture ID to be deleted.
+	 * @param texture The OpenGL texture to be deleted.
 	 */
-	public TextureDeleteRequest(int textureID) {
-		this.textureID = textureID;
+	public TextureDeleteRequest(TextureObject texture) {
+		this.texture = texture;
 	}
 
 	@Override
 	public void executeRequestGL() {
-		glDeleteTextures(textureID);
+		glDeleteTextures(texture.getTextureID());
+		FlounderTextures.getLoaded().get(texture.getName());
 	}
 }

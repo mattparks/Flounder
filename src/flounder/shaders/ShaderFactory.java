@@ -231,7 +231,7 @@ public class ShaderFactory extends Factory {
 			}
 		}
 
-		o.loadGL(b.getTypes(), uniforms, programID);
+		o.loadGL(uniforms, programID);
 	}
 
 	private int findCharPos(String line, char c) {

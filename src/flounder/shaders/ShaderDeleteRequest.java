@@ -8,20 +8,21 @@ import static org.lwjgl.opengl.GL20.*;
  * A class that can process a request to delete a shader.
  */
 public class ShaderDeleteRequest implements RequestOpenGL {
-	private int shaderID;
+	private ShaderObject shader;
 
 	/**
 	 * Creates a new shader delete request.
 	 *
-	 * @param shaderID The OpenGL shader ID to be deleted.
+	 * @param shader The OpenGL shader to be deleted.
 	 */
-	public ShaderDeleteRequest(int shaderID) {
-		this.shaderID = shaderID;
+	public ShaderDeleteRequest(ShaderObject shader) {
+		this.shader = shader;
 	}
 
 	@Override
 	public void executeRequestGL() {
 		glUseProgram(0);
-		glDeleteProgram(shaderID);
+		glDeleteProgram(shader.getProgramID());
+		FlounderShaders.getLoaded().remove(shader.getName());
 	}
 }

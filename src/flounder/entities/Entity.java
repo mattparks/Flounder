@@ -50,6 +50,7 @@ public class Entity implements ISpatialObject {
 	 */
 	public void addComponent(IComponentEntity component) {
 		components.add(component);
+		setMoved();
 	}
 
 	/**
@@ -60,6 +61,7 @@ public class Entity implements ISpatialObject {
 	public void removeComponent(IComponentEntity component) {
 		component.dispose();
 		components.remove(component);
+		setMoved();
 	}
 
 	/**

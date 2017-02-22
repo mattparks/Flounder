@@ -45,11 +45,8 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	@Override
 	public List<T> queryInFrustum(Frustum range) {
 		List<T> result = new ArrayList<>();
-		Iterator<T> it = objects.iterator();
 
-		while (it.hasNext()) {
-			T current = it.next();
-
+		for (T current : objects) {
 			if (current.getBounding() == null || current.getBounding().inFrustum(range)) {
 				result.add(current);
 			}
@@ -61,11 +58,8 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	@Override
 	public List<T> queryInBounding(IBounding range) {
 		List<T> result = new ArrayList<>();
-		Iterator<T> it = objects.iterator();
 
-		while (it.hasNext()) {
-			T current = it.next();
-
+		for (T current : objects) {
 			if (current.getBounding() != null) {
 				if (current.getBounding().intersects(range).isIntersection()) {
 					result.add(current);

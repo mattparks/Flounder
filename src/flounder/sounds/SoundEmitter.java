@@ -35,6 +35,10 @@ public class SoundEmitter {
 	 * @param delta The time in seconds since the last frame.
 	 */
 	public void update(float delta) {
+		if (playingSounds.keySet().isEmpty()) {
+			return;
+		}
+
 		Iterator<Entry<SoundEffect, AudioController>> iterator = playingSounds.entrySet().iterator();
 
 		while (iterator.hasNext()) {

@@ -111,8 +111,7 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 	 */
 	public void delete() {
 		if (isLoaded()) {
-			FlounderModels.getLoaded().remove(this.name);
-			FlounderProcessors.sendRequest(new ModelDeleteRequest(vaoID));
+			FlounderProcessors.sendRequest(new ModelDeleteRequest(this));
 			setFullyLoaded(false);
 		}
 	}
