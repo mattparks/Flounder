@@ -80,6 +80,10 @@ public class BoundingRenderer extends Renderer {
 	}
 
 	private void renderShape(ModelObject model, IBounding shape) {
+		if (model == null || model.isLoaded()) {
+			return;
+		}
+
 		POSITION_REUSABLE.set(0.0f, 0.0f, 0.0f);
 		ROTATION_REUSABLE.set(0.0f, 0.0f, 0.0f);
 		SCALE_REUSABLE.set(0.0f, 0.0f, 0.0f);
