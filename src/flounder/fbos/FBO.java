@@ -293,6 +293,16 @@ public class FBO {
 		height = Math.min(getMaxFBOSize(), height);
 	}
 
+	public void setSizeScalar(float sizeScalar) {
+		if (this.fitToScreen && this.sizeScalar == sizeScalar) {
+			return;
+		}
+
+		this.sizeScalar = sizeScalar;
+		this.fitToScreen = true;
+		updateSize();
+	}
+
 	/**
 	 * Gets the number of attachments in this FBO.
 	 *
