@@ -303,6 +303,14 @@ public class FBO {
 		updateSize();
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
 	/**
 	 * Gets the number of attachments in this FBO.
 	 *
