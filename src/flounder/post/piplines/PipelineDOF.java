@@ -4,7 +4,7 @@ import flounder.fbos.*;
 import flounder.post.*;
 import flounder.post.filters.*;
 
-public class PipelineDepthOfField extends PostPipeline {
+public class PipelineDOF extends PostPipeline {
 	private static final int BLUR_TEXTURE_WIDTH = 256;
 	private static final int BLUR_TEXTURE_HEIGHT = 144;
 
@@ -12,10 +12,17 @@ public class PipelineDepthOfField extends PostPipeline {
 	private FilterFXAA filterFXAA;
 	private FilterDOF filterDOF;
 
-	public PipelineDepthOfField() {
+	public PipelineDOF() {
 		pipelineGaussian = new PipelineGaussian(BLUR_TEXTURE_WIDTH, BLUR_TEXTURE_HEIGHT);
 		filterFXAA = new FilterFXAA();
 		filterDOF = new FilterDOF();
+	}
+
+	public void renderMRT(FBO fboMRT, FBO fboColour) {
+		filterFXAA.applyFilter(fboColour.getColourTexture(0));
+		pipelineGaussian.setScale(0.5f);
+		pipelineGaussian.renderPipeline(filterFXAA.fbo);
+		filterDOF.applyFilter(filterFXAA.fbo.getColourTexture(0), fboMRT.getDepthTexture(), pipelineGaussian.getOutput().getColourTexture(0));
 	}
 
 	@Override

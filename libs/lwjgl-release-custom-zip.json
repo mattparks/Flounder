@@ -2,12 +2,12 @@
   "build": "release",
   "mode": "zip",
   "selectedAddons": [
-	"steamworks4j"
+    "steamworks4j"
   ],
   "platform": [
-	"windows",
-	"macos",
-	"linux"
+    "windows",
+    "macos",
+    "linux"
   ],
   "descriptions": true,
   "compact": false,
@@ -16,12 +16,12 @@
   "source": true,
   "language": "groovy",
   "contents": [
-	"lwjgl",
-	"lwjgl-glfw",
-	"lwjgl-jemalloc",
-	"lwjgl-openal",
-	"lwjgl-opengl",
-	"lwjgl-jawt"
+    "lwjgl",
+    "lwjgl-glfw",
+    "lwjgl-jemalloc",
+    "lwjgl-openal",
+    "lwjgl-opengl",
+    "lwjgl-jawt"
   ],
   "version": "3.1.1",
   "versionLatest": "3.1.1"
