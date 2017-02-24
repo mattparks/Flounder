@@ -162,7 +162,7 @@ public class ShaderFactory extends Factory {
 
 			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 				FlounderLogger.error(glGetShaderInfoLog(shaderID, 500));
-				throw new RuntimeException("Could not compile shader " + type);
+				throw new RuntimeException("Could not compile shader " + ((ShaderObject) object).getName() + ", type=" + type);
 			}
 
 			type.setShaderProgramID(shaderID);
