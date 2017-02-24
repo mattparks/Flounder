@@ -236,6 +236,7 @@ public class FlounderDisplay extends Module {
 		FlounderLogger.log("Flounder Engine Version: " + Framework.getVersion().getVersion());
 		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
+		FlounderLogger.log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
 		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
 		FlounderLogger.log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
 		FlounderLogger.log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
