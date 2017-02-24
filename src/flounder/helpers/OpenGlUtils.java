@@ -36,7 +36,7 @@ public class OpenGlUtils {
 	 * @param b The b component of the clear colour.
 	 */
 	public static void prepareNewRenderParse(float r, float g, float b) {
-		glClearColor(r, g, b, 1.0f);
+		glClearColor(r, g, b, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		disableBlending();
 		cullBackFaces(true);
