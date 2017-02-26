@@ -117,6 +117,10 @@ public class TextureObject extends FactoryObject {
 		return numberOfRows;
 	}
 
+	public void setNumberOfRows(int numberOfRows) {
+		this.numberOfRows = numberOfRows;
+	}
+
 	/**
 	 * Gets the loaded name for the texture.
 	 *
