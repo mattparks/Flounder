@@ -91,6 +91,10 @@ public class Client extends Thread {
 		}
 	}
 
+	public String getIpAddress() {
+		return ipAddress.getHostAddress();
+	}
+
 	/**
 	 * Closes the sockets connection.
 	 */

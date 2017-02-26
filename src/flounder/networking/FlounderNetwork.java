@@ -71,9 +71,9 @@ public class FlounderNetwork extends Module {
 	/**
 	 * Starts the client.
 	 */
-	public static void startClient() {
+	public static void startClient(String ipAddress) {
 		FlounderLogger.log("Starting Client!");
-		INSTANCE.socketClient = new Client("localhost", INSTANCE.port);
+		INSTANCE.socketClient = new Client(ipAddress, INSTANCE.port); // Default ip: "localhost"
 		INSTANCE.socketClient.start();
 
 		PacketLogin loginPacket = new PacketLogin(INSTANCE.username);
@@ -126,6 +126,10 @@ public class FlounderNetwork extends Module {
 
 	public static String getUsername() {
 		return INSTANCE.username;
+	}
+
+	public static int getPort() {
+		return INSTANCE.port;
 	}
 
 	@Override
