@@ -7,16 +7,6 @@ import javax.swing.*;
 import java.util.*;
 
 public abstract class IComponentEditor {
-	public static final IComponentEditor[] EDITOR_COMPONENTS = new IComponentEditor[]{
-			//	new EditorAnimation((Entity) null),
-			//	new EditorCollider((Entity) null),
-			//	new EditorCollision((Entity) null),
-			//	new EditorModel((Entity) null),
-			//	new EditorParticleSystem((Entity) null),
-			//	new EditorRemoveFade((Entity) null),
-			// TODO!!!!
-	};
-
 	public static final List<Pair<String, JPanel>> ADD_SIDE_TAB = new ArrayList<>();
 	public static final List<String> REMOVE_SIDE_TAB = new ArrayList<>();
 
