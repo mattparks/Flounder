@@ -1,6 +1,5 @@
 package flounder.lights;
 
-import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
@@ -37,7 +36,6 @@ public class Light implements ISpatialObject {
 		this.position = position;
 		this.attenuation = attenuation;
 		this.lightDistance = new Sphere((float) quadratic(attenuation.constant, attenuation.linear, attenuation.exponent), position);
-		FlounderLogger.log(lightDistance);
 	}
 
 	private double quadratic(double a, double b, double c) {
