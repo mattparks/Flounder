@@ -1,7 +1,6 @@
 package flounder.entities.components;
 
 import flounder.entities.*;
-import flounder.physics.*;
 
 /**
  * Base class for all components that can be attached to engine.entities. (Have a constructor that takes in '(Entity entity, EntityTemplate template)' for the entity loader).
@@ -47,13 +46,6 @@ public abstract class IComponentEntity {
 	 * Updates this component.
 	 */
 	public abstract void update();
-
-	/**
-	 * A method that can be implemented to a component that adda boundings to the entity.
-	 *
-	 * @return The bounding, null if not adding one.
-	 */
-	public abstract IBounding getBounding();
 
 	/**
 	 * Runs when the component is removed from the entity.

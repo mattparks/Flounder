@@ -6,17 +6,13 @@ import flounder.helpers.*;
 import javax.swing.*;
 import java.util.*;
 
-public abstract class IComponentEditor {
+public interface IComponentEditor {
 	public static final List<Pair<String, JPanel>> ADD_SIDE_TAB = new ArrayList<>();
 	public static final List<String> REMOVE_SIDE_TAB = new ArrayList<>();
 
-	public abstract String getTabName();
+	void addToPanel(JPanel panel);
 
-	public abstract IComponentEntity getComponent();
-
-	public abstract void addToPanel(JPanel panel);
-
-	public abstract void update();
+	void editorUpdate();
 
 	/**
 	 * Gets the list of values that are saved with the component.
@@ -25,7 +21,7 @@ public abstract class IComponentEditor {
 	 *
 	 * @return Returns values saved with the component.
 	 */
-	public abstract Pair<String[], EntitySaverFunction[]> getSavableValues(String entityName);
+	Pair<String[], EntitySaverFunction[]> getSavableValues(String entityName);
 
 	/**
 	 * Creates a new text panel for the component.
@@ -36,5 +32,9 @@ public abstract class IComponentEditor {
 		JPanel panel = new JPanel();
 		panel.setLayout(new WrapLayout());
 		return panel;
+	}
+
+	public static String getTabName(IComponentEditor editor) {
+		return editor.getClass().getName();
 	}
 }
