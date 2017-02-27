@@ -12,7 +12,7 @@ public class FlounderNetwork extends Module {
 	private static final FlounderNetwork INSTANCE = new FlounderNetwork();
 	public static final String PROFILE_TAB_NAME = "Network";
 
-	private static final int DEFAULT_PORT = 2266;
+	public static final int DEFAULT_PORT = 2266;
 
 	private Server socketServer;
 	private Client socketClient;
@@ -25,18 +25,6 @@ public class FlounderNetwork extends Module {
 	 */
 	public FlounderNetwork() {
 		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderLogger.class);
-	}
-
-	/**
-	 * A function called before initialization to configure the network.
-	 *
-	 * @param port The networks port.
-	 */
-	public static void setup(int port) {
-		if (!INSTANCE.setup) {
-			INSTANCE.port = port;
-			INSTANCE.setup = true;
-		}
 	}
 
 	@Override
@@ -62,18 +50,18 @@ public class FlounderNetwork extends Module {
 	/**
 	 * Starts the server.
 	 */
-	public static void startServer() {
+	public static void startServer(int port) {
 		FlounderLogger.log("Starting server!");
-		INSTANCE.socketServer = new Server(INSTANCE.port);
+		INSTANCE.socketServer = new Server(port);
 		INSTANCE.socketServer.start();
 	}
 
 	/**
 	 * Starts the client.
 	 */
-	public static void startClient(String ipAddress) {
+	public static void startClient(String ipAddress, int port) {
 		FlounderLogger.log("Starting Client!");
-		INSTANCE.socketClient = new Client(ipAddress, INSTANCE.port); // Default ip: "localhost"
+		INSTANCE.socketClient = new Client(ipAddress, port); // Default ip: "localhost"
 		INSTANCE.socketClient.start();
 
 		PacketLogin loginPacket = new PacketLogin(INSTANCE.username);

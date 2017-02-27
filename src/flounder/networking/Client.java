@@ -13,21 +13,21 @@ import java.net.*;
  */
 public class Client extends Thread {
 	private InetAddress ipAddress;
-	private int port;
 	private DatagramSocket socket;
+	private int serverPort;
 
 	/**
 	 * Creates a new client.
 	 *
 	 * @param ipAddress The IP address to connect to.
-	 * @param port The IP's port to connect with.
+	 * @param port The IP's serverPort to connect with.
 	 */
 	public Client(String ipAddress, int port) {
 		try {
 			super.setName("client");
 			this.socket = new DatagramSocket();
 			this.ipAddress = InetAddress.getByName(ipAddress);
-			this.port = port;
+			this.serverPort = port;
 		} catch (SocketException | UnknownHostException e) {
 			FlounderLogger.exception(e);
 		}
@@ -82,7 +82,7 @@ public class Client extends Thread {
 	 * @param data The data to send.
 	 */
 	public void sendData(byte[] data) {
-		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, port);
+		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, serverPort);
 
 		try {
 			socket.send(packet);
@@ -93,6 +93,10 @@ public class Client extends Thread {
 
 	public String getIpAddress() {
 		return ipAddress.getHostAddress();
+	}
+
+	public int getServerPort() {
+		return serverPort;
 	}
 
 	/**

@@ -15,6 +15,7 @@ import java.util.*;
 public class Server extends Thread {
 	private DatagramSocket socket;
 	private List<ClientInfo> connected;
+	private int serverPort;
 
 	/**
 	 * Creates a new server.
@@ -26,6 +27,7 @@ public class Server extends Thread {
 			super.setName("server");
 			this.socket = new DatagramSocket(port);
 			this.connected = new ArrayList<>();
+			this.serverPort = port;
 		} catch (SocketException e) {
 			FlounderLogger.exception(e);
 		}
@@ -176,6 +178,10 @@ public class Server extends Thread {
 		for (ClientInfo p : connected) {
 			sendData(data, p.getIpAddress(), p.getPort());
 		}
+	}
+
+	public int getServerPort() {
+		return serverPort;
 	}
 
 	/**
