@@ -35,6 +35,7 @@ public interface IComponentEditor {
 	}
 
 	public static String getTabName(IComponentEditor editor) {
-		return editor.getClass().getName();
+		String[] path = editor.getClass().getName().split("\\.");
+		return path[path.length - 1].replace("Component", "").trim();
 	}
 }
