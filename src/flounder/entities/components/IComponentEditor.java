@@ -21,7 +21,7 @@ public interface IComponentEditor {
 	 *
 	 * @return Returns values saved with the component.
 	 */
-	Pair<String[], EntitySaverFunction[]> getSavableValues(String entityName);
+	String[] getSavableValues(String entityName);
 
 	/**
 	 * Creates a new text panel for the component.

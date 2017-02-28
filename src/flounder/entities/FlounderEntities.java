@@ -217,28 +217,11 @@ public class FlounderEntities extends Module {
 				for (int i = 0; i < editorComponents.size(); i++) {
 					FileWriterHelper.beginNewSegment(entity.getComponents().get(i).getClass().getName());
 
-					Pair<String[], EntitySaverFunction[]> saveableValues = editorComponents.get(i).getSavableValues(name);
+					String[] saveableValues = editorComponents.get(i).getSavableValues(name);
 
 					// Individual data components.
-					for (String s : saveableValues.getFirst()) {
+					for (String s : saveableValues) {
 						FileWriterHelper.writeSegmentData(s + ";", true);
-					}
-
-					// Blank area between both sections.
-					if (saveableValues.getSecond().length > 0) {
-						FileWriterHelper.enterBlankLine();
-						FileWriterHelper.enterBlankLine();
-					}
-
-					// Segmented data components.
-					int fi = 0;
-
-					for (EntitySaverFunction f : saveableValues.getSecond()) {
-						FileWriterHelper.beginNewSegment(f.getSectionName());
-						{
-							f.writeIntoSection(FileWriterHelper);
-						}
-						FileWriterHelper.endSegment(fi++ == saveableValues.getSecond().length - 1);
 					}
 
 					FileWriterHelper.endSegment(i == entity.getComponents().size() - 1);
