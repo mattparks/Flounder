@@ -59,10 +59,11 @@ public class FlounderEntities extends Module {
 	/**
 	 * Saves the entity components to a .entity file.
 	 *
-	 * @param entity The entity to save.
+	 * @param packageLocation The package to have for the entity file.
+	 * @param editorComponents The entity editor components to save.
 	 * @param name The nave for the entity and file.
 	 */
-	public static void save(Entity entity, List<IComponentEditor> editorComponents, String name) {
+	public static void save(String packageLocation, List<IComponentEditor> editorComponents, String name) {
 		try {
 			String className = "Instance" + name.substring(0, 1).toUpperCase() + name.substring(1);
 
@@ -89,6 +90,16 @@ public class FlounderEntities extends Module {
 			String savedDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.YEAR) + " - " + Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE);
 			FlounderLogger.log("Entity " + name + " is being saved at: " + savedDate);
 			FileWriterHelper.addComment("Automatically generated entity source", "Date generated: " + savedDate, "Created by: " + System.getProperty("user.name"));
+
+			FileWriterHelper.writeSegmentData("package " + packageLocation + ";", true);
+			FileWriterHelper.writeSegmentData("\nimport flounder.entities.*;\n" +
+					"import flounder.lights.*;\n" +
+					"import flounder.maths.*;\n" +
+					"import flounder.maths.vectors.*;\n" +
+					"import flounder.models.*;\n" +
+					"import flounder.resources.*;\n" +
+					"import flounder.space.*;\n" +
+					"import flounder.textures.*;\n\n", true);
 
 			// Entity instance class.
 			FileWriterHelper.beginNewSegment("public class " + className + " extends Entity");
