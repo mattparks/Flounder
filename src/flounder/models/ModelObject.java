@@ -3,6 +3,7 @@ package flounder.models;
 import flounder.factory.*;
 import flounder.physics.*;
 import flounder.processing.*;
+import flounder.resources.*;
 
 /**
  * Class that represents a loaded model.
@@ -16,6 +17,7 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 	private boolean smoothShading;
 
 	private String name;
+	private MyFile file;
 
 	private AABB aabb;
 	private QuickHull hull;
@@ -36,9 +38,10 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		this.smoothShading = false;
 
 		this.name = null;
+		this.file = null;
 	}
 
-	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, AABB aabb, QuickHull hull, String name) {
+	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, AABB aabb, QuickHull hull, String name, MyFile file) {
 		this.vertices = vertices;
 		this.textures = textureCoords;
 		this.normals = normals;
@@ -47,6 +50,7 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		this.smoothShading = smoothShading;
 
 		this.name = name;
+		this.file = file;
 
 		this.aabb = aabb;
 		this.hull = hull;
@@ -88,6 +92,15 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * Gets the model file this was stored in.
+	 *
+	 * @return The model file.
+	 */
+	public MyFile getFile() {
+		return file;
 	}
 
 	public AABB getAABB() {

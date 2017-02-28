@@ -5,6 +5,7 @@ import flounder.collada.geometry.*;
 import flounder.collada.joints.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
+import flounder.resources.*;
 
 public class ModelAnimated {
 	private final MeshData meshData;
@@ -12,13 +13,17 @@ public class ModelAnimated {
 	private final JointsData jointsData;
 	private final Joint headJoint;
 
+	private MyFile file;
+
 	private AABB aabb;
 
 	private int vaoID;
 	private int vaoLength;
 
-	public ModelAnimated(MeshData meshData, JointsData jointsData) {
+	public ModelAnimated(MeshData meshData, JointsData jointsData, MyFile file) {
 		this.meshData = meshData;
+
+		this.file = file;
 
 		float furthest = meshData.getFurthestPoint();
 		this.aabb = new AABB(new Vector3f(-furthest, -furthest, -furthest), new Vector3f(furthest, furthest, furthest));
@@ -49,6 +54,10 @@ public class ModelAnimated {
 
 	public Joint getHeadJoint() {
 		return headJoint;
+	}
+
+	public MyFile getFile() {
+		return file;
 	}
 
 	public AABB getAABB() {

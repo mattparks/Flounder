@@ -42,7 +42,7 @@ public class ModelFactory extends Factory {
 
 		if (((ModelBuilder) builder).getManual() != null) {
 			ModelLoadManual m = b.getManual();
-			o.loadData(m.getVertices(), m.getTextureCoords(), m.getNormals(), m.getTangents(), m.getIndices(), m.isSmoothShading(), m.getAABB(), m.getHull(), name);
+			o.loadData(m.getVertices(), m.getTextureCoords(), m.getNormals(), m.getTangents(), m.getIndices(), m.isSmoothShading(), m.getAABB(), m.getHull(), name, b.getFile());
 		} else if (((ModelBuilder) builder).getFile() != null) {
 			loadOBJ(o, b.getFile(), name);
 		}
@@ -168,7 +168,7 @@ public class ModelFactory extends Factory {
 		}
 
 		// Takes OpenGL comparable data and loads it into a data object.
-		object.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, smoothShading, createAABB(vertices), createHull(vertices), name);
+		object.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, smoothShading, createAABB(vertices), createHull(vertices), name, file);
 	}
 
 	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices) {

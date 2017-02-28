@@ -65,7 +65,7 @@ public class FlounderCollada extends Module {
 		GeometryLoader g = new GeometryLoader(node.getChild("library_geometries"), skinningData.getVerticesSkinData());
 		MeshData meshData = g.extractModelData();
 
-		return new ModelAnimated(meshData, jointsData);
+		return new ModelAnimated(meshData, jointsData, file);
 	}
 
 	/**
