@@ -3,7 +3,6 @@ package flounder.entities.components;
 import flounder.helpers.*;
 
 import javax.swing.*;
-import java.util.*;
 
 public interface IComponentEditor {
 	void addToPanel(JPanel panel);
@@ -15,9 +14,9 @@ public interface IComponentEditor {
 	 *
 	 * @param entityName The name of the save type, can be used to save extra files under /entities/name/*.
 	 *
-	 * @return Returns parameter values saved with the component.
+	 * @return Returns static variables and parameter values saved with the component.
 	 */
-	String[] getSaveParameters(String entityName);
+	Pair<String[], String[]> getSaveValues(String entityName);
 
 	/**
 	 * Creates a new text panel for the component.

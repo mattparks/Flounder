@@ -96,6 +96,18 @@ public class FlounderEntities extends Module {
 			// Entity instance class.
 			FileWriterHelper.beginNewSegment("public class " + className + " extends Entity");
 			{
+				// Writes static data to the save.
+				for (int i = 0; i < editorComponents.size(); i++) {
+					for (String s : editorComponents.get(i).getSaveValues(name).getFirst()) {
+						FileWriterHelper.writeSegmentData(s + ";", true);
+					}
+				}
+
+				// Add some spacing before constructor.
+				if (!editorComponents.isEmpty()) {
+					FileWriterHelper.writeSegmentData("\n", true);
+				}
+
 				// Entity instance constructor.
 				FileWriterHelper.beginNewSegment("public " + className + "(ISpatialStructure<Entity> structure, Vector3f position, Vector3f rotation)");
 				{
@@ -104,7 +116,7 @@ public class FlounderEntities extends Module {
 					for (int i = 0; i < editorComponents.size(); i++) {
 						String parameterData = "";
 
-						for (String s : editorComponents.get(i).getSaveParameters(name)) {
+						for (String s : editorComponents.get(i).getSaveValues(name).getSecond()) {
 							parameterData += s + ", ";
 						}
 
