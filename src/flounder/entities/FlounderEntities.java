@@ -91,15 +91,7 @@ public class FlounderEntities extends Module {
 			FlounderLogger.log("Entity " + name + " is being saved at: " + savedDate);
 			FileWriterHelper.addComment("Automatically generated entity source", "Date generated: " + savedDate, "Created by: " + System.getProperty("user.name"));
 
-			FileWriterHelper.writeSegmentData("package " + packageLocation + ";", true);
-			FileWriterHelper.writeSegmentData("\nimport flounder.entities.*;\n" +
-					"import flounder.lights.*;\n" +
-					"import flounder.maths.*;\n" +
-					"import flounder.maths.vectors.*;\n" +
-					"import flounder.models.*;\n" +
-					"import flounder.resources.*;\n" +
-					"import flounder.space.*;\n" +
-					"import flounder.textures.*;\n\n", true);
+			FileWriterHelper.writeSegmentData("package " + packageLocation + ";\n\n", true);
 
 			// Entity instance class.
 			FileWriterHelper.beginNewSegment("public class " + className + " extends Entity");
@@ -125,6 +117,7 @@ public class FlounderEntities extends Module {
 						}
 					}
 				}
+				FileWriterHelper.endSegment(true);
 			}
 			FileWriterHelper.endSegment(false);
 
