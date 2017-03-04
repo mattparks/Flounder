@@ -145,6 +145,29 @@ public class ShaderObject extends FactoryObject {
 	 *
 	 * @return The uniform that was found.
 	 */
+	public UniformInt getUniformInt(String uniformName) {
+		try {
+			return (UniformInt) uniforms.get(uniformName);
+		} catch (ClassCastException e) {
+			if (uniforms.get(uniformName) != null) {
+				FlounderLogger.error(uniformName + " is not a int!");
+			} else {
+				FlounderLogger.error("Could not find a uniform for " + uniformName);
+			}
+
+			FlounderLogger.exception(e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets a uniform from a name.
+	 *
+	 * @param uniformName The uniforms name.
+	 *
+	 * @return The uniform that was found.
+	 */
 	public UniformMat2 getUniformMat2(String uniformName) {
 		try {
 			return (UniformMat2) uniforms.get(uniformName);
