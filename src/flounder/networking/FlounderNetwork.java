@@ -34,7 +34,7 @@ public class FlounderNetwork extends Module {
 			this.setup = true;
 		}
 
-		this.username = "USERNAME" + ((int) (Math.random() * 10000));
+	//	this.username = "USERNAME" + ((int) (Math.random() * 10000));
 	}
 
 	@Override
@@ -59,7 +59,9 @@ public class FlounderNetwork extends Module {
 	/**
 	 * Starts the client.
 	 */
-	public static void startClient(String ipAddress, int port) {
+	public static void startClient(String username, String ipAddress, int port) {
+		INSTANCE.username = username;
+
 		FlounderLogger.log("Starting Client!");
 		INSTANCE.socketClient = new Client(ipAddress, port); // Default ip: "localhost"
 		INSTANCE.socketClient.start();
