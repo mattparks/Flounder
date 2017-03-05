@@ -146,7 +146,8 @@ public class FlounderLoader extends Module {
 	 */
 	public static void deleteVAOFromCache(int vao) {
 		if (INSTANCE.vaoCache.containsKey(vao)) {
-			INSTANCE.vaoCache.get(vao).forEach(cache -> glDeleteBuffers(cache));
+			INSTANCE.vaoCache.get(vao).forEach(GL15::glDeleteBuffers);
+			INSTANCE.vaoCache.get(vao).clear();
 			INSTANCE.vaoCache.remove(vao);
 			glDeleteVertexArrays(vao);
 		}

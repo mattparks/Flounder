@@ -21,7 +21,13 @@ public class TextureDeleteRequest implements RequestOpenGL {
 
 	@Override
 	public void executeRequestGL() {
+		if (!FlounderTextures.getLoaded().containsKey(texture.getName())) {
+			return;
+		}
+
+		FlounderTextures.getLoaded().get(texture.getName()).clear();
+		FlounderTextures.getLoaded().remove(texture.getName());
+
 		glDeleteTextures(texture.getTextureID());
-		FlounderTextures.getLoaded().get(texture.getName());
 	}
 }

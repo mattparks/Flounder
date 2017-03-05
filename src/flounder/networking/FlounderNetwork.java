@@ -34,7 +34,7 @@ public class FlounderNetwork extends Module {
 			this.setup = true;
 		}
 
-	//	this.username = "USERNAME" + ((int) (Math.random() * 10000));
+		//	this.username = "USERNAME" + ((int) (Math.random() * 10000));
 	}
 
 	@Override

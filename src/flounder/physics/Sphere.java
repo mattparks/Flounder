@@ -206,6 +206,15 @@ public class Sphere extends IBounding<Sphere> {
 	}
 
 	/**
+	 * Sets the radius of the sphere.
+	 *
+	 * @param radius The new sphere radius.
+	 */
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+
+	/**
 	 * Gets the radius of the position.
 	 *
 	 * @return The radius of the position.

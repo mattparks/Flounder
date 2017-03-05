@@ -20,7 +20,13 @@ public class ModelDeleteRequest implements RequestOpenGL {
 
 	@Override
 	public void executeRequestGL() {
-		FlounderLoader.deleteVAOFromCache(model.getVaoID());
+		if (!FlounderModels.getLoaded().containsKey(model.getName())) {
+			return;
+		}
+
+		FlounderModels.getLoaded().get(model.getName()).clear();
 		FlounderModels.getLoaded().remove(model.getName());
+
+		FlounderLoader.deleteVAOFromCache(model.getVaoID());
 	}
 }

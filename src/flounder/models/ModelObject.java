@@ -1,6 +1,7 @@
 package flounder.models;
 
 import flounder.factory.*;
+import flounder.logger.*;
 import flounder.physics.*;
 import flounder.processing.*;
 import flounder.resources.*;
@@ -126,6 +127,12 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		if (isLoaded()) {
 			FlounderProcessors.sendRequest(new ModelDeleteRequest(this));
 			setFullyLoaded(false);
+
+			this.vertices = null;
+			this.textures = null;
+			this.normals = null;
+			this.tangents = null;
+			this.indices = null;
 		}
 	}
 }
