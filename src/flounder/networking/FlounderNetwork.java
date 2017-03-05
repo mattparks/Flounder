@@ -62,7 +62,7 @@ public class FlounderNetwork extends Module {
 	public static void startClient(String username, String ipAddress, int port) {
 		INSTANCE.username = username;
 
-		FlounderLogger.log("Starting Client!");
+		FlounderLogger.log("Starting Client on server " + ipAddress);
 		INSTANCE.socketClient = new Client(ipAddress, port); // Default ip: "localhost"
 		INSTANCE.socketClient.start();
 
