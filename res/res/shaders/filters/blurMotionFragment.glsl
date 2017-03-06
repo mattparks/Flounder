@@ -29,8 +29,7 @@ vec3 decodeLocation() {
 
 //---------MAIN------------
 void main(void) {
-	//vec3 colour = texture(originalTexture, pass_textureCoords).rgb;
-
+    // Gets the currebt world position for this fragment.
 	vec4 worldPosition = vec4(decodeLocation(), 1.0);
 
     // Transform by the view-projection inverse to get the current world position.
@@ -40,8 +39,9 @@ void main(void) {
     vec4 previousPos = projectionMatrix * lastViewMatrix * worldPosition;
 
     // Use this frame's position and last frame's to compute the pixel velocity.
-    vec2 velocity = (currentPos.xy - previousPos.xy) * 0.05 * delta;
+    vec2 velocity = (currentPos.xy - previousPos.xy) * 0.03 * delta;
 
+    // Samples the texture to produce a blur in the velocity.
     vec2 texcoord = pass_textureCoords;
 
     for (float i = 1.0; i < numSamples; ++i){

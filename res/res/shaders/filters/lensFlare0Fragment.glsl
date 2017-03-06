@@ -8,7 +8,6 @@ in vec2 pass_textureCoords;
 layout(binding = 0) uniform sampler2D originalTexture;
 uniform vec2 sunPositon;
 uniform float aspectRatio;
-uniform bool flareHidden;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
@@ -54,7 +53,7 @@ vec3 lensflare(vec2 uv, vec2 pos) {
 	c.g += f22 + f42 + f52 + f62;
 	c.b += f23 + f43 + f53 + f63;
 	c = c * 1.3 - vec3(length(uvd) * 0.05);
-	c += vec3(f0);
+//	c += vec3(f0);
 	return c;
 }
 
@@ -65,14 +64,16 @@ vec3 cc(vec3 colour, float factor,float factor2) {
 
 //---------MAIN------------
 void main(void) {
+	vec4 albedo = texture(originalTexture, sunPositon);
+
 	vec3 colour = vec3(0.0, 0.0, 0.0);
 
-	if (!flareHidden) {
+	//if (albedo.r > 0.5) {
 	    vec2 uv = (pass_textureCoords - 0.5) * aspectRatio;
         colour = vec3(1.4, 1.2, 1.0) * lensflare(uv, sunPositon.xy);
         colour -= 0.015;
         colour = cc(colour, 0.5, 0.1);
-	}
+	//}
 
 	out_colour = texture(originalTexture, pass_textureCoords) + vec4(colour, 0.0);
 }

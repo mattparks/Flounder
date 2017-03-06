@@ -11,7 +11,6 @@ in vec2 pass_textureCoords;
 layout(binding = 0) uniform sampler2D originalTexture;
 uniform vec2 sunPositon;
 uniform float aspectRatio;
-uniform bool flareHidden;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
