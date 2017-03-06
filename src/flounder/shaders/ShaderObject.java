@@ -327,8 +327,8 @@ public class ShaderObject extends FactoryObject {
 	 */
 	public void delete() {
 		if (isLoaded()) {
-			FlounderProcessors.sendRequest(new ShaderDeleteRequest(this));
 			setFullyLoaded(false);
+			FlounderProcessors.sendRequest(new ShaderDeleteRequest(this));
 		}
 	}
 }
