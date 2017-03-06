@@ -47,11 +47,15 @@ public class TextureObject extends FactoryObject {
 		this.numberOfRows = numberOfRows;
 
 		this.name = name;
+
+		setDataLoaded(true);
 	}
 
 	protected void loadGL(int textureID, int glType) {
 		this.textureID = textureID;
 		this.glType = glType;
+
+		setFullyLoaded(true);
 	}
 
 	/**

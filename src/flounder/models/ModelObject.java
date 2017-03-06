@@ -55,11 +55,15 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 
 		this.aabb = aabb;
 		this.hull = hull;
+
+		setDataLoaded(true);
 	}
 
 	protected void loadGL(int vaoID, int vaoLength) {
 		this.vaoID = vaoID;
 		this.vaoLength = vaoLength;
+
+		setFullyLoaded(true);
 	}
 
 	public float[] getVertices() {

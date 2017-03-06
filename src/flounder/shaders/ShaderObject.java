@@ -41,12 +41,16 @@ public class ShaderObject extends FactoryObject {
 		this.shaderUniforms = shaderUniforms;
 
 		this.name = name;
+
+		setDataLoaded(true);
 	}
 
 	protected void loadGL(Map<String, Uniform> uniforms, int shaderID) {
 		this.uniforms = uniforms;
 
 		this.programID = shaderID;
+
+		setFullyLoaded(true);
 	}
 
 	public List<Pair<String, String>> getConstantValues() {
