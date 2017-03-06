@@ -80,6 +80,10 @@ public class ModelFactory extends Factory {
 				}
 
 				switch (prefix) {
+					case "mtllib":
+						break;
+					case "usemtl":
+						break;
 					case "v":
 						String[] currentLineV = line.split(" ");
 						Vector3f vertex = new Vector3f(Float.valueOf(currentLineV[1]), Float.valueOf(currentLineV[2]), Float.valueOf(currentLineV[3]));
