@@ -50,12 +50,12 @@ public class Ray {
 	 *
 	 * @param currentPosition The new position.
 	 */
-	public void update(Vector3f currentPosition) {
+	public void recalculateRay(Vector3f currentPosition) {
 		origin.set(currentPosition);
 
 		if (useMouse) {
-			float mouseX = FlounderMouse.getPositionX();
-			float mouseY = FlounderMouse.getPositionY();
+			float mouseX = FlounderMouse.getPositionX() * FlounderDisplay.getWidth();
+			float mouseY = FlounderMouse.getPositionY() * FlounderDisplay.getHeight();
 			updateNormalisedDeviceCoordinates(mouseX, mouseY);
 		} else {
 			if (screenStart != null) {

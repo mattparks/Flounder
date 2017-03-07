@@ -3,6 +3,7 @@ package flounder.camera;
 import flounder.framework.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.physics.*;
 import flounder.sounds.*;
 import flounder.space.*;
 
@@ -53,6 +54,13 @@ public abstract class Camera extends Extension implements IAudioListener {
 	 * @return The view frustum created by the current camera position and rotation.
 	 */
 	public abstract Frustum getViewFrustum();
+
+	/**
+	 * Gets the ray that extends from the cameras position though the screen.
+	 *
+	 * @return The cameras ray.
+	 */
+	public abstract Ray getViewRay();
 
 	/**
 	 * Gets the view matrix created by the current camera position and rotation.

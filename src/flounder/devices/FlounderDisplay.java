@@ -120,16 +120,19 @@ public class FlounderDisplay extends Module {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // The window will be resizable depending on if its createDisplay.
-		glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
 
-		glfwWindowHint(GLFW_RED_BITS, mode.redBits());
-		glfwWindowHint(GLFW_GREEN_BITS, mode.greenBits());
-		glfwWindowHint(GLFW_BLUE_BITS, mode.blueBits());
-		glfwWindowHint(GLFW_REFRESH_RATE, mode.refreshRate());
+		if (samples > 0) {
+			glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
+		}
 
-		if (fullscreen) {
+		if (fullscreen && mode != null) {
 			fullscreenWidth = mode.width();
 			fullscreenHeight = mode.height();
+
+			glfwWindowHint(GLFW_RED_BITS, mode.redBits());
+			glfwWindowHint(GLFW_GREEN_BITS, mode.greenBits());
+			glfwWindowHint(GLFW_BLUE_BITS, mode.blueBits());
+			glfwWindowHint(GLFW_REFRESH_RATE, mode.refreshRate());
 		}
 
 		// Create a windowed mode window and its OpenGL context.
@@ -176,7 +179,7 @@ public class FlounderDisplay extends Module {
 		}
 
 		// Centres the window position.
-		if (!fullscreen) {
+		if (!fullscreen && mode != null) {
 			glfwSetWindowPos(window, (windowPosX = (mode.width() - windowWidth) / 2), (windowPosY = (mode.height() - windowHeight) / 2));
 		}
 
