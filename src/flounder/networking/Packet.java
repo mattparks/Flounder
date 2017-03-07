@@ -1,6 +1,4 @@
-package flounder.networking.packets;
-
-import flounder.networking.*;
+package flounder.networking;
 
 import java.net.*;
 

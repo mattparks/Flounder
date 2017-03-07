@@ -2,7 +2,6 @@ package flounder.networking;
 
 import flounder.framework.*;
 import flounder.logger.*;
-import flounder.networking.packets.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -80,9 +79,8 @@ public class Server extends Thread {
 	 * Adds the connection of a client.
 	 *
 	 * @param player The client data to add.
-	 * @param packet The connect packet.
 	 */
-	public void addConnection(ClientInfo player, PacketLogin packet) {
+	public void addConnection(ClientInfo player) {
 		boolean alreadyConnected = false;
 
 		for (ClientInfo p : connected) {
@@ -96,13 +94,6 @@ public class Server extends Thread {
 				}
 
 				alreadyConnected = true;
-			} else {
-				// Relay to the current connected player that there is a new player
-				sendData(packet.getData(), p.getIpAddress(), p.getPort());
-
-				// Relay to the new player that the currently connect player exists
-				packet = new PacketLogin(p.getUsername());
-				sendData(packet.getData(), player.getIpAddress(), player.getPort());
 			}
 		}
 
@@ -114,11 +105,10 @@ public class Server extends Thread {
 	/**
 	 * Removes the connection of a client.
 	 *
-	 * @param packet The disconnect packet.
+	 * @param username The disconnecting username.
 	 */
-	public void removeConnection(PacketDisconnect packet) {
-		this.connected.remove(getPlayerMP(packet.getUsername()));
-		packet.writeData(this);
+	public void removeConnection(String username) {
+		this.connected.remove(getPlayerMP(username));
 	}
 
 	/**

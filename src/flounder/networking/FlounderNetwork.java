@@ -2,7 +2,6 @@ package flounder.networking;
 
 import flounder.framework.*;
 import flounder.logger.*;
-import flounder.networking.packets.*;
 import flounder.profiling.*;
 
 /**
@@ -51,6 +50,8 @@ public class FlounderNetwork extends Module {
 	 * Starts the server.
 	 */
 	public static void startServer(int port) {
+		INSTANCE.username = "server";
+
 		FlounderLogger.log("Starting server!");
 		INSTANCE.socketServer = new Server(port);
 		INSTANCE.socketServer.start();
@@ -65,9 +66,6 @@ public class FlounderNetwork extends Module {
 		FlounderLogger.log("Starting Client on server " + ipAddress);
 		INSTANCE.socketClient = new Client(ipAddress, port); // Default ip: "localhost"
 		INSTANCE.socketClient.start();
-
-		PacketLogin loginPacket = new PacketLogin(INSTANCE.username);
-		loginPacket.writeData(INSTANCE.socketClient);
 	}
 
 	/**
@@ -76,8 +74,6 @@ public class FlounderNetwork extends Module {
 	public static void closeServer() {
 		if (INSTANCE.socketServer != null) {
 			FlounderLogger.log("Closing server!");
-
-			new PacketDisconnect("server").writeData(INSTANCE.socketServer);
 			INSTANCE.socketServer.dispose();
 			INSTANCE.socketServer = null;
 		}
@@ -89,8 +85,6 @@ public class FlounderNetwork extends Module {
 	public static void closeClient() {
 		if (INSTANCE.socketClient != null) {
 			FlounderLogger.log("Closing client!");
-
-			new PacketDisconnect(INSTANCE.username).writeData(INSTANCE.socketClient);
 			INSTANCE.socketClient.dispose();
 			INSTANCE.socketClient = null;
 		}

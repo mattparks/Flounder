@@ -1,11 +1,9 @@
 package flounder.entities;
 
-import flounder.camera.*;
 import flounder.entities.components.*;
 import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
-import flounder.physics.bounding.*;
 import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.space.*;
@@ -28,7 +26,7 @@ public class FlounderEntities extends Module {
 	 * Creates a new game manager for entities.
 	 */
 	public FlounderEntities() {
-		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderCamera.class, FlounderBounding.class);
+		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class);
 	}
 
 	@Override

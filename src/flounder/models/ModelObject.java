@@ -1,7 +1,6 @@
 package flounder.models;
 
 import flounder.factory.*;
-import flounder.logger.*;
 import flounder.physics.*;
 import flounder.processing.*;
 import flounder.resources.*;

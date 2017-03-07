@@ -2,7 +2,6 @@ package flounder.networking;
 
 import flounder.framework.*;
 import flounder.logger.*;
-import flounder.networking.packets.*;
 
 import java.io.*;
 import java.lang.reflect.*;
