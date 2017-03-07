@@ -31,6 +31,9 @@ public class ModelAnimated {
 		this.jointsData = jointsData;
 		this.headJoint = createJoints(jointsData.getHeadJoint());
 
+		this.vaoID = -1;
+		this.vaoLength = -1;
+
 		FlounderCollada.loadModelToOpenGL(this);
 	}
 

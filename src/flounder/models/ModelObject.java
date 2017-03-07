@@ -39,6 +39,9 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 
 		this.name = null;
 		this.file = null;
+
+		this.vaoID = -1;
+		this.vaoLength = -1;
 	}
 
 	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, AABB aabb, QuickHull hull, String name, MyFile file) {

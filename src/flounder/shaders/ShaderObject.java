@@ -42,6 +42,8 @@ public class ShaderObject extends FactoryObject {
 
 		this.name = name;
 
+		this.programID = -1;
+
 		setDataLoaded(true);
 	}
 

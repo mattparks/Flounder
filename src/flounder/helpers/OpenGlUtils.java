@@ -179,6 +179,10 @@ public class OpenGlUtils {
 	 * @param bankID The shaders blank ID to bind to.
 	 */
 	public static void bindTexture(TextureObject texture, int bankID) {
+		if (texture == null || texture.getTextureID() == -1) {
+			return;
+		}
+
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(texture.getGlType(), texture.getTextureID());
 	}
@@ -191,6 +195,10 @@ public class OpenGlUtils {
 	 * @param bankID The shaders blank ID to bind to.
 	 */
 	public static void bindTexture(int textureID, int glTarget, int bankID) {
+		if (textureID == -1) {
+			return;
+		}
+
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(glTarget, textureID);
 	}
@@ -203,6 +211,10 @@ public class OpenGlUtils {
 	 * @param bankID The shaders blank ID to bind to.
 	 */
 	public static void bindTextureLOD(int textureID, int lodBias, int bankID) {
+		if (textureID == -1) {
+			return;
+		}
+
 		glActiveTexture(GL_TEXTURE0 + bankID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, lodBias);

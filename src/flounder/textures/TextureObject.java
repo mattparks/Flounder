@@ -48,6 +48,8 @@ public class TextureObject extends FactoryObject {
 
 		this.name = name;
 
+		this.textureID = -1;
+
 		setDataLoaded(true);
 	}
 
