@@ -2,37 +2,26 @@ package flounder.post.filters;
 
 import flounder.camera.*;
 import flounder.devices.*;
-import flounder.maths.matrices.*;
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.post.*;
 import flounder.resources.*;
 
 public class FilterLensFlare extends PostFilter {
-	private Vector2f sunPositon;
+	private Vector3f sunPosition;
 
 	public FilterLensFlare() {
-		super("filterLensFlare", new MyFile(PostFilter.POST_LOC, "lensFlare0Fragment.glsl"));
-		sunPositon = new Vector2f();
+		super("filterLensFlare", new MyFile(PostFilter.POST_LOC, "lensFlareFragment.glsl"));
+		this.sunPosition = new Vector3f();
 	}
 
-	public void setSunPositon(Vector3f sunPositon) {
-		Vector4f point4 = new Vector4f(sunPositon.x, sunPositon.y, sunPositon.z, 1.0f);
-		point4 = Matrix4f.transform(FlounderCamera.getCamera().getViewMatrix(), point4, null);
-		point4 = Matrix4f.transform(FlounderCamera.getCamera().getProjectionMatrix(), point4, null);
-		Vector3f point = new Vector3f(point4);
-
-		point.x /= point.z;
-		point.y /= point.z;
-
-		// point.x = (point.x + 1) * FlounderDisplay.getWidth() / 2;
-		// point.y = (point.y + 1) * FlounderDisplay.getHeight() / 2;
-
-		this.sunPositon.set(point.x, point.y);
+	public void setSunPosition(Vector3f sunPosition) {
+		Maths.worldToScreenSpace(sunPosition, FlounderCamera.getCamera().getViewMatrix(), FlounderCamera.getCamera().getProjectionMatrix(), this.sunPosition);
 	}
 
 	@Override
 	public void storeValues() {
-		shader.getUniformVec2("sunPositon").loadVec2(sunPositon);
+		shader.getUniformVec3("sunPosition").loadVec3(sunPosition);
 		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 	}
 }

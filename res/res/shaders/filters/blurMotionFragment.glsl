@@ -39,7 +39,7 @@ void main(void) {
     vec4 previousPos = projectionMatrix * lastViewMatrix * worldPosition;
 
     // Use this frame's position and last frame's to compute the pixel velocity.
-    vec2 velocity = (currentPos.xy - previousPos.xy) * 0.03 * delta;
+    vec2 velocity = (currentPos.xy - previousPos.xy) * 0.02 * delta;
 
     // Samples the texture to produce a blur in the velocity.
     vec2 texcoord = pass_textureCoords;
