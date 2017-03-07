@@ -75,6 +75,10 @@ public class Server extends Thread {
 		}
 	}
 
+	public List<ClientInfo> getConnected() {
+		return connected;
+	}
+
 	/**
 	 * Adds the connection of a client.
 	 *
