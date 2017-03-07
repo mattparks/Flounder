@@ -43,7 +43,7 @@ vec3 lensflare(vec2 uv, vec3 pos) {
 	}
 
     // Hides flare when below a world height.
-    colour *= clamp(worldHeight + 2.0, 0.0, 1.0);
+    colour *= clamp(worldHeight + 10.0, 0.0, 1.0);
 
     // Adds a bit of darkining around the edge of the screen.
 	return colour * 1.3 - vec3(length(uvd) * 0.05);
