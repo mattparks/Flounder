@@ -11,7 +11,7 @@ public class FlounderNetwork extends Module {
 	private static final FlounderNetwork INSTANCE = new FlounderNetwork();
 	public static final String PROFILE_TAB_NAME = "Network";
 
-	public static final int DEFAULT_PORT = 2266;
+	public static final int DEFAULT_PORT = 27650;
 
 	private Server socketServer;
 	private Client socketClient;
@@ -52,7 +52,7 @@ public class FlounderNetwork extends Module {
 	public static void startServer(int port) {
 		INSTANCE.username = "server";
 
-		FlounderLogger.log("Starting server!");
+		FlounderLogger.log("Starting server on port " + INSTANCE.port);
 		INSTANCE.socketServer = new Server(port);
 		INSTANCE.socketServer.start();
 	}
@@ -63,8 +63,8 @@ public class FlounderNetwork extends Module {
 	public static void startClient(String username, String ipAddress, int port) {
 		INSTANCE.username = username;
 
-		FlounderLogger.log("Starting Client on server " + ipAddress);
-		INSTANCE.socketClient = new Client(ipAddress, port); // Default ip: "localhost"
+		FlounderLogger.log("Starting Client on server " + ipAddress + ":" + port);
+		INSTANCE.socketClient = new Client(ipAddress, port);
 		INSTANCE.socketClient.start();
 	}
 

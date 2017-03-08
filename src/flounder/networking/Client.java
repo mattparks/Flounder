@@ -40,6 +40,8 @@ public class Client extends Thread {
 
 			try {
 				socket.receive(packet);
+			} catch (SocketException e) {
+				// Ignore.
 			} catch (IOException e) {
 				FlounderLogger.error("Client socket could not receive data!");
 				FlounderLogger.exception(e);

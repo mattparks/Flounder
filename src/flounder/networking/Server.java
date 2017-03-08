@@ -40,6 +40,8 @@ public class Server extends Thread {
 
 			try {
 				socket.receive(packet);
+			} catch (SocketException e) {
+				// Ignore.
 			} catch (IOException e) {
 				FlounderLogger.error("Server socket could not receive data!");
 				FlounderLogger.exception(e);
