@@ -53,6 +53,10 @@ public class FontRenderer extends Renderer {
 	}
 
 	private void renderText(Text text) {
+		if (text.getMesh() == -1 || text.getVertexCount() == -1) {
+			return;
+		}
+
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenGlUtils.bindTexture(text.getFontType().getTexture(), 0);
 		Vector2f textPosition = text.getPosition();

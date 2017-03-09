@@ -49,13 +49,15 @@ public class BoundingRenderer extends Renderer {
 		prepareRendering(clipPlane, camera);
 
 		for (ModelObject model : FlounderBounding.getRenderShapes().keySet()) {
-			prepareModel(model);
+			if (model.isLoaded() && model.getVaoID() != -1 && model.getVaoLength() != -1) {
+				prepareModel(model);
 
-			for (IBounding shape : FlounderBounding.getRenderShapes().get(model)) {
-				renderShape(model, shape);
+				for (IBounding shape : FlounderBounding.getRenderShapes().get(model)) {
+					renderShape(model, shape);
+				}
+
+				unbindModel();
 			}
-
-			unbindModel();
 		}
 
 		endRendering();

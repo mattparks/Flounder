@@ -63,6 +63,9 @@ public class Text {
 		this.fontSize = fontSize;
 		this.guiAlign = guiAlign;
 
+		this.textMesh = -1;
+		this.vertexCount = -1;
+
 		this.alphaDriver = new ConstantDriver(1.0f);
 		this.scaleDriver = new ConstantDriver(1.0f);
 		this.glowDriver = new ConstantDriver(0.0f);

@@ -13,7 +13,7 @@ uniform float aspectRatio;
 layout(location = 0) out vec4 out_colour;
 
 vec3 lensflare(vec2 uv, vec3 pos) {
-	vec2 uvd = uv * (length(uv));
+	vec2 uvd = uv * length(uv);
 	vec3 colour = vec3(0.0);
 
     if (sunPosition.z >= 0.0) {
