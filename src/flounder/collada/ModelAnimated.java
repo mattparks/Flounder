@@ -83,6 +83,10 @@ public class ModelAnimated {
 		this.vaoLength = vaoLength;
 	}
 
+	public boolean isLoaded() {
+		return vaoID != -1 && vaoLength != -1;
+	}
+
 	/**
 	 * Deletes the animated model from OpenGL memory.
 	 */

@@ -354,7 +354,7 @@ public class Text {
 	}
 
 	public boolean isLoaded() {
-		return loaded;
+		return loaded && textMesh != -1 && vertexCount != -1;
 	}
 
 	/**

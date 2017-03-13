@@ -53,7 +53,7 @@ public class FontRenderer extends Renderer {
 	}
 
 	private void renderText(Text text) {
-		if (text.getMesh() == -1 || text.getVertexCount() == -1) {
+		if (!text.isLoaded()) {
 			return;
 		}
 

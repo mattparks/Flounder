@@ -35,6 +35,7 @@ public class TextureObject extends FactoryObject {
 
 		this.name = null;
 
+		this.textureID = -1;
 		this.glType = GL_TEXTURE_2D;
 	}
 
@@ -152,6 +153,11 @@ public class TextureObject extends FactoryObject {
 	 */
 	public int getGlType() {
 		return glType;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return super.isLoaded() && textureID != -1;
 	}
 
 	/**

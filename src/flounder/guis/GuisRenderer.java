@@ -53,7 +53,7 @@ public class GuisRenderer extends Renderer {
 	}
 
 	private void renderGui(GuiTexture gui) {
-		if (vaoID == -1 || !gui.getTexture().isLoaded() || gui.getTexture().getTextureID() == -1) {
+		if (vaoID == -1 || !gui.getTexture().isLoaded()) {
 			return;
 		}
 

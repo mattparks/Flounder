@@ -126,6 +126,11 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		return vaoLength;
 	}
 
+	@Override
+	public boolean isLoaded() {
+		return super.isLoaded() && vaoID != -1 && vaoLength != -1;
+	}
+
 	/**
 	 * Deletes the model from OpenGL memory.
 	 */

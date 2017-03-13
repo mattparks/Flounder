@@ -328,6 +328,11 @@ public class ShaderObject extends FactoryObject {
 		return null;
 	}
 
+	@Override
+	public boolean isLoaded() {
+		return super.isLoaded() && programID != -1;
+	}
+
 	/**
 	 * Deletes the shader from OpenGL memory.
 	 */
