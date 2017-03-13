@@ -1,6 +1,7 @@
 package flounder.renderer;
 
 import flounder.camera.*;
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 
@@ -9,13 +10,15 @@ import flounder.profiling.*;
  */
 public abstract class Renderer {
 	private ProfileTimer profileTimer;
+	private Timer timerProfile;
 
 	/**
 	 * Creates a new sub renderer in the engine.
 	 */
 	public Renderer() {
 		// TODO: Have own internal Module requirements to render.
-		profileTimer = new ProfileTimer();
+		this.profileTimer = new ProfileTimer();
+		this.timerProfile = new Timer(1.0 / 7.5);
 	}
 
 	/**
@@ -30,9 +33,12 @@ public abstract class Renderer {
 		profileTimer.stopInvocation();
 		profileTimer.reset();
 
-		if (FlounderProfiler.isOpen()) {
-			// TODO: Limit profile speed.
+		// Profile some values to the profiler.
+		if (FlounderProfiler.isOpen() && timerProfile.isPassedTime()) {
 			profile();
+
+			// Resets the timer.
+			timerProfile.resetStartTime();
 		}
 	}
 
