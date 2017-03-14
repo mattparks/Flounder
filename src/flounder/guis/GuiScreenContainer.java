@@ -4,7 +4,7 @@ import java.util.*;
 
 public class GuiScreenContainer extends GuiComponent {
 	public GuiScreenContainer() {
-		super.setScreenSpacePosition(0, 0, 1, 1);
+		super.setScreenSpacePosition(0.0f, 0.0f, 1.0f, 1.0f);
 	}
 
 	@Override

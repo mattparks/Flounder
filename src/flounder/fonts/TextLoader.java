@@ -102,18 +102,18 @@ public class TextLoader {
 					cursorX = 0.0;
 					break;
 				case CENTRE:
-					cursorX = (line.getMaxLength() - line.getLineLength()) / 2.0;
+					cursorX = (line.maxLength - line.currentLineLength) / 2.0;
 					break;
 				case RIGHT:
-					cursorX = line.getMaxLength() - line.getLineLength();
+					cursorX = line.maxLength - line.currentLineLength;
 					break;
 			}
 
-			for (Word word : line.getWords()) {
-				for (Character letter : word.getCharacters()) {
+			for (Word word : line.words) {
+				for (Character letter : word.characters) {
 					addVerticesForCharacter(cursorX, cursorY, letter, text.getFontSize(), vertices);
-					addTextCoords(textureCoords, letter.getXTextureCoord(), letter.getYTextureCoord(), letter.getXMaxTextureCoord(), letter.getYMaxTextureCoord());
-					cursorX += letter.getXAdvance() * text.getFontSize();
+					addTextCoords(textureCoords, letter.xTextureCoord, letter.yTextureCoord, letter.xMaxTextureCoord, letter.yMaxTextureCoord);
+					cursorX += letter.xAdvance * text.getFontSize();
 				}
 
 				cursorX += metaData.getSpaceWidth() * text.getFontSize();
@@ -148,19 +148,19 @@ public class TextLoader {
 		text.setNumberOfLines(lines.size());
 
 		if (text.getGuiAlign().equals(GuiAlign.CENTRE) || lines.size() > 1.0f) {
-			text.setOriginalWidth((float) lines.get(0).getMaxLength());
+			text.setOriginalWidth((float) lines.get(0).maxLength);
 		} else {
-			text.setOriginalWidth((float) lines.get(0).getLineLength());
+			text.setOriginalWidth((float) lines.get(0).currentLineLength);
 		}
 
 		text.setOriginalHeight((float) TextLoader.LINE_HEIGHT * text.getFontSize() * lines.size() * 1.0f);
 	}
 
 	private void addVerticesForCharacter(double cursorX, double cursorY, Character character, double fontSize, List<Float> vertices) {
-		double x = cursorX + character.getXOffset() * fontSize;
-		double y = cursorY + character.getYOffset() * fontSize;
-		double maxX = x + character.getSizeX() * fontSize;
-		double maxY = y + character.getSizeY() * fontSize;
+		double x = cursorX + character.xOffset * fontSize;
+		double y = cursorY + character.yOffset * fontSize;
+		double maxX = x + character.sizeX * fontSize;
+		double maxY = y + character.sizeY * fontSize;
 		addVertices(vertices, x, y, maxX, maxY);
 	}
 

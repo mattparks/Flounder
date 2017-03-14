@@ -159,7 +159,7 @@ public class MetaFile {
 			Character c = loadCharacter(imageWidth);
 
 			if (c != null) {
-				metaData.put(c.getId(), c);
+				metaData.put(c.id, c);
 			}
 		}
 	}
