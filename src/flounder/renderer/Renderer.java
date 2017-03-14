@@ -18,7 +18,7 @@ public abstract class Renderer {
 	public Renderer() {
 		// TODO: Have own internal Module requirements to render.
 		this.profileTimer = new ProfileTimer();
-		this.timerProfile = new Timer(1.0 / 7.5);
+		this.timerProfile = new Timer(1.0 / 5.0);
 	}
 
 	/**
