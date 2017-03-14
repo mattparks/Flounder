@@ -121,9 +121,10 @@ public class FlounderDisplay extends Module {
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // The window will be resizable depending on if its createDisplay.
 
-		if (samples > 0) {
-			glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
-		}
+		// Use FBO antialiasing instead!
+		//if (samples > 0) {
+		//	glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
+		//}
 
 		if (fullscreen && mode != null) {
 			fullscreenWidth = mode.width();
