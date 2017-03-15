@@ -42,7 +42,7 @@ public class ModelFactory extends Factory {
 
 		if (((ModelBuilder) builder).getManual() != null) {
 			ModelLoadManual m = b.getManual();
-			o.loadData(m.getVertices(), m.getTextureCoords(), m.getNormals(), m.getTangents(), m.getIndices(), m.isSmoothShading(), m.getAABB(), m.getHull(), name, b.getFile());
+			o.loadData(m.getVertices(), m.getTextureCoords(), m.getNormals(), m.getTangents(), m.getIndices(), m.isSmoothShading(), m.getAABB(), name, b.getFile());
 		} else if (((ModelBuilder) builder).getFile() != null) {
 			loadOBJ(o, b.getFile(), name);
 		}
@@ -172,7 +172,7 @@ public class ModelFactory extends Factory {
 		}
 
 		// Takes OpenGL comparable data and loads it into a data object.
-		object.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, smoothShading, createAABB(vertices), createHull(vertices), name, file);
+		object.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, smoothShading, createAABB(vertices), name, file);
 	}
 
 	private VertexData processDataVertex(String[] vertex, List<VertexData> vertices, List<Integer> indices) {
@@ -258,16 +258,6 @@ public class ModelFactory extends Factory {
 		}
 
 		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
-	}
-
-	private QuickHull createHull(List<VertexData> vertices) {
-		List<Vector3f> points = new ArrayList<>();
-
-		for (VertexData vertex : vertices) {
-			points.add(vertex.getPosition());
-		}
-
-		return new QuickHull(points);
 	}
 
 	@Override

@@ -66,11 +66,4 @@ public abstract class ModelLoadManual {
 	 * @return The surrounding AABB.
 	 */
 	public abstract AABB getAABB();
-
-	/**
-	 * Gets the surrounding Hull (without applied scale).
-	 *
-	 * @return The surrounding Hull.
-	 */
-	public abstract QuickHull getHull();
 }

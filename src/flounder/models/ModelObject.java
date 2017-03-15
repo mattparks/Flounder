@@ -8,7 +8,7 @@ import flounder.resources.*;
 /**
  * Class that represents a loaded model.
  */
-public class ModelObject extends FactoryObject { // TODO: Document more!
+public class ModelObject extends FactoryObject {
 	private float[] vertices;
 	private float[] textures;
 	private float[] normals;
@@ -20,7 +20,6 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 	private MyFile file;
 
 	private AABB aabb;
-	private QuickHull hull;
 
 	private int vaoID;
 	private int vaoLength;
@@ -44,7 +43,7 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		this.vaoLength = -1;
 	}
 
-	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, AABB aabb, QuickHull hull, String name, MyFile file) {
+	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, AABB aabb, String name, MyFile file) {
 		this.vertices = vertices;
 		this.textures = textureCoords;
 		this.normals = normals;
@@ -56,7 +55,6 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 		this.file = file;
 
 		this.aabb = aabb;
-		this.hull = hull;
 
 		setDataLoaded(true);
 	}
@@ -112,10 +110,6 @@ public class ModelObject extends FactoryObject { // TODO: Document more!
 
 	public AABB getAABB() {
 		return aabb;
-	}
-
-	public QuickHull getHull() {
-		return hull;
 	}
 
 	public int getVaoID() {
