@@ -26,8 +26,16 @@ public class FlounderFonts extends Module {
 	public static final FontType FFF_FORWARD = new FontType(new MyFile(FONTS_LOC, "fffForward.png"), new MyFile(FONTS_LOC, "fffForward.fnt"));
 	public static final FontType FORTE = new FontType(new MyFile(FONTS_LOC, "forte.png"), new MyFile(FONTS_LOC, "forte.fnt"));
 	public static final FontType NEXA_BOLD = new FontType(new MyFile(FONTS_LOC, "nexaBold.png"), new MyFile(FONTS_LOC, "nexaBold.fnt"));
-	public static final FontType SEGO_UI = new FontType(new MyFile(FONTS_LOC, "segoeUI.png"), new MyFile(FONTS_LOC, "segoeUI.fnt"));
+
+	public static final FontType OPEN_SANS = new FontType(new MyFile(FONTS_LOC, "openSans.png"), new MyFile(FONTS_LOC, "openSans.fnt"));
+	public static final FontType OPEN_SANS_EXTRABOLD = new FontType(new MyFile(FONTS_LOC, "openSansExtrabold.png"), new MyFile(FONTS_LOC, "openSansExtrabold.fnt"));
+	public static final FontType OPEN_SANS_LIGHT = new FontType(new MyFile(FONTS_LOC, "openSansLight.png"), new MyFile(FONTS_LOC, "openSansLight.fnt"));
+	public static final FontType OPEN_SANS_SEMIBOLD = new FontType(new MyFile(FONTS_LOC, "openSansSemibold.png"), new MyFile(FONTS_LOC, "openSansSemibold.fnt"));
+
+	public static final FontType SEGOE_UI = new FontType(new MyFile(FONTS_LOC, "segoeUI.png"), new MyFile(FONTS_LOC, "segoeUI.fnt"));
 	public static final FontType SEGOE_UI_BLACK = new FontType(new MyFile(FONTS_LOC, "segoeUIBlack.png"), new MyFile(FONTS_LOC, "segoeUIBlack.fnt"));
+	public static final FontType SEGOE_UI_SEMIBOLD = new FontType(new MyFile(FONTS_LOC, "segoeUISemibold.png"), new MyFile(FONTS_LOC, "segoeUISemibold.fnt"));
+
 	public static final FontType SERIF = new FontType(new MyFile(FONTS_LOC, "serif.png"), new MyFile(FONTS_LOC, "serif.fnt"));
 	public static final FontType TREBUCHET = new FontType(new MyFile(FONTS_LOC, "trebuchet.png"), new MyFile(FONTS_LOC, "trebuchet.fnt"));
 	public static final FontType BRUSH_SCRIPT = new FontType(new MyFile(FONTS_LOC, "brushScript.png"), new MyFile(FONTS_LOC, "brushScript.fnt"));

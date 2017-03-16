@@ -2,44 +2,36 @@ package flounder.lights;
 
 import flounder.maths.*;
 import flounder.maths.vectors.*;
-import flounder.physics.*;
-import flounder.space.*;
 
 /**
- * Represents a light in the game, contains a colour, position and attenuation.
+ * Represents a point light, contains a colour, position and attenuation.
  */
-public class Light implements ISpatialObject {
+public class LightPoint implements ILight {
 	public Colour colour;
 	public Vector3f position;
 	public Attenuation attenuation;
-	private Sphere lightDistance;
 
 	/**
-	 * Creates a new Light with unlimited range.
+	 * Creates a new point light with unlimited range.
 	 *
 	 * @param colour The colour of the light.
 	 * @param position The world position of the light.
 	 */
-	public Light(Colour colour, Vector3f position) {
+	public LightPoint(Colour colour, Vector3f position) {
 		this(colour, position, new Attenuation(1.0f, 0.0f, 0.0f));
 	}
 
 	/**
-	 * Creates a new Light.
+	 * Creates a new point light.
 	 *
 	 * @param colour The colour of the light.
 	 * @param position The world position of the light.
 	 * @param attenuation How much the intensity of the light is lost over a distance.
 	 */
-	public Light(Colour colour, Vector3f position, Attenuation attenuation) {
+	public LightPoint(Colour colour, Vector3f position, Attenuation attenuation) {
 		this.colour = colour;
 		this.position = position;
 		this.attenuation = attenuation;
-		this.lightDistance = new Sphere((float) quadratic(attenuation.constant, attenuation.linear, attenuation.exponent), position);
-	}
-
-	private double quadratic(double a, double b, double c) {
-		return (-b + Math.sqrt((b * b) + (4.0 * a * c))) / (2.0 * a);
 	}
 
 	/**
@@ -97,17 +89,11 @@ public class Light implements ISpatialObject {
 	}
 
 	@Override
-	public Sphere getBounding() {
-		return lightDistance;
-	}
-
-	@Override
 	public String toString() {
-		return "Light{" +
+		return "LightPoint{" +
 				"colour=" + colour +
 				", position=" + position +
 				", attenuation=" + attenuation +
-				", lightDistance=" + lightDistance +
 				'}';
 	}
 }
