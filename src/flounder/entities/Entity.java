@@ -2,6 +2,7 @@ package flounder.entities;
 
 import flounder.entities.components.*;
 import flounder.logger.*;
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.space.*;
@@ -146,7 +147,7 @@ public class Entity implements ISpatialObject {
 	 * @param rotateAmount The amount being rotated.
 	 */
 	public void move(Vector3f moveAmount, Vector3f rotateAmount) {
-		structure.remove(this);
+	//	structure.remove(this);
 
 		hasMoved = false;
 
@@ -158,12 +159,20 @@ public class Entity implements ISpatialObject {
 		}
 
 		if (!hasMoved) {
-			position.set(position.x + moveAmount.x, position.y + moveAmount.y, position.z + moveAmount.z);
-			rotation.set(rotation.x + rotateAmount.x, rotation.y + rotateAmount.y, rotation.z + rotateAmount.z);
+			position.set(
+					position.x + moveAmount.x,
+					position.y + moveAmount.y,
+					position.z + moveAmount.z
+			);
+			rotation.set(
+					Maths.normalizeAngle(rotation.x + rotateAmount.x),
+					Maths.normalizeAngle(rotation.y + rotateAmount.y),
+					Maths.normalizeAngle(rotation.z + rotateAmount.z)
+			);
 			hasMoved = true;
 		}
 
-		structure.add(this);
+	//	structure.add(this);
 	}
 
 	/**
