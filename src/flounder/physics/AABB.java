@@ -207,7 +207,7 @@ public class AABB extends IBounding<AABB> {
 	 * Creates an AABB equivalent to this, but in a new position and rotation.
 	 *
 	 * @param source The source AABB.
-	 * @param position The amount to move.
+	 * @param position The amount to verifyMove.
 	 * @param rotation The amount to rotate.
 	 * @param scale The amount to scale the object.
 	 * @param destination The destination AABB or null if a new AABB is to be created.
@@ -400,7 +400,7 @@ public class AABB extends IBounding<AABB> {
 	}
 
 	/**
-	 * Adjusts a movement amount so that after the move is performed, the {@code left} AABB will not intersect the {@code right}.
+	 * Adjusts a movement amount so that after the verifyMove is performed, the {@code left} AABB will not intersect the {@code right}.
 	 * <p/>
 	 * This method assumes that {@code left} AABB can actually intersect {@code right} after some amount of movement,
 	 * even if it won't necessarily intersect it after the movement specified by {@code moveDelta}.
@@ -410,7 +410,7 @@ public class AABB extends IBounding<AABB> {
 	 * @param positionDelta The delta movement for the left AABB.
 	 * @param destination Where the final resolved delta should be stored.
 	 *
-	 * @return The new, adjusted move delta that guarantees no intersection.
+	 * @return The new, adjusted verifyMove delta that guarantees no intersection.
 	 */
 	public static Vector3f resolveCollision(AABB left, AABB right, Vector3f positionDelta, Vector3f destination) {
 		if (destination == null) {

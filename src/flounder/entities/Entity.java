@@ -45,6 +45,15 @@ public class Entity implements ISpatialObject {
 	}
 
 	/**
+	 * Gets a list of all entity components.
+	 *
+	 * @return All entity components in this entity.
+	 */
+	public List<IComponentEntity> getComponents() {
+		return components;
+	}
+
+	/**
 	 * Adds a new component to the entity.
 	 *
 	 * @param component The component to add.
@@ -66,25 +75,16 @@ public class Entity implements ISpatialObject {
 	}
 
 	/**
-	 * Gets a list of all entity components.
-	 *
-	 * @return All entity components in this entity.
-	 */
-	public List<IComponentEntity> getComponents() {
-		return components;
-	}
-
-	/**
 	 * Removes a component from this entity by id. If more than one is found, the first component in the list is removed. If none are found, nothing is removed.
 	 *
 	 * @param id The id of the component. This is typically found with ComponentClass.ID.
 	 */
 	public void removeComponent(int id) {
-		for (IComponentEntity c : components) {
-			if (c.getId() == id) {
-				c.dispose();
-				components.remove(c);
-				return;
+		for (IComponentEntity component : components) {
+			if (component.getId() == id) {
+				component.dispose();
+				components.remove(component);
+				setMoved();
 			}
 		}
 	}
@@ -141,22 +141,24 @@ public class Entity implements ISpatialObject {
 	}
 
 	/**
-	 * Moves this entity by a certain amount. If this entity is a colliding entity and it hits another colliding entity when it moves, then this will only move the entity as far as it can without intersecting a colliding entity.
+	 * Moves this entity by a certain amount. If this entity is a colliding entity and it hits another colliding entity when it moves, then this will only verifyMove the entity as far as it can without intersecting a colliding entity.
 	 *
 	 * @param moveAmount The amount being moved.
 	 * @param rotateAmount The amount being rotated.
 	 */
 	public void move(Vector3f moveAmount, Vector3f rotateAmount) {
-		hasMoved = false;
+		if (moveAmount.isZero() && rotateAmount.isZero()) {
+			return;
+		}
 
 		for (IComponentEntity component : components) {
 			if (IComponentMove.class.isInstance(component)) {
-				((IComponentMove) component).move(this, moveAmount, rotateAmount);
+				((IComponentMove) component).verifyMove(this, moveAmount, rotateAmount);
 				hasMoved = true;
 			}
 		}
 
-		if (!hasMoved) {
+		if (hasMoved) {
 			position.set(
 					position.x + moveAmount.x,
 					position.y + moveAmount.y,
@@ -167,7 +169,6 @@ public class Entity implements ISpatialObject {
 					Maths.normalizeAngle(rotation.y + rotateAmount.y),
 					Maths.normalizeAngle(rotation.z + rotateAmount.z)
 			);
-			hasMoved = true;
 		}
 	}
 

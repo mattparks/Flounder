@@ -168,7 +168,7 @@ public class Animator {
 	 * Finally the inverse of the joint's bind transform is multiplied with the
 	 * model-space transform of the joint. This basically "subtracts" the
 	 * joint's original bind (no animation applied) transform from the desired
-	 * pose transform. The result of this is then the transform required to move
+	 * pose transform. The result of this is then the transform required to verifyMove
 	 * the joint from its original model-space transform to it's desired
 	 * model-space posed transform. This is the transform that needs to be
 	 * loaded up to the vertex shader and used to transform the vertices into

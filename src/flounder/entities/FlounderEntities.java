@@ -37,7 +37,17 @@ public class FlounderEntities extends Module {
 	@Override
 	public void update() {
 		if (entityStructure != null) {
-			entityStructure.getAll().forEach(Entity::update);
+			Iterator<Entity> iterator = entityStructure.getAll().iterator();
+
+			while (iterator.hasNext()) {
+				Entity entity = iterator.next();
+
+				if (entity != null && !entity.isRemoved()) {
+					entity.update();
+				} else {
+					iterator.remove();
+				}
+			}
 		}
 	}
 

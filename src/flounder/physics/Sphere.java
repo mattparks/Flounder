@@ -61,7 +61,7 @@ public class Sphere extends IBounding<Sphere> {
 	 * Creates an Sphere equivalent to this, but in a new position and scale.
 	 *
 	 * @param source The source Sphere.
-	 * @param position The amount to move.
+	 * @param position The amount to verifyMove.
 	 * @param scale The amount to scale the object.
 	 * @param destination The destination Sphere or null if a new Sphere is to be created.
 	 *
