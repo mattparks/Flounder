@@ -147,8 +147,6 @@ public class Entity implements ISpatialObject {
 	 * @param rotateAmount The amount being rotated.
 	 */
 	public void move(Vector3f moveAmount, Vector3f rotateAmount) {
-	//	structure.remove(this);
-
 		hasMoved = false;
 
 		for (IComponentEntity component : components) {
@@ -171,8 +169,6 @@ public class Entity implements ISpatialObject {
 			);
 			hasMoved = true;
 		}
-
-	//	structure.add(this);
 	}
 
 	/**
