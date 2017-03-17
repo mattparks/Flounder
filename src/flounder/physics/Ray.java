@@ -2,6 +2,7 @@ package flounder.physics;
 
 import flounder.camera.*;
 import flounder.devices.*;
+import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 
@@ -54,8 +55,8 @@ public class Ray {
 		origin.set(currentPosition);
 
 		if (useMouse) {
-			float mouseX = FlounderMouse.getPositionX() * FlounderDisplay.getWidth();
-			float mouseY = FlounderMouse.getPositionY() * FlounderDisplay.getHeight();
+			float mouseX = FlounderMouse.getPositionX();
+			float mouseY = FlounderMouse.getPositionY();
 			updateNormalisedDeviceCoordinates(mouseX, mouseY);
 		} else {
 			if (screenStart != null) {
@@ -71,9 +72,9 @@ public class Ray {
 	}
 
 	private void updateNormalisedDeviceCoordinates(float mouseX, float mouseY) {
-		float x = (2.0f * mouseX) / FlounderDisplay.getWidth() - 1.0f;
-		float y = (2.0f * mouseY) / FlounderDisplay.getHeight() - 1.0f;
-		normalizedCoords.set(x, y);
+		float x = (2.0f * mouseX) - 1.0f;
+		float y = (2.0f * mouseY) - 1.0f;
+		normalizedCoords.set(x, -y);
 	}
 
 	private void updateEyeCoords(Vector4f clipCoords) {
