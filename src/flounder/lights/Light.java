@@ -6,7 +6,7 @@ import flounder.maths.vectors.*;
 /**
  * Represents a point light, contains a colour, position and attenuation.
  */
-public class LightPoint implements ILight {
+public class Light {
 	public Colour colour;
 	public Vector3f position;
 	public Attenuation attenuation;
@@ -17,7 +17,7 @@ public class LightPoint implements ILight {
 	 * @param colour The colour of the light.
 	 * @param position The world position of the light.
 	 */
-	public LightPoint(Colour colour, Vector3f position) {
+	public Light(Colour colour, Vector3f position) {
 		this(colour, position, new Attenuation(1.0f, 0.0f, 0.0f));
 	}
 
@@ -28,7 +28,7 @@ public class LightPoint implements ILight {
 	 * @param position The world position of the light.
 	 * @param attenuation How much the intensity of the light is lost over a distance.
 	 */
-	public LightPoint(Colour colour, Vector3f position, Attenuation attenuation) {
+	public Light(Colour colour, Vector3f position, Attenuation attenuation) {
 		this.colour = colour;
 		this.position = position;
 		this.attenuation = attenuation;
@@ -90,7 +90,7 @@ public class LightPoint implements ILight {
 
 	@Override
 	public String toString() {
-		return "LightPoint{" +
+		return "Light{" +
 				"colour=" + colour +
 				", position=" + position +
 				", attenuation=" + attenuation +
