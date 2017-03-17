@@ -93,10 +93,10 @@ public class FlounderDisplay extends Module {
 	public void init() {
 		if (!setup) {
 			FlounderLogger.error("Flounder Display setup can be used to configure the display, default settings were set!");
-		//	this.windowWidth = 1080;
-		//	this.windowHeight = 720;
-		//	this.title = "Testing 1";
-		//	this.icons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
+			//	this.windowWidth = 1080;
+			//	this.windowHeight = 720;
+			//	this.title = "Testing 1";
+			//	this.icons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
 			this.vsync = true;
 			this.antialiasing = true;
 			this.samples = 0;
