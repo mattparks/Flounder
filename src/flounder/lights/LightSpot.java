@@ -9,20 +9,20 @@ import flounder.maths.vectors.*;
 public class LightSpot implements ILight {
 	public Colour colour;
 	public Vector3f position;
-	public Vector3f direction;
+	public Vector3f coneDirection;
 	public Attenuation attenuation;
-	public float angle;
+	public float coneAngle;
 
-	public LightSpot(Colour colour, Vector3f position, Vector3f direction, float angle) {
-		this(colour, position, direction, new Attenuation(1.0f, 0.0f, 0.0f), angle);
+	public LightSpot(Colour colour, Vector3f position, Vector3f coneDirection, float coneAngle) {
+		this(colour, position, coneDirection, new Attenuation(1.0f, 0.0f, 0.0f), coneAngle);
 	}
 
-	public LightSpot(Colour colour, Vector3f position, Vector3f direction, Attenuation attenuation, float angle) {
+	public LightSpot(Colour colour, Vector3f position, Vector3f coneDirection, Attenuation attenuation, float coneAngle) {
 		this.colour = colour;
 		this.position = position;
-		this.direction = direction;
+		this.coneDirection = coneDirection;
 		this.attenuation = attenuation;
-		this.angle = angle;
+		this.coneAngle = coneAngle;
 	}
 
 	@Override
@@ -30,9 +30,9 @@ public class LightSpot implements ILight {
 		return "LightSpot{" +
 				"colour=" + colour +
 				", position=" + position +
-				", direction=" + direction +
+				", coneDirection=" + coneDirection +
 				", attenuation=" + attenuation +
-				", angle=" + angle +
+				", coneAngle=" + coneAngle +
 				'}';
 	}
 }
