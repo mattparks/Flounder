@@ -11,7 +11,7 @@ public class FlounderNetwork extends Module {
 	private static final FlounderNetwork INSTANCE = new FlounderNetwork();
 	public static final String PROFILE_TAB_NAME = "Network";
 
-	public static final int DEFAULT_PORT = 27650;
+	public static final int DEFAULT_PORT = 2266;
 
 	private Server socketServer;
 	private Client socketClient;
