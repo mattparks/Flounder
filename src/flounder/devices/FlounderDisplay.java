@@ -15,6 +15,7 @@ import java.nio.*;
 import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -263,6 +264,7 @@ public class FlounderDisplay extends Module {
 		FlounderLogger.log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
 		FlounderLogger.log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
 		FlounderLogger.log("Flounder Maximum FBO Size: " + FBO.getMaxFBOSize());
+		FlounderLogger.log("Flounder Maximum Anisotropy: " + glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
 		FlounderLogger.log("===== End of system info log. =====\n");
 	}
 

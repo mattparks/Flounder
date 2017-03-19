@@ -24,7 +24,7 @@ public class FilterBlurMotion extends PostFilter {
 		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.getCamera().getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(FlounderCamera.getCamera().getViewMatrix());
 		shader.getUniformMat4("lastViewMatrix").loadMat4(lastViewMatrix);
-		shader.getUniformFloat("delta").loadFloat(Framework.getDelta()); // Render delta?
+		shader.getUniformFloat("delta").loadFloat(Framework.getDeltaRender());
 		this.lastViewMatrix.set(FlounderCamera.getCamera().getViewMatrix());
 	}
 }
