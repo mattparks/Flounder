@@ -23,11 +23,11 @@ public abstract class PostFilter {
 	public FBO fbo;
 
 	public PostFilter(String filterName, MyFile fragmentShader) {
-		this(ShaderFactory.newBuilder().setName(filterName).addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)).create(), FBO.newFBO(1.0f).disableTextureWrap().create());
+		this(ShaderFactory.newBuilder().setName(filterName).addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)).create(), FBO.newFBO(1.0f).create());
 	}
 
 	public PostFilter(ShaderObject shader) {
-		this(shader, FBO.newFBO(1.0f).disableTextureWrap().create());
+		this(shader, FBO.newFBO(1.0f).create());
 	}
 
 	public PostFilter(ShaderObject shader, FBO fbo) {
