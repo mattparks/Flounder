@@ -348,6 +348,15 @@ public class FBO {
 		return fitToScreen;
 	}
 
+	public void setSize(int width, int height) {
+		this.width = width;
+		this.height = height;
+		fitToScreen = false;
+		delete();
+		FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+		initializeFBO();
+	}
+
 	public float getSizeScalar() {
 		return sizeScalar;
 	}

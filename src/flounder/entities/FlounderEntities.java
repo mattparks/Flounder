@@ -92,34 +92,34 @@ public class FlounderEntities extends Module {
 			File saveFile = new File(saveFolder.getPath() + "/" + className + ".java");
 			saveFile.createNewFile();
 			FileWriter fileWriter = new FileWriter(saveFile);
-			FileWriterHelper FileWriterHelper = new FileWriterHelper(fileWriter);
+			FileWriterHelper fileWriterHelper = new FileWriterHelper(fileWriter);
 
 			// Date and save info.
 			String savedDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.YEAR) + " - " + Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE);
 			FlounderLogger.log("Entity " + name + " is being saved at: " + savedDate);
-			FileWriterHelper.addComment("Automatically generated entity source", "Date generated: " + savedDate, "Created by: " + System.getProperty("user.name"));
+			fileWriterHelper.addComment("Automatically generated entity source", "Date generated: " + savedDate, "Created by: " + System.getProperty("user.name"));
 
-			FileWriterHelper.writeSegmentData("package " + packageLocation + ";\n\n", true);
+			fileWriterHelper.writeSegmentData("package " + packageLocation + ";\n\n", true);
 
 			// Entity instance class.
-			FileWriterHelper.beginNewSegment("public class " + className + " extends Entity");
+			fileWriterHelper.beginNewSegment("public class " + className + " extends Entity");
 			{
 				// Writes static data to the save.
 				for (int i = 0; i < editorComponents.size(); i++) {
 					for (String s : editorComponents.get(i).getSaveValues(name).getFirst()) {
-						FileWriterHelper.writeSegmentData(s + ";", true);
+						fileWriterHelper.writeSegmentData(s + ";", true);
 					}
 				}
 
 				// Add some spacing before constructor.
 				if (!editorComponents.isEmpty()) {
-					FileWriterHelper.writeSegmentData("\n", true);
+					fileWriterHelper.writeSegmentData("\n", true);
 				}
 
 				// Entity instance constructor.
-				FileWriterHelper.beginNewSegment("public " + className + "(ISpatialStructure<Entity> structure, Vector3f position, Vector3f rotation)");
+				fileWriterHelper.beginNewSegment("public " + className + "(ISpatialStructure<Entity> structure, Vector3f position, Vector3f rotation)");
 				{
-					FileWriterHelper.writeSegmentData("super(structure, position, rotation);", true);
+					fileWriterHelper.writeSegmentData("super(structure, position, rotation);", true);
 					// Writes the component constructors.
 					for (int i = 0; i < editorComponents.size(); i++) {
 						String parameterData = "";
@@ -131,15 +131,15 @@ public class FlounderEntities extends Module {
 						parameterData = parameterData.replaceAll(", $", "");
 
 						if (parameterData.isEmpty()) {
-							FileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this);", true);
+							fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this);", true);
 						} else {
-							FileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this, " + parameterData + ");", true);
+							fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this, " + parameterData + ");", true);
 						}
 					}
 				}
-				FileWriterHelper.endSegment(true);
+				fileWriterHelper.endSegment(true);
 			}
-			FileWriterHelper.endSegment(false);
+			fileWriterHelper.endSegment(false);
 
 			// Closes the file for writing.
 			fileWriter.close();

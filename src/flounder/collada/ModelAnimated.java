@@ -26,7 +26,7 @@ public class ModelAnimated {
 		this.file = file;
 
 		float furthest = meshData.getFurthestPoint(); // TODO
-		this.aabb = new AABB(new Vector3f(-2, 0, -2) , new Vector3f(2, 9, 2));//new AABB(new Vector3f(-furthest, -furthest, -furthest), new Vector3f(furthest, furthest, furthest));
+		this.aabb = new AABB(new Vector3f(-2, 0, -2), new Vector3f(2, 9, 2));//new AABB(new Vector3f(-furthest, -furthest, -furthest), new Vector3f(furthest, furthest, furthest));
 
 		this.jointsData = jointsData;
 		this.headJoint = createJoints(jointsData.getHeadJoint());
