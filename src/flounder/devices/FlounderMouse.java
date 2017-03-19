@@ -201,10 +201,12 @@ public class FlounderMouse extends Module {
 	 * @param disabled If the system cursor should be disabled or hidden when not shown.
 	 */
 	public static void setCursorHidden(boolean disabled) {
-		glfwSetInputMode(FlounderDisplay.getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
+		if (INSTANCE.cursorDisabled != disabled) {
+			glfwSetInputMode(FlounderDisplay.getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 
-		if (!disabled && INSTANCE.cursorDisabled) {
-			glfwSetCursorPos(FlounderDisplay.getWindow(), INSTANCE.mousePositionX * FlounderDisplay.getWidth(), INSTANCE.mousePositionY * FlounderDisplay.getHeight());
+			if (!disabled && INSTANCE.cursorDisabled) {
+				glfwSetCursorPos(FlounderDisplay.getWindow(), INSTANCE.mousePositionX * FlounderDisplay.getWidth(), INSTANCE.mousePositionY * FlounderDisplay.getHeight());
+			}
 		}
 
 		INSTANCE.cursorDisabled = disabled;
@@ -274,6 +276,15 @@ public class FlounderMouse extends Module {
 	 */
 	public static boolean isDisplaySelected() {
 		return INSTANCE.displaySelected;
+	}
+
+	/**
+	 * If the cursor is hidden, the mouse is the display locked if true.
+	 *
+	 * @return If the cursor is hidden.
+	 */
+	public static boolean isCursorDisabled() {
+		return INSTANCE.cursorDisabled;
 	}
 
 	@Override
