@@ -11,17 +11,17 @@ import java.util.*;
  */
 public class KeyFrameJoints {
 	private final float timeStamp;
-	private final Map<String, JointTransform> jointKeyFrames;
+	private final Map<String, JointTransform> pose;
 
 	/**
 	 * Creates a new keyframe at a timestamp.
 	 *
 	 * @param timeStamp The time (in seconds) that this keyframe occurs during the animation.
-	 * @param jointKeyFrames The local-space transforms for all the joints at this keyframe, indexed by the name of the joint that they should be applied to.
+	 * @param pose The local-space transforms for all the joints at this keyframe, indexed by the name of the joint that they should be applied to.
 	 */
-	public KeyFrameJoints(float timeStamp, Map<String, JointTransform> jointKeyFrames) {
+	public KeyFrameJoints(float timeStamp, Map<String, JointTransform> pose) {
 		this.timeStamp = timeStamp;
-		this.jointKeyFrames = jointKeyFrames;
+		this.pose = pose;
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class KeyFrameJoints {
 	 *
 	 * @return The desired local-space transforms.
 	 */
-	public Map<String, JointTransform> getJointKeyFrames() {
-		return jointKeyFrames;
+	public Map<String, JointTransform> getPose() {
+		return pose;
 	}
 }

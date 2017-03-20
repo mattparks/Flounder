@@ -90,28 +90,24 @@ public class Animator {
 
 	/**
 	 * Finds the previous keyframe in the animation and the next keyframe in the animation, and returns them in an array of length 2.
-	 * If there is no  previous frame (perhaps current animation time is 0.5 and the first keyframe is at time 1.5)
-	 * then the next keyframe is used as both the previous and next keyframe. The reverse happens if there is no next keyframe.
+	 * If there is no previous frame (perhaps current animation time is 0.5 and the first keyframe is at time 1.5) then the first keyframe is used as both the previous and next keyframe.
+	 * The last keyframe is used for both next and previous if there is no next keyframe.
 	 *
 	 * @return The previous and next keyframes, in an array which therefore will always have a length of 2.
 	 */
 	private KeyFrameJoints[] getPreviousAndNextFrames() {
-		KeyFrameJoints previousFrame = null;
-		KeyFrameJoints nextFrame = null;
+		KeyFrameJoints[] allFrames = currentAnimation.getKeyFrameJointss();
+		KeyFrameJoints previousFrame = allFrames[0];
+		KeyFrameJoints nextFrame = allFrames[0];
 
-		for (KeyFrameJoints frame : currentAnimation.getKeyFrameJointss()) {
-			if (frame.getTimeStamp() > animationTime) {
-				nextFrame = frame;
+		for (int i = 1; i < allFrames.length; i++) {
+			nextFrame = allFrames[i];
+
+			if (nextFrame.getTimeStamp() > animationTime) {
 				break;
 			}
 
-			previousFrame = frame;
-		}
-
-		if (previousFrame == null) {
-			previousFrame = nextFrame;
-		} else if (nextFrame == null) {
-			nextFrame = previousFrame;
+			previousFrame = allFrames[i];
 		}
 
 		return new KeyFrameJoints[]{previousFrame, nextFrame};
@@ -126,8 +122,9 @@ public class Animator {
 	 * @return A number between 0 and 1 indicating how far between the two keyframes the current animation time is.
 	 */
 	private float calculateProgression(KeyFrameJoints previousFrame, KeyFrameJoints nextFrame) {
-		float timeDifference = nextFrame.getTimeStamp() - previousFrame.getTimeStamp();
-		return (animationTime - previousFrame.getTimeStamp()) / timeDifference;
+		float totalTime = nextFrame.getTimeStamp() - previousFrame.getTimeStamp();
+		float currentTime = animationTime - previousFrame.getTimeStamp();
+		return currentTime / totalTime;
 	}
 
 	/**
@@ -144,9 +141,9 @@ public class Animator {
 	private Map<String, Matrix4f> calculateCurrentPose(KeyFrameJoints previousFrame, KeyFrameJoints nextFrame, float progression) {
 		Map<String, Matrix4f> currentPose = new HashMap<>();
 
-		for (String jointName : previousFrame.getJointKeyFrames().keySet()) {
-			JointTransform previousPose = previousFrame.getJointKeyFrames().get(jointName);
-			JointTransform nextPose = nextFrame.getJointKeyFrames().get(jointName);
+		for (String jointName : previousFrame.getPose().keySet()) {
+			JointTransform previousPose = previousFrame.getPose().get(jointName);
+			JointTransform nextPose = nextFrame.getPose().get(jointName);
 			JointTransform jointPose = JointTransform.interpolate(previousPose, nextPose, progression);
 			currentPose.put(jointName, jointPose.getLocalTransform());
 		}
