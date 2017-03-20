@@ -1,12 +1,16 @@
 package flounder.fonts;
 
 import flounder.camera.*;
+import flounder.devices.*;
+import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
+
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -29,36 +33,44 @@ public class FontRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || FlounderFonts.getTexts().keySet().size() < 1) {
+		if (!shader.isLoaded() || FlounderGuis.getContainer() == null) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderFonts.getTexts().keySet().forEach(font -> FlounderFonts.getTexts().get(font).forEach((text) -> renderText(font, text)));
+		FlounderGuis.getContainer().getAll(new ArrayList<>()).forEach(this::renderText);
 		endRendering();
 	}
 
 	private void prepareRendering() {
 		shader.start();
 
-		OpenGlUtils.antialias(false);
+		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 		OpenGlUtils.cullBackFaces(true);
+
+		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
-	private void renderText(FontType type, TextObject text) {
+	private void renderText(ScreenObject object) {
+		if (!(object instanceof TextObject)) {
+			return;
+		}
+
+		TextObject text = (TextObject) object;
+
 		//	if (!text.isLoaded()) {
 		//		return;
 		//	}
 
-		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
-		OpenGlUtils.bindTexture(type.getTexture(), 0);
+		OpenGlUtils.bindVAO(text.getText().getMesh(), 0, 1);
+		OpenGlUtils.bindTexture(text.getText().getFont().getTexture(), 0);
 		Vector2f textPosition = text.getPosition();
-		Colour textColour = text.getColour();
+		Colour textColour = text.getText().getColour();
 		shader.getUniformVec2("transform").loadVec2(textPosition.x, textPosition.y);
 		shader.getUniformVec4("colour").loadVec4(textColour);
-		glDrawArrays(GL_TRIANGLES, 0, text.getVertexCount());
+		glDrawArrays(GL_TRIANGLES, 0, text.getText().getVertexCount());
 		OpenGlUtils.unbindVAO(0, 1);
 	}
 

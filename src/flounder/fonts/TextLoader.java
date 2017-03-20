@@ -21,13 +21,13 @@ public class TextLoader {
 		return fontTexture;
 	}
 
-	protected TextMeshData createTextMesh(TextObject text) {
+	protected TextMeshData createTextMesh(Text text) {
 		List<Line> lines = createStructure(text);
 		TextMeshData data = createQuadVertices(text, lines);
 		return data;
 	}
 
-	private List<Line> createStructure(TextObject text) {
+	private List<Line> createStructure(Text text) {
 		char[] chars = text.getTextString().toCharArray();
 		List<Line> lines = new ArrayList<>();
 		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
@@ -57,7 +57,7 @@ public class TextLoader {
 		return lines;
 	}
 
-	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, TextObject text) {
+	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, Text text) {
 		boolean added = currentLine.attemptToAddWord(currentWord);
 
 		if (!added) {
@@ -69,7 +69,7 @@ public class TextLoader {
 		lines.add(currentLine);
 	}
 
-	private TextMeshData createQuadVertices(TextObject text, List<Line> lines) {
+	private TextMeshData createQuadVertices(Text text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 		double curserX = 0f;
 		double curserY = 0f;

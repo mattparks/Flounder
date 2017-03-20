@@ -36,7 +36,7 @@ public class FontType {
 	 *
 	 * @return Information about the vertices of all the quads.
 	 */
-	public TextMeshData loadText(TextObject text) {
+	public TextMeshData loadText(Text text) {
 		return loader.createTextMesh(text);
 	}
 }

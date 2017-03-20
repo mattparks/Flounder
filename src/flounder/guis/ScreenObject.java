@@ -2,6 +2,7 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.framework.*;
+import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.visual.*;
 
@@ -76,6 +77,7 @@ public abstract class ScreenObject {
 		alpha = alphaDriver.update(Framework.getDelta());
 		scale = scaleDriver.update(Framework.getDelta());
 		updateObject();
+		children.forEach(ScreenObject::update);
 	}
 
 	/**

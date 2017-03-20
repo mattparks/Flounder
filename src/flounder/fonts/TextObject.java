@@ -1,164 +1,27 @@
 package flounder.fonts;
 
-import flounder.maths.*;
+import flounder.guis.*;
 import flounder.maths.vectors.*;
 
-/**
- * Represents a piece of text in the game.
- */
-public class TextObject {
+public class TextObject extends ScreenObject {
+	private Text text;
 
-	private String textString;
-	private float fontSize;
-
-	private int textMeshVao;
-	private int vertexCount;
-	private Colour colour = new Colour(0f, 0f, 0f);
-
-	private Vector2f position;
-	private float lineMaxSize;
-	private int numberOfLines;
-
-	private FontType font;
-
-	private boolean centerText = false;
-
-	/**
-	 * Creates a new text, loads the text's quads into a VAO, and adds the text to the screen.
-	 *
-	 * @param text The text.
-	 * @param fontSize The font size of the text, where a font size of 1 is the default size.
-	 * @param font The font that this text should use.
-	 * @param position The position on the screen where the top left corner of the text should be rendered. The top left corner of the screen is  (0, 0) and the bottom right is (1, 1).
-	 * @param maxLineLength Basically the width of the virtual page in terms of screen
-	 * width (1 is full screen width, 0.5 is half the width of the
-	 * screen, etc.) Text cannot go off the edge of the page, so if
-	 * the text is longer than this length it will go onto the next
-	 * line. When text is centered it is centered into the middle of
-	 * the line, based on this line length value.
-	 * @param centered Whether the text should be centered or not.
-	 */
-	public TextObject(String text, float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
-		this.textString = text;
-		this.fontSize = fontSize;
-		this.font = font;
-		this.position = position;
-		this.lineMaxSize = maxLineLength;
-		this.centerText = centered;
-		FlounderFonts.loadText(this);
+	public TextObject(ScreenObject parent, Vector2f position, Text text) {
+		super(parent, position, new Vector2f());
+		this.text = text;
 	}
 
-	/**
-	 * Remove the text from the screen.
-	 */
-	public void remove() {
-		FlounderFonts.removeText(this);
+	@Override
+	public void updateObject() {
+		text.getPosition().set(getPosition());
 	}
 
-	/**
-	 * @return The font used by this text.
-	 */
-	public FontType getFont() {
-		return font;
+	public Text getText() {
+		return text;
 	}
 
-	/**
-	 * Set the colour of the text.
-	 *
-	 * @param r Red value, between 0 and 1.
-	 * @param g Green value, between 0 and 1.
-	 * @param b Blue value, between 0 and 1.
-	 */
-	public void setColour(float r, float g, float b) {
-		colour.set(r, g, b);
-	}
-
-	/**
-	 * Gets the colour of the text.
-	 *
-	 * @return The colour of the text.
-	 */
-	public Colour getColour() {
-		return colour;
-	}
-
-	/**
-	 * Gets the number of lines of text. This is determined when the text is  loaded, based on the length of the text and the max line length that is set.
-	 *
-	 * @return The number of lines of text
-	 */
-	public int getNumberOfLines() {
-		return numberOfLines;
-	}
-
-	/**
-	 * Gets the position of the top-left corner of the text in screen-space. (0, 0) is the top left corner of the screen, (1, 1) is the bottom right.
-	 *
-	 * @return The position.
-	 */
-	public Vector2f getPosition() {
-		return position;
-	}
-
-	/**
-	 * @return The ID of the text's VAO, which contains all the vertex data for the quads on which the text will be rendered.
-	 */
-	public int getMesh() {
-		return textMeshVao;
-	}
-
-	/**
-	 * Set the VAO and vertex count for this text.
-	 *
-	 * @param vao The VAO containing all the vertex data for the quads on which the text will be rendered.
-	 * @param verticesCount The total number of vertices in all of the quads.
-	 */
-	public void setMeshInfo(int vao, int verticesCount) {
-		this.textMeshVao = vao;
-		this.vertexCount = verticesCount;
-	}
-
-	/**
-	 * @return The total number of vertices of all the text's quads.
-	 */
-	public int getVertexCount() {
-		return this.vertexCount;
-	}
-
-	/**
-	 * @return the font size of the text (a font size of 1 is normal).
-	 */
-	protected float getFontSize() {
-		return fontSize;
-	}
-
-	/**
-	 * Sets the number of lines that this text covers (method used only in loading).
-	 *
-	 * @param number
-	 */
-	protected void setNumberOfLines(int number) {
-		this.numberOfLines = number;
-	}
-
-	/**
-	 * @return {@code true} if the text should be centered.
-	 */
-	protected boolean isCentered() {
-		return centerText;
-	}
-
-	/**
-	 * @return The maximum length of a line of this text.
-	 */
-	protected float getMaxLineSize() {
-		return lineMaxSize;
-	}
-
-	/**
-	 * @return The string of text.
-	 */
-	protected String getTextString() {
-		return textString;
+	@Override
+	public void deleteObject() {
+		text.remove();
 	}
 }
