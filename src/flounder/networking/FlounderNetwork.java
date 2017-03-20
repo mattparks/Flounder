@@ -16,8 +16,6 @@ public class FlounderNetwork extends Module {
 	private Server socketServer;
 	private Client socketClient;
 	private String username;
-	private int port;
-	private boolean setup;
 
 	/**
 	 * Creates a new network manager.
@@ -28,12 +26,6 @@ public class FlounderNetwork extends Module {
 
 	@Override
 	public void init() {
-		if (!setup) {
-			this.port = DEFAULT_PORT;
-			this.setup = true;
-		}
-
-		//	this.username = "USERNAME" + ((int) (Math.random() * 10000));
 	}
 
 	@Override
@@ -43,7 +35,7 @@ public class FlounderNetwork extends Module {
 	@Override
 	public void profile() {
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Username", username);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Port", port);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Port", getPort());
 	}
 
 	/**
@@ -52,7 +44,7 @@ public class FlounderNetwork extends Module {
 	public static void startServer(int port) {
 		INSTANCE.username = "server";
 
-		FlounderLogger.log("Starting server on port " + INSTANCE.port);
+		FlounderLogger.log("Starting server on port " + port);
 		INSTANCE.socketServer = new Server(port);
 		INSTANCE.socketServer.start();
 	}
@@ -113,7 +105,13 @@ public class FlounderNetwork extends Module {
 	}
 
 	public static int getPort() {
-		return INSTANCE.port;
+		if (INSTANCE.socketClient != null) {
+			return INSTANCE.socketClient.getServerPort();
+		} else if (INSTANCE.socketServer != null) {
+			return INSTANCE.socketServer.getServerPort();
+		}
+
+		return DEFAULT_PORT;
 	}
 
 	@Override
