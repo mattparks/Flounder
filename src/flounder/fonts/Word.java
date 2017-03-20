@@ -1,14 +1,16 @@
 package flounder.fonts;
 
+import flounder.logger.*;
+
 import java.util.*;
 
 /**
  * During the loading of a text this represents one word in the text.
  */
 public class Word {
-	private List<Character> characters;
-	private double width;
-	private double fontSize;
+	protected List<Character> characters;
+	protected double fontSize;
+	protected double width;
 
 	/**
 	 * Creates a new empty word.
@@ -17,8 +19,8 @@ public class Word {
 	 */
 	protected Word(double fontSize) {
 		this.characters = new ArrayList<>();
-		this.width = 0.0;
 		this.fontSize = fontSize;
+		this.width = 0.0;
 	}
 
 	/**
@@ -27,25 +29,12 @@ public class Word {
 	 * @param character The character to be added.
 	 */
 	protected void addCharacter(Character character) {
+		if (character == null) {
+			FlounderLogger.error("Invalid character detected!");
+			return;
+		}
+
 		characters.add(character);
 		width += character.xAdvance * fontSize;
-	}
-
-	/**
-	 * Gets the list of characters in the word.
-	 *
-	 * @return The list of characters in the word.
-	 */
-	protected List<Character> getCharacters() {
-		return characters;
-	}
-
-	/**
-	 * Gets the width of the word in terms of screen size.
-	 *
-	 * @return The width of the word.
-	 */
-	protected double getWordWidth() {
-		return width;
 	}
 }

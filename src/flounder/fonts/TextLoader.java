@@ -1,25 +1,33 @@
 package flounder.fonts;
 
-import java.io.*;
+import flounder.resources.*;
+import flounder.textures.*;
+
 import java.util.*;
 
 public class TextLoader {
 	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32;
 
+	private TextureObject fontTexture;
 	private MetaFile metaData;
 
-	protected TextLoader(File metaFile) {
-		metaData = new MetaFile(metaFile);
+	protected TextLoader(MyFile fontSheet, MyFile metaFile) {
+		this.fontTexture = TextureFactory.newBuilder().setFile(fontSheet).noFiltering().clampEdges().create();
+		this.metaData = new MetaFile(metaFile);
 	}
 
-	protected TextMeshData createTextMesh(GUIText text) {
+	public TextureObject getFontTexture() {
+		return fontTexture;
+	}
+
+	protected TextMeshData createTextMesh(TextObject text) {
 		List<Line> lines = createStructure(text);
 		TextMeshData data = createQuadVertices(text, lines);
 		return data;
 	}
 
-	private List<Line> createStructure(GUIText text) {
+	private List<Line> createStructure(TextObject text) {
 		char[] chars = text.getTextString().toCharArray();
 		List<Line> lines = new ArrayList<>();
 		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
@@ -49,7 +57,7 @@ public class TextLoader {
 		return lines;
 	}
 
-	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, GUIText text) {
+	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, TextObject text) {
 		boolean added = currentLine.attemptToAddWord(currentWord);
 
 		if (!added) {
@@ -61,7 +69,7 @@ public class TextLoader {
 		lines.add(currentLine);
 	}
 
-	private TextMeshData createQuadVertices(GUIText text, List<Line> lines) {
+	private TextMeshData createQuadVertices(TextObject text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 		double curserX = 0f;
 		double curserY = 0f;
@@ -71,11 +79,11 @@ public class TextLoader {
 
 		for (Line line : lines) {
 			if (text.isCentered()) {
-				curserX = (line.getMaxLength() - line.getLineLength()) / 2;
+				curserX = (line.maxLength - line.currentLineLength) / 2;
 			}
 
-			for (Word word : line.getWords()) {
-				for (Character letter : word.getCharacters()) {
+			for (Word word : line.words) {
+				for (Character letter : word.characters) {
 					addVerticesForCharacter(curserX, curserY, letter, text.getFontSize(), vertices);
 					addTexCoords(textureCoords, letter.xTextureCoord, letter.yTextureCoord, letter.xMaxTextureCoord, letter.yMaxTextureCoord);
 					curserX += letter.xAdvance * text.getFontSize();

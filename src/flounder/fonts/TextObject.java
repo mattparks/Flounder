@@ -1,18 +1,19 @@
 package flounder.fonts;
 
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 
 /**
  * Represents a piece of text in the game.
  */
-public class GUIText {
+public class TextObject {
 
 	private String textString;
 	private float fontSize;
 
 	private int textMeshVao;
 	private int vertexCount;
-	private Vector3f colour = new Vector3f(0f, 0f, 0f);
+	private Colour colour = new Colour(0f, 0f, 0f);
 
 	private Vector2f position;
 	private float lineMaxSize;
@@ -30,28 +31,28 @@ public class GUIText {
 	 * @param font The font that this text should use.
 	 * @param position The position on the screen where the top left corner of the text should be rendered. The top left corner of the screen is  (0, 0) and the bottom right is (1, 1).
 	 * @param maxLineLength Basically the width of the virtual page in terms of screen
-	 *            width (1 is full screen width, 0.5 is half the width of the
-	 *            screen, etc.) Text cannot go off the edge of the page, so if
-	 *            the text is longer than this length it will go onto the next
-	 *            line. When text is centered it is centered into the middle of
-	 *            the line, based on this line length value.
+	 * width (1 is full screen width, 0.5 is half the width of the
+	 * screen, etc.) Text cannot go off the edge of the page, so if
+	 * the text is longer than this length it will go onto the next
+	 * line. When text is centered it is centered into the middle of
+	 * the line, based on this line length value.
 	 * @param centered Whether the text should be centered or not.
 	 */
-	public GUIText(String text, float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
+	public TextObject(String text, float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = font;
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextMaster.loadText(this);
+		FlounderFonts.loadText(this);
 	}
 
 	/**
 	 * Remove the text from the screen.
 	 */
 	public void remove() {
-		TextMaster.removeText(this);
+		FlounderFonts.removeText(this);
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class GUIText {
 	 *
 	 * @return The colour of the text.
 	 */
-	public Vector3f getColour() {
+	public Colour getColour() {
 		return colour;
 	}
 

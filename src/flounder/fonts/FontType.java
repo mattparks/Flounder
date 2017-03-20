@@ -1,23 +1,22 @@
 package flounder.fonts;
 
-import java.io.*;
+import flounder.resources.*;
+import flounder.textures.*;
 
 /**
  * Represents a font. It holds the font's texture atlas as well as having the ability to create the quad vertices for any text using this font.
  */
 public class FontType {
-	private int textureAtlas;
 	private TextLoader loader;
 
 	/**
 	 * Creates a new font and loads up the data about each character from the font file.
 	 *
-	 * @param textureAtlas The ID of the font atlas texture.
+	 * @param fontSheet The file for the font atlas texture.
 	 * @param fontFile The font file containing information about each character in the texture atlas.
 	 */
-	public FontType(int textureAtlas, File fontFile) {
-		this.textureAtlas = textureAtlas;
-		this.loader = new TextLoader(fontFile);
+	public FontType(MyFile fontSheet, MyFile fontFile) {
+		this.loader = new TextLoader(fontSheet, fontFile);
 	}
 
 	/**
@@ -25,8 +24,8 @@ public class FontType {
 	 *
 	 * @return The font texture atlas.
 	 */
-	public int getTextureAtlas() {
-		return textureAtlas;
+	public TextureObject getTexture() {
+		return loader.getFontTexture();
 	}
 
 	/**
@@ -37,7 +36,7 @@ public class FontType {
 	 *
 	 * @return Information about the vertices of all the quads.
 	 */
-	public TextMeshData loadText(GUIText text) {
+	public TextMeshData loadText(TextObject text) {
 		return loader.createTextMesh(text);
 	}
 }

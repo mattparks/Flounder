@@ -2,6 +2,7 @@ package flounder.fonts;
 
 import flounder.devices.*;
 import flounder.logger.*;
+import flounder.resources.*;
 
 import java.io.*;
 import java.util.*;
@@ -15,7 +16,7 @@ public class MetaFile {
 	private static final int PAD_BOTTOM = 2;
 	private static final int PAD_RIGHT = 3;
 
-	private static final int DESIRED_PADDING = 3;
+	private static final int DESIRED_PADDING = 3; // 10
 
 	private static final String SPLITTER = " ";
 	private static final String NUMBER_SEPARATOR = ",";
@@ -39,7 +40,7 @@ public class MetaFile {
 	 *
 	 * @param file The font file to load from.
 	 */
-	protected MetaFile(File file) {
+	protected MetaFile(MyFile file) {
 		this.aspectRatio = (double) FlounderDisplay.getWidth() / (double) FlounderDisplay.getHeight();
 
 		this.metaData = new HashMap<>();
@@ -48,8 +49,7 @@ public class MetaFile {
 		openFile(file);
 		loadPaddingData();
 		loadLineSizes();
-		int imageWidth = getValueOfVariable("scaleW");
-		loadCharacterData(imageWidth);
+		loadCharacterData();
 		close();
 	}
 
@@ -58,12 +58,12 @@ public class MetaFile {
 	 *
 	 * @param file The font file to open.
 	 */
-	private void openFile(File file) {
+	private void openFile(MyFile file) {
 		try {
-			reader = new BufferedReader(new FileReader(file));
+			reader = file.getReader();
 		} catch (Exception e) {
-			FlounderLogger.exception(e);
 			FlounderLogger.log("Couldn't read font meta file!");
+			FlounderLogger.exception(e);
 		}
 	}
 
@@ -79,8 +79,8 @@ public class MetaFile {
 		try {
 			line = reader.readLine();
 		} catch (IOException e) {
-			FlounderLogger.exception(e);
 			FlounderLogger.log("Couldn't process the next font line!");
+			FlounderLogger.exception(e);
 		}
 
 		if (line == null) {
@@ -121,10 +121,11 @@ public class MetaFile {
 
 	/**
 	 * Loads in data about each character and stores the data in the {@link Character} class.
-	 *
-	 * @param imageWidth The width of the texture atlas in pixels.
 	 */
-	private void loadCharacterData(int imageWidth) {
+	private void loadCharacterData() {
+		// The width of the texture atlas in pixels.
+		int imageWidth = getValueOfVariable("scaleW");
+
 		processNextLine();
 		processNextLine();
 
@@ -153,18 +154,18 @@ public class MetaFile {
 			return null;
 		}
 
-		double xTex = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
-		double yTex = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
+		double xTextureCoord = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
+		double yTextureCoord = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
 		int width = getValueOfVariable("width") - (paddingWidth - (2 * DESIRED_PADDING));
 		int height = getValueOfVariable("height") - ((paddingHeight) - (2 * DESIRED_PADDING));
 		double quadWidth = width * horizontalPerPixelSize;
 		double quadHeight = height * verticalPerPixelSize;
 		double xTexSize = (double) width / imageSize;
 		double yTexSize = (double) height / imageSize;
-		double xOff = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * horizontalPerPixelSize;
-		double yOff = (getValueOfVariable("yoffset") + (padding[PAD_TOP] - DESIRED_PADDING)) * verticalPerPixelSize;
+		double xOffset = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * horizontalPerPixelSize;
+		double yOffset = (getValueOfVariable("yoffset") + (padding[PAD_TOP] - DESIRED_PADDING)) * verticalPerPixelSize;
 		double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
-		return new Character(id, xTex, yTex, xTexSize, yTexSize, xOff, yOff, quadWidth, quadHeight, xAdvance);
+		return new Character(id, xTextureCoord, yTextureCoord, xTexSize, yTexSize, xOffset, yOffset, quadWidth, quadHeight, xAdvance);
 	}
 
 	/**
@@ -195,6 +196,7 @@ public class MetaFile {
 
 		return actualValues;
 	}
+
 	/**
 	 * Closes the font file after finishing reading.
 	 */

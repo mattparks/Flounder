@@ -7,7 +7,7 @@ public class TextMeshData {
 	protected final float[] vertexPositions;
 	protected final float[] textureCoords;
 
-	protected TextMeshData(float[] vertexPositions, float[] textureCoords){
+	protected TextMeshData(float[] vertexPositions, float[] textureCoords) {
 		this.vertexPositions = vertexPositions;
 		this.textureCoords = textureCoords;
 	}
