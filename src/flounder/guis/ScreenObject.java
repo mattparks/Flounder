@@ -7,14 +7,23 @@ import flounder.visual.*;
 
 import java.util.*;
 
+/**
+ * A representation of a object this is rendered to a screen. This object is contained in a parent and has children.
+ * The screen object has a few values that allow for it to be positioned and scaled, along with other variables that are used when rendering.
+ * This class can be extended to create a representation for GUI textures, fonts, etc.
+ */
 public abstract class ScreenObject {
 	private ScreenObject parent;
 	private List<ScreenObject> children;
 
 	private boolean visible;
-	private boolean useAspect;
 	private Vector2f position;
 	private Vector2f dimensions;
+
+	private boolean inScreenCoords;
+
+	private Vector2f screenPosition;
+	private Vector2f screenDimensions;
 
 	private ValueDriver rotationDriver;
 	private float rotation;
@@ -25,14 +34,29 @@ public abstract class ScreenObject {
 	private ValueDriver scaleDriver;
 	private float scale;
 
-	public ScreenObject(ScreenObject parent, boolean useAspect, Vector2f position, Vector2f dimensions) {
+	/**
+	 * Creates a new screen object.
+	 *
+	 * @param parent The parent screen object.
+	 * @param position The position in relative space (can be changed to screen space be changing {@code #inScreenCoords} to true.)
+	 * @param dimensions The dimensions of the object, its width is scaled with the aspect ratio so it remains in proportion to the original values.
+	 */
+	public ScreenObject(ScreenObject parent, Vector2f position, Vector2f dimensions) {
+		if (parent != null) {
+			parent.children.add(this);
+		}
+
 		this.visible = true;
 		this.parent = parent;
 		this.children = new ArrayList<>();
 
-		this.useAspect = useAspect;
 		this.position = position;
 		this.dimensions = dimensions;
+
+		this.inScreenCoords = true;
+
+		this.screenPosition = new Vector2f();
+		this.screenDimensions = new Vector2f();
 
 		this.rotationDriver = new ConstantDriver(0.0f);
 		this.rotation = 0.0f;
@@ -44,30 +68,50 @@ public abstract class ScreenObject {
 		this.scale = 1.0f;
 	}
 
+	/**
+	 * Updates this screen object and the extended object.
+	 */
 	public void update() {
 		rotation = rotationDriver.update(Framework.getDelta());
 		alpha = alphaDriver.update(Framework.getDelta());
 		scale = scaleDriver.update(Framework.getDelta());
+		updateObject();
 	}
 
+	/**
+	 * Updates the implementation.
+	 */
 	public abstract void updateObject();
 
+	/**
+	 * Gets the parent object.
+	 *
+	 * @return The parent object.
+	 */
 	public ScreenObject getParent() {
 		return parent;
 	}
 
-	public void addChild(ScreenObject child, boolean visible) {
-		child.visible = visible;
-		this.children.add(child);
-	}
-
+	/**
+	 * Disowns a child from this screen objects children list.
+	 *
+	 * @param child The child to disown.
+	 */
 	public void removeChild(ScreenObject child) {
 		this.children.remove(child);
 	}
 
-	public void getAll(List<ScreenObject> list) {
+	/**
+	 * Adds this object and its children to a list.
+	 *
+	 * @param list The list to add to.
+	 *
+	 * @return The list that has been added to.
+	 */
+	public List<ScreenObject> getAll(List<ScreenObject> list) {
 		list.add(this);
 		children.forEach((child) -> child.getAll(list));
+		return list;
 	}
 
 	public boolean isVisible() {
@@ -76,14 +120,6 @@ public abstract class ScreenObject {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
-	}
-
-	public boolean isUseAspect() {
-		return useAspect;
-	}
-
-	public void setUseAspect(boolean useAspect) {
-		this.useAspect = useAspect;
 	}
 
 	public Vector2f getPosition() {
@@ -100,6 +136,10 @@ public abstract class ScreenObject {
 
 	public void setDimensions(Vector2f dimensions) {
 		this.dimensions.set(dimensions);
+	}
+
+	public void setInScreenCoords(boolean inScreenCoords) {
+		this.inScreenCoords = inScreenCoords;
 	}
 
 	public ValueDriver getRotationDriver() {
@@ -138,21 +178,37 @@ public abstract class ScreenObject {
 		return scale;
 	}
 
-	public Vector2f getScreenPosition(Vector2f destination) {
-		if (destination == null) {
-			destination = new Vector2f();
-		}
-
-		return destination.set(position.x * (useAspect ? FlounderDisplay.getAspectRatio() : 1.0f), position.y);
+	/**
+	 * Gets the positions relative in screen space.
+	 *
+	 * @return The screen positions.
+	 */
+	public Vector2f getScreenPosition() {
+		return screenPosition.set(position.x / (inScreenCoords ? FlounderDisplay.getAspectRatio() : 1.0f), position.y);
 	}
 
-	public Vector2f getScreenDimensions(Vector2f destination) {
-		if (destination == null) {
-			destination = new Vector2f();
-		}
-
-		return destination.set(dimensions.x * (useAspect ? FlounderDisplay.getAspectRatio() : 1.0f), dimensions.y).scale(getScale());
+	/**
+	 * Gets the dimensions relative in screen space.
+	 *
+	 * @return The screen dimensions.
+	 */
+	public Vector2f getScreenDimensions() {
+		return screenDimensions.set(dimensions.x / FlounderDisplay.getAspectRatio(), dimensions.y).scale(getScale());
 	}
 
-	public abstract void delete();
+	/**
+	 * Deletes this screen object and the extended object.
+	 */
+	public void delete() {
+		for (ScreenObject child : children) {
+			child.delete();
+		}
+
+		this.deleteObject();
+	}
+
+	/**
+	 * Deletes the implementation.
+	 */
+	public abstract void deleteObject();
 }

@@ -4,6 +4,9 @@ import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.textures.*;
 
+/**
+ * A object the represents a texture in a GUI.
+ */
 public class GuiObject extends ScreenObject {
 	private TextureObject texture;
 	private boolean flipTexture;
@@ -12,8 +15,17 @@ public class GuiObject extends ScreenObject {
 	private Vector2f textureOffset;
 	private Colour colourOffset;
 
-	public GuiObject(ScreenObject parent, boolean useAspect, Vector2f position, Vector2f dimensions, TextureObject texture, int selectedRow) {
-		super(parent, useAspect, position, dimensions);
+	/**
+	 * Creates a new GUI object.
+	 *
+	 * @param parent The objects parent.
+	 * @param position The objects position relative to the parents.
+	 * @param dimensions The objects dimensions.
+	 * @param texture The objects texture.
+	 * @param selectedRow The default row of the texture to render from.
+	 */
+	public GuiObject(ScreenObject parent, Vector2f position, Vector2f dimensions, TextureObject texture, int selectedRow) {
+		super(parent, position, dimensions);
 		this.texture = texture;
 		this.flipTexture = false;
 		this.selectedRow = selectedRow;
@@ -71,6 +83,6 @@ public class GuiObject extends ScreenObject {
 	}
 
 	@Override
-	public void delete() {
+	public void deleteObject() {
 	}
 }
