@@ -77,7 +77,7 @@ public class TextLoader {
 
 		int vao = FlounderLoader.createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
 		text.setMeshInfo(vao, meshData.vertices.length / 2);
-		text.setDimensions(new Vector2f(Math.abs(minX) + Math.abs(maxX), Math.abs(minY) + Math.abs(maxY)));
+		//text.setDimensions(new Vector2f((minX + maxX) / 2.0f, (minY + maxY) / 2.0f));
 	}
 
 	private List<Line> createStructure(TextObject text) {
