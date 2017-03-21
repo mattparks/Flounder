@@ -2,6 +2,7 @@ package flounder.fonts;
 
 import flounder.loaders.*;
 import flounder.logger.*;
+import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
@@ -131,7 +132,7 @@ public class TextLoader {
 
 		for (Line line : lines) {
 			if (text.isCentred()) {
-				cursorX = (line.maxLength - line.currentLineLength) / 2;
+				cursorX = (line.maxLength - line.currentLineLength) / 2.0;
 			}
 
 			for (Word word : line.words) {
@@ -144,11 +145,22 @@ public class TextLoader {
 				cursorX += metaData.getSpaceWidth();
 			}
 
-			cursorX = 0;
+			cursorX = 0.0;
 			cursorY += LINE_HEIGHT;
 		}
 
 		return new TextMeshData(listToArray(vertices), listToArray(textures));
+	}
+
+
+	private static float[] listToArray(List<Float> listOfFloats) {
+		float[] array = new float[listOfFloats.size()];
+
+		for (int i = 0; i < array.length; i++) {
+			array[i] = listOfFloats.get(i);
+		}
+
+		return array;
 	}
 
 	private void addVerticesForCharacter(double cursorX, double cursorY, Character character, List<Float> vertices) {
@@ -156,11 +168,15 @@ public class TextLoader {
 		double y = cursorY + character.yOffset;
 		double maxX = x + character.sizeX;
 		double maxY = y + character.sizeY;
+
+		addVertices(vertices, x, y, maxX, maxY);
+
 		double properX = (2.0 * x) - 1.0;
 		double properY = (-2.0 * y) + 1.0;
 		double properMaxX = (2.0 * maxX) - 1.0;
 		double properMaxY = (-2.0 * maxY) + 1.0;
-		addVertices(vertices, properX, properY, properMaxX, properMaxY);
+
+	//	addVertices(vertices, properX, properY, properMaxX, properMaxY);
 	}
 
 	private static void addVertices(List<Float> vertices, double x, double y, double maxX, double maxY) {
@@ -191,17 +207,6 @@ public class TextLoader {
 		textures.add((float) y);
 		textures.add((float) x);
 		textures.add((float) y);
-	}
-
-
-	private static float[] listToArray(List<Float> listOfFloats) {
-		float[] array = new float[listOfFloats.size()];
-
-		for (int i = 0; i < array.length; i++) {
-			array[i] = listOfFloats.get(i);
-		}
-
-		return array;
 	}
 
 	/**
