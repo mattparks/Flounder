@@ -1,6 +1,5 @@
 package flounder.fonts;
 
-import flounder.devices.*;
 import flounder.logger.*;
 import flounder.resources.*;
 
@@ -16,38 +15,41 @@ public class MetaFile {
 	private static final int PAD_BOTTOM = 2;
 	private static final int PAD_RIGHT = 3;
 
-	private static final int DESIRED_PADDING = 10;
+	private static final int DESIRED_PADDING = 8;
 
 	private static final String SPLITTER = " ";
 	private static final String NUMBER_SEPARATOR = ",";
 
 	private Map<Integer, Character> metaData;
 	private Map<String, String> values;
-	private double perPixelSize;
+
+	private double verticalPerPixelSize;
+	private double horizontalPerPixelSize;
 	private double spaceWidth;
 	private int[] padding;
 	private int paddingWidth;
 	private int paddingHeight;
+
 	private BufferedReader reader;
 
 	/**
 	 * Opens a font file in preparation for reading.
 	 *
-	 * @param file The font file.
+	 * @param file The font file to load from.
 	 */
 	protected MetaFile(MyFile file) {
-		metaData = new HashMap<>();
-		values = new HashMap<>();
+		this.metaData = new HashMap<>();
+		this.values = new HashMap<>();
 
 		openFile(file);
 		loadPaddingData();
 		loadLineSizes();
-		loadCharacterData(getValueOfVariable("scaleW"));
-		close();
+		loadCharacterData();
+		closeReader();
 	}
 
 	/**
-	 * Opens the font file for reading.
+	 * Opens the font file, ready for reading.
 	 *
 	 * @param file The font file to open.
 	 */
@@ -55,19 +57,9 @@ public class MetaFile {
 		try {
 			reader = file.getReader();
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't read font meta file " + file.getPath());
+			FlounderLogger.log("Couldn't read font meta file!");
 			FlounderLogger.exception(e);
 		}
-	}
-
-	/**
-	 * Loads all padding data.
-	 */
-	private void loadPaddingData() {
-		processNextLine();
-		padding = getValuesOfVariable("padding");
-		paddingWidth = padding[PAD_LEFT] + padding[PAD_RIGHT];
-		paddingHeight = padding[PAD_TOP] + padding[PAD_BOTTOM];
 	}
 
 	/**
@@ -82,7 +74,7 @@ public class MetaFile {
 		try {
 			line = reader.readLine();
 		} catch (IOException e) {
-			FlounderLogger.error("Failed to read the next line!");
+			FlounderLogger.log("Couldn't process the next font line!");
 			FlounderLogger.exception(e);
 		}
 
@@ -99,6 +91,87 @@ public class MetaFile {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Loads the data about how much padding is used around each character in the texture atlas.
+	 */
+	private void loadPaddingData() {
+		processNextLine();
+		this.padding = getValuesOfVariable("padding");
+		this.paddingWidth = padding[PAD_LEFT] + padding[PAD_RIGHT];
+		this.paddingHeight = padding[PAD_TOP] + padding[PAD_BOTTOM];
+	}
+
+	/**
+	 * Loads information about the line height for this font in pixels,
+	 * and uses this as a way to find the conversion rate between pixels in the texture atlas and screen-space.
+	 */
+	private void loadLineSizes() {
+		processNextLine();
+		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
+		verticalPerPixelSize = TextLoader.LINE_HEIGHT / (double) lineHeightPixels;
+		horizontalPerPixelSize = verticalPerPixelSize;
+	}
+
+	/**
+	 * Loads in data about each character and stores the data in the {@link Character} class.
+	 */
+	private void loadCharacterData() {
+		// The width of the texture atlas in pixels.
+		int imageWidth = getValueOfVariable("scaleW");
+
+		processNextLine();
+		processNextLine();
+
+		while (processNextLine()) {
+			Character c = loadCharacter(imageWidth);
+
+			if (c != null) {
+				metaData.put(c.id, c);
+			}
+		}
+	}
+
+	/**
+	 * Loads all the data about one character in the texture atlas and converts it all from 'pixels' to 'screen-space' before storing.
+	 * The effects of padding are also removed from the data.
+	 *
+	 * @param imageSize The size of the texture atlas in pixels.
+	 *
+	 * @return The data about the character.
+	 */
+	private Character loadCharacter(int imageSize) {
+		int id = getValueOfVariable("id");
+
+		if (id == TextLoader.SPACE_ASCII) {
+			this.spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
+			return null;
+		}
+
+		double xTextureCoord = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
+		double yTextureCoord = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
+		int width = getValueOfVariable("width") - (paddingWidth - (2 * DESIRED_PADDING));
+		int height = getValueOfVariable("height") - ((paddingHeight) - (2 * DESIRED_PADDING));
+		double quadWidth = width * horizontalPerPixelSize;
+		double quadHeight = height * verticalPerPixelSize;
+		double xTexSize = (double) width / imageSize;
+		double yTexSize = (double) height / imageSize;
+		double xOffset = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * horizontalPerPixelSize;
+		double yOffset = (getValueOfVariable("yoffset") + (padding[PAD_TOP] - DESIRED_PADDING)) * verticalPerPixelSize;
+		double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
+		return new Character(id, xTextureCoord, yTextureCoord, xTexSize, yTexSize, xOffset, yOffset, quadWidth, quadHeight, xAdvance);
+	}
+
+	/**
+	 * Gets the {@code int} value of the variable with a certain name on the current line.
+	 *
+	 * @param variable The name of the variable.
+	 *
+	 * @return The value of the variable.
+	 */
+	private int getValueOfVariable(String variable) {
+		return Integer.parseInt(values.get(variable));
 	}
 
 	/**
@@ -120,104 +193,21 @@ public class MetaFile {
 	}
 
 	/**
-	 * Loads all line sizes.
-	 */
-	private void loadLineSizes() {
-		processNextLine();
-		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
-		perPixelSize = TextLoader.LINE_HEIGHT / lineHeightPixels;
-	}
-
-	/**
-	 * Gets the {@code int} value of the variable with a certain name on the current line.
-	 *
-	 * @param variable The name of the variable.
-	 *
-	 * @return The value of the variable.
-	 */
-	private int getValueOfVariable(String variable) {
-		String value = values.get(variable);
-
-		if (value == null) {
-			//	FlounderLogger.error("Could not find font variable for: " + variable, true);
-			return 0;
-		}
-
-		return Integer.parseInt(value);
-	}
-
-	/**
-	 * Loads the character data.
-	 *
-	 * @param imageWidth The images width.
-	 */
-	private void loadCharacterData(int imageWidth) {
-		processNextLine();
-		processNextLine();
-
-		while (processNextLine()) {
-			Character c = loadCharacter(imageWidth);
-
-			if (c != null) {
-				metaData.put(c.id, c);
-			}
-		}
-	}
-
-	private Character loadCharacter(int imageSize) {
-		int id = getValueOfVariable("id");
-		int displayWidth = FlounderDisplay.getWidth();
-		int displayHeight = FlounderDisplay.getHeight();
-		double displayAspect = displayWidth / displayHeight;
-
-		if (id == TextLoader.SPACE_ASCII) {
-			spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize * (1.0 / displayAspect);
-			return null;
-		}
-
-		double xTextureCoord = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
-		double yTextureCoord = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
-		int width = getValueOfVariable("width") - (paddingWidth - 2 * DESIRED_PADDING);
-		int height = getValueOfVariable("height") - (paddingHeight - 2 * DESIRED_PADDING);
-		double quadWidth = width * perPixelSize;
-		double quadHeight = height * perPixelSize;
-		double xTexSize = (double) width / imageSize;
-		double yTexSize = (double) height / imageSize;
-		double xOffset = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * perPixelSize;
-		double yOffset = (getValueOfVariable("yoffset") + padding[PAD_TOP] - DESIRED_PADDING) * perPixelSize;
-		double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * perPixelSize;
-		return new Character(id, xTextureCoord, yTextureCoord, xTexSize, yTexSize, xOffset, yOffset, quadWidth, quadHeight, xAdvance);
-	}
-
-	/**
 	 * Closes the font file after finishing reading.
 	 */
-	private void close() {
+	private void closeReader() {
 		try {
 			reader.close();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not close Font MetaFile.");
-			FlounderLogger.exception(e);
+			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * Gets the character from a ascii id.
-	 *
-	 * @param ascii The ascii ID.
-	 *
-	 * @return The character.
-	 */
-	protected Character getCharacter(int ascii) {
-		return metaData.get(ascii);
-	}
-
-	/**
-	 * Gets the space width.
-	 *
-	 * @return The space width.
-	 */
 	protected double getSpaceWidth() {
 		return spaceWidth;
+	}
+
+	protected Character getCharacter(int ascii) {
+		return metaData.get(ascii);
 	}
 }

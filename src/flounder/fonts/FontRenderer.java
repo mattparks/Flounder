@@ -2,13 +2,15 @@ package flounder.fonts;
 
 import flounder.camera.*;
 import flounder.devices.*;
+import flounder.guis.*;
 import flounder.helpers.*;
-import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
+
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -31,40 +33,47 @@ public class FontRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || FlounderFonts.getTexts().keySet().size() < 1) {
+		if (!shader.isLoaded() || FlounderGuis.getContainer() == null) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderFonts.getTexts().keySet().forEach(font -> FlounderFonts.getTexts().get(font).forEach(this::renderText));
+		FlounderGuis.getContainer().getAll(new ArrayList<>()).forEach(this::renderText);
 		endRendering();
 	}
 
 	private void prepareRendering() {
 		shader.start();
 
-		OpenGlUtils.antialias(false);
+		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 		OpenGlUtils.cullBackFaces(true);
 
-		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
-	private void renderText(Text text) {
-		if (!text.isLoaded()) {
+	private void renderText(ScreenObject object) {
+		if (!(object instanceof TextObject)) {
+			return;
+		}
+
+		TextObject text = (TextObject) object;
+
+		if (!text.isLoaded() || !text.isVisible()) {
 			return;
 		}
 
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
-		OpenGlUtils.bindTexture(text.getFontType().getTexture(), 0);
-		Vector2f textPosition = text.getPosition();
-		Colour textColour = text.getColour();
-		shader.getUniformVec2("size").loadVec2(text.getOriginalWidth() / 2.0f, text.getOriginalHeight() / 2.0f);
-		shader.getUniformVec3("transform").loadVec3(textPosition.x, textPosition.y, text.getScale());
+		OpenGlUtils.bindTexture(text.getFont().getTexture(), 0);
+		shader.getUniformVec2("size").loadVec2(text.getMeshSize());
+		shader.getUniformVec4("transform").loadVec4(
+				text.getScreenPosition().x, text.getScreenPosition().y,
+				text.getScreenDimensions().x, text.getScreenDimensions().y
+		);
 		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(text.getRotation()));
-		shader.getUniformVec4("colour").loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getCurrentAlpha());
+
+		shader.getUniformVec4("colour").loadVec4(text.getColour().r, text.getColour().g, text.getColour().b, text.getAlpha());
 		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());
 		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
 		shader.getUniformVec2("borderSizes").loadVec2(text.getTotalBorderSize(), text.getGlowSize());

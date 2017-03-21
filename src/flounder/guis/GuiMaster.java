@@ -38,11 +38,6 @@ public abstract class GuiMaster extends Extension {
 	public abstract boolean isGamePaused();
 
 	/**
-	 * Forces the main GUI to open.
-	 */
-	public abstract void openMenu();
-
-	/**
 	 * Gets the main menu's blur factor.
 	 *
 	 * @return The main menu's blur factor.

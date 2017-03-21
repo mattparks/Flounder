@@ -1,64 +1,41 @@
 package flounder.fonts;
 
-import flounder.framework.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
-import java.util.*;
-
 /**
- * Represents a font type that can be used in any text.
+ * Represents a font. It holds the font's texture atlas as well as having the ability to create the quad vertices for any text using this font.
  */
 public class FontType {
-	protected static final List<FontType> ALL_FONT_TYPES = new ArrayList<>();
-	protected static final List<FontType> NEEDS_TO_BE_CREATED = new ArrayList<>();
-
-	private MyFile textureAtlas;
-	private MyFile fontFile;
 	private TextLoader loader;
 
 	/**
-	 * Creates a new font type.
+	 * Creates a new font and loads up the data about each character from the font file.
 	 *
-	 * @param textureAtlas The image that holds the signed distance values.
-	 * @param fontFile The file that describes how to renderObjects the font, file usually ends in '.fnt'.
+	 * @param textureFile The file for the font atlas texture.
+	 * @param fontFile The font file containing information about each character in the texture atlas.
 	 */
-	public FontType(MyFile textureAtlas, MyFile fontFile) {
-		this.textureAtlas = textureAtlas;
-		this.fontFile = fontFile;
-
-		// If the engine is initialized fonts can be loaded right away, otherwise add to pool.
-		if (!Framework.isInitialized()) {
-			NEEDS_TO_BE_CREATED.add(this);
-		} else {
-			createLoader();
-		}
-
-		ALL_FONT_TYPES.add(this);
+	public FontType(MyFile textureFile, MyFile fontFile) {
+		this.loader = new TextLoader(textureFile, fontFile);
 	}
 
 	/**
-	 * Creates the font loader, has to be called after OpenGL is initialized.
+	 * Takes in an unloaded text and calculate all of the vertices for the quads on which this text will be rendered.
+	 * The vertex positions and texture coords and calculated based on the information from the font file.
+	 * Then takes the information about the vertices of all the quads and stores it in OpenGL.
+	 *
+	 * @param text The unloaded text.
 	 */
-	public void createLoader() {
-		loader = new TextLoader(textureAtlas, fontFile);
+	public void loadText(TextObject text) {
+		loader.loadTextMesh(text);
 	}
 
 	/**
-	 * Loads the text.
+	 * Gets the font texture atlas.
 	 *
-	 * @param text The text to load.
+	 * @return The font texture atlas.
 	 */
-	protected void loadText(Text text) {
-		loader.loadTextIntoMemory(text);
-	}
-
-	/**
-	 * Gets the font family's texture.
-	 *
-	 * @return The texture.
-	 */
-	protected TextureObject getTexture() {
+	public TextureObject getTexture() {
 		return loader.getFontTexture();
 	}
 }

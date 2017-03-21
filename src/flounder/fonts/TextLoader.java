@@ -1,103 +1,113 @@
 package flounder.fonts;
 
-import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.logger.*;
+import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
 import java.util.*;
 
+/**
+ * A loader capable of loading font data into a instance of a text mesh.
+ */
 public class TextLoader {
-	protected static final double LINE_HEIGHT = 0.04f;
+	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int NEWLINE_ASCII = 10;
 	protected static final int SPACE_ASCII = 32;
 
 	private TextureObject fontTexture;
 	private MetaFile metaData;
 
-	public TextLoader(MyFile fontSheet, MyFile metaFile) {
-		this.fontTexture = TextureFactory.newBuilder().setFile(fontSheet).noFiltering().clampEdges().create();
-		this.metaData = new MetaFile(metaFile);
+	/**
+	 * Creates a new text loader.
+	 *
+	 * @param textureFile The file for the font atlas texture.
+	 * @param fontFile The font file containing information about each character in the texture atlas.
+	 */
+	protected TextLoader(MyFile textureFile, MyFile fontFile) {
+		this.fontTexture = TextureFactory.newBuilder().setFile(textureFile).create(); // noFiltering().clampEdges().
+		this.metaData = new MetaFile(fontFile);
 	}
 
-	public TextureObject getFontTexture() {
+	/**
+	 * Gets the loaded texture atlas for this font.
+	 *
+	 * @return The fonts texture atlas.
+	 */
+	protected TextureObject getFontTexture() {
 		return fontTexture;
 	}
 
-	public void loadTextIntoMemory(Text text) {
+	/**
+	 * Creates a mesh for the provided text object using the meta data for this font. Then takes the data created for the text mesh and stores it in OpenGL.
+	 *
+	 * @param text The text object to create a mesh for.
+	 */
+	protected void loadTextMesh(TextObject text) {
+		// Create mesh data.
 		List<Line> lines = createStructure(text);
-		loadStructureToOpenGL(text, lines);
+		TextMeshData meshData = createQuadVertices(text, lines);
+		Vector2f meshSize = getBounding(meshData.vertices);
+
+		// Load mesh data to OpenGL.
+		int vao = FlounderLoader.createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
+		int verticesCount = meshData.vertices.length / 2;
+		text.setMeshInfo(vao, verticesCount, meshSize);
 	}
 
-	private List<Line> createStructure(Text text) {
+	private List<Line> createStructure(TextObject text) {
 		char[] chars = text.getTextString().toCharArray();
 		List<Line> lines = new ArrayList<>();
-		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
-		Word currentWord = new Word(text.getFontSize());
+		Line currentLine = new Line(metaData.getSpaceWidth(), text.getMaxLineSize());
+		Word currentWord = new Word();
 
 		for (char c : chars) {
-			if (c == SPACE_ASCII) {
+			int ascii = (int) c;
+
+			if (ascii == SPACE_ASCII) {
 				boolean added = currentLine.attemptToAddWord(currentWord);
 
 				if (!added) {
 					lines.add(currentLine);
-					currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+					currentLine = new Line(metaData.getSpaceWidth(), text.getMaxLineSize());
 					currentLine.attemptToAddWord(currentWord);
 				}
 
-				currentWord = new Word(text.getFontSize());
+				currentWord = new Word();
 				continue;
-			}/* else if (c == NEWLINE_ASCII) {
-				currentLine.attemptToAddWord(currentWord);
-				lines.add(currentLine);
-				currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
-				currentWord = new Word(text.getFontSize());
-			}*/
-
-			Character character = metaData.getCharacter(c);
-
-			if (character == null) {
-				FlounderLogger.error("Could not find font char for: " + c);
-			} else {
-				currentWord.addCharacter(character);
 			}
+
+			Character character = metaData.getCharacter(ascii);
+			currentWord.addCharacter(character);
 		}
-
-		/*System.out.println();
-		for (Line l : lines) {
-			for (Word w : l.getWords()) {
-				for (Character c : w.getCharacters()) {
-					System.out.print(java.lang.Character.toString ((char) c.getId()));
-				}
-				System.out.print(" ");
-			}
-			System.out.println();
-		}*/
 
 		completeStructure(lines, currentLine, currentWord, text);
 		return lines;
 	}
 
-	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, Text text) {
-		if (!currentLine.attemptToAddWord(currentWord)) {
+	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, TextObject text) {
+		boolean added = currentLine.attemptToAddWord(currentWord);
+
+		if (!added) {
 			lines.add(currentLine);
-			currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+			currentLine = new Line(metaData.getSpaceWidth(), text.getMaxLineSize());
 			currentLine.attemptToAddWord(currentWord);
 		}
 
 		lines.add(currentLine);
 	}
 
-	private void loadStructureToOpenGL(Text text, List<Line> lines) {
-		setTextSettings(text, lines);
+	private TextMeshData createQuadVertices(TextObject text, List<Line> lines) {
+		text.setNumberOfLines(lines.size());
 		double cursorX = 0.0;
 		double cursorY = 0.0;
+
 		List<Float> vertices = new ArrayList<>();
-		List<Float> textureCoords = new ArrayList<>();
+		List<Float> textures = new ArrayList<>();
 
 		for (Line line : lines) {
-			switch (text.getGuiAlign()) {
+			switch (text.getTextAlign()) {
 				case LEFT:
 					cursorX = 0.0;
 					break;
@@ -111,56 +121,37 @@ public class TextLoader {
 
 			for (Word word : line.words) {
 				for (Character letter : word.characters) {
-					addVerticesForCharacter(cursorX, cursorY, letter, text.getFontSize(), vertices);
-					addTextCoords(textureCoords, letter.xTextureCoord, letter.yTextureCoord, letter.xMaxTextureCoord, letter.yMaxTextureCoord);
-					cursorX += letter.xAdvance * text.getFontSize();
+					addVerticesForCharacter(cursorX, cursorY, letter, vertices);
+					addTextures(textures, letter.xTextureCoord, letter.yTextureCoord, letter.xMaxTextureCoord, letter.yMaxTextureCoord);
+					cursorX += letter.xAdvance;
 				}
 
-				cursorX += metaData.getSpaceWidth() * text.getFontSize();
+				cursorX += metaData.getSpaceWidth();
 			}
 
 			cursorX = 0.0;
-			cursorY += LINE_HEIGHT * text.getFontSize();
+			cursorY += LINE_HEIGHT;
 		}
 
-		float[] verticesArray = listToArray(vertices);
-		float[] textureArray = listToArray(textureCoords);
-		int vao = FlounderLoader.createInterleavedVAO(vertices.size() / 2, verticesArray, textureArray);
-		text.setMeshInfo(vao, vertices.size() / 2);
+		return new TextMeshData(listToArray(vertices), listToArray(textures));
 	}
 
-	private static void addTextCoords(List<Float> texCoords, double x, double y, double maxX, double maxY) {
-		texCoords.add((float) x);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) y);
-	}
 
-	private void setTextSettings(Text text, List<Line> lines) {
-		text.setNumberOfLines(lines.size());
+	private static float[] listToArray(List<Float> listOfFloats) {
+		float[] array = new float[listOfFloats.size()];
 
-		if (text.getGuiAlign().equals(GuiAlign.CENTRE) || lines.size() > 1.0f) {
-			text.setOriginalWidth((float) lines.get(0).maxLength);
-		} else {
-			text.setOriginalWidth((float) lines.get(0).currentLineLength);
+		for (int i = 0; i < array.length; i++) {
+			array[i] = listOfFloats.get(i);
 		}
 
-		text.setOriginalHeight((float) TextLoader.LINE_HEIGHT * text.getFontSize() * lines.size() * 1.0f);
+		return array;
 	}
 
-	private void addVerticesForCharacter(double cursorX, double cursorY, Character character, double fontSize, List<Float> vertices) {
-		double x = cursorX + character.xOffset * fontSize;
-		double y = cursorY + character.yOffset * fontSize;
-		double maxX = x + character.sizeX * fontSize;
-		double maxY = y + character.sizeY * fontSize;
+	private void addVerticesForCharacter(double cursorX, double cursorY, Character character, List<Float> vertices) {
+		double x = cursorX + character.xOffset;
+		double y = cursorY + character.yOffset;
+		double maxX = x + character.sizeX;
+		double maxY = y + character.sizeY;
 		addVertices(vertices, x, y, maxX, maxY);
 	}
 
@@ -179,13 +170,61 @@ public class TextLoader {
 		vertices.add((float) y);
 	}
 
-	private float[] listToArray(List<Float> list) {
-		float[] array = new float[list.size()];
+	private static void addTextures(List<Float> textures, double x, double y, double maxX, double maxY) {
+		textures.add((float) x);
+		textures.add((float) y);
+		textures.add((float) x);
+		textures.add((float) maxY);
+		textures.add((float) maxX);
+		textures.add((float) maxY);
+		textures.add((float) maxX);
+		textures.add((float) maxY);
+		textures.add((float) maxX);
+		textures.add((float) y);
+		textures.add((float) x);
+		textures.add((float) y);
+	}
 
-		for (int i = 0; i < array.length; i++) {
-			array[i] = list.get(i);
+	private Vector2f getBounding(float[] vertices) {
+		float minX = Float.POSITIVE_INFINITY;
+		float minY = Float.POSITIVE_INFINITY;
+		float maxX = Float.NEGATIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+		int i = 0;
+
+		for (float v : vertices) {
+			if (i == 0) {
+				if (v < minX) {
+					minX = v;
+				} else if (v > maxX) {
+					maxX = v;
+				}
+
+				i++;
+			} else if (i == 1) {
+				if (v < minY) {
+					minY = v;
+				} else if (v > maxY) {
+					maxY = v;
+				}
+
+				i = 0;
+			}
 		}
 
-		return array;
+		return new Vector2f((minX + maxX) / 2.0f, (minY + maxY) / 2.0f);
+	}
+
+	/**
+	 * Stores the vertex data for all the quads on which a text will be rendered.
+	 */
+	public class TextMeshData {
+		protected final float[] vertices;
+		protected final float[] textures;
+
+		protected TextMeshData(float[] vertices, float[] textures) {
+			this.vertices = vertices;
+			this.textures = textures;
+		}
 	}
 }

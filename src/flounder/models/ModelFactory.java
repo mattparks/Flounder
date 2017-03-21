@@ -232,8 +232,12 @@ public class ModelFactory extends Factory {
 	}
 
 	private AABB createAABB(List<VertexData> vertices) {
-		float minX = 0, minY = 0, minZ = 0;
-		float maxX = 0, maxY = 0, maxZ = 0;
+		float minX = Float.POSITIVE_INFINITY;
+		float minY = Float.POSITIVE_INFINITY;
+		float minZ = Float.POSITIVE_INFINITY;
+		float maxX = Float.NEGATIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+		float maxZ = Float.NEGATIVE_INFINITY;
 
 		for (VertexData vertex : vertices) {
 			Vector3f vector = vertex.getPosition();

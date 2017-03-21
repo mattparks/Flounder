@@ -16,12 +16,12 @@ public class Line {
 	 * Creates an empty line.
 	 *
 	 * @param spaceWidth The screen-space width of a space character.
-	 * @param fontSize The size of font being used.
 	 * @param maxLength The screen-space maximum length of a line.
 	 */
-	protected Line(double spaceWidth, double fontSize, double maxLength) {
+	protected Line(double spaceWidth, double maxLength) {
 		this.maxLength = maxLength;
-		this.spaceSize = spaceWidth * fontSize;
+		this.spaceSize = spaceWidth;
+
 		this.words = new ArrayList<>();
 		this.currentLineLength = 0.0;
 	}

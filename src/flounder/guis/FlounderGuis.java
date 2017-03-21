@@ -2,16 +2,11 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.events.*;
-import flounder.fonts.*;
 import flounder.framework.*;
-import flounder.loaders.*;
-import flounder.logger.*;
 import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;
-
-import java.util.*;
 
 /**
  * A module used for that manages GUI textures in a container.
@@ -23,24 +18,21 @@ public class FlounderGuis extends Module {
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
 	private GuiMaster guiMaster;
-
-	private GuiScreenContainer container;
-	private List<GuiTexture> guiTextures;
 	private GuiSelector selector;
+	private ScreenObject container;
 
 	/**
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderFonts.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderShaders.class, FlounderSound.class, FlounderTextures.class);
 		guiMaster = null;
 	}
 
 	@Override
 	public void init() {
-		this.container = new GuiScreenContainer();
-		this.guiTextures = new ArrayList<>();
 		this.selector = new GuiSelector();
+		this.container = new GuiObjectScreen();
 	}
 
 	@Override
@@ -56,8 +48,6 @@ public class FlounderGuis extends Module {
 			guiMaster = newManager;
 		}
 
-		guiTextures.clear();
-
 		if (guiMaster != null) {
 			if (!guiMaster.isInitialized()) {
 				guiMaster.init();
@@ -66,7 +56,7 @@ public class FlounderGuis extends Module {
 		}
 
 		selector.update();
-		container.update(guiTextures, FlounderFonts.getTexts());
+		container.update();
 
 		if (guiMaster != null) {
 			guiMaster.update();
@@ -75,34 +65,25 @@ public class FlounderGuis extends Module {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Textures Count", guiTextures.size());
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
 	}
 
+	/**
+	 * Gets the GUI master.
+	 *
+	 * @return The GUI master.
+	 */
 	public static GuiMaster getGuiMaster() {
 		return INSTANCE.guiMaster;
 	}
 
 	/**
-	 * Adds a component to the screen container.
+	 * Gets the screen container.
 	 *
-	 * @param component The component to add,
-	 * @param relX The X pos relative to the container.
-	 * @param relY The Y pos relative to the container.
-	 * @param relScaleX The X scale relative to the container.
-	 * @param relScaleY The Y scale relative to the container.
+	 * @return The screen container.
 	 */
-	public static void addComponent(GuiComponent component, float relX, float relY, float relScaleX, float relScaleY) {
-		INSTANCE.container.addComponent(component, relX, relY, relScaleX, relScaleY);
-	}
-
-	/**
-	 * Gets a list of all the renerable GUI textures.
-	 *
-	 * @return List of GUI textures.
-	 */
-	public static List<GuiTexture> getGuiTextures() {
-		return INSTANCE.guiTextures;
+	public static ScreenObject getContainer() {
+		return INSTANCE.container;
 	}
 
 	/**
@@ -126,11 +107,6 @@ public class FlounderGuis extends Module {
 			guiMaster.setInitialized(false);
 		}
 
-		guiTextures.forEach(guiTexture -> {
-			if (guiTexture != null) {
-				guiTexture.getTexture().delete();
-			}
-		});
-		guiTextures.clear();
+		container.delete();
 	}
 }

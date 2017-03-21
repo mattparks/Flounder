@@ -10,6 +10,8 @@ import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
+import java.util.*;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -31,36 +33,44 @@ public class GuisRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || FlounderGuis.getGuiTextures().isEmpty()) {
+		if (!shader.isLoaded() || FlounderGuis.getContainer() == null) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderGuis.getGuiTextures().forEach(this::renderGui);
+		FlounderGuis.getContainer().getAll(new ArrayList<>()).forEach(this::renderGui);
 		endRendering();
 	}
 
 	private void prepareRendering() {
 		shader.start();
 
-		OpenGlUtils.antialias(false);
+		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.cullBackFaces(true);
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 
-		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
-	private void renderGui(GuiTexture gui) {
-		if (vaoID == -1 || !gui.getTexture().isLoaded()) {
+	private void renderGui(ScreenObject object) {
+		if (!(object instanceof GuiObject)) {
+			return;
+		}
+
+		GuiObject gui = (GuiObject) object;
+
+		if (vaoID == -1 || !gui.getTexture().isLoaded() || !gui.isVisible()) {
 			return;
 		}
 
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTexture(gui.getTexture(), 0);
 		shader.getUniformVec2("size").loadVec2((POSITION_MAX - POSITION_MIN) / 2.0f, (POSITION_MAX - POSITION_MIN) / 2.0f);
-		shader.getUniformVec4("transform").loadVec4(gui.getPosition().x, gui.getPosition().y, gui.getScale().x, gui.getScale().y);
+		shader.getUniformVec4("transform").loadVec4(
+				gui.getScreenPosition().x, gui.getScreenPosition().y,
+				gui.getScreenDimensions().x, gui.getScreenDimensions().y
+		);
 		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(gui.getRotation()));
 		shader.getUniformFloat("alpha").loadFloat(gui.getAlpha());
 		shader.getUniformBool("flipTexture").loadBoolean(gui.isFlipTexture());
@@ -82,6 +92,11 @@ public class GuisRenderer extends Renderer {
 
 	@Override
 	public void dispose() {
+		if (vaoID != -1) {
+			FlounderLoader.deleteVAOFromCache(vaoID);
+			vaoID = -1;
+		}
+
 		shader.delete();
 	}
 }

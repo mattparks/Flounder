@@ -20,4 +20,9 @@ void main(void) {
 	if (polygonMode) {
 		out_colour = vec4(1.0, 0.0, 0.0, 1.0);
 	}
+
+	if (out_colour.a < 0.05){
+		out_colour = vec4(0.0);
+		discard;
+	}
 }
