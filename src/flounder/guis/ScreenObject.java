@@ -117,7 +117,11 @@ public abstract class ScreenObject {
 	}
 
 	public boolean isVisible() {
-		return visible;
+		if (parent != null) {
+			return visible && parent.isVisible();
+		} else {
+			return visible;
+		}
 	}
 
 	public void setVisible(boolean visible) {

@@ -97,7 +97,7 @@ public class TextObject extends ScreenObject {
 	 *
 	 * @return The string of text.
 	 */
-	protected String getTextString() {
+	public String getTextString() {
 		return textString;
 	}
 
@@ -117,7 +117,7 @@ public class TextObject extends ScreenObject {
 	 *
 	 * @return How the text should align.
 	 */
-	protected GuiAlign getTextAlign() {
+	public GuiAlign getTextAlign() {
 		return textAlign;
 	}
 
