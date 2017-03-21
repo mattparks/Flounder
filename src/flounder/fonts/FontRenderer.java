@@ -67,10 +67,14 @@ public class FontRenderer extends Renderer {
 
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenGlUtils.bindTexture(text.getFont().getTexture(), 0);
-		Vector2f textPosition = text.getPosition();
-		Colour textColour = text.getColour();
-		shader.getUniformVec2("transform").loadVec2(textPosition.x, textPosition.y);
-		shader.getUniformVec4("colour").loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getCurrentAlpha());
+		// shader.getUniformVec2("size").loadVec2((POSITION_MAX - POSITION_MIN) / 2.0f, (POSITION_MAX - POSITION_MIN) / 2.0f);
+		shader.getUniformVec4("transform").loadVec4(
+				text.getScreenPosition().x, text.getScreenPosition().y,
+				text.getScreenDimensions().x, text.getScreenDimensions().y
+		);
+		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(text.getRotation()));
+
+		shader.getUniformVec4("colour").loadVec4(text.getColour().r, text.getColour().g, text.getColour().b, text.getAlpha());
 		shader.getUniformVec3("borderColour").loadVec3(1.0f, 1.0f, 1.0f); //text.getBorderColour());
 		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
 		shader.getUniformVec2("borderSizes").loadVec2(0.0f, 0.0f); // text.getTotalBorderSize(), text.getGlowSize());

@@ -21,8 +21,8 @@ public class Character {
 	 * @param yTextureCoord The y texture coordinate for the top left corner of the character in the texture atlas.
 	 * @param xTexSize The width of the character in the texture atlas.
 	 * @param yTexSize The height of the character in the texture atlas.
-	 * @param xOffset The x distance from the curser to the left edge of the character's quad.
-	 * @param yOffset The y distance from the curser to the top edge of the character's quad.
+	 * @param xOffset The x distance from the cursor to the left edge of the character's quad.
+	 * @param yOffset The y distance from the cursor to the top edge of the character's quad.
 	 * @param sizeX The width of the character's quad in screen space.
 	 * @param sizeY The height of the character's quad in screen space.
 	 * @param xAdvance How far in pixels the cursor should advance after adding this character.

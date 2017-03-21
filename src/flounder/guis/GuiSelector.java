@@ -98,8 +98,11 @@ public class GuiSelector {
 			return false;
 		}
 
+		// TODO: Account for rotations.
+
 		float positionX = object.getScreenPosition().x;
 		float positionY = object.getScreenPosition().y;
+
 		float dimensionsX = object.getScreenDimensions().x;
 		float dimensionsY = object.getScreenDimensions().y;
 

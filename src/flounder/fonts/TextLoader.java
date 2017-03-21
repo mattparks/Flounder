@@ -1,6 +1,8 @@
 package flounder.fonts;
 
 import flounder.loaders.*;
+import flounder.logger.*;
+import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
@@ -45,15 +47,44 @@ public class TextLoader {
 	protected void loadTextMesh(TextObject text) {
 		List<Line> lines = createStructure(text);
 		TextMeshData meshData = createQuadVertices(text, lines);
+
+		float minX = Float.POSITIVE_INFINITY;
+		float minY = Float.POSITIVE_INFINITY;
+		float maxX = Float.NEGATIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+		int i = 0;
+
+		for (float v : meshData.vertices) {
+			if (i == 0) {
+				if (v < minX) {
+					minX = v;
+				} else if (v > maxX) {
+					maxX = v;
+				}
+
+				i++;
+			} else if (i == 1) {
+				if (v < minY) {
+					minY = v;
+				} else if (v > maxY) {
+					maxY = v;
+				}
+
+				i = 0;
+			}
+		}
+		FlounderLogger.error("===(" + minX + ", " + minY + "), (" + maxX + ", " + maxY + ")===");
+
 		int vao = FlounderLoader.createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
 		text.setMeshInfo(vao, meshData.vertices.length / 2);
+		text.setDimensions(new Vector2f(Math.abs(minX) + Math.abs(maxX), Math.abs(minY) + Math.abs(maxY)));
 	}
 
 	private List<Line> createStructure(TextObject text) {
 		char[] chars = text.getTextString().toCharArray();
 		List<Line> lines = new ArrayList<>();
-		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
-		Word currentWord = new Word(text.getFontSize());
+		Line currentLine = new Line(metaData.getSpaceWidth(), text.getMaxLineSize());
+		Word currentWord = new Word();
 
 		for (char c : chars) {
 			int ascii = (int) c;
@@ -63,11 +94,11 @@ public class TextLoader {
 
 				if (!added) {
 					lines.add(currentLine);
-					currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+					currentLine = new Line(metaData.getSpaceWidth(), text.getMaxLineSize());
 					currentLine.attemptToAddWord(currentWord);
 				}
 
-				currentWord = new Word(text.getFontSize());
+				currentWord = new Word();
 				continue;
 			}
 
@@ -84,7 +115,7 @@ public class TextLoader {
 
 		if (!added) {
 			lines.add(currentLine);
-			currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+			currentLine = new Line(metaData.getSpaceWidth(), text.getMaxLineSize());
 			currentLine.attemptToAddWord(currentWord);
 		}
 
@@ -93,43 +124,43 @@ public class TextLoader {
 
 	private TextMeshData createQuadVertices(TextObject text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
-		double curserX = 0.0;
-		double curserY = 0.0;
+		double cursorX = 0.0;
+		double cursorY = 0.0;
 
 		List<Float> vertices = new ArrayList<>();
 		List<Float> textures = new ArrayList<>();
 
 		for (Line line : lines) {
 			if (text.isCentered()) {
-				curserX = (line.maxLength - line.currentLineLength) / 2;
+				cursorX = (line.maxLength - line.currentLineLength) / 2;
 			}
 
 			for (Word word : line.words) {
 				for (Character letter : word.characters) {
-					addVerticesForCharacter(curserX, curserY, letter, text.getFontSize(), vertices);
+					addVerticesForCharacter(cursorX, cursorY, letter, vertices);
 					addTextures(textures, letter.xTextureCoord, letter.yTextureCoord, letter.xMaxTextureCoord, letter.yMaxTextureCoord);
-					curserX += letter.xAdvance * text.getFontSize();
+					cursorX += letter.xAdvance;
 				}
 
-				curserX += metaData.getSpaceWidth() * text.getFontSize();
+				cursorX += metaData.getSpaceWidth();
 			}
 
-			curserX = 0;
-			curserY += LINE_HEIGHT * text.getFontSize();
+			cursorX = 0;
+			cursorY += LINE_HEIGHT;
 		}
 
 		return new TextMeshData(listToArray(vertices), listToArray(textures));
 	}
 
-	private void addVerticesForCharacter(double curserX, double curserY, Character character, double fontSize, List<Float> vertices) {
-		double x = curserX + (character.xOffset * fontSize);
-		double y = curserY + (character.yOffset * fontSize);
-		double maxX = x + (character.sizeX * fontSize);
-		double maxY = y + (character.sizeY * fontSize);
-		double properX = (2 * x) - 1;
-		double properY = (-2 * y) + 1;
-		double properMaxX = (2 * maxX) - 1;
-		double properMaxY = (-2 * maxY) + 1;
+	private void addVerticesForCharacter(double cursorX, double cursorY, Character character, List<Float> vertices) {
+		double x = cursorX + character.xOffset;
+		double y = cursorY + character.yOffset;
+		double maxX = x + character.sizeX;
+		double maxY = y + character.sizeY;
+		double properX = (2.0 * x) - 1.0;
+		double properY = (-2.0 * y) + 1.0;
+		double properMaxX = (2.0 * maxX) - 1.0;
+		double properMaxY = (-2.0 * maxY) + 1.0;
 		addVertices(vertices, properX, properY, properMaxX, properMaxY);
 	}
 

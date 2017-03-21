@@ -4,10 +4,10 @@ import flounder.guis.*;
 import flounder.loaders.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.visual.*;
 
 public class TextObject extends ScreenObject {
 	private String textString;
-	private float fontSize;
 
 	private int textMeshVao;
 	private int vertexCount;
@@ -22,10 +22,10 @@ public class TextObject extends ScreenObject {
 	private boolean centerText = false;
 
 	public TextObject(ScreenObject parent, Vector2f position, String text, float fontSize, FontType font, float maxLineLength, boolean centered) {
-		super(parent, position, new Vector2f());
+		super(parent, position, new Vector2f(1.0f, 1.0f));
+		super.setScaleDriver(new ConstantDriver(fontSize));
 
 		this.textString = text;
-		this.fontSize = fontSize;
 		this.font = font;
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
@@ -103,13 +103,6 @@ public class TextObject extends ScreenObject {
 	}
 
 	/**
-	 * @return the font size of the text (a font size of 1 is normal).
-	 */
-	protected float getFontSize() {
-		return fontSize;
-	}
-
-	/**
 	 * Sets the number of lines that this text covers (method used only in loading).
 	 *
 	 * @param number
@@ -139,16 +132,13 @@ public class TextObject extends ScreenObject {
 		return textString;
 	}
 
-	public float getCurrentAlpha() {
-		return 1.0f;
-	}
 	protected float calculateEdgeStart() {
-		float size = fontSize * 1;
+		float size = super.getScale();
 		return 1.0f / 300.0f * size + 137.0f / 300.0f;
 	}
 
 	protected float calculateAntialiasSize() {
-		float size = fontSize * 1;
+		float size = super.getScale();
 		size = (size - 1.0f) / (1.0f + size / 4.0f) + 1.0f;
 		return 0.1f / size;
 	}

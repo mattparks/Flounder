@@ -21,8 +21,6 @@ public class MetaFile {
 	private static final String SPLITTER = " ";
 	private static final String NUMBER_SEPARATOR = ",";
 
-	private double aspectRatio;
-
 	private Map<Integer, Character> metaData;
 	private Map<String, String> values;
 
@@ -41,8 +39,6 @@ public class MetaFile {
 	 * @param file The font file to load from.
 	 */
 	protected MetaFile(MyFile file) {
-		this.aspectRatio = (double) FlounderDisplay.getWidth() / (double) FlounderDisplay.getHeight();
-
 		this.metaData = new HashMap<>();
 		this.values = new HashMap<>();
 
@@ -50,7 +46,7 @@ public class MetaFile {
 		loadPaddingData();
 		loadLineSizes();
 		loadCharacterData();
-		close();
+		closeReader();
 	}
 
 	/**
@@ -116,7 +112,7 @@ public class MetaFile {
 		processNextLine();
 		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
 		verticalPerPixelSize = TextLoader.LINE_HEIGHT / (double) lineHeightPixels;
-		horizontalPerPixelSize = verticalPerPixelSize / aspectRatio;
+		horizontalPerPixelSize = verticalPerPixelSize;
 	}
 
 	/**
@@ -200,7 +196,7 @@ public class MetaFile {
 	/**
 	 * Closes the font file after finishing reading.
 	 */
-	private void close() {
+	private void closeReader() {
 		try {
 			reader.close();
 		} catch (IOException e) {

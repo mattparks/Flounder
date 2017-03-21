@@ -9,17 +9,13 @@ import java.util.*;
  */
 public class Word {
 	protected List<Character> characters;
-	protected double fontSize;
 	protected double width;
 
 	/**
 	 * Creates a new empty word.
-	 *
-	 * @param fontSize The font size of the text which this word is in.
 	 */
-	protected Word(double fontSize) {
+	protected Word() {
 		this.characters = new ArrayList<>();
-		this.fontSize = fontSize;
 		this.width = 0.0;
 	}
 
@@ -35,6 +31,6 @@ public class Word {
 		}
 
 		characters.add(character);
-		width += character.xAdvance * fontSize;
+		width += character.xAdvance;
 	}
 }
