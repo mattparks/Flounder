@@ -60,7 +60,7 @@ public class GuisRenderer extends Renderer {
 
 		GuiObject gui = (GuiObject) object;
 
-		if (vaoID == -1 || !gui.getTexture().isLoaded()) {
+		if (vaoID == -1 || !gui.getTexture().isLoaded() || !gui.isVisible()) {
 			return;
 		}
 
@@ -92,6 +92,11 @@ public class GuisRenderer extends Renderer {
 
 	@Override
 	public void dispose() {
+		if (vaoID != -1) {
+			FlounderLoader.deleteVAOFromCache(vaoID);
+			vaoID = -1;
+		}
+
 		shader.delete();
 	}
 }

@@ -61,9 +61,9 @@ public class FontRenderer extends Renderer {
 
 		TextObject text = (TextObject) object;
 
-		//	if (!text.isLoaded()) {
-		//		return;
-		//	}
+		if (!text.isLoaded() || !text.isVisible()) {
+			return;
+		}
 
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenGlUtils.bindTexture(text.getFont().getTexture(), 0);
@@ -75,9 +75,9 @@ public class FontRenderer extends Renderer {
 		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(text.getRotation()));
 
 		shader.getUniformVec4("colour").loadVec4(text.getColour().r, text.getColour().g, text.getColour().b, text.getAlpha());
-		shader.getUniformVec3("borderColour").loadVec3(1.0f, 1.0f, 1.0f); //text.getBorderColour());
+		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());
 		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
-		shader.getUniformVec2("borderSizes").loadVec2(0.0f, 0.0f); // text.getTotalBorderSize(), text.getGlowSize());
+		shader.getUniformVec2("borderSizes").loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		glDrawArrays(GL_TRIANGLES, 0, text.getVertexCount());
 		OpenGlUtils.unbindVAO(0, 1);
 	}

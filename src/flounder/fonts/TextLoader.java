@@ -2,7 +2,6 @@ package flounder.fonts;
 
 import flounder.loaders.*;
 import flounder.logger.*;
-import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
@@ -131,7 +130,7 @@ public class TextLoader {
 		List<Float> textures = new ArrayList<>();
 
 		for (Line line : lines) {
-			if (text.isCentered()) {
+			if (text.isCentred()) {
 				cursorX = (line.maxLength - line.currentLineLength) / 2;
 			}
 
