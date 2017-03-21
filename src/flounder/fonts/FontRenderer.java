@@ -4,7 +4,6 @@ import flounder.camera.*;
 import flounder.devices.*;
 import flounder.guis.*;
 import flounder.helpers.*;
-import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 import flounder.renderer.*;
@@ -67,7 +66,7 @@ public class FontRenderer extends Renderer {
 
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenGlUtils.bindTexture(text.getFont().getTexture(), 0);
-		// shader.getUniformVec2("size").loadVec2((POSITION_MAX - POSITION_MIN) / 2.0f, (POSITION_MAX - POSITION_MIN) / 2.0f);
+		shader.getUniformVec2("size").loadVec2(text.getMeshSize());
 		shader.getUniformVec4("transform").loadVec4(
 				text.getScreenPosition().x, text.getScreenPosition().y,
 				text.getScreenDimensions().x, text.getScreenDimensions().y

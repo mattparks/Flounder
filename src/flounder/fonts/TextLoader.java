@@ -45,39 +45,15 @@ public class TextLoader {
 	 * @param text The text object to create a mesh for.
 	 */
 	protected void loadTextMesh(TextObject text) {
+		// Create mesh data.
 		List<Line> lines = createStructure(text);
 		TextMeshData meshData = createQuadVertices(text, lines);
+		Vector2f meshSize = getBounding(meshData.vertices);
 
-		float minX = Float.POSITIVE_INFINITY;
-		float minY = Float.POSITIVE_INFINITY;
-		float maxX = Float.NEGATIVE_INFINITY;
-		float maxY = Float.NEGATIVE_INFINITY;
-		int i = 0;
-
-		for (float v : meshData.vertices) {
-			if (i == 0) {
-				if (v < minX) {
-					minX = v;
-				} else if (v > maxX) {
-					maxX = v;
-				}
-
-				i++;
-			} else if (i == 1) {
-				if (v < minY) {
-					minY = v;
-				} else if (v > maxY) {
-					maxY = v;
-				}
-
-				i = 0;
-			}
-		}
-		FlounderLogger.error("===(" + minX + ", " + minY + "), (" + maxX + ", " + maxY + ")===");
-
+		// Load mesh data to OpenGL.
 		int vao = FlounderLoader.createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
-		text.setMeshInfo(vao, meshData.vertices.length / 2);
-		//text.setDimensions(new Vector2f((minX + maxX) / 2.0f, (minY + maxY) / 2.0f));
+		int verticesCount = meshData.vertices.length / 2;
+		text.setMeshInfo(vao, verticesCount, meshSize);
 	}
 
 	private List<Line> createStructure(TextObject text) {
@@ -131,8 +107,16 @@ public class TextLoader {
 		List<Float> textures = new ArrayList<>();
 
 		for (Line line : lines) {
-			if (text.isCentred()) {
-				cursorX = (line.maxLength - line.currentLineLength) / 2.0;
+			switch (text.getTextAlign()) {
+				case LEFT:
+					cursorX = 0.0;
+					break;
+				case CENTRE:
+					cursorX = (line.maxLength - line.currentLineLength) / 2.0;
+					break;
+				case RIGHT:
+					cursorX = line.maxLength - line.currentLineLength;
+					break;
 			}
 
 			for (Word word : line.words) {
@@ -168,15 +152,7 @@ public class TextLoader {
 		double y = cursorY + character.yOffset;
 		double maxX = x + character.sizeX;
 		double maxY = y + character.sizeY;
-
 		addVertices(vertices, x, y, maxX, maxY);
-
-		double properX = (2.0 * x) - 1.0;
-		double properY = (-2.0 * y) + 1.0;
-		double properMaxX = (2.0 * maxX) - 1.0;
-		double properMaxY = (-2.0 * maxY) + 1.0;
-
-	//	addVertices(vertices, properX, properY, properMaxX, properMaxY);
 	}
 
 	private static void addVertices(List<Float> vertices, double x, double y, double maxX, double maxY) {
@@ -207,6 +183,36 @@ public class TextLoader {
 		textures.add((float) y);
 		textures.add((float) x);
 		textures.add((float) y);
+	}
+
+	private Vector2f getBounding(float[] vertices) {
+		float minX = Float.POSITIVE_INFINITY;
+		float minY = Float.POSITIVE_INFINITY;
+		float maxX = Float.NEGATIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+		int i = 0;
+
+		for (float v : vertices) {
+			if (i == 0) {
+				if (v < minX) {
+					minX = v;
+				} else if (v > maxX) {
+					maxX = v;
+				}
+
+				i++;
+			} else if (i == 1) {
+				if (v < minY) {
+					minY = v;
+				} else if (v > maxY) {
+					maxY = v;
+				}
+
+				i = 0;
+			}
+		}
+
+		return new Vector2f((minX + maxX) / 2.0f, (minY + maxY) / 2.0f);
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package flounder.fonts;
 
-import flounder.devices.*;
 import flounder.logger.*;
 import flounder.resources.*;
 

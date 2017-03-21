@@ -23,7 +23,5 @@ void main(void) {
 	screenPosition.y = screenPosition.y * -2.0 + 1.0;
 	gl_Position = vec4(screenPosition, 0.0, 1.0);
 
-	// gl_Position = vec4(in_position * transform.zw + transform.xy * vec2(2.0, -2.0), 0.0, 1.0);
-
 	pass_textureCoords = in_textureCoords;
 }

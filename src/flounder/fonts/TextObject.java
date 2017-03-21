@@ -7,11 +7,18 @@ import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.visual.*;
 
+/**
+ * A object the represents a text in a GUI.
+ */
 public class TextObject extends ScreenObject {
 	private String textString;
+	private GuiAlign textAlign;
+
+	private String newText;
 
 	private int textMeshVao;
 	private int vertexCount;
+	private Vector2f meshSize;
 	private float lineMaxSize;
 	private int numberOfLines;
 
@@ -29,16 +36,29 @@ public class TextObject extends ScreenObject {
 	private ValueDriver borderDriver;
 	private float borderSize;
 
-	private boolean centredText;
-
-	public TextObject(ScreenObject parent, Vector2f position, String text, float fontSize, FontType font, float maxLineLength, boolean centered) {
+	/**
+	 * Creates a new ext object.
+	 *
+	 * @param parent The objects parent.
+	 * @param position The objects position relative to the parents.
+	 * @param text The text that will be set to this object,
+	 * @param fontSize The initial size of the font (1 is the default).
+	 * @param font The font type to be used in this text.
+	 * @param maxLineLength The longest line length before the text is wrapped, 1.0 being 100& of the screen width when font size = 1.
+	 * @param align How the text will align if wrapped.
+	 */
+	public TextObject(ScreenObject parent, Vector2f position, String text, float fontSize, FontType font, float maxLineLength, GuiAlign align) {
 		super(parent, position, new Vector2f(1.0f, 1.0f));
 		super.setScaleDriver(new ConstantDriver(fontSize));
 
 		this.textString = text;
+		this.textAlign = align;
+
+		this.newText = null;
 
 		this.textMeshVao = -1;
 		this.vertexCount = -1;
+		this.meshSize = new Vector2f(0.0f, 0.0f);
 		this.lineMaxSize = maxLineLength;
 		this.numberOfLines = -1;
 
@@ -56,24 +76,49 @@ public class TextObject extends ScreenObject {
 		this.borderDriver = new ConstantDriver(0.0f);
 		this.borderSize = 0.0f;
 
-		this.centredText = centered;
-
 		font.loadText(this);
 	}
 
 	@Override
 	public void updateObject() {
+		if (isLoaded() && newText != null) {
+			delete();
+			textString = newText;
+			font.loadText(this);
+			newText = null;
+		}
+
 		glowSize = glowDriver.update(Framework.getDelta());
 		borderSize = borderDriver.update(Framework.getDelta());
 	}
 
 	/**
-	 * Gets the string of text represented..
+	 * Gets the string of text represented.
 	 *
 	 * @return The string of text.
 	 */
 	protected String getTextString() {
 		return textString;
+	}
+
+	/**
+	 * Changed the current string in this text.
+	 *
+	 * @param newText The new text,
+	 */
+	public void setText(String newText) {
+		if (!textString.equals(newText)) {
+			this.newText = newText;
+		}
+	}
+
+	/**
+	 * Gets how the text should align.
+	 *
+	 * @return How the text should align.
+	 */
+	protected GuiAlign getTextAlign() {
+		return textAlign;
 	}
 
 	/**
@@ -95,14 +140,25 @@ public class TextObject extends ScreenObject {
 	}
 
 	/**
+	 * Gets the dimensions for the original text mesh.
+	 *
+	 * @return The dimensions for the original text mesh.
+	 */
+	public Vector2f getMeshSize() {
+		return meshSize;
+	}
+
+	/**
 	 * Sets the loaded mesh data for the text.
 	 *
 	 * @param vao The mesh VAO id.
 	 * @param verticesCount The mesh vertex count.
+	 * @param meshSize The dimensions for the original text mesh.
 	 */
-	protected void setMeshInfo(int vao, int verticesCount) {
+	protected void setMeshInfo(int vao, int verticesCount, Vector2f meshSize) {
 		this.textMeshVao = vao;
 		this.vertexCount = verticesCount;
+		this.meshSize = meshSize;
 	}
 
 	/**
@@ -242,15 +298,6 @@ public class TextObject extends ScreenObject {
 	}
 
 	/**
-	 * Gets if the text should be centred.
-	 *
-	 * @return {@code true} if the text should be centred.
-	 */
-	protected boolean isCentred() {
-		return centredText;
-	}
-
-	/**
 	 * Gets the distance field edge before antialias.
 	 *
 	 * @return The distance field edge.
@@ -271,6 +318,11 @@ public class TextObject extends ScreenObject {
 		return 0.1f / size;
 	}
 
+	/**
+	 * Gets if the text has been loaded to OpenGL.
+	 *
+	 * @return If the text has been loaded to OpenGL.
+	 */
 	public boolean isLoaded() {
 		return !textString.isEmpty() && textMeshVao != -1 && vertexCount != -1;
 	}
