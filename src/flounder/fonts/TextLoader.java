@@ -1,33 +1,55 @@
 package flounder.fonts;
 
+import flounder.loaders.*;
 import flounder.resources.*;
 import flounder.textures.*;
 
 import java.util.*;
 
+/**
+ * A loader capable of loading font data into a instance of a text mesh.
+ */
 public class TextLoader {
 	protected static final double LINE_HEIGHT = 0.03f;
+	protected static final int NEWLINE_ASCII = 10;
 	protected static final int SPACE_ASCII = 32;
 
 	private TextureObject fontTexture;
 	private MetaFile metaData;
 
-	protected TextLoader(MyFile fontSheet, MyFile metaFile) {
-		this.fontTexture = TextureFactory.newBuilder().setFile(fontSheet).noFiltering().clampEdges().create();
-		this.metaData = new MetaFile(metaFile);
+	/**
+	 * Creates a new text loader.
+	 *
+	 * @param textureFile The file for the font atlas texture.
+	 * @param fontFile The font file containing information about each character in the texture atlas.
+	 */
+	protected TextLoader(MyFile textureFile, MyFile fontFile) {
+		this.fontTexture = TextureFactory.newBuilder().setFile(textureFile).create(); // noFiltering().clampEdges().
+		this.metaData = new MetaFile(fontFile);
 	}
 
-	public TextureObject getFontTexture() {
+	/**
+	 * Gets the loaded texture atlas for this font.
+	 *
+	 * @return The fonts texture atlas.
+	 */
+	protected TextureObject getFontTexture() {
 		return fontTexture;
 	}
 
-	protected TextMeshData createTextMesh(Text text) {
+	/**
+	 * Creates a mesh for the provided text object using the meta data for this font. Then takes the data created for the text mesh and stores it in OpenGL.
+	 *
+	 * @param text The text object to create a mesh for.
+	 */
+	protected void loadTextMesh(TextObject text) {
 		List<Line> lines = createStructure(text);
-		TextMeshData data = createQuadVertices(text, lines);
-		return data;
+		TextMeshData meshData = createQuadVertices(text, lines);
+		int vao = FlounderLoader.createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
+		text.setMeshInfo(vao, meshData.vertices.length / 2);
 	}
 
-	private List<Line> createStructure(Text text) {
+	private List<Line> createStructure(TextObject text) {
 		char[] chars = text.getTextString().toCharArray();
 		List<Line> lines = new ArrayList<>();
 		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
@@ -57,7 +79,7 @@ public class TextLoader {
 		return lines;
 	}
 
-	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, Text text) {
+	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, TextObject text) {
 		boolean added = currentLine.attemptToAddWord(currentWord);
 
 		if (!added) {
@@ -69,13 +91,13 @@ public class TextLoader {
 		lines.add(currentLine);
 	}
 
-	private TextMeshData createQuadVertices(Text text, List<Line> lines) {
+	private TextMeshData createQuadVertices(TextObject text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
-		double curserX = 0f;
-		double curserY = 0f;
+		double curserX = 0.0;
+		double curserY = 0.0;
 
 		List<Float> vertices = new ArrayList<>();
-		List<Float> textureCoords = new ArrayList<>();
+		List<Float> textures = new ArrayList<>();
 
 		for (Line line : lines) {
 			if (text.isCentered()) {
@@ -85,7 +107,7 @@ public class TextLoader {
 			for (Word word : line.words) {
 				for (Character letter : word.characters) {
 					addVerticesForCharacter(curserX, curserY, letter, text.getFontSize(), vertices);
-					addTexCoords(textureCoords, letter.xTextureCoord, letter.yTextureCoord, letter.xMaxTextureCoord, letter.yMaxTextureCoord);
+					addTextures(textures, letter.xTextureCoord, letter.yTextureCoord, letter.xMaxTextureCoord, letter.yMaxTextureCoord);
 					curserX += letter.xAdvance * text.getFontSize();
 				}
 
@@ -96,7 +118,7 @@ public class TextLoader {
 			curserY += LINE_HEIGHT * text.getFontSize();
 		}
 
-		return new TextMeshData(listToArray(vertices), listToArray(textureCoords));
+		return new TextMeshData(listToArray(vertices), listToArray(textures));
 	}
 
 	private void addVerticesForCharacter(double curserX, double curserY, Character character, double fontSize, List<Float> vertices) {
@@ -126,19 +148,19 @@ public class TextLoader {
 		vertices.add((float) y);
 	}
 
-	private static void addTexCoords(List<Float> texCoords, double x, double y, double maxX, double maxY) {
-		texCoords.add((float) x);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) maxY);
-		texCoords.add((float) maxX);
-		texCoords.add((float) y);
-		texCoords.add((float) x);
-		texCoords.add((float) y);
+	private static void addTextures(List<Float> textures, double x, double y, double maxX, double maxY) {
+		textures.add((float) x);
+		textures.add((float) y);
+		textures.add((float) x);
+		textures.add((float) maxY);
+		textures.add((float) maxX);
+		textures.add((float) maxY);
+		textures.add((float) maxX);
+		textures.add((float) maxY);
+		textures.add((float) maxX);
+		textures.add((float) y);
+		textures.add((float) x);
+		textures.add((float) y);
 	}
 
 
@@ -150,5 +172,18 @@ public class TextLoader {
 		}
 
 		return array;
+	}
+
+	/**
+	 * Stores the vertex data for all the quads on which a text will be rendered.
+	 */
+	public class TextMeshData {
+		protected final float[] vertices;
+		protected final float[] textures;
+
+		protected TextMeshData(float[] vertices, float[] textures) {
+			this.vertices = vertices;
+			this.textures = textures;
+		}
 	}
 }

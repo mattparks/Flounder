@@ -6,6 +6,7 @@ import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -64,13 +65,16 @@ public class FontRenderer extends Renderer {
 		//		return;
 		//	}
 
-		OpenGlUtils.bindVAO(text.getText().getMesh(), 0, 1);
-		OpenGlUtils.bindTexture(text.getText().getFont().getTexture(), 0);
+		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
+		OpenGlUtils.bindTexture(text.getFont().getTexture(), 0);
 		Vector2f textPosition = text.getPosition();
-		Colour textColour = text.getText().getColour();
+		Colour textColour = text.getColour();
 		shader.getUniformVec2("transform").loadVec2(textPosition.x, textPosition.y);
-		shader.getUniformVec4("colour").loadVec4(textColour);
-		glDrawArrays(GL_TRIANGLES, 0, text.getText().getVertexCount());
+		shader.getUniformVec4("colour").loadVec4(textColour.getR(), textColour.getG(), textColour.getB(), text.getCurrentAlpha());
+		shader.getUniformVec3("borderColour").loadVec3(1.0f, 1.0f, 1.0f); //text.getBorderColour());
+		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
+		shader.getUniformVec2("borderSizes").loadVec2(0.0f, 0.0f); // text.getTotalBorderSize(), text.getGlowSize());
+		glDrawArrays(GL_TRIANGLES, 0, text.getVertexCount());
 		OpenGlUtils.unbindVAO(0, 1);
 	}
 
@@ -80,7 +84,7 @@ public class FontRenderer extends Renderer {
 
 	@Override
 	public void profile() {
-		//	FlounderProfiler.add(FlounderFonts.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.add(FlounderFonts.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
 	}
 
 	@Override

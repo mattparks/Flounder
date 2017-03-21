@@ -12,11 +12,22 @@ public class FontType {
 	/**
 	 * Creates a new font and loads up the data about each character from the font file.
 	 *
-	 * @param fontSheet The file for the font atlas texture.
+	 * @param textureFile The file for the font atlas texture.
 	 * @param fontFile The font file containing information about each character in the texture atlas.
 	 */
-	public FontType(MyFile fontSheet, MyFile fontFile) {
-		this.loader = new TextLoader(fontSheet, fontFile);
+	public FontType(MyFile textureFile, MyFile fontFile) {
+		this.loader = new TextLoader(textureFile, fontFile);
+	}
+
+	/**
+	 * Takes in an unloaded text and calculate all of the vertices for the quads on which this text will be rendered.
+	 * The vertex positions and texture coords and calculated based on the information from the font file.
+	 * Then takes the information about the vertices of all the quads and stores it in OpenGL.
+	 *
+	 * @param text The unloaded text.
+	 */
+	public void loadText(TextObject text) {
+		loader.loadTextMesh(text);
 	}
 
 	/**
@@ -26,17 +37,5 @@ public class FontType {
 	 */
 	public TextureObject getTexture() {
 		return loader.getFontTexture();
-	}
-
-	/**
-	 * Takes in an unloaded text and calculate all of the vertices for the quads on which this text will be rendered.
-	 * The vertex positions and texture coords and calculated based on the information from the font file.
-	 *
-	 * @param text The unloaded text.
-	 *
-	 * @return Information about the vertices of all the quads.
-	 */
-	public TextMeshData loadText(Text text) {
-		return loader.createTextMesh(text);
 	}
 }
