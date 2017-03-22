@@ -196,7 +196,7 @@ public abstract class ScreenObject {
 	 * @return The screen positions.
 	 */
 	public Vector2f getScreenPosition() {
-		return screenPosition.set((position.x + positionOffsets.x) / (inScreenCoords ? FlounderDisplay.getAspectRatio() : 1.0f), (position.y + positionOffsets.y));
+		return screenPosition.set((position.x / (inScreenCoords ? FlounderDisplay.getAspectRatio() : 1.0f)) + positionOffsets.x, position.y + positionOffsets.y);
 	}
 
 	/**

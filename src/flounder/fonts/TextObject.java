@@ -89,15 +89,16 @@ public class TextObject extends ScreenObject {
 			newText = null;
 		}
 
+		// TODO
 		switch (textAlign) {
 			case LEFT:
-				getPositionOffsets().set(meshSize.x * FlounderDisplay.getAspectRatio(), 0.0f);
+				getPositionOffsets().set(0.5f * meshSize.x * getDimensions().x * getScale(), 0.0f);
 				break;
 			case CENTRE:
 				getPositionOffsets().set(0.0f, 0.0f);
 				break;
 			case RIGHT:
-				getPositionOffsets().set(-meshSize.x, 0.0f);
+				getPositionOffsets().set(-0.5f * meshSize.x * getDimensions().x * getScale(), 0.0f);
 				break;
 		}
 
