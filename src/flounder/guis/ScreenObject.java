@@ -25,6 +25,7 @@ public abstract class ScreenObject {
 
 	private Vector2f screenPosition;
 	private Vector2f screenDimensions;
+	private Vector2f positionOffsets;
 
 	private ValueDriver rotationDriver;
 	private float rotation;
@@ -58,6 +59,7 @@ public abstract class ScreenObject {
 
 		this.screenPosition = new Vector2f();
 		this.screenDimensions = new Vector2f();
+		this.positionOffsets = new Vector2f();
 
 		this.rotationDriver = new ConstantDriver(0.0f);
 		this.rotation = 0.0f;
@@ -144,6 +146,10 @@ public abstract class ScreenObject {
 		this.dimensions.set(dimensions);
 	}
 
+	public Vector2f getPositionOffsets() {
+		return positionOffsets;
+	}
+
 	public void setInScreenCoords(boolean inScreenCoords) {
 		this.inScreenCoords = inScreenCoords;
 	}
@@ -190,7 +196,7 @@ public abstract class ScreenObject {
 	 * @return The screen positions.
 	 */
 	public Vector2f getScreenPosition() {
-		return screenPosition.set(position.x / (inScreenCoords ? FlounderDisplay.getAspectRatio() : 1.0f), position.y);
+		return screenPosition.set((position.x + positionOffsets.x) / (inScreenCoords ? FlounderDisplay.getAspectRatio() : 1.0f), (position.y + positionOffsets.y));
 	}
 
 	/**

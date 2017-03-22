@@ -1,5 +1,6 @@
 package flounder.fonts;
 
+import flounder.devices.*;
 import flounder.framework.*;
 import flounder.guis.*;
 import flounder.loaders.*;
@@ -86,6 +87,18 @@ public class TextObject extends ScreenObject {
 			textString = newText;
 			font.loadText(this);
 			newText = null;
+		}
+
+		switch (textAlign) {
+			case LEFT:
+				getPositionOffsets().set(meshSize.x * FlounderDisplay.getAspectRatio(), 0.0f);
+				break;
+			case CENTRE:
+				getPositionOffsets().set(0.0f, 0.0f);
+				break;
+			case RIGHT:
+				getPositionOffsets().set(-meshSize.x, 0.0f);
+				break;
 		}
 
 		glowSize = glowDriver.update(Framework.getDelta());
