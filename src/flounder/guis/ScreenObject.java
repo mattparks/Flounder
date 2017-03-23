@@ -165,6 +165,10 @@ public abstract class ScreenObject {
 		return positionOffsets;
 	}
 
+	public boolean isInScreenCoords() {
+		return inScreenCoords;
+	}
+
 	public void setInScreenCoords(boolean inScreenCoords) {
 		this.inScreenCoords = inScreenCoords;
 	}

@@ -100,18 +100,15 @@ public class GuiSelector {
 		}
 
 		// TODO: Account for rotations.
+		float positionX = object.getPosition().x;
+		float positionY = object.getPosition().y;
 
-		float positionX = (-object.getMeshSize().x * object.getScreenDimensions().x) + object.getScreenPosition().x;
-		float positionY = (-object.getMeshSize().y * object.getScreenDimensions().y) + object.getScreenPosition().y;
-
-		//FlounderLogger.log(positionX + ", " + positionY);
-
-		float dimensionsX = object.getScreenDimensions().x;
-		float dimensionsY = object.getScreenDimensions().y;
+		float width = 2.0f * object.getMeshSize().x * object.getScreenDimensions().x / FlounderDisplay.getAspectRatio();
+		float height = 2.0f * object.getMeshSize().y * object.getScreenDimensions().y;
 
 		if (FlounderMouse.isDisplaySelected() && FlounderDisplay.isFocused()) {
-			if (FlounderGuis.getSelector().getCursorX() >= positionX - (dimensionsX / 2.0f) && FlounderGuis.getSelector().getCursorX() <= positionX + (dimensionsX / 2.0f)) {
-				if (FlounderGuis.getSelector().getCursorY() >= positionY - (dimensionsY / 2.0f) && FlounderGuis.getSelector().getCursorY() <= positionY + (dimensionsY / 2.0f)) {
+			if (FlounderGuis.getSelector().getCursorX() >= positionX - (width / 2.0f) && FlounderGuis.getSelector().getCursorX() <= positionX + (width / 2.0f)) {
+				if (FlounderGuis.getSelector().getCursorY() >= positionY - (height / 2.0f) && FlounderGuis.getSelector().getCursorY() <= positionY + (height / 2.0f)) {
 					return true;
 				}
 			}
