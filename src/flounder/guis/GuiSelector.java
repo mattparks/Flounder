@@ -3,6 +3,7 @@ package flounder.guis;
 import flounder.devices.*;
 import flounder.framework.*;
 import flounder.inputs.*;
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.profiling.*;
 
@@ -100,8 +101,10 @@ public class GuiSelector {
 
 		// TODO: Account for rotations.
 
-		float positionX = object.getScreenPosition().x;
-		float positionY = object.getScreenPosition().y;
+		float positionX = (-object.getMeshSize().x * object.getScreenDimensions().x) + object.getScreenPosition().x;
+		float positionY = (-object.getMeshSize().y * object.getScreenDimensions().y) + object.getScreenPosition().y;
+
+		//FlounderLogger.log(positionX + ", " + positionY);
 
 		float dimensionsX = object.getScreenDimensions().x;
 		float dimensionsY = object.getScreenDimensions().y;

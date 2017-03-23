@@ -53,7 +53,8 @@ public class TextLoader {
 		// Load mesh data to OpenGL.
 		int vao = FlounderLoader.createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
 		int verticesCount = meshData.vertices.length / 2;
-		text.setMeshInfo(vao, verticesCount, meshSize);
+		text.setMeshInfo(vao, verticesCount);
+		text.setMeshSize(meshSize);
 	}
 
 	private List<Line> createStructure(TextObject text) {

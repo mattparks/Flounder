@@ -17,6 +17,10 @@ public class FlounderGuis extends Module {
 
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
+	public static final float POSITION_MIN = 0.0f;
+	public static final float POSITION_MAX = 1.0f;
+	public static final float[] POSITIONS = {POSITION_MIN, POSITION_MIN, POSITION_MIN, POSITION_MAX, POSITION_MAX, POSITION_MIN, POSITION_MAX, POSITION_MAX};
+
 	private GuiMaster guiMaster;
 	private GuiSelector selector;
 	private ScreenObject container;

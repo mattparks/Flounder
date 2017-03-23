@@ -19,16 +19,12 @@ public class GuisRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "guis", "guiVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "guis", "guiFragment.glsl");
 
-	private static final float POSITION_MIN = 0.0f;
-	private static final float POSITION_MAX = 1.0f;
-	private static final float[] POSITIONS = {POSITION_MIN, POSITION_MIN, POSITION_MIN, POSITION_MAX, POSITION_MAX, POSITION_MIN, POSITION_MAX, POSITION_MAX};
-
 	private ShaderObject shader;
 	private int vaoID;
 
 	public GuisRenderer() {
 		this.shader = ShaderFactory.newBuilder().setName("guis").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
-		this.vaoID = FlounderLoader.createInterleavedVAO(POSITIONS, 2);
+		this.vaoID = FlounderLoader.createInterleavedVAO(FlounderGuis.POSITIONS, 2);
 	}
 
 	@Override
@@ -67,7 +63,7 @@ public class GuisRenderer extends Renderer {
 
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTexture(gui.getTexture(), 0);
-		shader.getUniformVec2("size").loadVec2((POSITION_MIN + POSITION_MAX) / 2.0f, (POSITION_MIN + POSITION_MAX) / 2.0f);
+		shader.getUniformVec2("size").loadVec2(gui.getMeshSize());
 		shader.getUniformVec4("transform").loadVec4(
 				gui.getScreenPosition().x, gui.getScreenPosition().y,
 				gui.getScreenDimensions().x, gui.getScreenDimensions().y
@@ -79,7 +75,7 @@ public class GuisRenderer extends Renderer {
 		shader.getUniformFloat("atlasRows").loadFloat(gui.getTexture().getNumberOfRows());
 		shader.getUniformVec2("atlasOffset").loadVec2(gui.getTextureOffset());
 		shader.getUniformVec3("colourOffset").loadVec3(gui.getColourOffset());
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length / 2);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, FlounderGuis.POSITIONS.length / 2);
 		OpenGlUtils.unbindVAO(0);
 	}
 

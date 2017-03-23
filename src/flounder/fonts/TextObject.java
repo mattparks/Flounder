@@ -19,7 +19,6 @@ public class TextObject extends ScreenObject {
 
 	private int textMeshVao;
 	private int vertexCount;
-	private Vector2f meshSize;
 	private float lineMaxSize;
 	private int numberOfLines;
 
@@ -50,6 +49,7 @@ public class TextObject extends ScreenObject {
 	 */
 	public TextObject(ScreenObject parent, Vector2f position, String text, float fontSize, FontType font, float maxLineLength, GuiAlign align) {
 		super(parent, position, new Vector2f(1.0f, 1.0f));
+		super.setMeshSize(new Vector2f());
 		super.setScaleDriver(new ConstantDriver(fontSize));
 
 		this.textString = text;
@@ -59,7 +59,6 @@ public class TextObject extends ScreenObject {
 
 		this.textMeshVao = -1;
 		this.vertexCount = -1;
-		this.meshSize = new Vector2f(0.0f, 0.0f);
 		this.lineMaxSize = maxLineLength;
 		this.numberOfLines = -1;
 
@@ -92,8 +91,7 @@ public class TextObject extends ScreenObject {
 		// TODO
 		switch (textAlign) {
 			case LEFT:
-				getPositionOffsets().set(getScale() * meshSize.x * 0.5f, 0.0f);
-			//	getPositionOffsets().set(0.5f * meshSize.x * getDimensions().x * getScale(), 0.0f);
+				getPositionOffsets().set(0.0f, 0.0f);
 				break;
 			case CENTRE:
 				getPositionOffsets().set(0.0f, 0.0f);
@@ -155,25 +153,14 @@ public class TextObject extends ScreenObject {
 	}
 
 	/**
-	 * Gets the dimensions for the original text mesh.
-	 *
-	 * @return The dimensions for the original text mesh.
-	 */
-	public Vector2f getMeshSize() {
-		return meshSize;
-	}
-
-	/**
 	 * Sets the loaded mesh data for the text.
 	 *
 	 * @param vao The mesh VAO id.
 	 * @param verticesCount The mesh vertex count.
-	 * @param meshSize The dimensions for the original text mesh.
 	 */
-	protected void setMeshInfo(int vao, int verticesCount, Vector2f meshSize) {
+	protected void setMeshInfo(int vao, int verticesCount) {
 		this.textMeshVao = vao;
 		this.vertexCount = verticesCount;
-		this.meshSize = meshSize;
 	}
 
 	/**

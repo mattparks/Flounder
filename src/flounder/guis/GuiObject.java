@@ -26,6 +26,8 @@ public class GuiObject extends ScreenObject {
 	 */
 	public GuiObject(ScreenObject parent, Vector2f position, Vector2f dimensions, TextureObject texture, int selectedRow) {
 		super(parent, position, dimensions);
+		super.setMeshSize(new Vector2f((FlounderGuis.POSITION_MIN + FlounderGuis.POSITION_MAX) / 2.0f, (FlounderGuis.POSITION_MIN + FlounderGuis.POSITION_MAX) / 2.0f));
+
 		this.texture = texture;
 		this.flipTexture = false;
 		this.selectedRow = selectedRow;

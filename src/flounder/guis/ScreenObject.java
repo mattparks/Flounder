@@ -20,6 +20,7 @@ public abstract class ScreenObject {
 	private boolean visible;
 	private Vector2f position;
 	private Vector2f dimensions;
+	private Vector2f meshSize;
 
 	private boolean inScreenCoords;
 
@@ -54,6 +55,7 @@ public abstract class ScreenObject {
 
 		this.position = position;
 		this.dimensions = dimensions;
+		this.meshSize = new Vector2f();
 
 		this.inScreenCoords = true;
 
@@ -146,6 +148,19 @@ public abstract class ScreenObject {
 		this.dimensions.set(dimensions);
 	}
 
+	/**
+	 * Gets the original mesh dimensions for the object.
+	 *
+	 * @return The original mesh dimensions.
+	 */
+	public Vector2f getMeshSize() {
+		return meshSize;
+	}
+
+	public void setMeshSize(Vector2f meshSize) {
+		this.meshSize = meshSize;
+	}
+
 	public Vector2f getPositionOffsets() {
 		return positionOffsets;
 	}
@@ -175,7 +190,11 @@ public abstract class ScreenObject {
 	}
 
 	public float getAlpha() {
-		return alpha;
+		if (parent != null) {
+			return alpha * parent.getAlpha();
+		} else {
+			return alpha;
+		}
 	}
 
 	public ValueDriver getScaleDriver() {
