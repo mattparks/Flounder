@@ -50,6 +50,7 @@ public class FontRenderer extends Renderer {
 		OpenGlUtils.disableDepthTesting();
 		OpenGlUtils.cullBackFaces(true);
 
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 

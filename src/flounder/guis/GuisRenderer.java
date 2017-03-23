@@ -50,6 +50,7 @@ public class GuisRenderer extends Renderer {
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
@@ -66,12 +67,13 @@ public class GuisRenderer extends Renderer {
 
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTexture(gui.getTexture(), 0);
-		shader.getUniformVec2("size").loadVec2((POSITION_MAX - POSITION_MIN) / 2.0f, (POSITION_MAX - POSITION_MIN) / 2.0f);
+		shader.getUniformVec2("size").loadVec2((POSITION_MIN + POSITION_MAX) / 2.0f, (POSITION_MIN + POSITION_MAX) / 2.0f);
 		shader.getUniformVec4("transform").loadVec4(
 				gui.getScreenPosition().x, gui.getScreenPosition().y,
 				gui.getScreenDimensions().x, gui.getScreenDimensions().y
 		);
 		shader.getUniformFloat("rotation").loadFloat((float) Math.toRadians(gui.getRotation()));
+
 		shader.getUniformFloat("alpha").loadFloat(gui.getAlpha());
 		shader.getUniformBool("flipTexture").loadBoolean(gui.isFlipTexture());
 		shader.getUniformFloat("atlasRows").loadFloat(gui.getTexture().getNumberOfRows());

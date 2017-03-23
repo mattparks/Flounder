@@ -3,6 +3,7 @@ package flounder.collada;
 import flounder.animation.*;
 import flounder.collada.geometry.*;
 import flounder.collada.joints.*;
+import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;

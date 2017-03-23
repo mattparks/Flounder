@@ -92,13 +92,14 @@ public class TextObject extends ScreenObject {
 		// TODO
 		switch (textAlign) {
 			case LEFT:
-				getPositionOffsets().set(0.5f * meshSize.x * getDimensions().x * getScale(), 0.0f);
+				getPositionOffsets().set(getScale() * meshSize.x * 0.5f, 0.0f);
+			//	getPositionOffsets().set(0.5f * meshSize.x * getDimensions().x * getScale(), 0.0f);
 				break;
 			case CENTRE:
 				getPositionOffsets().set(0.0f, 0.0f);
 				break;
 			case RIGHT:
-				getPositionOffsets().set(-0.5f * meshSize.x * getDimensions().x * getScale(), 0.0f);
+				getPositionOffsets().set(0.0f, 0.0f);
 				break;
 		}
 
