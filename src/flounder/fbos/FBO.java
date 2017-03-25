@@ -381,6 +381,10 @@ public class FBO {
 		return depthTexture;
 	}
 
+	public void setDepthTexture(int depthTexture) {
+		this.depthTexture = depthTexture;
+	}
+
 	public static int getMaxFBOSize() {
 		return glGetInteger(GL_MAX_RENDERBUFFER_SIZE_EXT);
 	}
