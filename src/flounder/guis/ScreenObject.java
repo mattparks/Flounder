@@ -2,7 +2,6 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.framework.*;
-import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.visual.*;
 

@@ -1,7 +1,6 @@
 package flounder.fonts;
 
 import flounder.loaders.*;
-import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
 import flounder.textures.*;

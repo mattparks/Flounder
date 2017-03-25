@@ -9,11 +9,9 @@ import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
+import org.lwjgl.opengl.*;
 
 import java.util.*;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
 
 /**
  * A renderer capable of rendering fonts.
@@ -28,7 +26,7 @@ public class FontRenderer extends Renderer {
 	 * Creates a new font renderer.
 	 */
 	public FontRenderer() {
-		this.shader = ShaderFactory.newBuilder().setName("fonts").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("fonts").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 	}
 
 	@Override
@@ -78,7 +76,7 @@ public class FontRenderer extends Renderer {
 		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());
 		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
 		shader.getUniformVec2("borderSizes").loadVec2(text.getTotalBorderSize(), text.getGlowSize());
-		glDrawArrays(GL_TRIANGLES, 0, text.getVertexCount());
+		OpenGlUtils.renderArrays(GL11.GL_TRIANGLES, text.getVertexCount());
 		OpenGlUtils.unbindVAO(0, 1);
 	}
 

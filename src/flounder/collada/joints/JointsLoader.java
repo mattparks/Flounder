@@ -1,6 +1,5 @@
 package flounder.collada.joints;
 
-import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.parsing.xml.*;
 import org.lwjgl.*;

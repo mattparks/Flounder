@@ -2,6 +2,7 @@ package flounder.helpers;
 
 import flounder.maths.*;
 import flounder.textures.*;
+import org.lwjgl.opengl.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
@@ -219,5 +220,37 @@ public class OpenGlUtils {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, lodBias);
 		glActiveTexture(0);
+	}
+
+	/**
+	 * Renders a bound model on a enabled shader using glDrawArrays.
+	 *
+	 * @param glMode The OpenGL mode to draw in.
+	 * @param glLength The length of the model.
+	 */
+	public static void renderArrays(int glMode, int glLength) {
+		glDrawArrays(glMode, 0, glLength);
+	}
+
+	/**
+	 * Renders a bound model on a enabled shader using glDrawElements.
+	 *
+	 * @param glMode The OpenGL mode to draw in.
+	 * @param glType The OpenGL type to draw in.
+	 * @param glLength The length of the model.
+	 */
+	public static void renderElements(int glMode, int glType, int glLength) {
+		glDrawElements(glMode, glLength, glType, 0);
+	}
+
+	/**
+	 * Renders a bound model on a enabled shader using glDrawArraysInstancedARB.
+	 *
+	 * @param glMode The OpenGL mode to draw in.
+	 * @param glLength The length of the model.
+	 * @param glPrimCount How many primitives rendered.
+	 */
+	public static void renderInstanced(int glMode, int glLength, int glPrimCount) {
+		ARBDrawInstanced.glDrawArraysInstancedARB(glMode, 0, glLength, glPrimCount);
 	}
 }

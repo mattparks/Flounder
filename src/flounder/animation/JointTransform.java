@@ -64,7 +64,7 @@ public class JointTransform {
 	 */
 	protected static JointTransform interpolate(JointTransform frameA, JointTransform frameB, float progression) {
 		Vector3f pos = interpolate(frameA.position, frameB.position, progression);
-		Quaternion rot = Quaternion.interpolate(frameA.rotation, frameB.rotation, progression);
+		Quaternion rot = Quaternion.slerp(frameA.rotation, frameB.rotation, progression);
 		return new JointTransform(pos, rot);
 	}
 

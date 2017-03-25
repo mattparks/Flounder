@@ -9,11 +9,9 @@ import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
+import org.lwjgl.opengl.*;
 
 import java.util.*;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
 
 public class GuisRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "guis", "guiVertex.glsl");
@@ -21,10 +19,12 @@ public class GuisRenderer extends Renderer {
 
 	private ShaderObject shader;
 	private int vaoID;
+	private int vaoLength;
 
 	public GuisRenderer() {
-		this.shader = ShaderFactory.newBuilder().setName("guis").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("guis").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		this.vaoID = FlounderLoader.createInterleavedVAO(FlounderGuis.POSITIONS, 2);
+		this.vaoLength = FlounderGuis.POSITIONS.length / 2;
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class GuisRenderer extends Renderer {
 		shader.getUniformFloat("atlasRows").loadFloat(gui.getTexture().getNumberOfRows());
 		shader.getUniformVec2("atlasOffset").loadVec2(gui.getTextureOffset());
 		shader.getUniformVec3("colourOffset").loadVec3(gui.getColourOffset());
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, FlounderGuis.POSITIONS.length / 2);
+		OpenGlUtils.renderArrays(GL11.GL_TRIANGLE_STRIP, vaoLength);
 		OpenGlUtils.unbindVAO(0);
 	}
 
