@@ -94,6 +94,7 @@ public class GuiButtonText extends ScreenObject {
 		Vector2f.multiply(textObject.getDimensions(), textObject.getMeshSize(), guiObject.getDimensions());
 		guiObject.getDimensions().scale(2.0f * textObject.getScale());
 		guiObject.getPositionOffsets().set(textObject.getPositionOffsets());
+		guiObject.getPosition().set(textObject.getPosition());
 	}
 
 	@Override
