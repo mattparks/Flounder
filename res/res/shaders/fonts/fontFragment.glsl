@@ -29,7 +29,7 @@ void main(void) {
 	out_colour.a *= colour.a;
 
 	if (polygonMode) {
-		out_colour = vec4(1.0, 0.0, 0.0, 1.0);
+		out_colour = vec4(1.0, 0.0, 0.0, colour.a);
 	}
 
 	if (out_colour.a < 0.05){

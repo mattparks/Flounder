@@ -215,6 +215,10 @@ public class TextLoader {
 		return new Vector2f((minX + maxX) / 2.0f, (minY + maxY) / 2.0f);
 	}
 
+	protected MetaFile getMetaData() {
+		return metaData;
+	}
+
 	/**
 	 * Stores the vertex data for all the quads on which a text will be rendered.
 	 */

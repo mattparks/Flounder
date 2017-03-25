@@ -91,7 +91,9 @@ public class GuiButtonText extends ScreenObject {
 		}
 
 		// Update background size.
-		Vector2f.multiply(textObject.getDimensions(), textObject.getMeshSize(), guiObject.getDimensions());
+		guiObject.getDimensions().set(textObject.getMeshSize());
+		guiObject.getDimensions().y = 0.5f * (float) textObject.getFont().getMaxSizeY();
+		Vector2f.multiply(textObject.getDimensions(), guiObject.getDimensions(), guiObject.getDimensions());
 		guiObject.getDimensions().scale(2.0f * textObject.getScale());
 		guiObject.getPositionOffsets().set(textObject.getPositionOffsets());
 		guiObject.getPosition().set(textObject.getPosition());

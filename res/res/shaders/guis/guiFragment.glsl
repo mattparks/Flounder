@@ -18,7 +18,7 @@ void main(void) {
 	out_colour.a *= alpha;
 
 	if (polygonMode) {
-		out_colour = vec4(1.0, 0.0, 0.0, 1.0);
+		out_colour = vec4(1.0, 0.0, 0.0, alpha);
 	}
 
 	if (out_colour.a < 0.05){

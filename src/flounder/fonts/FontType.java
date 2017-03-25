@@ -38,4 +38,13 @@ public class FontType {
 	public TextureObject getTexture() {
 		return loader.getFontTexture();
 	}
+
+	/**
+	 * Gets the max line height for this font type.
+	 *
+	 * @return The max line height.
+	 */
+	public double getMaxSizeY() {
+		return loader.getMetaData().getMaxSizeY();
+	}
 }

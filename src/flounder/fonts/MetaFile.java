@@ -29,6 +29,7 @@ public class MetaFile {
 	private int[] padding;
 	private int paddingWidth;
 	private int paddingHeight;
+	private double maxSizeY;
 
 	private BufferedReader reader;
 
@@ -160,6 +161,9 @@ public class MetaFile {
 		double xOffset = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * horizontalPerPixelSize;
 		double yOffset = (getValueOfVariable("yoffset") + (padding[PAD_TOP] - DESIRED_PADDING)) * verticalPerPixelSize;
 		double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
+		if (quadHeight > maxSizeY) {
+			maxSizeY = quadHeight;
+		}
 		return new Character(id, xTextureCoord, yTextureCoord, xTexSize, yTexSize, xOffset, yOffset, quadWidth, quadHeight, xAdvance);
 	}
 
@@ -209,5 +213,9 @@ public class MetaFile {
 
 	protected Character getCharacter(int ascii) {
 		return metaData.get(ascii);
+	}
+
+	protected double getMaxSizeY() {
+		return maxSizeY;
 	}
 }
