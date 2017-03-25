@@ -1,6 +1,7 @@
 package flounder.guis;
 
 import flounder.framework.*;
+import flounder.maths.*;
 
 /**
  * A interface used to manage a main GUI system.
@@ -43,6 +44,13 @@ public abstract class GuiMaster extends Extension {
 	 * @return The main menu's blur factor.
 	 */
 	public abstract float getBlurFactor();
+
+	/**
+	 * The primary colour to be used in UI elements.
+	 *
+	 * @return The primary colour.
+	 */
+	public abstract Colour getPrimaryColour();
 
 	/**
 	 * Run when disposing the GUI master.

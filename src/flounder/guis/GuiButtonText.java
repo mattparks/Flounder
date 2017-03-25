@@ -11,8 +11,11 @@ import flounder.visual.*;
 
 public class GuiButtonText extends ScreenObject {
 	private static final float CHANGE_TIME = 0.15f;
-	private static final float NORMAL_SCALE = 1.5f;
-	private static final float MAX_SCALE = 1.75f;
+
+	private static final float SCALE_NORMAL = 1.5f;
+	private static final float SCALE_SELECTED = 1.75f;
+
+	private final Colour COLOUR_NORMAL = new Colour(0.0f, 0.0f, 0.0f);
 
 	private final Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button1.wav"), 0.8f, 1.0f);
 	private final Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button2.wav"), 0.8f, 1.0f);
@@ -29,12 +32,13 @@ public class GuiButtonText extends ScreenObject {
 	public GuiButtonText(ScreenObject parent, Vector2f position, String text, GuiAlign align) {
 		super(parent, position, new Vector2f());
 
-		this.textObject = new TextObject(this, this.getPosition(), text, NORMAL_SCALE, FlounderFonts.CANDARA, 0.3f, align);
+		this.textObject = new TextObject(this, this.getPosition(), text, SCALE_NORMAL, FlounderFonts.CANDARA, 0.3f, align);
 		this.textObject.setInScreenCoords(true);
 		this.textObject.setColour(new Colour(1.0f, 1.0f, 1.0f));
 
 		this.guiObject = new GuiObject(this, this.getPosition(), new Vector2f(), TextureFactory.newBuilder().setFile(new MyFile(FlounderGuis.GUIS_LOC, "buttonText.png")).create(), 1);
 		this.guiObject.setInScreenCoords(true);
+		this.guiObject.setColourOffset(new Colour());
 
 		this.mouseOver = false;
 	}
@@ -52,12 +56,14 @@ public class GuiButtonText extends ScreenObject {
 		// Mouse over updates.
 		if (FlounderGuis.getSelector().isSelected(textObject) && !mouseOver) {
 			FlounderSound.playSystemSound(SOUND_MOUSE_HOVER);
-			textObject.setScaleDriver(new SlideDriver(textObject.getScale(), MAX_SCALE, CHANGE_TIME));
+			textObject.setScaleDriver(new SlideDriver(textObject.getScale(), SCALE_SELECTED, CHANGE_TIME));
 			mouseOver = true;
 		} else if (!FlounderGuis.getSelector().isSelected(textObject) && mouseOver) {
-			textObject.setScaleDriver(new SlideDriver(textObject.getScale(), NORMAL_SCALE, CHANGE_TIME));
+			textObject.setScaleDriver(new SlideDriver(textObject.getScale(), SCALE_NORMAL, CHANGE_TIME));
 			mouseOver = false;
 		}
+
+		Colour.interpolate(COLOUR_NORMAL, FlounderGuis.getGuiMaster().getPrimaryColour(), (textObject.getScale() - SCALE_NORMAL) / (SCALE_SELECTED - SCALE_NORMAL), guiObject.getColourOffset());
 
 		// Click updates.
 		if (FlounderGuis.getSelector().isSelected(textObject) && FlounderGuis.getSelector().wasLeftClick()) {
