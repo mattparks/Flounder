@@ -53,6 +53,10 @@ public class GuiButtonText extends ScreenObject {
 
 	@Override
 	public void updateObject() {
+		if (!isVisible() || getAlpha() == 0.0f) {
+			return;
+		}
+
 		// Mouse over updates.
 		if (FlounderGuis.getSelector().isSelected(textObject) && !mouseOver) {
 			FlounderSound.playSystemSound(SOUND_MOUSE_HOVER);
