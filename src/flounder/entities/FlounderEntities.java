@@ -32,6 +32,33 @@ public class FlounderEntities extends Module {
 	@Override
 	public void init() {
 		this.entityStructure = new StructureBasic<>();
+
+		/*FlounderEvents.addEvent(new IEvent() {
+			private KeyButton saveEntities = new KeyButton(GLFW_KEY_E);
+
+			@Override
+			public boolean eventTriggered() {
+				return saveEntities.wasDown() && !FlounderGuis.getGuiMaster().isGamePaused();
+			}
+
+			@Override
+			public void onEvent() {
+				for (Entity entity : FlounderEntities.getEntities().getAll()) {
+					String[] path = entity.getClass().getName().split("\\.");
+					String name = path[path.length - 1].trim();
+
+					List<IComponentEditor> editorList = new ArrayList<>();
+
+					for (IComponentEntity ce : entity.getComponents()) {
+						if (ce instanceof IComponentEditor) {
+							editorList.add((IComponentEditor) ce);
+						}
+					}
+
+					FlounderEntities.save("kosmos.entities.instances", editorList, name);
+				}
+			}
+		});*/
 	}
 
 	@Override

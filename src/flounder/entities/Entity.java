@@ -254,4 +254,13 @@ public class Entity implements ISpatialObject {
 
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		return "Entity{" +
+				"position=" + position +
+				", rotation=" + rotation +
+				", removed=" + removed +
+				'}';
+	}
 }
