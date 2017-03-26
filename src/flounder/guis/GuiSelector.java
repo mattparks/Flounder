@@ -64,20 +64,15 @@ public class GuiSelector {
 				cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
 				glfwSetCursorPos(FlounderDisplay.getWindow(), cursorX * FlounderDisplay.getWidth(), cursorY * FlounderDisplay.getHeight());
 			}
-
-			leftClick = joystickLeft.isDown();
-			rightClick = joystickRight.isDown();
-			leftWasClick = joystickLeft.wasDown();
-			rightWasClick = joystickRight.wasDown();
-		} else {
-			leftClick = mouseLeft.isDown();
-			rightClick = mouseRight.isDown();
-			leftWasClick = mouseLeft.wasDown();
-			rightWasClick = mouseRight.wasDown();
 		}
 
 		cursorX = FlounderMouse.getPositionX();
 		cursorY = FlounderMouse.getPositionY();
+
+		leftClick = mouseLeft.isDown() || joystickLeft.isDown();
+		rightClick = mouseRight.isDown() || joystickRight.isDown();
+		leftWasClick = mouseLeft.wasDown() || joystickLeft.wasDown();
+		rightWasClick = mouseRight.wasDown() || joystickRight.wasDown();
 
 		if (FlounderProfiler.isOpen()) {
 			FlounderProfiler.add(FlounderGuis.PROFILE_TAB_NAME, "Selector X", cursorX);
