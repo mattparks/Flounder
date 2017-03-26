@@ -99,6 +99,10 @@ public class GuiButtonText extends ScreenObject {
 		guiObject.getPosition().set(textObject.getPosition());
 	}
 
+	public void setText(String text) {
+		textObject.setText(text);
+	}
+
 	@Override
 	public void deleteObject() {
 	}
