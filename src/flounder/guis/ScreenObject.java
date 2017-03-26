@@ -98,6 +98,17 @@ public abstract class ScreenObject {
 	}
 
 	/**
+	 * Removes this object from the previous parent and attaches it to another parent.
+	 *
+	 * @param parent The new parent object.
+	 */
+	public void setParent(ScreenObject parent) {
+		this.parent.removeChild(this);
+		parent.children.add(this);
+		this.parent = parent;
+	}
+
+	/**
 	 * Disowns a child from this screen objects children list.
 	 *
 	 * @param child The child to disown.
