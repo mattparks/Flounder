@@ -15,11 +15,11 @@ public class GuiButtonText extends ScreenObject {
 	private static final float SCALE_NORMAL = 1.5f;
 	private static final float SCALE_SELECTED = 1.75f;
 
-	private final Colour COLOUR_NORMAL = new Colour(0.0f, 0.0f, 0.0f);
+	private final static Colour COLOUR_NORMAL = new Colour(0.0f, 0.0f, 0.0f);
 
-	private final Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button1.wav"), 0.8f, 1.0f);
-	private final Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button2.wav"), 0.8f, 1.0f);
-	private final Sound SOUND_MOUSE_RIGHT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button3.wav"), 0.8f, 1.0f);
+	private final static Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button1.wav"), 0.8f, 1.0f);
+	private final static Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button2.wav"), 0.8f, 1.0f);
+	private final static Sound SOUND_MOUSE_RIGHT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button3.wav"), 0.8f, 1.0f);
 
 	private TextObject textObject;
 	private GuiObject guiObject;
