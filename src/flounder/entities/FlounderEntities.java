@@ -82,12 +82,6 @@ public class FlounderEntities extends Module {
 				saveFolder.mkdir();
 			}
 
-			saveFolder = new File("entities/" + name);
-
-			if (!saveFolder.exists()) {
-				saveFolder.mkdir();
-			}
-
 			// The save file and the writers.
 			File saveFile = new File(saveFolder.getPath() + "/" + className + ".java");
 			saveFile.createNewFile();
