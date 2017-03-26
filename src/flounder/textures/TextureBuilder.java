@@ -9,6 +9,7 @@ import flounder.resources.*;
  */
 public class TextureBuilder extends FactoryBuilder {
 	private MyFile file;
+	private MyFile[] cubemap;
 
 	private Colour borderColour;
 	private boolean clampToBorder;
@@ -21,6 +22,7 @@ public class TextureBuilder extends FactoryBuilder {
 	protected TextureBuilder(Factory factory) {
 		super(factory);
 		this.file = null;
+		this.cubemap = null;
 
 		this.borderColour = new Colour();
 		this.clampToBorder = false;
@@ -40,6 +42,18 @@ public class TextureBuilder extends FactoryBuilder {
 	 */
 	public TextureBuilder setFile(MyFile file) {
 		this.file = file;
+		return this;
+	}
+
+	/**
+	 * Sets the cubemap source files.
+	 *
+	 * @param cubemap The source cubemap files.
+	 *
+	 * @return this.
+	 */
+	public TextureBuilder setCubemap(MyFile[] cubemap) {
+		this.cubemap = cubemap;
 		return this;
 	}
 
@@ -121,6 +135,15 @@ public class TextureBuilder extends FactoryBuilder {
 	}
 
 	/**
+	 * Gets the cubemap source files.
+	 *
+	 * @return The cubemap source files.
+	 */
+	public MyFile[] getCubemap() {
+		return cubemap;
+	}
+
+	/**
 	 * Gets the border colour.
 	 *
 	 * @return The border colour.
@@ -187,6 +210,8 @@ public class TextureBuilder extends FactoryBuilder {
 	public TextureObject create() {
 		if (file != null) {
 			return (TextureObject) builderCreate(file.getName());
+		} else if (cubemap != null && cubemap.length >= 1) {
+			return (TextureObject) builderCreate(cubemap[0].getName());
 		}
 
 		return null;
@@ -196,6 +221,7 @@ public class TextureBuilder extends FactoryBuilder {
 	public String toString() {
 		return "TextureBuilder{" +
 				"file=" + file +
+				", cubemap=" + cubemap +
 				", borderColour=" + borderColour +
 				", clampToBorder=" + clampToBorder +
 				", clampEdges=" + clampEdges +
