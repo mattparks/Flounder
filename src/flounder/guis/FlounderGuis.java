@@ -3,6 +3,7 @@ package flounder.guis;
 import flounder.devices.*;
 import flounder.events.*;
 import flounder.framework.*;
+import flounder.maths.vectors.*;
 import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -36,7 +37,7 @@ public class FlounderGuis extends Module {
 	@Override
 	public void init() {
 		this.selector = new GuiSelector();
-		this.container = new GuiObjectScreen();
+		this.container = new ScreenObjectEmpty(null, new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), false);
 	}
 
 	@Override

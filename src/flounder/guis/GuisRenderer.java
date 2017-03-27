@@ -41,7 +41,7 @@ public class GuisRenderer extends Renderer {
 	private void prepareRendering() {
 		shader.start();
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(false);
 		OpenGlUtils.cullBackFaces(true);
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();

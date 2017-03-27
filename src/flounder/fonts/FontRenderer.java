@@ -43,10 +43,10 @@ public class FontRenderer extends Renderer {
 	private void prepareRendering() {
 		shader.start();
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(false);
+		OpenGlUtils.cullBackFaces(true);
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
-		OpenGlUtils.cullBackFaces(true);
 
 		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());

@@ -32,7 +32,7 @@ public class GuiButtonText extends ScreenObject {
 	public GuiButtonText(ScreenObject parent, Vector2f position, String text, GuiAlign align) {
 		super(parent, position, new Vector2f());
 
-		this.textObject = new TextObject(this, this.getPosition(), text, SCALE_NORMAL, FlounderFonts.CANDARA, 0.3f, align);
+		this.textObject = new TextObject(this, this.getPosition(), text, SCALE_NORMAL, FlounderFonts.CANDARA, 0.36f, align);
 		this.textObject.setInScreenCoords(true);
 		this.textObject.setColour(new Colour(1.0f, 1.0f, 1.0f));
 
