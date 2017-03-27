@@ -7,13 +7,13 @@ import flounder.maths.vectors.*;
  * an AudioController is returned allowing the source's settings to be updated while the sound is playing. Once the sound has finished playing the controller becomes inactive.
  */
 public class AudioController {
-	private static final float FADE_TIME = 2;
+	private static final float FADE_TIME = 2.0f;
 
 	private SoundSource source;
 	private boolean active;
 	private boolean fading;
 
-	private float Volume;
+	private float volume;
 	private float fadeFactor;
 
 	/**
@@ -26,7 +26,7 @@ public class AudioController {
 		this.active = true;
 		this.fading = false;
 
-		this.Volume = 0.0f;
+		this.volume = 0.0f;
 		this.fadeFactor = 1.0f;
 	}
 
@@ -64,7 +64,7 @@ public class AudioController {
 	 */
 	private void updateFadingOut(float delta) {
 		fadeFactor -= delta / FADE_TIME;
-		source.setVolume(Volume * fadeFactor);
+		source.setVolume(volume * fadeFactor);
 
 		if (fadeFactor <= 0) {
 			source.stop();
@@ -99,7 +99,7 @@ public class AudioController {
 	 */
 	protected void fadeOut() {
 		fading = true;
-		Volume = source.getVolume();
+		volume = source.getVolume();
 	}
 
 	/**

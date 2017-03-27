@@ -122,6 +122,10 @@ public class FlounderSound extends Module {
 		return INSTANCE.sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
 	}
 
+	public static SourcePoolManager getSourcePool() {
+		return INSTANCE.sourcePool;
+	}
+
 	/**
 	 * Gets the sound stream manager.
 	 *

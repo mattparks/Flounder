@@ -12,12 +12,16 @@ public class SourcePoolManager {
 	private List<SoundSource> sourcePool;
 	private List<SoundSource> usedSources;
 
+	private float systemVolume;
+
 	/**
 	 * Creates all the sound sources that will ever be used to play sound.
 	 */
 	public SourcePoolManager() {
-		sourcePool = new ArrayList<>();
-		usedSources = new ArrayList<>();
+		this.sourcePool = new ArrayList<>();
+		this.usedSources = new ArrayList<>();
+
+		this.systemVolume = 1.0f;
 
 		for (int i = 0; i < NUMBER_SOURCES; i++) {
 			sourcePool.add(new SoundSource());
@@ -62,12 +66,20 @@ public class SourcePoolManager {
 			}
 
 			Sound sound = playRequest.getSound();
-			source.setVolume(playRequest.getVolume() * sound.getVolume());
+			source.setVolume(playRequest.getVolume() * sound.getVolume() * systemVolume);
 			source.setPitch(playRequest.getPitch() * sound.getPitch());
 			return source.playSound(sound);
 		}
 
 		return null;
+	}
+
+	public float getSystemVolume() {
+		return systemVolume;
+	}
+
+	public void setSystemVolume(float systemVolume) {
+		this.systemVolume = systemVolume;
 	}
 
 	/**
