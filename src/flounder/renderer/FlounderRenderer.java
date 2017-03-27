@@ -2,7 +2,6 @@ package flounder.renderer;
 
 import flounder.devices.*;
 import flounder.framework.*;
-import flounder.logger.*;
 import flounder.profiling.*;
 import flounder.shaders.*;
 
@@ -19,7 +18,7 @@ public class FlounderRenderer extends Module {
 	 * Creates a new OpenGL renderer manager.
 	 */
 	public FlounderRenderer() {
-		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderShaders.class);
+		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderShaders.class);
 	}
 
 	@Override

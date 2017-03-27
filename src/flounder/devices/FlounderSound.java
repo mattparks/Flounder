@@ -5,7 +5,6 @@ import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.processing.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.sounds.*;
 import org.lwjgl.openal.*;
@@ -39,7 +38,7 @@ public class FlounderSound extends Module {
 	 * Creates a new OpenAL audio manager.
 	 */
 	public FlounderSound() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderProcessors.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package flounder.physics.bounding;
 import flounder.devices.*;
 import flounder.framework.*;
 import flounder.loaders.*;
-import flounder.logger.*;
 import flounder.models.*;
 import flounder.physics.*;
 import flounder.profiling.*;
@@ -25,7 +24,7 @@ public class FlounderBounding extends Module {
 	 * Creates a new bounding manager.
 	 */
 	public FlounderBounding() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
 	}
 
 	@Override

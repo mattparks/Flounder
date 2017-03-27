@@ -57,7 +57,7 @@ public class FlounderDisplay extends Module {
 	 * Creates a new GLFW display manager.
 	 */
 	public FlounderDisplay() {
-		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplaySync.class);
+		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderDisplaySync.class);
 	}
 
 	/**

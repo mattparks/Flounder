@@ -3,8 +3,6 @@ package flounder.fonts;
 import flounder.devices.*;
 import flounder.framework.*;
 import flounder.loaders.*;
-import flounder.logger.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;
@@ -27,7 +25,7 @@ public class FlounderFonts extends Module {
 	 * Creates a new font manager.
 	 */
 	public FlounderFonts() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
 	}
 
 	@Override

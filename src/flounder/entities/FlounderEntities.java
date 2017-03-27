@@ -1,8 +1,11 @@
 package flounder.entities;
 
 import flounder.entities.components.*;
+import flounder.events.*;
 import flounder.framework.*;
+import flounder.guis.*;
 import flounder.helpers.*;
+import flounder.inputs.*;
 import flounder.logger.*;
 import flounder.profiling.*;
 import flounder.resources.*;
@@ -10,6 +13,8 @@ import flounder.space.*;
 
 import java.io.*;
 import java.util.*;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * A class that manages game entities.
@@ -26,26 +31,28 @@ public class FlounderEntities extends Module {
 	 * Creates a new game manager for entities.
 	 */
 	public FlounderEntities() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class);
 	}
 
 	@Override
 	public void init() {
 		this.entityStructure = new StructureBasic<>();
 
-		/*FlounderEvents.addEvent(new IEvent() {
-			private KeyButton saveEntities = new KeyButton(GLFW_KEY_E);
+		FlounderEvents.addEvent(new IEvent() {
+			private KeyButton saveEntities1 = new KeyButton(GLFW_KEY_E);
+			private KeyButton saveEntities2 = new KeyButton(GLFW_KEY_LEFT_ALT);
 
 			@Override
 			public boolean eventTriggered() {
-				return saveEntities.wasDown() && !FlounderGuis.getGuiMaster().isGamePaused();
+				return saveEntities1.wasDown() && saveEntities2.wasDown() && !FlounderGuis.getGuiMaster().isGamePaused();
 			}
 
 			@Override
 			public void onEvent() {
 				for (Entity entity : FlounderEntities.getEntities().getAll()) {
 					String[] path = entity.getClass().getName().split("\\.");
-					String name = path[path.length - 1].trim();
+					String name = path[path.length - 1].trim().replace("Instance", "");
+					name = name.substring(0, 1).toLowerCase() + name.substring(1);
 
 					List<IComponentEditor> editorList = new ArrayList<>();
 
@@ -58,7 +65,7 @@ public class FlounderEntities extends Module {
 					FlounderEntities.save("kosmos.entities.instances", editorList, name);
 				}
 			}
-		});*/
+		});
 	}
 
 	@Override
@@ -107,6 +114,12 @@ public class FlounderEntities extends Module {
 
 			if (!saveFolder.exists()) {
 				saveFolder.mkdir();
+			}
+
+			File saveNameFolder = new File("entities/" + name);
+
+			if (!saveNameFolder.exists()) {
+				saveNameFolder.mkdir();
 			}
 
 			// The save file and the writers.
