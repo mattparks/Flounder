@@ -78,6 +78,10 @@ public class FlounderTextures extends Module {
 		return INSTANCE.anisotropyLevel;
 	}
 
+	public static void setAnisotropyLevel(float anisotropyLevel) {
+		INSTANCE.anisotropyLevel = anisotropyLevel;
+	}
+
 	@Override
 	public Module getInstance() {
 		return INSTANCE;
