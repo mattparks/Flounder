@@ -466,7 +466,7 @@ public class FlounderDisplay extends Module {
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		if (vsync) {
-			Framework.setFpsLimit(-1);
+			Framework.setFpsLimit(60);
 		}
 	}
 

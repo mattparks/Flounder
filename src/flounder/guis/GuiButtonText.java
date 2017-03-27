@@ -10,44 +10,46 @@ import flounder.textures.*;
 import flounder.visual.*;
 
 public class GuiButtonText extends ScreenObject {
-	private static final float CHANGE_TIME = 0.15f;
+	protected static final float CHANGE_TIME = 0.15f;
 
-	private static final float SCALE_NORMAL = 1.5f;
-	private static final float SCALE_SELECTED = 1.75f;
+	protected static final float SCALE_NORMAL = 1.5f;
+	protected static final float SCALE_SELECTED = 1.75f;
 
-	private final static Colour COLOUR_NORMAL = new Colour(0.0f, 0.0f, 0.0f);
+	protected final static Colour COLOUR_NORMAL = new Colour(0.0f, 0.0f, 0.0f);
 
-	private final static Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button1.wav"), 0.8f, 1.0f);
-	private final static Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button2.wav"), 0.8f, 1.0f);
-	private final static Sound SOUND_MOUSE_RIGHT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button3.wav"), 0.8f, 1.0f);
+	protected final static Sound SOUND_MOUSE_HOVER = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button1.wav"), 0.8f, 1.0f);
+	protected final static Sound SOUND_MOUSE_LEFT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button2.wav"), 0.8f, 1.0f);
+	protected final static Sound SOUND_MOUSE_RIGHT = Sound.loadSoundInBackground(new MyFile(FlounderSound.SOUND_FOLDER, "button3.wav"), 0.8f, 1.0f);
 
-	private TextObject textObject;
-	private GuiObject guiObject;
+	private static final TextureObject TEXTURE_BACKGROUND = TextureFactory.newBuilder().setFile(new MyFile(FlounderGuis.GUIS_LOC, "buttonText.png")).create();
+
+	private TextObject text;
+	private GuiObject background;
 
 	private boolean mouseOver;
 
-	private ListenerBasic listenerLeft;
-	private ListenerBasic listenerRight;
+	private ScreenListener listenerLeft;
+	private ScreenListener listenerRight;
 
-	public GuiButtonText(ScreenObject parent, Vector2f position, String text, GuiAlign align) {
+	public GuiButtonText(ScreenObject parent, Vector2f position, String string, GuiAlign align) {
 		super(parent, position, new Vector2f());
 
-		this.textObject = new TextObject(this, this.getPosition(), text, SCALE_NORMAL, FlounderFonts.CANDARA, 0.36f, align);
-		this.textObject.setInScreenCoords(true);
-		this.textObject.setColour(new Colour(1.0f, 1.0f, 1.0f));
+		this.text = new TextObject(this, this.getPosition(), string, SCALE_NORMAL, FlounderFonts.CANDARA, 0.36f, align);
+		this.text.setInScreenCoords(true);
+		this.text.setColour(new Colour(1.0f, 1.0f, 1.0f));
 
-		this.guiObject = new GuiObject(this, this.getPosition(), new Vector2f(), TextureFactory.newBuilder().setFile(new MyFile(FlounderGuis.GUIS_LOC, "buttonText.png")).create(), 1);
-		this.guiObject.setInScreenCoords(true);
-		this.guiObject.setColourOffset(new Colour());
+		this.background = new GuiObject(this, this.getPosition(), new Vector2f(), TEXTURE_BACKGROUND, 1);
+		this.background.setInScreenCoords(true);
+		this.background.setColourOffset(new Colour());
 
 		this.mouseOver = false;
 	}
 
-	public void addLeftListener(ListenerBasic listenerLeft) {
+	public void addLeftListener(ScreenListener listenerLeft) {
 		this.listenerLeft = listenerLeft;
 	}
 
-	public void addRightListener(ListenerBasic listenerRight) {
+	public void addRightListener(ScreenListener listenerRight) {
 		this.listenerRight = listenerRight;
 	}
 
@@ -57,20 +59,8 @@ public class GuiButtonText extends ScreenObject {
 			return;
 		}
 
-		// Mouse over updates.
-		if (FlounderGuis.getSelector().isSelected(textObject) && !mouseOver) {
-			FlounderSound.playSystemSound(SOUND_MOUSE_HOVER);
-			textObject.setScaleDriver(new SlideDriver(textObject.getScale(), SCALE_SELECTED, CHANGE_TIME));
-			mouseOver = true;
-		} else if (!FlounderGuis.getSelector().isSelected(textObject) && mouseOver) {
-			textObject.setScaleDriver(new SlideDriver(textObject.getScale(), SCALE_NORMAL, CHANGE_TIME));
-			mouseOver = false;
-		}
-
-		Colour.interpolate(COLOUR_NORMAL, FlounderGuis.getGuiMaster().getPrimaryColour(), (textObject.getScale() - SCALE_NORMAL) / (SCALE_SELECTED - SCALE_NORMAL), guiObject.getColourOffset());
-
 		// Click updates.
-		if (FlounderGuis.getSelector().isSelected(textObject) && FlounderGuis.getSelector().wasLeftClick()) {
+		if (FlounderGuis.getSelector().isSelected(text) && getAlpha() == 1.0f && FlounderGuis.getSelector().wasLeftClick()) {
 			FlounderSound.playSystemSound(SOUND_MOUSE_LEFT);
 
 			if (listenerLeft != null) {
@@ -78,9 +68,7 @@ public class GuiButtonText extends ScreenObject {
 			}
 
 			FlounderGuis.getSelector().cancelWasEvent();
-		}
-
-		if (FlounderGuis.getSelector().isSelected(textObject) && FlounderGuis.getSelector().wasRightClick()) {
+		} else if (FlounderGuis.getSelector().isSelected(text) && getAlpha() == 1.0f && FlounderGuis.getSelector().wasRightClick()) {
 			FlounderSound.playSystemSound(SOUND_MOUSE_RIGHT);
 
 			if (listenerRight != null) {
@@ -90,30 +78,33 @@ public class GuiButtonText extends ScreenObject {
 			FlounderGuis.getSelector().cancelWasEvent();
 		}
 
+		// Mouse over updates.
+		if (FlounderGuis.getSelector().isSelected(text) && !mouseOver) {
+			FlounderSound.playSystemSound(SOUND_MOUSE_HOVER);
+			text.setScaleDriver(new SlideDriver(text.getScale(), SCALE_SELECTED, CHANGE_TIME));
+			mouseOver = true;
+		} else if (!FlounderGuis.getSelector().isSelected(text) && mouseOver) {
+			text.setScaleDriver(new SlideDriver(text.getScale(), SCALE_NORMAL, CHANGE_TIME));
+			mouseOver = false;
+		}
+
+		// Update the background colour.
+		Colour.interpolate(COLOUR_NORMAL, FlounderGuis.getGuiMaster().getPrimaryColour(), (text.getScale() - SCALE_NORMAL) / (SCALE_SELECTED - SCALE_NORMAL), background.getColourOffset());
+
 		// Update background size.
-		guiObject.getDimensions().set(textObject.getMeshSize());
-		guiObject.getDimensions().y = 0.5f * (float) textObject.getFont().getMaxSizeY();
-		Vector2f.multiply(textObject.getDimensions(), guiObject.getDimensions(), guiObject.getDimensions());
-		guiObject.getDimensions().scale(2.0f * textObject.getScale());
-		guiObject.getPositionOffsets().set(textObject.getPositionOffsets());
-		guiObject.getPosition().set(textObject.getPosition());
+		background.getDimensions().set(text.getMeshSize());
+		background.getDimensions().y = 0.5f * (float) text.getFont().getMaxSizeY();
+		Vector2f.multiply(text.getDimensions(), background.getDimensions(), background.getDimensions());
+		background.getDimensions().scale(2.0f * text.getScale());
+		background.getPositionOffsets().set(text.getPositionOffsets());
+		background.getPosition().set(text.getPosition());
 	}
 
-	public void setText(String text) {
-		textObject.setText(text);
+	public void setText(String string) {
+		this.text.setText(string);
 	}
 
 	@Override
 	public void deleteObject() {
-	}
-
-	/**
-	 * A simple GUI listener.
-	 */
-	public interface ListenerBasic {
-		/**
-		 * Run when a event has occurred.
-		 */
-		void eventOccurred();
 	}
 }
