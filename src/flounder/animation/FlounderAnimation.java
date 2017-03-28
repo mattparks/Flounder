@@ -17,6 +17,8 @@ public class FlounderAnimation extends Module {
 	private static final FlounderAnimation INSTANCE = new FlounderAnimation();
 	public static final String PROFILE_TAB_NAME = "Animation";
 
+	public static final int MAX_WEIGHTS = 3;
+
 	/**
 	 * Creates a new animation loader class.
 	 */

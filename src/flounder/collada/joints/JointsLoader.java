@@ -11,12 +11,15 @@ public class JointsLoader {
 	private XmlNode armatureData;
 
 	private List<String> boneOrder;
+	private Map<String, Matrix4f> bindPositions;
+
 	private int jointCount;
 
-	public JointsLoader(XmlNode visualSceneNode, List<String> boneOrder) {
+	public JointsLoader(XmlNode visualSceneNode, List<String> boneOrder, Map<String, Matrix4f> bindPositions) {
 		this.armatureData = visualSceneNode.getChild("visual_scene").getChildWithAttribute("node", "id", "Armature");
 
 		this.boneOrder = boneOrder;
+		this.bindPositions = bindPositions;
 		this.jointCount = 0;
 	}
 
@@ -44,7 +47,7 @@ public class JointsLoader {
 		matrix.load(convertData(matrixData));
 		matrix.transpose();
 		jointCount++;
-		return new JointData(index, nameId, matrix);
+		return new JointData(index, nameId, matrix, new Matrix4f(bindPositions.get(nameId)));
 	}
 
 	private FloatBuffer convertData(String[] rawData) {

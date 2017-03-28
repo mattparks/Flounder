@@ -1,5 +1,6 @@
 package flounder.animation;
 
+import flounder.logger.*;
 import flounder.maths.matrices.*;
 
 import java.util.*;
@@ -37,8 +38,9 @@ public class Joint {
 	 * @param index The joint's index (ID).
 	 * @param name The name of the joint. This is how the joint is named in the collada file, and so is used to identify which joint a joint transform in an animation keyframe refers to.
 	 * @param bindLocalTransform The bone-space transform of the joint in the bind position.
+	 * @param inverseBindTransform
 	 */
-	public Joint(int index, String name, Matrix4f bindLocalTransform) {
+	public Joint(int index, String name, Matrix4f bindLocalTransform, Matrix4f inverseBindTransform) {
 		this.index = index;
 		this.name = name;
 
@@ -46,7 +48,7 @@ public class Joint {
 
 		this.children = new ArrayList<>();
 
-		this.inverseBindTransform = new Matrix4f();
+		this.inverseBindTransform = inverseBindTransform;
 		this.animatedTransform = new Matrix4f();
 	}
 
@@ -100,8 +102,12 @@ public class Joint {
 	 * @param parentBindTransform The model-space bind transform of the parent joint.
 	 */
 	public void calculateInverseBindTransform(Matrix4f parentBindTransform) {
+		//Matrix4f mr = new Matrix4f(inverseBindTransform);
+		inverseBindTransform.setIdentity();
 		Matrix4f bindTransform = Matrix4f.multiply(parentBindTransform, localBindTransform, null);
 		Matrix4f.invert(bindTransform, inverseBindTransform);
+
+		//FlounderLogger.log(mr + " == " + inverseBindTransform);
 
 		for (Joint child : children) {
 			child.calculateInverseBindTransform(bindTransform);

@@ -1,7 +1,12 @@
 package flounder.collada.skin;
 
+import flounder.logger.*;
+import flounder.maths.matrices.*;
+import flounder.maths.vectors.*;
 import flounder.parsing.xml.*;
+import org.lwjgl.*;
 
+import java.nio.*;
 import java.util.*;
 
 public class SkinLoader {
@@ -17,11 +22,15 @@ public class SkinLoader {
 
 	public SkinningData extractSkinData() {
 		List<String> jointsList = loadJointsList();
+
+		Map<String, Matrix4f> bindPositions = loadBindPositions(jointsList);
+
 		float[] weights = loadWeights();
 		XmlNode weightsDataNode = skinningData.getChild("vertex_weights");
 		int[] effectorJointCounts = getEffectiveJointsCounts(weightsDataNode);
 		List<VertexSkinData> vertexWeights = getSkinData(weightsDataNode, effectorJointCounts, weights);
-		return new SkinningData(jointsList, vertexWeights);
+
+		return new SkinningData(jointsList, bindPositions, vertexWeights);
 	}
 
 	private List<String> loadJointsList() {
@@ -36,6 +45,34 @@ public class SkinLoader {
 		}
 
 		return jointsList;
+	}
+
+	private Map<String, Matrix4f> loadBindPositions(List<String> jointsList) {
+		XmlNode jointsNode = skinningData.getChild("joints");
+		String jointDataId = jointsNode.getChildWithAttribute("input", "semantic", "INV_BIND_MATRIX").getAttribute("source").substring(1);
+		XmlNode bindPosesNode = skinningData.getChildWithAttribute("source", "id", jointDataId).getChild("float_array");
+		String[] bindPoses = bindPosesNode.getData().split(" ");
+		Map<String, Matrix4f> bindPosesList = new HashMap<>();
+
+		float[] data = new float[16];
+		int j = 0;
+		int p = 0;
+
+		for (int i = 0; i < bindPoses.length; i++) {
+			data[j] = Float.parseFloat(bindPoses[i]);
+			j++;
+
+			if (j == 16) {
+				Matrix4f transform = new Matrix4f(data);
+				transform.transpose();
+				bindPosesList.put(jointsList.get(p), transform);
+				data = new float[16];
+				j = 0;
+				p++;
+			}
+		}
+
+		return bindPosesList;
 	}
 
 	private float[] loadWeights() {

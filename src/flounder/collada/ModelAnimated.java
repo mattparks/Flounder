@@ -38,7 +38,7 @@ public class ModelAnimated {
 	}
 
 	private static Joint createJoints(JointData data) {
-		Joint j = new Joint(data.getIndex(), data.getNameId(), data.getBindLocalTransform());
+		Joint j = new Joint(data.getIndex(), data.getNameId(), data.getBindLocalTransform(), data.getInverseBindTransform());
 
 		for (JointData child : data.getChildren()) {
 			j.addChild(createJoints(child));

@@ -56,10 +56,10 @@ public class FlounderCollada extends Module {
 	public static ModelAnimated loadCollada(MyFile file) {
 		XmlNode node = XmlParser.loadXmlFile(file);
 
-		SkinLoader skinLoader = new SkinLoader(node.getChild("library_controllers"), AnimationSettings.MAX_WEIGHTS);
+		SkinLoader skinLoader = new SkinLoader(node.getChild("library_controllers"), FlounderAnimation.MAX_WEIGHTS);
 		SkinningData skinningData = skinLoader.extractSkinData();
 
-		JointsLoader jointsLoader = new JointsLoader(node.getChild("library_visual_scenes"), skinningData.getJointOrder());
+		JointsLoader jointsLoader = new JointsLoader(node.getChild("library_visual_scenes"), skinningData.getJointOrder(), skinningData.getBindPositions());
 		JointsData jointsData = jointsLoader.extractBoneData();
 
 		GeometryLoader g = new GeometryLoader(node.getChild("library_geometries"), skinningData.getVerticesSkinData());
