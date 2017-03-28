@@ -17,8 +17,6 @@ public class FlounderAnimation extends Module {
 	private static final FlounderAnimation INSTANCE = new FlounderAnimation();
 	public static final String PROFILE_TAB_NAME = "Animation";
 
-	public static final int MAX_WEIGHTS = 3;
-
 	/**
 	 * Creates a new animation loader class.
 	 */
@@ -46,17 +44,17 @@ public class FlounderAnimation extends Module {
 	 * @return The animation made from the data in the file.
 	 */
 	public static Animation loadAnimation(AnimationData animationData) {
-		KeyFrameJoints[] frames = new KeyFrameJoints[animationData.getKeyFrames().length];
+		KeyFrames[] frames = new KeyFrames[animationData.getKeyFrames().length];
 		int pointer = 0;
 
-		for (AnimationKeyFrameData frameData : animationData.getKeyFrames()) {
+		for (KeyFrameData frameData : animationData.getKeyFrames()) {
 			frames[pointer++] = createKeyFrame(frameData);
 		}
 
 		return new Animation(animationData.getLengthSeconds(), frames);
 	}
 
-	private static KeyFrameJoints createKeyFrame(AnimationKeyFrameData data) {
+	private static KeyFrames createKeyFrame(KeyFrameData data) {
 		Map<String, JointTransform> map = new HashMap<>();
 
 		for (JointTransformData jointData : data.getJointTransforms()) {
@@ -64,7 +62,7 @@ public class FlounderAnimation extends Module {
 			map.put(jointData.getJointNameId(), jointTransform);
 		}
 
-		return new KeyFrameJoints(data.getTime(), map);
+		return new KeyFrames(data.getTime(), map);
 	}
 
 	private static JointTransform createTransform(JointTransformData data) {

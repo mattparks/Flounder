@@ -1,5 +1,6 @@
-package flounder.collada.joints;
+package flounder.collada.skeleton;
 
+import flounder.collada.*;
 import flounder.maths.matrices.*;
 import flounder.parsing.xml.*;
 import org.lwjgl.*;
@@ -7,47 +8,50 @@ import org.lwjgl.*;
 import java.nio.*;
 import java.util.*;
 
-public class JointsLoader {
+public class SkeletonLoader {
 	private XmlNode armatureData;
 
 	private List<String> boneOrder;
-	private Map<String, Matrix4f> bindPositions;
-
 	private int jointCount;
 
-	public JointsLoader(XmlNode visualSceneNode, List<String> boneOrder, Map<String, Matrix4f> bindPositions) {
+	public SkeletonLoader(XmlNode visualSceneNode, List<String> boneOrder) {
 		this.armatureData = visualSceneNode.getChild("visual_scene").getChildWithAttribute("node", "id", "Armature");
 
 		this.boneOrder = boneOrder;
-		this.bindPositions = bindPositions;
 		this.jointCount = 0;
 	}
 
-	public JointsData extractBoneData() {
+	public SkeletonData extractBoneData() {
 		XmlNode headNode = armatureData.getChild("node");
-		JointData headJoint = loadJointData(headNode);
-		return new JointsData(jointCount, headJoint);
+		JointData headJoint = loadJointData(headNode, true);
+		return new SkeletonData(jointCount, headJoint);
 	}
 
-	private JointData loadJointData(XmlNode jointNode) {
-		JointData joint = extractMainJointData(jointNode);
+	private JointData loadJointData(XmlNode jointNode, boolean isRoot) {
+		JointData joint = extractMainJointData(jointNode, isRoot);
 
 		for (XmlNode childNode : jointNode.getChildren("node")) {
-			joint.addChild(loadJointData(childNode));
+			joint.addChild(loadJointData(childNode, false));
 		}
 
 		return joint;
 	}
 
-	private JointData extractMainJointData(XmlNode jointNode) {
+	private JointData extractMainJointData(XmlNode jointNode, boolean isRoot) {
 		String nameId = jointNode.getAttribute("id");
 		int index = boneOrder.indexOf(nameId);
 		String[] matrixData = jointNode.getChild("matrix").getData().split(" ");
 		Matrix4f matrix = new Matrix4f();
 		matrix.load(convertData(matrixData));
 		matrix.transpose();
+
+		if (isRoot) {
+			// Because in Blender z is up, but in our game y is up.
+			Matrix4f.multiply(FlounderCollada.CORRECTION, matrix, matrix);
+		}
+
 		jointCount++;
-		return new JointData(index, nameId, matrix, new Matrix4f(bindPositions.get(nameId)));
+		return new JointData(index, nameId, matrix);
 	}
 
 	private FloatBuffer convertData(String[] rawData) {

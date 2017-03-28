@@ -1,6 +1,5 @@
 package flounder.animation;
 
-import flounder.logger.*;
 import flounder.maths.matrices.*;
 
 import java.util.*;
@@ -25,12 +24,11 @@ public class Joint {
 	protected final int index;
 	protected final String name;
 
-	private final Matrix4f localBindTransform;
-
 	protected final List<Joint> children;
 
-	private Matrix4f inverseBindTransform;
+	private final Matrix4f localBindTransform;
 	private Matrix4f animatedTransform;
+	private Matrix4f inverseBindTransform;
 
 	/**
 	 * Creates a new joint.
@@ -38,18 +36,28 @@ public class Joint {
 	 * @param index The joint's index (ID).
 	 * @param name The name of the joint. This is how the joint is named in the collada file, and so is used to identify which joint a joint transform in an animation keyframe refers to.
 	 * @param bindLocalTransform The bone-space transform of the joint in the bind position.
-	 * @param inverseBindTransform
 	 */
-	public Joint(int index, String name, Matrix4f bindLocalTransform, Matrix4f inverseBindTransform) {
+	public Joint(int index, String name, Matrix4f bindLocalTransform) {
 		this.index = index;
 		this.name = name;
 
-		this.localBindTransform = bindLocalTransform;
-
 		this.children = new ArrayList<>();
 
-		this.inverseBindTransform = inverseBindTransform;
+		this.localBindTransform = bindLocalTransform;
 		this.animatedTransform = new Matrix4f();
+		this.inverseBindTransform = new Matrix4f();
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public List<Joint> getChildren() {
+		return children;
 	}
 
 	/**
@@ -63,14 +71,20 @@ public class Joint {
 	}
 
 	/**
-	 * This returns the inverted model-space bind transform.
-	 * The bind transform is the original model-space transform of the joint (when no animation is applied).
-	 * This returns the inverse of that, which is used to calculate the animated transform matrix which gets used to transform vertices in the shader.
+	 * Adds this joint to an array, they for each child calls the same method.
 	 *
-	 * @return The inverse of the joint's bind transform (in model-space).
+	 * @param joints The array to add this and children into.
 	 */
-	public Matrix4f getInverseBindTransform() {
-		return inverseBindTransform;
+	public void addSelfAndChildren(List<Joint> joints) {
+		joints.add(this);
+
+		for (Joint child : children) {
+			child.addSelfAndChildren(joints);
+		}
+	}
+
+	public Matrix4f getLocalBindTransform() {
+		return localBindTransform;
 	}
 
 	/**
@@ -89,6 +103,17 @@ public class Joint {
 	}
 
 	/**
+	 * This returns the inverted model-space bind transform.
+	 * The bind transform is the original model-space transform of the joint (when no animation is applied).
+	 * This returns the inverse of that, which is used to calculate the animated transform matrix which gets used to transform vertices in the shader.
+	 *
+	 * @return The inverse of the joint's bind transform (in model-space).
+	 */
+	public Matrix4f getInverseBindTransform() {
+		return inverseBindTransform;
+	}
+
+	/**
 	 * This is called during set-up, after the joints hierarchy has been created. This calculates the model-space bind transform of this joint like so:
 	 * <p>
 	 * </br>
@@ -102,44 +127,11 @@ public class Joint {
 	 * @param parentBindTransform The model-space bind transform of the parent joint.
 	 */
 	public void calculateInverseBindTransform(Matrix4f parentBindTransform) {
-		//Matrix4f mr = new Matrix4f(inverseBindTransform);
-		inverseBindTransform.setIdentity();
 		Matrix4f bindTransform = Matrix4f.multiply(parentBindTransform, localBindTransform, null);
 		Matrix4f.invert(bindTransform, inverseBindTransform);
-
-		//FlounderLogger.log(mr + " == " + inverseBindTransform);
 
 		for (Joint child : children) {
 			child.calculateInverseBindTransform(bindTransform);
 		}
-	}
-
-	/**
-	 * Adds this joint to an array, they for each child calls the same method.
-	 *
-	 * @param joints The array to add this and children into.
-	 */
-	public void addSelfAndChildren(List<Joint> joints) {
-		joints.add(this);
-
-		for (Joint child : children) {
-			child.addSelfAndChildren(joints);
-		}
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Matrix4f getLocalBindTransform() {
-		return localBindTransform;
-	}
-
-	public List<Joint> getChildren() {
-		return children;
 	}
 }

@@ -1,4 +1,4 @@
 /**
  * Contains classes for loading joint from collada files.
  */
-package flounder.collada.joints;
+package flounder.collada.skeleton;

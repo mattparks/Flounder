@@ -2,20 +2,20 @@ package flounder.animation;
 
 /**
  * Represents an animation that can be carried out by an animated entity.
- * It contains the length of the animation in seconds, and a list of {@link KeyFrameJoints}s.
+ * It contains the length of the animation in seconds, and a list of {@link KeyFrames}s.
  */
 public class Animation {
 	private final float length;
-	private final KeyFrameJoints[] keyFrameJointss;
+	private final KeyFrames[] keyFrames;
 
 	/**
 	 * Creates a new animation.
 	 *
 	 * @param lengthInSeconds The length of the animation in seconds.
-	 * @param frames All the keyframes for the animation, ordered by time of appearance in the animation.
+	 * @param keyFrames All the keyframes for the animation, ordered by time of appearance in the animation.
 	 */
-	public Animation(float lengthInSeconds, KeyFrameJoints[] frames) {
-		this.keyFrameJointss = frames;
+	public Animation(float lengthInSeconds, KeyFrames[] keyFrames) {
+		this.keyFrames = keyFrames;
 		this.length = lengthInSeconds;
 	}
 
@@ -34,7 +34,7 @@ public class Animation {
 	 *
 	 * @return The array of the animation's keyframes.
 	 */
-	public KeyFrameJoints[] getKeyFrameJointss() {
-		return keyFrameJointss;
+	public KeyFrames[] getKeyFrames() {
+		return keyFrames;
 	}
 }

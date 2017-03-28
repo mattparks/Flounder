@@ -1,5 +1,6 @@
 package flounder.collada.geometry;
 
+import flounder.collada.*;
 import flounder.collada.skin.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -27,7 +28,6 @@ public class GeometryLoader {
 	private List<Vector2f> textures;
 	private List<Vector3f> normals;
 	private List<Integer> indices;
-	private Matrix4f correction;
 
 	public GeometryLoader(XmlNode geometryNode, List<VertexSkinData> vertexWeights) {
 		this.meshData = geometryNode.getChild("geometry").getChild("mesh");
@@ -38,8 +38,6 @@ public class GeometryLoader {
 		this.textures = new ArrayList<>();
 		this.normals = new ArrayList<>();
 		this.indices = new ArrayList<>();
-		this.correction = new Matrix4f();
-		Matrix4f.rotate(correction, new Vector3f(1.0f, 0.0f, 0.0f), (float) Math.toRadians(-90.0f), correction);
 	}
 
 	public MeshData extractModelData() {
@@ -68,8 +66,8 @@ public class GeometryLoader {
 			float x = Float.parseFloat(posData[i * 3]);
 			float y = Float.parseFloat(posData[i * 3 + 1]);
 			float z = Float.parseFloat(posData[i * 3 + 2]);
-			Vector4f position = new Vector4f(x, y, z, 1);
-			Matrix4f.transform(correction, position, position);
+			Vector4f position = new Vector4f(x, y, z, 1.0f);
+			Matrix4f.transform(FlounderCollada.CORRECTION, position, position);
 			VertexData vertexNew = new VertexData(vertices.size(), new Vector3f(position.x, position.y, position.z));
 			vertexNew.setWeightsData(vertexWeights.get(vertices.size()));
 			vertices.add(vertexNew);
@@ -86,9 +84,9 @@ public class GeometryLoader {
 			float x = Float.parseFloat(normData[i * 3]);
 			float y = Float.parseFloat(normData[i * 3 + 1]);
 			float z = Float.parseFloat(normData[i * 3 + 2]);
-			Vector4f norm = new Vector4f(x, y, z, 0f);
-			Matrix4f.transform(correction, norm, norm);
-			normals.add(new Vector3f(norm.x, norm.y, norm.z));
+			Vector4f normal = new Vector4f(x, y, z, 0.0f);
+			Matrix4f.transform(FlounderCollada.CORRECTION, normal, normal);
+			normals.add(new Vector3f(normal.x, normal.y, normal.z));
 		}
 	}
 

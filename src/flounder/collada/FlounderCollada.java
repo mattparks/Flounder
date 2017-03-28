@@ -1,13 +1,14 @@
 package flounder.collada;
 
-import flounder.animation.*;
 import flounder.collada.animation.*;
 import flounder.collada.geometry.*;
-import flounder.collada.joints.*;
+import flounder.collada.skeleton.*;
 import flounder.collada.skin.*;
 import flounder.framework.*;
 import flounder.loaders.*;
 import flounder.logger.*;
+import flounder.maths.matrices.*;
+import flounder.maths.vectors.*;
 import flounder.parsing.xml.*;
 import flounder.processing.*;
 import flounder.profiling.*;
@@ -22,6 +23,9 @@ import java.util.*;
 public class FlounderCollada extends Module {
 	private static final FlounderCollada INSTANCE = new FlounderCollada();
 	public static final String PROFILE_TAB_NAME = "Collada";
+
+	public static final Matrix4f CORRECTION = Matrix4f.rotate(new Matrix4f(), new Vector3f(1.0f, 0.0f, 0.0f), (float) Math.toRadians(-90.0f), null);
+	public static final int MAX_WEIGHTS = 3;
 
 	private Map<String, SoftReference<ModelAnimated>> loaded;
 
@@ -56,16 +60,16 @@ public class FlounderCollada extends Module {
 	public static ModelAnimated loadCollada(MyFile file) {
 		XmlNode node = XmlParser.loadXmlFile(file);
 
-		SkinLoader skinLoader = new SkinLoader(node.getChild("library_controllers"), FlounderAnimation.MAX_WEIGHTS);
+		SkinLoader skinLoader = new SkinLoader(node.getChild("library_controllers"), FlounderCollada.MAX_WEIGHTS);
 		SkinningData skinningData = skinLoader.extractSkinData();
 
-		JointsLoader jointsLoader = new JointsLoader(node.getChild("library_visual_scenes"), skinningData.getJointOrder(), skinningData.getBindPositions());
-		JointsData jointsData = jointsLoader.extractBoneData();
+		SkeletonLoader skeletonLoader = new SkeletonLoader(node.getChild("library_visual_scenes"), skinningData.getJointOrder());
+		SkeletonData skeletonData = skeletonLoader.extractBoneData();
 
 		GeometryLoader g = new GeometryLoader(node.getChild("library_geometries"), skinningData.getVerticesSkinData());
 		MeshData meshData = g.extractModelData();
 
-		return new ModelAnimated(meshData, jointsData, file);
+		return new ModelAnimated(meshData, skeletonData, file);
 	}
 
 	/**
@@ -78,7 +82,7 @@ public class FlounderCollada extends Module {
 	public static AnimationData loadAnimation(MyFile file) {
 		XmlNode node = XmlParser.loadXmlFile(file);
 
-		AnimationLoader animationLoader = new AnimationLoader(node.getChild("library_animations"));
+		AnimationLoader animationLoader = new AnimationLoader(node.getChild("library_animations"), node.getChild("library_visual_scenes"));
 		AnimationData animationData = animationLoader.extractAnimation();
 
 		return animationData;

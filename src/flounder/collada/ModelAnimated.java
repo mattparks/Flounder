@@ -2,7 +2,7 @@ package flounder.collada;
 
 import flounder.animation.*;
 import flounder.collada.geometry.*;
-import flounder.collada.joints.*;
+import flounder.collada.skeleton.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;
@@ -10,7 +10,7 @@ import flounder.resources.*;
 public class ModelAnimated {
 	private final MeshData meshData;
 
-	private final JointsData jointsData;
+	private final SkeletonData skeletonData;
 	private final Joint headJoint;
 
 	private MyFile file;
@@ -20,7 +20,7 @@ public class ModelAnimated {
 	private int vaoID;
 	private int vaoLength;
 
-	public ModelAnimated(MeshData meshData, JointsData jointsData, MyFile file) {
+	public ModelAnimated(MeshData meshData, SkeletonData skeletonData, MyFile file) {
 		this.meshData = meshData;
 
 		this.file = file;
@@ -28,8 +28,8 @@ public class ModelAnimated {
 		float furthest = meshData.getFurthestPoint(); // TODO
 		this.aabb = new AABB(new Vector3f(-2, 0, -2), new Vector3f(2, 9, 2));//new AABB(new Vector3f(-furthest, -furthest, -furthest), new Vector3f(furthest, furthest, furthest));
 
-		this.jointsData = jointsData;
-		this.headJoint = createJoints(jointsData.getHeadJoint());
+		this.skeletonData = skeletonData;
+		this.headJoint = createJoints(skeletonData.getHeadJoint());
 
 		this.vaoID = -1;
 		this.vaoLength = -1;
@@ -38,7 +38,7 @@ public class ModelAnimated {
 	}
 
 	private static Joint createJoints(JointData data) {
-		Joint j = new Joint(data.getIndex(), data.getNameId(), data.getBindLocalTransform(), data.getInverseBindTransform());
+		Joint j = new Joint(data.getIndex(), data.getNameId(), data.getBindLocalTransform());
 
 		for (JointData child : data.getChildren()) {
 			j.addChild(createJoints(child));
@@ -51,8 +51,8 @@ public class ModelAnimated {
 		return meshData;
 	}
 
-	public JointsData getJointsData() {
-		return jointsData;
+	public SkeletonData getSkeletonData() {
+		return skeletonData;
 	}
 
 	public Joint getHeadJoint() {

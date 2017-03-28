@@ -43,7 +43,7 @@ public class VertexSkinData {
 	}
 
 	private float saveTopWeights(float[] topWeightsArray) {
-		float total = 0;
+		float total = 0.0f;
 
 		for (int i = 0; i < topWeightsArray.length; i++) {
 			topWeightsArray[i] = weights.get(i);

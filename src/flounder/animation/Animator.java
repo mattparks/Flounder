@@ -2,7 +2,6 @@ package flounder.animation;
 
 import flounder.framework.*;
 import flounder.maths.matrices.*;
-import flounder.maths.vectors.*;
 
 import java.util.*;
 
@@ -36,7 +35,7 @@ public class Animator {
 
 		this.animationTime = 0;
 		this.currentAnimation = null;
-		this.animatorTransformation = Matrix4f.rotate(new Matrix4f(), new Vector3f(1.0f, 0.0f, 0.0f), (float) Math.toRadians(-90.0f), null);
+		this.animatorTransformation = new Matrix4f();
 	}
 
 	/**
@@ -49,8 +48,8 @@ public class Animator {
 		}
 
 		increaseAnimationTime();
-		Map<String, Matrix4f> currentPose = getCurrentAnimationPose();
-		applyPoseToJoints(currentPose, rootJoint, animatorTransformation);
+		Map<String, Matrix4f> currentPose = calculateCurrentAnimationPose();
+		applyPoseToJoints(currentPose, rootJoint, animatorTransformation.setIdentity());
 	}
 
 	/**
@@ -82,10 +81,10 @@ public class Animator {
 	 * @return The current pose as a map of the desired local-space transforms for all the joints.
 	 * The transforms are indexed by the name ID of the joint that they should be applied to.
 	 */
-	private Map<String, Matrix4f> getCurrentAnimationPose() {
-		KeyFrameJoints[] frames = getPreviousAndNextFrames();
+	private Map<String, Matrix4f> calculateCurrentAnimationPose() {
+		KeyFrames[] frames = getPreviousAndNextFrames();
 		float progression = calculateProgression(frames[0], frames[1]);
-		return calculateCurrentPose(frames[0], frames[1], progression);
+		return interpolatePoses(frames[0], frames[1], progression);
 	}
 
 	/**
@@ -95,10 +94,10 @@ public class Animator {
 	 *
 	 * @return The previous and next keyframes, in an array which therefore will always have a length of 2.
 	 */
-	private KeyFrameJoints[] getPreviousAndNextFrames() {
-		KeyFrameJoints[] allFrames = currentAnimation.getKeyFrameJointss();
-		KeyFrameJoints previousFrame = allFrames[0];
-		KeyFrameJoints nextFrame = allFrames[0];
+	private KeyFrames[] getPreviousAndNextFrames() {
+		KeyFrames[] allFrames = currentAnimation.getKeyFrames();
+		KeyFrames previousFrame = allFrames[0];
+		KeyFrames nextFrame = allFrames[0];
 
 		for (int i = 1; i < allFrames.length; i++) {
 			nextFrame = allFrames[i];
@@ -110,7 +109,7 @@ public class Animator {
 			previousFrame = allFrames[i];
 		}
 
-		return new KeyFrameJoints[]{previousFrame, nextFrame};
+		return new KeyFrames[]{previousFrame, nextFrame};
 	}
 
 	/**
@@ -121,7 +120,7 @@ public class Animator {
 	 *
 	 * @return A number between 0 and 1 indicating how far between the two keyframes the current animation time is.
 	 */
-	private float calculateProgression(KeyFrameJoints previousFrame, KeyFrameJoints nextFrame) {
+	private float calculateProgression(KeyFrames previousFrame, KeyFrames nextFrame) {
 		float totalTime = nextFrame.getTimeStamp() - previousFrame.getTimeStamp();
 		float currentTime = animationTime - previousFrame.getTimeStamp();
 		return currentTime / totalTime;
@@ -138,14 +137,14 @@ public class Animator {
 	 * @return The local-space transforms for all the joints for the desired current pose.
 	 * They are returned in a map, indexed by the name of the joint to which they should be applied.
 	 */
-	private Map<String, Matrix4f> calculateCurrentPose(KeyFrameJoints previousFrame, KeyFrameJoints nextFrame, float progression) {
+	private Map<String, Matrix4f> interpolatePoses(KeyFrames previousFrame, KeyFrames nextFrame, float progression) {
 		Map<String, Matrix4f> currentPose = new HashMap<>();
 
 		for (String jointName : previousFrame.getPose().keySet()) {
-			JointTransform previousPose = previousFrame.getPose().get(jointName);
-			JointTransform nextPose = nextFrame.getPose().get(jointName);
-			JointTransform jointPose = JointTransform.interpolate(previousPose, nextPose, progression);
-			currentPose.put(jointName, jointPose.getLocalTransform());
+			JointTransform previousTransform = previousFrame.getPose().get(jointName);
+			JointTransform nextTransform = nextFrame.getPose().get(jointName);
+			JointTransform currentTransform = JointTransform.interpolate(previousTransform, nextTransform, progression);
+			currentPose.put(jointName, currentTransform.getLocalTransform());
 		}
 
 		return currentPose;

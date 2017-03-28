@@ -1,10 +1,10 @@
-package flounder.collada.joints;
+package flounder.collada.skeleton;
 
-public class JointsData {
+public class SkeletonData {
 	private final int jointCount;
 	private final JointData headJoint;
 
-	public JointsData(int jointCount, JointData headJoint) {
+	public SkeletonData(int jointCount, JointData headJoint) {
 		this.jointCount = jointCount;
 		this.headJoint = headJoint;
 	}
