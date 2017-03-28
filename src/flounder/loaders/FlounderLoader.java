@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL33.*;
 
 /**
  * A module used for loading and managing OpenGL VAO's and VBO's.
@@ -186,7 +187,11 @@ public class FlounderLoader extends Module {
 			glVertexAttribPointer(i + startingAttribute, lengths[i], GL_FLOAT, false, vertexByteCount, ByteWork.FLOAT_LENGTH * total);
 
 			if (instanced) {
-				ARBInstancedArrays.glVertexAttribDivisorARB(i + startingAttribute, 1);
+				if (OpenGlUtils.isModern()) {
+					glVertexAttribDivisor(i + startingAttribute, 1); // TODO: Find non GL 3.3 version.
+				} else {
+					ARBInstancedArrays.glVertexAttribDivisorARB(i + startingAttribute, 1);
+				}
 			}
 
 			total += lengths[i];
@@ -277,7 +282,13 @@ public class FlounderLoader extends Module {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBindVertexArray(vao);
 		glVertexAttribPointer(attribute, dataSize, GL_FLOAT, false, instancedDataLength * 4, offset * 4);
-		ARBInstancedArrays.glVertexAttribDivisorARB(attribute, 1);
+
+		if (OpenGlUtils.isModern()) {
+			glVertexAttribDivisor(attribute, 1);
+		} else {
+			ARBInstancedArrays.glVertexAttribDivisorARB(attribute, 1);
+		}
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}

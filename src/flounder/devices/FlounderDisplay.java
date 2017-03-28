@@ -2,6 +2,7 @@ package flounder.devices;
 
 import flounder.fbos.*;
 import flounder.framework.*;
+import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.profiling.*;
 import flounder.resources.*;
@@ -258,6 +259,7 @@ public class FlounderDisplay extends Module {
 		FlounderLogger.log("Flounder Engine Version: " + Framework.getVersion().getVersion());
 		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
+		FlounderLogger.log("Flounder Is OpenGL Modern: " + OpenGlUtils.isModern());
 		FlounderLogger.log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
 		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
 		FlounderLogger.log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());

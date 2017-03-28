@@ -31,6 +31,8 @@ public class GuiSliderText extends ScreenObject {
 
 	private boolean mouseOver;
 
+	private boolean hasChange;
+	private Timer changeTimeout;
 	private ScreenListener listenerChange;
 
 	public GuiSliderText(ScreenObject parent, Vector2f position, String string, float minProgress, float maxProgress, float progress, GuiAlign align) {
@@ -54,6 +56,10 @@ public class GuiSliderText extends ScreenObject {
 		setProgress(progress);
 
 		this.mouseOver = false;
+
+		this.hasChange = false;
+		this.changeTimeout = new Timer(0.2f);
+		this.listenerChange = null;
 	}
 
 	public void addChangeListener(ScreenListener listenerChange) {
@@ -81,9 +87,7 @@ public class GuiSliderText extends ScreenObject {
 				updating = true;
 			}
 
-			if (listenerChange != null) {
-				listenerChange.eventOccurred();
-			}
+			hasChange = true;
 
 			float width = 2.0f * background.getMeshSize().x * background.getScreenDimensions().x / FlounderDisplay.getAspectRatio();
 			float positionX = background.getPosition().x;
@@ -94,6 +98,16 @@ public class GuiSliderText extends ScreenObject {
 			FlounderGuis.getSelector().cancelWasEvent();
 		} else {
 			updating = false;
+		}
+
+		// Updates the listener.
+		if (hasChange && changeTimeout.isPassedTime()) {
+			if (listenerChange != null) {
+				listenerChange.eventOccurred();
+			}
+
+			hasChange = false;
+			changeTimeout.resetStartTime();
 		}
 
 		// Mouse over updates.

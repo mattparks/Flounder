@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL31.*;
 
 /**
  * A helper for basic OpenGL rendering functions.
@@ -19,6 +20,17 @@ public class OpenGlUtils {
 	private static boolean isAlphaBlending = false;
 	private static boolean additiveBlending = false;
 	private static boolean antialiasing = false;
+
+	/**
+	 * Gets if the computer is modern and can handle higher than OpenGL 3.3 functions.
+	 *
+	 * @return If the computer is modern.
+	 */
+	public static boolean isModern() {
+		int major = glGetInteger(GL_MAJOR_VERSION);
+		int minor = glGetInteger(GL_MINOR_VERSION);
+		return major > 3 || (major == 3 && minor > 3);
+	}
 
 	/**
 	 * Prepares the screen for a new render.
@@ -251,6 +263,10 @@ public class OpenGlUtils {
 	 * @param glPrimCount How many primitives rendered.
 	 */
 	public static void renderInstanced(int glMode, int glLength, int glPrimCount) {
-		ARBDrawInstanced.glDrawArraysInstancedARB(glMode, 0, glLength, glPrimCount);
+		if (isModern()) {
+			glDrawArraysInstanced(glMode, 0, glLength, glPrimCount);
+		} else {
+			ARBDrawInstanced.glDrawArraysInstancedARB(glMode, 0, glLength, glPrimCount);
+		}
 	}
 }
