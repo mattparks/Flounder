@@ -209,9 +209,9 @@ public class TextureBuilder extends FactoryBuilder {
 	@Override
 	public TextureObject create() {
 		if (file != null) {
-			return (TextureObject) builderCreate(file.getName());
+			return (TextureObject) builderCreate(file.getPath());
 		} else if (cubemap != null && cubemap.length >= 1) {
-			return (TextureObject) builderCreate(cubemap[0].getName());
+			return (TextureObject) builderCreate(cubemap[0].getPath());
 		}
 
 		return null;

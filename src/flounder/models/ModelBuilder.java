@@ -63,7 +63,7 @@ public class ModelBuilder extends FactoryBuilder {
 		if (manual != null) {
 			return (ModelObject) builderCreate(manual.getName());
 		} else if (file != null) {
-			return (ModelObject) builderCreate(file.getName());
+			return (ModelObject) builderCreate(file.getPath());
 		}
 
 		return null;

@@ -40,7 +40,7 @@ public class FlounderEntities extends Module {
 
 		FlounderEvents.addEvent(new IEvent() {
 			private KeyButton saveEntities1 = new KeyButton(GLFW_KEY_E);
-			private KeyButton saveEntities2 = new KeyButton(GLFW_KEY_LEFT_ALT);
+			private KeyButton saveEntities2 = new KeyButton(GLFW_KEY_R);
 
 			@Override
 			public boolean eventTriggered() {
@@ -128,20 +128,34 @@ public class FlounderEntities extends Module {
 			FileWriter fileWriter = new FileWriter(saveFile);
 			FileWriterHelper fileWriterHelper = new FileWriterHelper(fileWriter);
 
+			// Package path data.
+			fileWriterHelper.writeSegmentData("package " + packageLocation + ";\n", true);
+
+			fileWriterHelper.writeSegmentData("import flounder.entities.*;", true);
+			fileWriterHelper.writeSegmentData("import flounder.lights.*;", true);
+			fileWriterHelper.writeSegmentData("import flounder.maths.*;", true);
+			fileWriterHelper.writeSegmentData("import flounder.maths.vectors.*;", true);
+			fileWriterHelper.writeSegmentData("import flounder.models.*;", true);
+			fileWriterHelper.writeSegmentData("import flounder.resources.*;", true);
+			fileWriterHelper.writeSegmentData("import flounder.space.*;", true);
+			fileWriterHelper.writeSegmentData("import flounder.textures.*;\n", true);
+
 			// Date and save info.
 			String savedDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.YEAR) + " - " + Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE);
 			FlounderLogger.log("Entity " + name + " is being saved at: " + savedDate);
 			fileWriterHelper.addComment("Automatically generated entity source", "Date generated: " + savedDate, "Created by: " + System.getProperty("user.name"));
-
-			fileWriterHelper.writeSegmentData("package " + packageLocation + ";\n\n", true);
 
 			// Entity instance class.
 			fileWriterHelper.beginNewSegment("public class " + className + " extends Entity");
 			{
 				// Writes static data to the save.
 				for (int i = 0; i < editorComponents.size(); i++) {
-					for (String s : editorComponents.get(i).getSaveValues(name).getFirst()) {
-						fileWriterHelper.writeSegmentData(s + ";", true);
+					Pair<String[], String[]> saveValues = editorComponents.get(i).getSaveValues(name);
+
+					if (saveValues != null) {
+						for (String s : saveValues.getFirst()) {
+							fileWriterHelper.writeSegmentData(s + ";", true);
+						}
 					}
 				}
 
@@ -156,18 +170,22 @@ public class FlounderEntities extends Module {
 					fileWriterHelper.writeSegmentData("super(structure, position, rotation);", true);
 					// Writes the component constructors.
 					for (int i = 0; i < editorComponents.size(); i++) {
-						String parameterData = "";
+						Pair<String[], String[]> saveValues = editorComponents.get(i).getSaveValues(name);
 
-						for (String s : editorComponents.get(i).getSaveValues(name).getSecond()) {
-							parameterData += s + ", ";
-						}
+						if (saveValues != null) {
+							String parameterData = "";
 
-						parameterData = parameterData.replaceAll(", $", "");
+							for (String s : saveValues.getSecond()) {
+								parameterData += s + ", ";
+							}
 
-						if (parameterData.isEmpty()) {
-							fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this);", true);
-						} else {
-							fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this, " + parameterData + ");", true);
+							parameterData = parameterData.replaceAll(", $", "");
+
+							if (parameterData.isEmpty()) {
+								fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this);", true);
+							} else {
+								fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this, " + parameterData + ");", true);
+							}
 						}
 					}
 				}
