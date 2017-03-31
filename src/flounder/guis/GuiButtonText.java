@@ -10,10 +10,10 @@ import flounder.textures.*;
 import flounder.visual.*;
 
 public class GuiButtonText extends ScreenObject {
-	protected static final float CHANGE_TIME = 0.15f;
+	protected static final float CHANGE_TIME = 0.1f;
 
-	protected static final float SCALE_NORMAL = 1.5f;
-	protected static final float SCALE_SELECTED = 1.75f;
+	protected static final float SCALE_NORMAL = 1.6f;
+	protected static final float SCALE_SELECTED = 1.8f;
 
 	protected final static Colour COLOUR_NORMAL = new Colour(0.0f, 0.0f, 0.0f);
 

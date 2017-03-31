@@ -22,6 +22,12 @@ public class Attenuation {
 		this.exponent = exponent;
 	}
 
+	public void set(Attenuation source) {
+		this.constant = source.constant;
+		this.linear = source.linear;
+		this.exponent = source.exponent;
+	}
+
 	/**
 	 * Gets the constant value.
 	 *

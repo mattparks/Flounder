@@ -49,7 +49,7 @@ public class Light {
 	 * @param colour The new light colour.
 	 */
 	public void setColour(Colour colour) {
-		this.colour = colour;
+		this.colour.set(colour);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class Light {
 	 * @param position The new light position.
 	 */
 	public void setPosition(Vector3f position) {
-		this.position = position;
+		this.position.set(position);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class Light {
 	 * @param attenuation The new light attenuation.
 	 */
 	public void setAttenuation(Attenuation attenuation) {
-		this.attenuation = attenuation;
+		this.attenuation.set(attenuation);
 	}
 
 	@Override
