@@ -9,5 +9,5 @@ public interface ISpatialObject {
 	/**
 	 * @return Returns a shape fully enclosing the object.
 	 */
-	Collider getBounding();
+	Collider getCollider();
 }

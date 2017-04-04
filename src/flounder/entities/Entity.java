@@ -241,10 +241,10 @@ public class Entity implements ISpatialObject {
 	}
 
 	@Override
-	public Collider getBounding() {
+	public Collider getCollider() {
 		for (IComponentEntity component : components) {
-			if (component instanceof IComponentBounding) {
-				Collider bounding = ((IComponentBounding) component).getBounding();
+			if (component instanceof IComponentCollider) {
+				Collider bounding = ((IComponentCollider) component).getBounding();
 
 				if (bounding != null) {
 					return bounding;

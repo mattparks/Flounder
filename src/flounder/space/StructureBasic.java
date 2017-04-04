@@ -51,7 +51,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		}
 
 		for (T current : objects) {
-			if (current != null && (current.getBounding() == null || current.getBounding().inFrustum(range))) {
+			if (current != null && (current.getCollider() == null || current.getCollider().inFrustum(range))) {
 				result.add(current);
 			}
 		}
@@ -68,7 +68,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		}
 
 		for (T current : objects) {
-			if (current != null && current.getBounding() != null && (current.getBounding().intersects(range).isIntersection() || range.contains(current.getBounding()))) {
+			if (current != null && current.getCollider() != null && (current.getCollider().intersects(range).isIntersection() || range.contains(current.getCollider()))) {
 				result.add(current);
 			}
 		}
