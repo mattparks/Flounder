@@ -40,6 +40,8 @@ public class FlounderNetwork extends Module {
 
 	/**
 	 * Starts the server.
+	 *
+	 * @param port The port to start the server on.
 	 */
 	public static void startServer(int port) {
 		INSTANCE.username = "server";
@@ -51,6 +53,10 @@ public class FlounderNetwork extends Module {
 
 	/**
 	 * Starts the client.
+	 *
+	 * @param username The username for the client to use.
+	 * @param ipAddress The ip address to connect the client on.
+	 * @param port The port to connect the client on.
 	 */
 	public static void startClient(String username, String ipAddress, int port) {
 		INSTANCE.username = username;

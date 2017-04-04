@@ -111,7 +111,6 @@ public class AABB extends Collider {
 
 	/**
 	 * Adjusts a movement amount so that after the verifyMove is performed, the {@code left} AABB will not intersect the {@code right}.
-	 * <p/>
 	 * This method assumes that {@code left} AABB can actually intersect {@code right} after some amount of movement,
 	 * even if it won't necessarily intersect it after the movement specified by {@code moveDelta}.
 	 *

@@ -66,7 +66,7 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	 *
 	 * @param object The object to check for.
 	 *
-	 * @returns If the structure contains the object.
+	 * @return If the structure contains the object.
 	 */
 	boolean contains(ISpatialObject object);
 }

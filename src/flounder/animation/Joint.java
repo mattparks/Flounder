@@ -115,10 +115,7 @@ public class Joint {
 
 	/**
 	 * This is called during set-up, after the joints hierarchy has been created. This calculates the model-space bind transform of this joint like so:
-	 * <p>
-	 * </br>
 	 * {@code bindTransform = parentBindTransform * localBindTransform}</br>
-	 * </br>
 	 * where "bindTransform" is the model-space bind transform of this joint, "parentBindTransform" is the model-space bind transform of the parent joint,
 	 * and "localBindTransform" is the bone-space bind transform of this joint. It the calculates and stores the inverse of this model-space bind transform,
 	 * for use when calculating the final animation transform each frame. It then recursively calls the method for all of the children joints,

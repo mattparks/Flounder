@@ -40,10 +40,10 @@ public class TextObject extends ScreenObject {
 	 *
 	 * @param parent The objects parent.
 	 * @param position The objects position relative to the parents.
-	 * @param text The text that will be set to this object,
+	 * @param text The text that will be set to this object.
 	 * @param fontSize The initial size of the font (1 is the default).
 	 * @param font The font type to be used in this text.
-	 * @param maxLineLength The longest line length before the text is wrapped, 1.0 being 100& of the screen width when font size = 1.
+	 * @param maxLineLength The longest line length before the text is wrapped, 1.0 being 100% of the screen width when font size = 1.
 	 * @param align How the text will align if wrapped.
 	 */
 	public TextObject(ScreenObject parent, Vector2f position, String text, float fontSize, FontType font, float maxLineLength, GuiAlign align) {
