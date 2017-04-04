@@ -18,32 +18,32 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public synchronized void add(T object) {
+	public void add(T object) {
 		objects.add(object);
 	}
 
 	@Override
-	public synchronized void remove(T object) {
+	public void remove(T object) {
 		objects.remove(object);
 	}
 
 	@Override
-	public synchronized void clear() {
+	public void clear() {
 		objects.clear();
 	}
 
 	@Override
-	public synchronized int getSize() {
+	public int getSize() {
 		return objects.size();
 	}
 
 	@Override
-	public synchronized List<T> getAll() {
+	public List<T> getAll() {
 		return objects;
 	}
 
 	@Override
-	public synchronized List<T> queryInFrustum(Frustum range) {
+	public List<T> queryInFrustum(Frustum range) {
 		List<T> result = new ArrayList<>();
 
 		if (objects == null) {
@@ -60,7 +60,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public synchronized List<T> queryInBounding(IBounding range) {
+	public List<T> queryInBounding(Collider range) {
 		List<T> result = new ArrayList<>();
 
 		if (objects == null) {
@@ -77,7 +77,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public synchronized boolean contains(ISpatialObject object) {
+	public boolean contains(ISpatialObject object) {
 		return objects.contains(object);
 	}
 
@@ -88,7 +88,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	 *
 	 * @return The object found.
 	 */
-	public synchronized T get(int index) {
+	public T get(int index) {
 		return objects.get(index);
 	}
 }

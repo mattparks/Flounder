@@ -59,7 +59,7 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInBounding(IBounding range);
+	List<T> queryInBounding(Collider range);
 
 	/**
 	 * If the structure contains the object.

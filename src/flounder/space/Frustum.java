@@ -191,33 +191,4 @@ public class Frustum {
 
 		return true;
 	}
-
-	/**
-	 * Is the cube contained fully in the frustum?
-	 *
-	 * @param x1 The point 1's X coord.
-	 * @param y1 The point 1's Y coord.
-	 * @param z1 The point 1's Z coord.
-	 * @param x2 The point 2's X coord.
-	 * @param y2 The point 2's Y coord.
-	 * @param z2 The point 2's Z coord.
-	 *
-	 * @return True if fully contained, false if outside.
-	 */
-	public boolean cubeFullyInFrustum(float x1, float y1, float z1, float x2, float y2, float z2) {
-		for (int i = 0; i < 6; i++) {
-			if (frustum[i][0] * x1 + frustum[i][1] * y1 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
-					frustum[i][0] * x2 + frustum[i][1] * y1 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
-					frustum[i][0] * x1 + frustum[i][1] * y2 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
-					frustum[i][0] * x2 + frustum[i][1] * y2 + frustum[i][2] * z1 + frustum[i][3] <= 0.0f &&
-					frustum[i][0] * x1 + frustum[i][1] * y1 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f &&
-					frustum[i][0] * x2 + frustum[i][1] * y1 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f &&
-					frustum[i][0] * x1 + frustum[i][1] * y2 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f &&
-					frustum[i][0] * x2 + frustum[i][1] * y2 + frustum[i][2] * z2 + frustum[i][3] <= 0.0f) {
-				return false;
-			}
-		}
-
-		return true;
-	}
 }

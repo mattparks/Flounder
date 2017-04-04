@@ -50,7 +50,7 @@ public class BoundingRenderer extends Renderer {
 			if (model.isLoaded()) {
 				prepareModel(model);
 
-				for (IBounding shape : FlounderBounding.getRenderShapes().get(model)) {
+				for (Collider shape : FlounderBounding.getRenderShapes().get(model)) {
 					renderShape(model, shape);
 				}
 
@@ -79,7 +79,7 @@ public class BoundingRenderer extends Renderer {
 		OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3);
 	}
 
-	private void renderShape(ModelObject model, IBounding shape) {
+	private void renderShape(ModelObject model, Collider shape) {
 		if (model == null || !model.isLoaded()) {
 			return;
 		}
