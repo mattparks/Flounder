@@ -77,11 +77,11 @@ public class Entity implements ISpatialObject {
 	/**
 	 * Removes a component from this entity by id. If more than one is found, the first component in the list is removed. If none are found, nothing is removed.
 	 *
-	 * @param id The id of the component. This is typically found with ComponentClass.ID.
+	 * @param object The class of the component.
 	 */
-	public void removeComponent(int id) {
+	public void removeComponent(Class object) {
 		for (IComponentEntity component : components) {
-			if (component.getId() == id) {
+			if (component.getClass() == object) {
 				component.dispose();
 				components.remove(component);
 				setMoved();
@@ -92,19 +92,19 @@ public class Entity implements ISpatialObject {
 	/**
 	 * Visits every entity with a particular component within a certain range of space.
 	 *
-	 * @param id The id of the component. This is typically found with ComponentClass.ID. If no particular component is desired, specify -1.
+	 * @param object The class of the component. If no particular component is desired, specify null.
 	 * @param range The range of space to be visited.
 	 * @param visitor The visitor that will be executed for every entity visited.
 	 */
-	public void visitInRange(int id, AABB range, IComponentVisitor visitor) {
+	public void visitInRange(Class object, AABB range, IComponentVisitor visitor) {
 		for (Entity entity : structure.queryInBounding(range)) {
 			if (entity.removed) {
 				continue;
 			}
 
-			IComponentEntity component = id == -1 ? null : entity.getComponent(id);
+			IComponentEntity component = object == null ? null : entity.getComponent(object);
 
-			if (component != null || id == -1) {
+			if (component != null || object == null) {
 				visitor.visit(entity, component);
 			}
 		}
@@ -113,13 +113,13 @@ public class Entity implements ISpatialObject {
 	/**
 	 * Finds and returns a component attached to this entity by id. If more than one is found, the first component in the list is returned. If none are found, returns null.
 	 *
-	 * @param id The id of the component. This is typically found with ComponentClass.ID.
+	 * @param object The class of the component.
 	 *
 	 * @return The first component found with the given id, or null if none are found.
 	 */
-	public IComponentEntity getComponent(int id) {
+	public IComponentEntity getComponent(Class object) {
 		for (IComponentEntity component : components) {
-			if (component.getId() == id) {
+			if (component.getClass() == object) {
 				return component;
 			}
 		}
