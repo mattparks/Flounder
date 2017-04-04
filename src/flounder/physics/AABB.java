@@ -304,8 +304,10 @@ public class AABB extends IBounding<AABB> {
 			return new IntersectData(true, 0.0f);
 		}
 
-		float maxDist = Maths.max(Maths.max(new Vector3f(getMinExtents().getX() - other.getMaxExtents().getX(), getMinExtents().getY() - other.getMaxExtents().getY(), getMinExtents().getZ() - other.getMaxExtents().getZ()), new Vector3f(other.getMinExtents().getX() - getMaxExtents().getX(), other.getMinExtents().getY() - getMaxExtents().getY(), other.getMinExtents().getZ() - getMaxExtents().getZ())));
-		return new IntersectData(maxDist < 0, maxDist);
+		Vector3f distance1 = Vector3f.subtract(getMinExtents(), other.getMaxExtents(), null);
+		Vector3f distance2 = Vector3f.subtract(other.getMinExtents(), getMaxExtents(), null);
+		float maxDist = Maths.max(Maths.max(distance1, distance2));
+		return new IntersectData(maxDist < 0.0f, maxDist);
 	}
 
 	@Override
