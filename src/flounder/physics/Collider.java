@@ -11,13 +11,6 @@ import flounder.space.*;
  */
 public abstract class Collider {
 	/**
-	 * Clones this collider into a new object.
-	 *
-	 * @return The new object.
-	 */
-	public abstract Collider clone();
-
-	/**
 	 * Clones this collder into the destination and updates it.
 	 *
 	 * @param position The amount to move.
@@ -28,6 +21,26 @@ public abstract class Collider {
 	 * @return The destination.
 	 */
 	public abstract Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination);
+
+	/**
+	 * Adjusts a movement amount so that after the move is performed, the this collider will not intersect the {@code right}.
+	 * This method assumes that this collider can actually intersect {@code right} after some amount of movement,
+	 * even if it won't necessarily intersect it after the movement specified by {@code moveDelta}.
+	 *
+	 * @param other The right source collider.
+	 * @param positionDelta The delta movement for the left collider.
+	 * @param destination Where the final resolved delta should be stored.
+	 *
+	 * @return The new, adjusted verifyMove delta that guarantees no intersection.
+	 */
+	public abstract Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination);
+
+	/**
+	 * Clones this collider into a new object.
+	 *
+	 * @return The new object.
+	 */
+	public abstract Collider clone();
 
 	/**
 	 * Tests whether a shape is intersecting this shape.

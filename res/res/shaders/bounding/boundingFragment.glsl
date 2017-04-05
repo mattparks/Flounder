@@ -8,9 +8,13 @@ in vec3 pass_surfaceNormal;
 uniform vec3 colour;
 
 //---------OUT------------
-layout(location = 0) out vec4 out_colour;
+layout(location = 0) out vec4 out_albedo;
+layout(location = 1) out vec4 out_normals;
+layout(location = 2) out vec4 out_extras;
 
 //---------MAIN------------
 void main(void) {
-	out_colour = vec4(colour, 1.0);
+	out_albedo = vec4(colour, 1.0);
+	out_normals = vec4(0.0, 1.0, 0.0, 1.0);
+	out_extras = vec4(1.0, 0.0, 1.0, 1.0); // Ignores lighting.
 }

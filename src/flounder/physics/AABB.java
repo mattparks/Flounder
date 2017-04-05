@@ -101,34 +101,27 @@ public class AABB extends Collider {
 		return aabb;
 	}
 
-	/**
-	 * Adjusts a movement amount so that after the verifyMove is performed, the {@code left} AABB will not intersect the {@code right}.
-	 * This method assumes that {@code left} AABB can actually intersect {@code right} after some amount of movement,
-	 * even if it won't necessarily intersect it after the movement specified by {@code moveDelta}.
-	 *
-	 * @param left The left source (moving) AABB.
-	 * @param right The right source AABB.
-	 * @param positionDelta The delta movement for the left AABB.
-	 * @param destination Where the final resolved delta should be stored.
-	 *
-	 * @return The new, adjusted verifyMove delta that guarantees no intersection.
-	 */
-	public static Vector3f resolveCollision(AABB left, AABB right, Vector3f positionDelta, Vector3f destination) {
+	@Override
+	public Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) {
 		if (destination == null) {
 			destination = new Vector3f();
 		}
 
-		float newAmountX = positionDelta.x;
-		float newAmountY = positionDelta.y;
-		float newAmountZ = positionDelta.z;
+		if (other == null || !(other instanceof AABB)) {
+			return destination;
+		}
+
+		AABB aabb2 = (AABB) other;
 
 		if (positionDelta.x != 0.0f) {
+			float newAmountX = positionDelta.x;
+
 			if (positionDelta.x >= 0.0f) {
 				// Our max == their min
-				newAmountX = right.getMinExtents().getX() - left.getMaxExtents().getX();
+				newAmountX = aabb2.getMinExtents().getX() - getMaxExtents().getX();
 			} else {
 				// Our min == their max
-				newAmountX = right.getMaxExtents().getX() - left.getMinExtents().getX();
+				newAmountX = aabb2.getMaxExtents().getX() - getMinExtents().getX();
 			}
 
 			if (Math.abs(newAmountX) < Math.abs(positionDelta.x)) {
@@ -137,12 +130,14 @@ public class AABB extends Collider {
 		}
 
 		if (positionDelta.y != 0.0f) {
+			float newAmountY = positionDelta.y;
+
 			if (positionDelta.y >= 0.0f) {
 				// Our max == their min
-				newAmountY = right.getMinExtents().getY() - left.getMaxExtents().getY();
+				newAmountY = aabb2.getMinExtents().getY() - getMaxExtents().getY();
 			} else {
 				// Our min == their max
-				newAmountY = right.getMaxExtents().getY() - left.getMinExtents().getY();
+				newAmountY = aabb2.getMaxExtents().getY() - getMinExtents().getY();
 			}
 
 			if (Math.abs(newAmountY) < Math.abs(positionDelta.y)) {
@@ -151,12 +146,14 @@ public class AABB extends Collider {
 		}
 
 		if (positionDelta.z != 0.0f) {
+			float newAmountZ = positionDelta.z;
+
 			if (positionDelta.z >= 0.0f) {
 				// Our max == their min
-				newAmountZ = right.getMinExtents().getZ() - left.getMaxExtents().getZ();
+				newAmountZ = aabb2.getMinExtents().getZ() - getMaxExtents().getZ();
 			} else {
 				// Our min == their max
-				newAmountZ = right.getMaxExtents().getZ() - left.getMinExtents().getZ();
+				newAmountZ = aabb2.getMaxExtents().getZ() - getMinExtents().getZ();
 			}
 
 			if (Math.abs(newAmountZ) < Math.abs(positionDelta.z)) {

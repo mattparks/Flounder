@@ -11,5 +11,5 @@ public interface IComponentCollider {
 	 *
 	 * @return The bounding, null if not adding one.
 	 */
-	Collider getBounding();
+	AABB getBounding();
 }

@@ -71,6 +71,21 @@ public class Sphere extends Collider {
 	}
 
 	@Override
+	public Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		if (other == null || !(other instanceof Sphere)) {
+			return destination;
+		}
+
+		Sphere sphere2 = (Sphere) other;
+
+		return destination;
+	}
+
+	@Override
 	public Collider clone() {
 		return new Sphere(radius, new Vector3f(position));
 	}
