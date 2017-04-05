@@ -240,6 +240,21 @@ public class Entity implements ISpatialObject {
 		return hasMoved;
 	}
 
+	/**
+	 * Gets the scale of the entity.
+	 *
+	 * @return The sale of the entity.
+	 */
+	public float getScale() {
+		for (IComponentEntity component : components) {
+			if (component instanceof IComponentScale) {
+				return ((IComponentScale) component).getScale();
+			}
+		}
+
+		return 1.0f;
+	}
+
 	@Override
 	public Collider getCollider() {
 		for (IComponentEntity component : components) {

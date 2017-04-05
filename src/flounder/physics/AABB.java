@@ -45,68 +45,60 @@ public class AABB extends Collider {
 		this.maxExtents = new Vector3f(source.getMaxExtents());
 	}
 
-	/**
-	 * Creates an AABB equivalent to this, but in a new position and rotation.
-	 *
-	 * @param source The source AABB.
-	 * @param position The amount to verifyMove.
-	 * @param rotation The amount to rotate.
-	 * @param scale The amount to scale the object.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 *
-	 * @return An AABB equivalent to this, but in a new position.
-	 */
-	public static AABB update(AABB source, Vector3f position, Vector3f rotation, float scale, AABB destination) {
-		if (destination == null) {
+	@Override
+	public Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination) {
+		if (destination == null || !(destination instanceof AABB)) {
 			destination = new AABB();
 		}
 
+		AABB aabb = (AABB) destination;
+
 		// Sets the destinations values to the sources.
-		destination.minExtents.set(source.minExtents);
-		destination.maxExtents.set(source.maxExtents);
+		aabb.minExtents.set(minExtents);
+		aabb.maxExtents.set(maxExtents);
 
 		// Scales the dimensions for the AABB.
 		if (scale != 1.0f) {
-			destination.setMinExtents(destination.minExtents.x * scale, destination.minExtents.y * scale, destination.minExtents.z * scale);
-			destination.setMaxExtents(destination.maxExtents.x * scale, destination.maxExtents.y * scale, destination.maxExtents.z * scale);
+			aabb.setMinExtents(aabb.minExtents.x * scale, aabb.minExtents.y * scale, aabb.minExtents.z * scale);
+			aabb.setMaxExtents(aabb.maxExtents.x * scale, aabb.maxExtents.y * scale, aabb.maxExtents.z * scale);
 		}
 
 		// Creates the 8 AABB corners and rotates them.
 		if (rotation.lengthSquared() != 0.0f) {
-			Vector3f fll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.minExtents.z);
+			Vector3f fll = new Vector3f(aabb.minExtents.x, aabb.minExtents.y, aabb.minExtents.z);
 			Vector3f.rotate(fll, rotation, fll);
 
-			Vector3f flr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.minExtents.z);
+			Vector3f flr = new Vector3f(aabb.maxExtents.x, aabb.minExtents.y, aabb.minExtents.z);
 			Vector3f.rotate(flr, rotation, flr);
 
-			Vector3f ful = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.minExtents.z);
+			Vector3f ful = new Vector3f(aabb.minExtents.x, aabb.maxExtents.y, aabb.minExtents.z);
 			Vector3f.rotate(ful, rotation, ful);
 
-			Vector3f fur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.minExtents.z);
+			Vector3f fur = new Vector3f(aabb.maxExtents.x, aabb.maxExtents.y, aabb.minExtents.z);
 			Vector3f.rotate(fur, rotation, fur);
 
-			Vector3f bur = new Vector3f(destination.maxExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+			Vector3f bur = new Vector3f(aabb.maxExtents.x, aabb.maxExtents.y, aabb.maxExtents.z);
 			Vector3f.rotate(bur, rotation, bur);
 
-			Vector3f bul = new Vector3f(destination.minExtents.x, destination.maxExtents.y, destination.maxExtents.z);
+			Vector3f bul = new Vector3f(aabb.minExtents.x, aabb.maxExtents.y, aabb.maxExtents.z);
 			Vector3f.rotate(bul, rotation, bul);
 
-			Vector3f blr = new Vector3f(destination.maxExtents.x, destination.minExtents.y, destination.maxExtents.z);
+			Vector3f blr = new Vector3f(aabb.maxExtents.x, aabb.minExtents.y, aabb.maxExtents.z);
 			Vector3f.rotate(blr, rotation, blr);
 
-			Vector3f bll = new Vector3f(destination.minExtents.x, destination.minExtents.y, destination.maxExtents.z);
+			Vector3f bll = new Vector3f(aabb.minExtents.x, aabb.minExtents.y, aabb.maxExtents.z);
 			Vector3f.rotate(bll, rotation, bll);
 
-			destination.minExtents = Maths.min(fll, Maths.min(flr, Maths.min(ful, Maths.min(fur, Maths.min(bur, Maths.min(bul, Maths.min(blr, bll)))))));
-			destination.maxExtents = Maths.max(fll, Maths.max(flr, Maths.max(ful, Maths.max(fur, Maths.max(bur, Maths.max(bul, Maths.max(blr, bll)))))));
+			aabb.minExtents = Maths.min(fll, Maths.min(flr, Maths.min(ful, Maths.min(fur, Maths.min(bur, Maths.min(bul, Maths.min(blr, bll)))))));
+			aabb.maxExtents = Maths.max(fll, Maths.max(flr, Maths.max(ful, Maths.max(fur, Maths.max(bur, Maths.max(bul, Maths.max(blr, bll)))))));
 		}
 
 		// Transforms the AABB.
-		Vector3f.add(destination.minExtents, position, destination.minExtents);
-		Vector3f.add(destination.maxExtents, position, destination.maxExtents);
+		Vector3f.add(aabb.minExtents, position, aabb.minExtents);
+		Vector3f.add(aabb.maxExtents, position, aabb.maxExtents);
 
 		// Returns the final AABB.
-		return destination;
+		return aabb;
 	}
 
 	/**
@@ -173,6 +165,11 @@ public class AABB extends Collider {
 		}
 
 		return destination;
+	}
+
+	@Override
+	public Collider clone() {
+		return new AABB(new Vector3f(minExtents), new Vector3f(maxExtents));
 	}
 
 	@Override
@@ -517,8 +514,8 @@ public class AABB extends Collider {
 	 *
 	 * @return The centre location of this AABB on the X axis.
 	 */
-	public double getCentreX() {
-		return (minExtents.getX() + maxExtents.getX()) / 2.0;
+	public float getCentreX() {
+		return (minExtents.getX() + maxExtents.getX()) / 2.0f;
 	}
 
 	/**
@@ -526,8 +523,8 @@ public class AABB extends Collider {
 	 *
 	 * @return The centre location of this AABB on the Y axis.
 	 */
-	public double getCentreY() {
-		return (minExtents.getY() + maxExtents.getY()) / 2.0;
+	public float getCentreY() {
+		return (minExtents.getY() + maxExtents.getY()) / 2.0f;
 	}
 
 	/**
@@ -535,8 +532,8 @@ public class AABB extends Collider {
 	 *
 	 * @return The centre location of this AABB on the Z axis.
 	 */
-	public double getCentreZ() {
-		return (minExtents.getZ() + maxExtents.getZ()) / 2.0;
+	public float getCentreZ() {
+		return (minExtents.getZ() + maxExtents.getZ()) / 2.0f;
 	}
 
 	/**
@@ -544,7 +541,7 @@ public class AABB extends Collider {
 	 *
 	 * @return The width of this AABB.
 	 */
-	public double getWidth() {
+	public float getWidth() {
 		return maxExtents.getX() - minExtents.getX();
 	}
 
@@ -553,7 +550,7 @@ public class AABB extends Collider {
 	 *
 	 * @return The height of this AABB.
 	 */
-	public double getHeight() {
+	public float getHeight() {
 		return maxExtents.getY() - minExtents.getY();
 	}
 
@@ -562,7 +559,7 @@ public class AABB extends Collider {
 	 *
 	 * @return The depth of this AABB.
 	 */
-	public double getDepth() {
+	public float getDepth() {
 		return maxExtents.getZ() - minExtents.getZ();
 	}
 

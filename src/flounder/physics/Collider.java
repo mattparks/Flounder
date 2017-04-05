@@ -11,6 +11,25 @@ import flounder.space.*;
  */
 public abstract class Collider {
 	/**
+	 * Clones this collider into a new object.
+	 *
+	 * @return The new object.
+	 */
+	public abstract Collider clone();
+
+	/**
+	 * Clones this collder into the destination and updates it.
+	 *
+	 * @param position The amount to move.
+	 * @param rotation The amount to rotate.
+	 * @param scale The amount to scale the object.
+	 * @param destination The collider to store the new data in.
+	 *
+	 * @return The destination.
+	 */
+	public abstract Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination);
+
+	/**
 	 * Tests whether a shape is intersecting this shape.
 	 *
 	 * @param other The other shape being tested for intersection

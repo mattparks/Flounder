@@ -56,24 +56,23 @@ public class Sphere extends Collider {
 		position = new Vector3f(source.position);
 	}
 
-	/**
-	 * Creates an sphere equivalent to this, but in a new position and scale.
-	 *
-	 * @param source The source sphere.
-	 * @param position The position for the destination sphere.
-	 * @param scale The amount to scale the object.
-	 * @param destination The destination sphere or null if a new sphere is to be created.
-	 *
-	 * @return An sphere equivalent to this, but in a new position.
-	 */
-	public static Sphere update(Sphere source, Vector3f position, float scale, Sphere destination) {
-		if (destination == null) {
-			destination = new Sphere(1.0f);
+	@Override
+	public Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination) {
+		if (destination == null || !(destination instanceof Sphere)) {
+			destination = new Sphere();
 		}
 
-		destination.radius = source.radius * scale;
-		destination.position.set(position);
-		return destination;
+		Sphere sphere = (Sphere) destination;
+
+		sphere.radius = radius * scale;
+		sphere.position.set(position);
+
+		return sphere;
+	}
+
+	@Override
+	public Collider clone() {
+		return new Sphere(radius, new Vector3f(position));
 	}
 
 	@Override

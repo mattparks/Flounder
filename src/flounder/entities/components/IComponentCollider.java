@@ -7,7 +7,7 @@ import flounder.physics.*;
  */
 public interface IComponentCollider {
 	/**
-	 * A method that can be implemented to a component that adda boundings to the entity.
+	 * A method that can be implemented to a component that adds boundings to the entity.
 	 *
 	 * @return The bounding, null if not adding one.
 	 */
