@@ -19,7 +19,7 @@ public class ModelObject extends FactoryObject {
 	private String name;
 	private MyFile file;
 
-	private AABB aabb;
+	private Collider collider;
 
 	private int vaoID;
 	private int vaoLength;
@@ -43,7 +43,7 @@ public class ModelObject extends FactoryObject {
 		this.vaoLength = -1;
 	}
 
-	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, AABB aabb, String name, MyFile file) {
+	protected void loadData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, boolean smoothShading, Collider collider, String name, MyFile file) {
 		this.vertices = vertices;
 		this.textures = textureCoords;
 		this.normals = normals;
@@ -54,7 +54,7 @@ public class ModelObject extends FactoryObject {
 		this.name = name;
 		this.file = file;
 
-		this.aabb = aabb;
+		this.collider = collider;
 
 		setDataLoaded(true);
 	}
@@ -108,8 +108,8 @@ public class ModelObject extends FactoryObject {
 		return file;
 	}
 
-	public AABB getAABB() {
-		return aabb;
+	public Collider getCollider() {
+		return collider;
 	}
 
 	public int getVaoID() {

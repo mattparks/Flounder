@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
@@ -64,7 +65,7 @@ public class AABB extends Collider {
 		}
 
 		// Creates the 8 AABB corners and rotates them.
-		if (rotation.lengthSquared() != 0.0f) {
+		if (!rotation.isZero()) {
 			Vector3f fll = new Vector3f(aabb.minExtents.x, aabb.minExtents.y, aabb.minExtents.z);
 			Vector3f.rotate(fll, rotation, fll);
 

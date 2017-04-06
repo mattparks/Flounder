@@ -259,7 +259,7 @@ public class Entity implements ISpatialObject {
 	public Collider getCollider() {
 		for (IComponentEntity component : components) {
 			if (component instanceof IComponentCollider) {
-				Collider bounding = ((IComponentCollider) component).getBounding();
+				Collider bounding = ((IComponentCollider) component).getCollider();
 
 				if (bounding != null) {
 					return bounding;

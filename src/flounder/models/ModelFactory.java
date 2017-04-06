@@ -3,6 +3,7 @@ package flounder.models;
 import flounder.factory.*;
 import flounder.loaders.*;
 import flounder.logger.*;
+import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;
@@ -172,6 +173,15 @@ public class ModelFactory extends Factory {
 		}
 
 		// Takes OpenGL comparable data and loads it into a data object.
+		/*AABB aabb = createAABB(vertices);
+		aabb.getMinExtents().x = Math.abs(aabb.getMinExtents().x);
+		aabb.getMinExtents().y = Math.abs(aabb.getMinExtents().y);
+		aabb.getMinExtents().z = Math.abs(aabb.getMinExtents().z);
+		aabb.getMaxExtents().x = Math.abs(aabb.getMaxExtents().x);
+		aabb.getMaxExtents().y = Math.abs(aabb.getMaxExtents().y);
+		aabb.getMaxExtents().z = Math.abs(aabb.getMaxExtents().z);
+		float r = Math.max(Maths.max(aabb.getMinExtents()), Maths.max(aabb.getMaxExtents()));
+		object.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, smoothShading, new Sphere(r), name, file);*/
 		object.loadData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, smoothShading, createAABB(vertices), name, file);
 	}
 
