@@ -1,11 +1,9 @@
 package flounder.physics;
 
-import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;
-import flounder.space.*;
 
 import java.util.*;
 
@@ -103,62 +101,66 @@ public class AABB extends Collider {
 	}
 
 	@Override
-	public Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) {
+	public Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) throws IllegalArgumentException {
 		if (destination == null) {
 			destination = new Vector3f();
 		}
 
-		if (other == null || !(other instanceof AABB)) {
+		if (other == null) {
+			throw new IllegalArgumentException("Null Collider.");
+		} else if (this.equals(other)) {
 			return destination;
 		}
 
-		AABB aabb2 = (AABB) other;
+		if (other instanceof AABB) {
+			AABB aabb2 = (AABB) other;
 
-		if (positionDelta.x != 0.0f) {
-			float newAmountX = positionDelta.x;
+			if (positionDelta.x != 0.0f) {
+				float newAmountX = positionDelta.x;
 
-			if (positionDelta.x >= 0.0f) {
-				// Our max == their min
-				newAmountX = aabb2.getMinExtents().getX() - getMaxExtents().getX();
-			} else {
-				// Our min == their max
-				newAmountX = aabb2.getMaxExtents().getX() - getMinExtents().getX();
+				if (positionDelta.x >= 0.0f) {
+					// Our max == their min
+					newAmountX = aabb2.getMinExtents().getX() - getMaxExtents().getX();
+				} else {
+					// Our min == their max
+					newAmountX = aabb2.getMaxExtents().getX() - getMinExtents().getX();
+				}
+
+				if (Math.abs(newAmountX) < Math.abs(positionDelta.x)) {
+					destination.x = newAmountX;
+				}
 			}
 
-			if (Math.abs(newAmountX) < Math.abs(positionDelta.x)) {
-				destination.x = newAmountX;
-			}
-		}
+			if (positionDelta.y != 0.0f) {
+				float newAmountY = positionDelta.y;
 
-		if (positionDelta.y != 0.0f) {
-			float newAmountY = positionDelta.y;
+				if (positionDelta.y >= 0.0f) {
+					// Our max == their min
+					newAmountY = aabb2.getMinExtents().getY() - getMaxExtents().getY();
+				} else {
+					// Our min == their max
+					newAmountY = aabb2.getMaxExtents().getY() - getMinExtents().getY();
+				}
 
-			if (positionDelta.y >= 0.0f) {
-				// Our max == their min
-				newAmountY = aabb2.getMinExtents().getY() - getMaxExtents().getY();
-			} else {
-				// Our min == their max
-				newAmountY = aabb2.getMaxExtents().getY() - getMinExtents().getY();
-			}
-
-			if (Math.abs(newAmountY) < Math.abs(positionDelta.y)) {
-				destination.y = newAmountY;
-			}
-		}
-
-		if (positionDelta.z != 0.0f) {
-			float newAmountZ = positionDelta.z;
-
-			if (positionDelta.z >= 0.0f) {
-				// Our max == their min
-				newAmountZ = aabb2.getMinExtents().getZ() - getMaxExtents().getZ();
-			} else {
-				// Our min == their max
-				newAmountZ = aabb2.getMaxExtents().getZ() - getMinExtents().getZ();
+				if (Math.abs(newAmountY) < Math.abs(positionDelta.y)) {
+					destination.y = newAmountY;
+				}
 			}
 
-			if (Math.abs(newAmountZ) < Math.abs(positionDelta.z)) {
-				destination.z = newAmountZ;
+			if (positionDelta.z != 0.0f) {
+				float newAmountZ = positionDelta.z;
+
+				if (positionDelta.z >= 0.0f) {
+					// Our max == their min
+					newAmountZ = aabb2.getMinExtents().getZ() - getMaxExtents().getZ();
+				} else {
+					// Our min == their max
+					newAmountZ = aabb2.getMaxExtents().getZ() - getMinExtents().getZ();
+				}
+
+				if (Math.abs(newAmountZ) < Math.abs(positionDelta.z)) {
+					destination.z = newAmountZ;
+				}
 			}
 		}
 
@@ -171,7 +173,7 @@ public class AABB extends Collider {
 	}
 
 	@Override
-	public IntersectData intersects(Collider other) {
+	public IntersectData intersects(Collider other) throws IllegalArgumentException {
 		if (other == null) {
 			throw new IllegalArgumentException("Null Collider.");
 		} else if (this.equals(other)) {
@@ -259,19 +261,16 @@ public class AABB extends Collider {
 			return new IntersectData(false, 0.0f);
 		}
 
-		if (tzmin > tmin) {
-			tmin = tzmin;
-		}
-
-		if (tzmax < tmax) {
-			tmax = tzmax;
-		}
-
 		return new IntersectData(true, 0.0f);
 	}
 
 	@Override
-	public boolean contains(Collider other) {
+	public boolean inFrustum(Frustum frustum) {
+		return frustum.cubeInFrustum(minExtents.x, minExtents.y, minExtents.z, maxExtents.x, maxExtents.y, maxExtents.z);
+	}
+
+	@Override
+	public boolean contains(Collider other) throws IllegalArgumentException {
 		if (other == null) {
 			throw new IllegalArgumentException("Null Collider.");
 		} else if (this.equals(other)) {
@@ -309,11 +308,6 @@ public class AABB extends Collider {
 		}
 
 		return true;
-	}
-
-	@Override
-	public boolean inFrustum(Frustum frustum) {
-		return frustum.cubeInFrustum(minExtents.x, minExtents.y, minExtents.z, maxExtents.x, maxExtents.y, maxExtents.z);
 	}
 
 	@Override

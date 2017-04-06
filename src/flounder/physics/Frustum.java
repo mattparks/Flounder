@@ -1,4 +1,4 @@
-package flounder.space;
+package flounder.physics;
 
 import flounder.maths.matrices.*;
 

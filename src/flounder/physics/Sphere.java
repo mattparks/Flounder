@@ -1,11 +1,9 @@
 package flounder.physics;
 
-import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;
-import flounder.space.*;
 
 import java.util.*;
 
@@ -72,18 +70,27 @@ public class Sphere extends Collider {
 	}
 
 	@Override
-	public Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) {
+	public Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) throws IllegalArgumentException {
 		if (destination == null) {
 			destination = new Vector3f();
 		}
 
-		if (other == null || !(other instanceof Sphere)) {
+		if (other == null) {
+			throw new IllegalArgumentException("Null Collider.");
+		} else if (this.equals(other)) {
 			return destination;
 		}
 
-		Sphere sphere2 = (Sphere) other;
+		if (other instanceof Sphere) {
+			Sphere sphere2 = (Sphere) other;
 
-		// TODO.
+			float d = sphere2.radius + radius;
+
+			float xDif = position.x - sphere2.position.x;
+			float yDif = position.y - sphere2.position.y;
+			float zDif = position.z - sphere2.position.z;
+			float distance = xDif * xDif + yDif * yDif + zDif * zDif;
+		}
 
 		return destination;
 	}
@@ -94,7 +101,7 @@ public class Sphere extends Collider {
 	}
 
 	@Override
-	public IntersectData intersects(Collider other) {
+	public IntersectData intersects(Collider other) throws IllegalArgumentException {
 		if (other == null) {
 			throw new IllegalArgumentException("Null Collider.");
 		} else if (this.equals(other)) {
@@ -190,6 +197,11 @@ public class Sphere extends Collider {
 	}
 
 	@Override
+	public boolean inFrustum(Frustum frustum) {
+		return frustum.sphereInFrustum(position.x, position.y, position.z, radius);
+	}
+
+	@Override
 	public boolean contains(Collider other) {
 		if (other == null) {
 			throw new IllegalArgumentException("Null Collider.");
@@ -214,11 +226,6 @@ public class Sphere extends Collider {
 	@Override
 	public boolean contains(Vector3f point) {
 		return Vector3f.getDistanceSquared(position, point) <= radius * radius;
-	}
-
-	@Override
-	public boolean inFrustum(Frustum frustum) {
-		return frustum.sphereInFrustum(position.x, position.y, position.z, radius);
 	}
 
 	@Override

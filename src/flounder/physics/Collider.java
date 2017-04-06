@@ -4,7 +4,6 @@ import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.physics.bounding.*;
-import flounder.space.*;
 
 /**
  * A simple class that represents a physical shape.
@@ -33,7 +32,7 @@ public abstract class Collider {
 	 *
 	 * @return The new, adjusted verifyMove delta that guarantees no intersection.
 	 */
-	public abstract Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination);
+	public abstract Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) throws IllegalArgumentException;
 
 	/**
 	 * Clones this collider into a new object.
@@ -61,13 +60,22 @@ public abstract class Collider {
 	public abstract IntersectData intersects(Ray other) throws IllegalArgumentException;
 
 	/**
+	 * Gets if the shape is partially in the view frustum.
+	 *
+	 * @param frustum The view frustum.
+	 *
+	 * @return If the shape is partially in the view frustum.
+	 */
+	public abstract boolean inFrustum(Frustum frustum);
+
+	/**
 	 * Tests whether another this shape completely contains the other.
 	 *
 	 * @param other The shape being tested for containment
 	 *
 	 * @return True if {@code other} is contained by this shape, false otherwise.
 	 */
-	public abstract boolean contains(Collider other);
+	public abstract boolean contains(Collider other) throws IllegalArgumentException;
 
 	/**
 	 * Gets if a point is contained in this shape.
@@ -77,15 +85,6 @@ public abstract class Collider {
 	 * @return If the point is contained in this shape.
 	 */
 	public abstract boolean contains(Vector3f point);
-
-	/**
-	 * Gets if the shape is partially in the view frustum.
-	 *
-	 * @param frustum The view frustum.
-	 *
-	 * @return If the shape is partially in the view frustum.
-	 */
-	public abstract boolean inFrustum(Frustum frustum);
 
 	/**
 	 * Gets the (optional) model to be used in the {@link BoundingRenderer}.

@@ -5,7 +5,6 @@ import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.sounds.*;
-import flounder.space.*;
 
 /**
  * A extension used with {@link flounder.camera.FlounderCamera} to define a camera.
