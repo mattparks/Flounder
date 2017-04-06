@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class Sphere extends Collider {
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "sphere.obj");
+	private static final ModelObject MODEL_OBJECT = ModelFactory.newBuilder().setFile(MODEL_FILE).create();
 
 	private float radius;
 	private Vector3f position;
@@ -229,8 +230,18 @@ public class Sphere extends Collider {
 	}
 
 	@Override
+	public float getVolume() {
+		return (4.0f / 3.0f) * (float) Math.PI * radius * radius * radius;
+	}
+
+	@Override
+	public float getSurfaceArea() {
+		return 4.0f * (float) Math.PI * radius * radius;
+	}
+
+	@Override
 	public ModelObject getRenderModel() {
-		return ModelFactory.newBuilder().setFile(MODEL_FILE).create();
+		return MODEL_OBJECT;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class AABB extends Collider {
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
+	private static final ModelObject MODEL_OBJECT = ModelFactory.newBuilder().setFile(MODEL_FILE).create();
 
 	private Vector3f minExtents;
 	private Vector3f maxExtents;
@@ -311,8 +312,21 @@ public class AABB extends Collider {
 	}
 
 	@Override
+	public float getVolume() {
+		return (maxExtents.getX() - minExtents.getX()) *
+				(maxExtents.getZ() - minExtents.getZ()) *
+				(maxExtents.getY() - minExtents.getY());
+	}
+
+	@Override
+	public float getSurfaceArea() {
+		return (2.0f * (maxExtents.getX() - minExtents.getX()) * (maxExtents.getY() - minExtents.getY())) +
+				(2.0f * (maxExtents.getZ() - minExtents.getZ()) * (maxExtents.getY() - minExtents.getY()));
+	}
+
+	@Override
 	public ModelObject getRenderModel() {
-		return ModelFactory.newBuilder().setFile(MODEL_FILE).create();
+		return MODEL_OBJECT;
 	}
 
 	@Override

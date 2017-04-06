@@ -86,6 +86,10 @@ public abstract class Collider {
 	 */
 	public abstract boolean contains(Vector3f point);
 
+	public abstract float getVolume();
+
+	public abstract float getSurfaceArea();
+
 	/**
 	 * Gets the (optional) model to be used in the {@link BoundingRenderer}.
 	 *
