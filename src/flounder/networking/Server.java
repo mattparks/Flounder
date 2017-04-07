@@ -103,9 +103,11 @@ public class Server extends Thread {
 			}
 		}
 
-		if (!alreadyConnected) {
-			this.connected.add(player);
+		if (alreadyConnected) {
+			removeConnection(player.getUsername());
 		}
+
+		this.connected.add(player);
 	}
 
 	/**

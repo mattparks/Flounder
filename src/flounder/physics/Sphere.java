@@ -77,9 +77,7 @@ public class Sphere extends Collider {
 			destination = new Vector3f();
 		}
 
-		if (other == null) {
-			throw new IllegalArgumentException("Null Collider.");
-		} else if (this.equals(other)) {
+		if (other == null || this.equals(other)) {
 			return destination;
 		}
 
@@ -104,9 +102,7 @@ public class Sphere extends Collider {
 
 	@Override
 	public IntersectData intersects(Collider other) throws IllegalArgumentException {
-		if (other == null) {
-			throw new IllegalArgumentException("Null Collider.");
-		} else if (this.equals(other)) {
+		if (other == null || this.equals(other)) {
 			return new IntersectData(true, 0.0f);
 		}
 
@@ -148,7 +144,7 @@ public class Sphere extends Collider {
 			return new IntersectData(intersects, (d * d) - distance);
 		}
 
-		return null;
+		return new IntersectData(false, 0.0f);
 	}
 
 	@Override
@@ -205,10 +201,8 @@ public class Sphere extends Collider {
 
 	@Override
 	public boolean contains(Collider other) {
-		if (other == null) {
-			throw new IllegalArgumentException("Null Collider.");
-		} else if (this.equals(other)) {
-			return true;
+		if (other == null || this.equals(other)) {
+			return false;
 		}
 
 		if (other instanceof Sphere) {

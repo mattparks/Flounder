@@ -52,6 +52,14 @@ public class Cylinder extends Collider {
 
 	@Override
 	public Vector3f resolveCollision(Collider other, Vector3f positionDelta, Vector3f destination) throws IllegalArgumentException {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		if (other == null || this.equals(other)) {
+			return destination;
+		}
+
 		return destination;
 	}
 
@@ -62,9 +70,7 @@ public class Cylinder extends Collider {
 
 	@Override
 	public IntersectData intersects(Collider other) throws IllegalArgumentException {
-		if (other == null) {
-			throw new IllegalArgumentException("Null Collider.");
-		} else if (this.equals(other)) {
+		if (other == null || this.equals(other)) {
 			return new IntersectData(true, 0.0f);
 		}
 
@@ -78,7 +84,7 @@ public class Cylinder extends Collider {
 			return new IntersectData(false, 0.0f); // TODO
 		}
 
-		return null;
+		return new IntersectData(false, 0.0f);
 	}
 
 	@Override
@@ -93,6 +99,10 @@ public class Cylinder extends Collider {
 
 	@Override
 	public boolean contains(Collider other) throws IllegalArgumentException {
+		if (other == null || this.equals(other)) {
+			return false;
+		}
+
 		return false;
 	}
 

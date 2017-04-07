@@ -108,9 +108,7 @@ public class AABB extends Collider {
 			destination = new Vector3f();
 		}
 
-		if (other == null) {
-			throw new IllegalArgumentException("Null Collider.");
-		} else if (this.equals(other)) {
+		if (other == null || this.equals(other)) {
 			return destination;
 		}
 
@@ -176,9 +174,7 @@ public class AABB extends Collider {
 
 	@Override
 	public IntersectData intersects(Collider other) throws IllegalArgumentException {
-		if (other == null) {
-			throw new IllegalArgumentException("Null Collider.");
-		} else if (this.equals(other)) {
+		if (other == null || this.equals(other)) {
 			return new IntersectData(true, 0.0f);
 		}
 
@@ -219,7 +215,7 @@ public class AABB extends Collider {
 			return new IntersectData(distanceSquared > 0.0f, (float) Math.sqrt(distanceSquared));
 		}
 
-		return null;
+		return new IntersectData(false, 0.0f);
 	}
 
 	@Override
@@ -277,10 +273,8 @@ public class AABB extends Collider {
 
 	@Override
 	public boolean contains(Collider other) throws IllegalArgumentException {
-		if (other == null) {
-			throw new IllegalArgumentException("Null Collider.");
-		} else if (this.equals(other)) {
-			return true;
+		if (other == null || this.equals(other)) {
+			return false;
 		}
 
 		if (other instanceof AABB) {
