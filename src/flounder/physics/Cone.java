@@ -1,6 +1,7 @@
 package flounder.physics;
 
 import flounder.maths.*;
+import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 
@@ -55,6 +56,22 @@ public class Cone extends Collider {
 
 	@Override
 	public IntersectData intersects(Collider other) throws IllegalArgumentException {
+		if (other == null) {
+			throw new IllegalArgumentException("Null Collider.");
+		} else if (this.equals(other)) {
+			return new IntersectData(true, 0.0f);
+		}
+
+		if (other instanceof AABB) {
+			return new IntersectData(false, 0.0f); // TODO
+		} else if (other instanceof Cone) {
+			return new IntersectData(false, 0.0f); // TODO
+		} else if (other instanceof Cylinder) {
+			return new IntersectData(false, 0.0f); // TODO
+		} else if (other instanceof Sphere) {
+			return new IntersectData(false, 0.0f); // TODO
+		}
+
 		return null;
 	}
 
@@ -86,6 +103,22 @@ public class Cone extends Collider {
 	@Override
 	public float getSurfaceArea() {
 		return 0;
+	}
+
+	@Override
+	public Matrix3f getInertiaTensor(float mass, Matrix3f destination) {
+		if (destination == null) {
+			destination = new Matrix3f();
+		}
+
+		float rSquare = radius * radius;
+		float diagXZ = 0.15f * mass * (rSquare + (0.5f * length));
+		destination.setIdentity();
+		destination.m00 = diagXZ;
+		destination.m11 = 0.3f * mass * rSquare;
+		destination.m22 = diagXZ;
+
+		return destination;
 	}
 
 	@Override

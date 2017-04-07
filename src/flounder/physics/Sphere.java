@@ -1,6 +1,7 @@
 package flounder.physics;
 
 import flounder.maths.*;
+import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;
@@ -237,6 +238,21 @@ public class Sphere extends Collider {
 	@Override
 	public float getSurfaceArea() {
 		return 4.0f * (float) Math.PI * radius * radius;
+	}
+
+	@Override
+	public Matrix3f getInertiaTensor(float mass, Matrix3f destination) {
+		if (destination == null) {
+			destination = new Matrix3f();
+		}
+
+		float diag = 0.4f * mass * radius * radius;
+		destination.setIdentity();
+		destination.m00 = diag;
+		destination.m11 = diag;
+		destination.m22 = diag;
+
+		return destination;
 	}
 
 	@Override

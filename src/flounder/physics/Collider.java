@@ -1,6 +1,7 @@
 package flounder.physics;
 
 import flounder.maths.*;
+import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.physics.bounding.*;
@@ -89,6 +90,16 @@ public abstract class Collider {
 	public abstract float getVolume();
 
 	public abstract float getSurfaceArea();
+
+	/**
+	 * Return the local inertia tensor of the collision shape. This is used in the GJK collision detection algorithm.
+	 *
+	 * @param destination The destination tensor.
+	 * @param mass The mass to calculate with.
+	 *
+	 * @return The destination tensor.
+	 */
+	public abstract Matrix3f getInertiaTensor(float mass, Matrix3f destination);
 
 	/**
 	 * Gets the (optional) model to be used in the {@link BoundingRenderer}.

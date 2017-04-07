@@ -1,6 +1,7 @@
 package flounder.physics;
 
 import flounder.maths.*;
+import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;
@@ -188,6 +189,10 @@ public class AABB extends Collider {
 			Vector3f distance2 = Vector3f.subtract(aabb.getMinExtents(), getMaxExtents(), null);
 			float maxDist = Maths.max(Maths.max(distance1, distance2));
 			return new IntersectData(maxDist < 0.0f, maxDist);
+		} else if (other instanceof Cone) {
+			return new IntersectData(false, 0.0f); // TODO
+		} else if (other instanceof Cylinder) {
+			return new IntersectData(false, 0.0f); // TODO
 		} else if (other instanceof Sphere) {
 			Sphere sphere = (Sphere) other;
 
@@ -322,6 +327,24 @@ public class AABB extends Collider {
 	public float getSurfaceArea() {
 		return (2.0f * (maxExtents.getX() - minExtents.getX()) * (maxExtents.getY() - minExtents.getY())) +
 				(2.0f * (maxExtents.getZ() - minExtents.getZ()) * (maxExtents.getY() - minExtents.getY()));
+	}
+
+	@Override
+	public Matrix3f getInertiaTensor(float mass, Matrix3f destination) {
+		if (destination == null) {
+			destination = new Matrix3f();
+		}
+
+		float factor = (1.0f / 3.0f) * mass;
+		float xSquare = getWidth();
+		float ySquare = getHeight();
+		float zSquare = getDepth();
+		destination.setIdentity();
+		destination.m00 = factor * (ySquare + zSquare);
+		destination.m11 = factor * (xSquare + zSquare);
+		destination.m22 = factor * (xSquare + ySquare);
+
+		return destination;
 	}
 
 	@Override
