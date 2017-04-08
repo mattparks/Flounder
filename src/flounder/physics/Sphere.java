@@ -81,9 +81,12 @@ public class Sphere extends Collider {
 			return destination;
 		}
 
-		if (other instanceof Sphere) {
+		if (other instanceof AABB) {
+			AABB aabb2 = (AABB) other;
+		} else if (other instanceof ConvexHull) {
+			ConvexHull hull2 = (ConvexHull) other;
+		} else if (other instanceof Sphere) {
 			Sphere sphere2 = (Sphere) other;
-
 			float d = sphere2.radius + radius;
 
 			float xDif = position.x - sphere2.position.x;
@@ -130,6 +133,9 @@ public class Sphere extends Collider {
 			}
 
 			return new IntersectData(distanceSquared > 0.0f, (float) Math.sqrt(distanceSquared));
+		} else if (other instanceof ConvexHull) {
+			ConvexHull hull2 = (ConvexHull) other;
+			return new IntersectData(false, 0.0f);
 		} else if (other instanceof Sphere) {
 			Sphere sphere = (Sphere) other;
 
@@ -278,7 +284,7 @@ public class Sphere extends Collider {
 			destination = new Colour();
 		}
 
-		return destination.set(0.0f, 1.0f, 0.0f);
+		return destination.set(0.0f, 0.0f, 1.0f);
 	}
 
 	/**

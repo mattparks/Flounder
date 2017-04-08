@@ -162,6 +162,10 @@ public class AABB extends Collider {
 					destination.z = newAmountZ;
 				}
 			}
+		} else if (other instanceof ConvexHull) {
+			ConvexHull hull2 = (ConvexHull) other;
+		} else if (other instanceof Sphere) {
+			Sphere sphere2 = (Sphere) other;
 		}
 
 		return destination;
@@ -185,10 +189,9 @@ public class AABB extends Collider {
 			Vector3f distance2 = Vector3f.subtract(aabb.getMinExtents(), getMaxExtents(), null);
 			float maxDist = Maths.max(Maths.max(distance1, distance2));
 			return new IntersectData(maxDist < 0.0f, maxDist);
-		} else if (other instanceof Cone) {
-			return new IntersectData(false, 0.0f); // TODO
-		} else if (other instanceof Cylinder) {
-			return new IntersectData(false, 0.0f); // TODO
+		} else if (other instanceof ConvexHull) {
+			ConvexHull hull2 = (ConvexHull) other;
+			return new IntersectData(false, 0.0f);
 		} else if (other instanceof Sphere) {
 			Sphere sphere = (Sphere) other;
 
