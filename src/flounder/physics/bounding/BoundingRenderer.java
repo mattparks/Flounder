@@ -90,7 +90,7 @@ public class BoundingRenderer extends Renderer {
 		MODEL_MATRIX_REUSABLE.setIdentity();
 		COLOUR_REUSABLE.set(0.0f, 0.0f, 0.0f);
 
-		Matrix4f.transformationMatrix(shape.getRenderCentre(POSITION_REUSABLE), ROTATION_REUSABLE, shape.getRenderScale(SCALE_REUSABLE), MODEL_MATRIX_REUSABLE);
+		Matrix4f.transformationMatrix(shape.getRenderCentre(POSITION_REUSABLE), shape.getRenderRotation(ROTATION_REUSABLE), shape.getRenderScale(SCALE_REUSABLE), MODEL_MATRIX_REUSABLE);
 
 		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
 		shader.getUniformVec3("colour").loadVec3(shape.getRenderColour(COLOUR_REUSABLE));

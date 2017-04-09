@@ -83,6 +83,8 @@ public class Sphere extends Collider {
 
 		if (other instanceof AABB) {
 			AABB aabb2 = (AABB) other;
+		} else if (other instanceof OBB) {
+			OBB obb2 = (OBB) other;
 		} else if (other instanceof ConvexHull) {
 			ConvexHull hull2 = (ConvexHull) other;
 		} else if (other instanceof Sphere) {
@@ -133,6 +135,9 @@ public class Sphere extends Collider {
 			}
 
 			return new IntersectData(distanceSquared > 0.0f, (float) Math.sqrt(distanceSquared));
+		} else if (other instanceof OBB) {
+			OBB obb2 = (OBB) other;
+			return new IntersectData(false, 0.0f);
 		} else if (other instanceof ConvexHull) {
 			ConvexHull hull2 = (ConvexHull) other;
 			return new IntersectData(false, 0.0f);
@@ -211,7 +216,16 @@ public class Sphere extends Collider {
 			return false;
 		}
 
-		if (other instanceof Sphere) {
+		if (other instanceof AABB) {
+			AABB aabb2 = (AABB) other;
+			return false;
+		} else if (other instanceof OBB) {
+			OBB obb2 = (OBB) other;
+			return false;
+		} else if (other instanceof ConvexHull) {
+			ConvexHull hull2 = (ConvexHull) other;
+			return false;
+		} else if (other instanceof Sphere) {
 			Sphere sphere = (Sphere) other;
 
 			return sphere.position.x + sphere.radius - 1.0f <= position.x + radius - 1.0f
@@ -267,6 +281,15 @@ public class Sphere extends Collider {
 		}
 
 		return destination.set(position);
+	}
+
+	@Override
+	public Vector3f getRenderRotation(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(0.0f, 0.0f, 0.0f);
 	}
 
 	@Override

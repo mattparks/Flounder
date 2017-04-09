@@ -118,6 +118,15 @@ public abstract class Collider {
 	public abstract Vector3f getRenderCentre(Vector3f destination);
 
 	/**
+	 * Gets the rotation for the rendered model.
+	 *
+	 * @param destination The destination for the information.
+	 *
+	 * @return The rotation for the rendered model.
+	 */
+	public abstract Vector3f getRenderRotation(Vector3f destination);
+
+	/**
 	 * Gets the scale for the rendered model.
 	 *
 	 * @param destination The destination for the information.

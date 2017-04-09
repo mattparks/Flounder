@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -162,6 +163,8 @@ public class AABB extends Collider {
 					destination.z = newAmountZ;
 				}
 			}
+		} else if (other instanceof OBB) {
+			OBB obb2 = (OBB) other;
 		} else if (other instanceof ConvexHull) {
 			ConvexHull hull2 = (ConvexHull) other;
 		} else if (other instanceof Sphere) {
@@ -189,6 +192,8 @@ public class AABB extends Collider {
 			Vector3f distance2 = Vector3f.subtract(aabb.getMinExtents(), getMaxExtents(), null);
 			float maxDist = Maths.max(Maths.max(distance1, distance2));
 			return new IntersectData(maxDist < 0.0f, maxDist);
+		} else if (other instanceof OBB) {
+			return new IntersectData(false, 0.0f);
 		} else if (other instanceof ConvexHull) {
 			ConvexHull hull2 = (ConvexHull) other;
 			return new IntersectData(false, 0.0f);
@@ -281,14 +286,22 @@ public class AABB extends Collider {
 		}
 
 		if (other instanceof AABB) {
-			AABB aabb = (AABB) other;
+			AABB aabb2 = (AABB) other;
 
-			return minExtents.getX() <= aabb.minExtents.getX() &&
-					aabb.maxExtents.getX() <= maxExtents.getX() &&
-					minExtents.getY() <= aabb.minExtents.getY() &&
-					aabb.maxExtents.getY() <= maxExtents.getY() &&
-					minExtents.getZ() <= aabb.minExtents.getZ() &&
-					aabb.maxExtents.getZ() <= maxExtents.getZ();
+			return minExtents.getX() <= aabb2.minExtents.getX() &&
+					aabb2.maxExtents.getX() <= maxExtents.getX() &&
+					minExtents.getY() <= aabb2.minExtents.getY() &&
+					aabb2.maxExtents.getY() <= maxExtents.getY() &&
+					minExtents.getZ() <= aabb2.minExtents.getZ() &&
+					aabb2.maxExtents.getZ() <= maxExtents.getZ();
+		} else if (other instanceof OBB) {
+			OBB obb2 = (OBB) other;
+			return false;
+		} else if (other instanceof ConvexHull) {
+			ConvexHull hull2 = (ConvexHull) other;
+			return false;
+		} else if (other instanceof Sphere) {
+			Sphere sphere = (Sphere) other;
 		}
 
 		return false;
@@ -357,6 +370,15 @@ public class AABB extends Collider {
 
 		Vector3f.add(getMaxExtents(), getMinExtents(), destination);
 		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
+	}
+
+	@Override
+	public Vector3f getRenderRotation(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(0.0f, 0.0f, 0.0f);
 	}
 
 	@Override
