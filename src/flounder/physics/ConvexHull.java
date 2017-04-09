@@ -48,14 +48,8 @@ public class ConvexHull extends Collider {
 			return destination;
 		}
 
-		if (other instanceof AABB) {
-			AABB aabb2 = (AABB) other;
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-		} else if (other instanceof ConvexHull) {
+		if (other instanceof ConvexHull) {
 			ConvexHull hull2 = (ConvexHull) other;
-		} else if (other instanceof Sphere) {
-			Sphere sphere2 = (Sphere) other;
 		}
 
 		return destination;
@@ -72,17 +66,8 @@ public class ConvexHull extends Collider {
 			return new IntersectData(true, 0.0f);
 		}
 
-		if (other instanceof AABB) {
-			AABB aabb2 = (AABB) other;
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof ConvexHull) {
+		if (other instanceof ConvexHull) {
 			ConvexHull hull2 = (ConvexHull) other;
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof Sphere) {
-			Sphere sphere2 = (Sphere) other;
 			return new IntersectData(false, 0.0f);
 		}
 
@@ -105,17 +90,8 @@ public class ConvexHull extends Collider {
 			return false;
 		}
 
-		if (other instanceof AABB) {
-			AABB aabb2 = (AABB) other;
-			return false;
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-			return false;
-		} else if (other instanceof ConvexHull) {
+		if (other instanceof ConvexHull) {
 			ConvexHull hull2 = (ConvexHull) other;
-			return false;
-		} else if (other instanceof Sphere) {
-			Sphere sphere2 = (Sphere) other;
 			return false;
 		}
 
@@ -145,48 +121,6 @@ public class ConvexHull extends Collider {
 
 		return destination;
 	}
-
-	@Override
-	public ModelObject getRenderModel() {
-		return null;
-	}
-
-	@Override
-	public Vector3f getRenderCentre(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(0.0f, 0.0f, 0.0f);
-	}
-
-	@Override
-	public Vector3f getRenderRotation(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(0.0f, 0.0f, 0.0f);
-	}
-
-	@Override
-	public Vector3f getRenderScale(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(1.0f, 1.0f, 1.0f);
-	}
-
-	@Override
-	public Colour getRenderColour(Colour destination) {
-		if (destination == null) {
-			destination = new Colour();
-		}
-
-		return destination.set(0.0f, 1.0f, 0.0f);
-	}
-
 
 	/**
 	 * Returns the most right/left aligned point.
@@ -403,6 +337,47 @@ public class ConvexHull extends Collider {
 
 	public boolean isLoaded() {
 		return !inputPoints.isEmpty() || !hullPoints.isEmpty();
+	}
+
+	@Override
+	public ModelObject getRenderModel() {
+		return null;
+	}
+
+	@Override
+	public Vector3f getRenderCentre(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(0.0f, 0.0f, 0.0f);
+	}
+
+	@Override
+	public Vector3f getRenderRotation(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(0.0f, 0.0f, 0.0f);
+	}
+
+	@Override
+	public Vector3f getRenderScale(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(1.0f, 1.0f, 1.0f);
+	}
+
+	@Override
+	public Colour getRenderColour(Colour destination) {
+		if (destination == null) {
+			destination = new Colour();
+		}
+
+		return destination.set(0.0f, 1.0f, 0.0f);
 	}
 
 	/**

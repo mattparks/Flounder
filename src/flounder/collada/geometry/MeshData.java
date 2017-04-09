@@ -1,5 +1,7 @@
 package flounder.collada.geometry;
 
+import flounder.physics.*;
+
 public class MeshData {
 	private float[] vertices;
 	private float[] textureCoords;
@@ -8,10 +10,9 @@ public class MeshData {
 	private int[] indices;
 	private int[] jointIds;
 	private float[] vertexWeights;
+	private AABB aabb;
 
-	private float furthestPoint;
-
-	public MeshData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, int[] jointIds, float[] vertexWeights, float furthestPoint) {
+	public MeshData(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, int[] jointIds, float[] vertexWeights, AABB aabb) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;
 		this.normals = normals;
@@ -19,8 +20,7 @@ public class MeshData {
 		this.indices = indices;
 		this.jointIds = jointIds;
 		this.vertexWeights = vertexWeights;
-
-		this.furthestPoint = furthestPoint;
+		this.aabb = aabb;
 	}
 
 	public float[] getVertices() {
@@ -51,7 +51,7 @@ public class MeshData {
 		return vertexWeights;
 	}
 
-	public float getFurthestPoint() {
-		return furthestPoint;
+	public AABB getAABB() {
+		return aabb;
 	}
 }

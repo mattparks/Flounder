@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -54,6 +55,12 @@ public class OBB extends Collider {
 		this.rotation = new Vector3f();
 	}
 
+	public OBB(AABB source) {
+		this.extents = new Vector3f(source.getWidth(), source.getHeight(), source.getDepth());
+		this.position = new Vector3f(source.getCentreX(), source.getCentreY(), source.getCentreZ());
+		this.rotation = new Vector3f();
+	}
+
 	@Override
 	public Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination) {
 		if (destination == null || !(destination instanceof OBB)) {
@@ -69,7 +76,10 @@ public class OBB extends Collider {
 		obb.extents.scale(scale);
 
 		// Sets the OBBs position and rotation.
-		obb.position.set(position);
+		obb.position.set(this.position);
+		obb.position.scale(scale);
+		Vector3f.add(position, obb.position, obb.position);
+		// obb.position.set(position);
 		obb.rotation.set(rotation);
 
 		// Returns the final OBB.
@@ -86,14 +96,8 @@ public class OBB extends Collider {
 			return destination;
 		}
 
-		if (other instanceof AABB) {
-			AABB aabb2 = (AABB) other;
-		} if (other instanceof OBB) {
+		if (other instanceof OBB) {
 			OBB obb2 = (OBB) other;
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-		} else if (other instanceof Sphere) {
-			Sphere sphere2 = (Sphere) other;
 		}
 
 		return destination;
@@ -110,14 +114,7 @@ public class OBB extends Collider {
 			return new IntersectData(true, 0.0f);
 		}
 
-		if (other instanceof AABB) {
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof OBB) {
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof Sphere) {
+		if (other instanceof OBB) {
 			return new IntersectData(false, 0.0f);
 		}
 
@@ -137,6 +134,11 @@ public class OBB extends Collider {
 	@Override
 	public boolean contains(Collider other) throws IllegalArgumentException {
 		if (other == null || this.equals(other)) {
+			return false;
+		}
+
+		if (other instanceof OBB) {
+			OBB obb2 = (OBB) other;
 			return false;
 		}
 
@@ -174,6 +176,30 @@ public class OBB extends Collider {
 		destination.m22 = factor * (xSquare + ySquare);
 
 		return destination;
+	}
+
+	public Vector3f getExtents() {
+		return extents;
+	}
+
+	public void setExtents(Vector3f extents) {
+		this.extents = extents;
+	}
+
+	public Vector3f getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vector3f position) {
+		this.position = position;
+	}
+
+	public Vector3f getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(Vector3f rotation) {
+		this.rotation = rotation;
 	}
 
 	@Override
@@ -215,30 +241,6 @@ public class OBB extends Collider {
 		}
 
 		return destination.set(0.5f, 0.5f, 0.0f);
-	}
-
-	public Vector3f getExtents() {
-		return extents;
-	}
-
-	public void setExtents(Vector3f extents) {
-		this.extents = extents;
-	}
-
-	public Vector3f getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector3f position) {
-		this.position = position;
-	}
-
-	public Vector3f getRotation() {
-		return rotation;
-	}
-
-	public void setRotation(Vector3f rotation) {
-		this.rotation = rotation;
 	}
 
 	@Override

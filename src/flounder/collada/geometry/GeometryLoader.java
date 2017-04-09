@@ -5,6 +5,7 @@ import flounder.collada.skin.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.parsing.xml.*;
+import flounder.physics.*;
 
 import java.util.*;
 
@@ -28,6 +29,7 @@ public class GeometryLoader {
 	private List<Vector2f> textures;
 	private List<Vector3f> normals;
 	private List<Integer> indices;
+	private AABB aabb;
 
 	public GeometryLoader(XmlNode geometryNode, List<VertexSkinData> vertexWeights) {
 		this.meshData = geometryNode.getChild("geometry").getChild("mesh");
@@ -38,6 +40,7 @@ public class GeometryLoader {
 		this.textures = new ArrayList<>();
 		this.normals = new ArrayList<>();
 		this.indices = new ArrayList<>();
+		this.aabb = new AABB();
 	}
 
 	public MeshData extractModelData() {
@@ -47,7 +50,7 @@ public class GeometryLoader {
 		initArrays();
 		convertDataToArrays();
 		convertIndicesListToArray();
-		return new MeshData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, jointIdsArray, weightsArray, 1);
+		return new MeshData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, jointIdsArray, weightsArray, aabb);
 	}
 
 	private void readRawData() {
@@ -68,9 +71,36 @@ public class GeometryLoader {
 			float z = Float.parseFloat(posData[i * 3 + 2]);
 			Vector4f position = new Vector4f(x, y, z, 1.0f);
 			Matrix4f.transform(FlounderCollada.CORRECTION, position, position);
+			expandAABB(position);
 			VertexData vertexNew = new VertexData(vertices.size(), new Vector3f(position.x, position.y, position.z));
 			vertexNew.setWeightsData(vertexWeights.get(vertices.size()));
 			vertices.add(vertexNew);
+		}
+	}
+
+	private void expandAABB(Vector4f newPosition) {
+		if (newPosition.x < aabb.getMinExtents().x) {
+			aabb.getMinExtents().x = newPosition.x;
+		}
+
+		if (newPosition.y < aabb.getMinExtents().y) {
+			aabb.getMinExtents().y = newPosition.y;
+		}
+
+		if (newPosition.z < aabb.getMinExtents().z) {
+			aabb.getMinExtents().z = newPosition.z;
+		}
+
+		if (newPosition.x > aabb.getMaxExtents().x) {
+			aabb.getMaxExtents().x = newPosition.x;
+		}
+
+		if (newPosition.y > aabb.getMaxExtents().y) {
+			aabb.getMaxExtents().y = newPosition.y;
+		}
+
+		if (newPosition.z > aabb.getMaxExtents().z) {
+			aabb.getMaxExtents().z = newPosition.z;
 		}
 	}
 

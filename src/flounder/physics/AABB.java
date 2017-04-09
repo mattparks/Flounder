@@ -49,58 +49,75 @@ public class AABB extends Collider {
 
 	@Override
 	public Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination) {
-		if (destination == null || !(destination instanceof AABB)) {
+		if (destination == null) {
 			destination = new AABB();
 		}
 
-		AABB aabb = (AABB) destination;
+		if (destination instanceof AABB) {
+			AABB aabb = (AABB) destination;
 
-		// Sets the destinations values to the sources.
-		aabb.minExtents.set(minExtents);
-		aabb.maxExtents.set(maxExtents);
+			// Sets the destinations values to the sources.
+			aabb.minExtents.set(minExtents);
+			aabb.maxExtents.set(maxExtents);
 
-		// Scales the dimensions for the AABB.
-		if (scale != 1.0f) {
-			aabb.setMinExtents(aabb.minExtents.x * scale, aabb.minExtents.y * scale, aabb.minExtents.z * scale);
-			aabb.setMaxExtents(aabb.maxExtents.x * scale, aabb.maxExtents.y * scale, aabb.maxExtents.z * scale);
+			// Scales the dimensions for the AABB.
+			if (scale != 1.0f) {
+				aabb.setMinExtents(aabb.minExtents.x * scale, aabb.minExtents.y * scale, aabb.minExtents.z * scale);
+				aabb.setMaxExtents(aabb.maxExtents.x * scale, aabb.maxExtents.y * scale, aabb.maxExtents.z * scale);
+			}
+
+			// Creates the 8 AABB corners and rotates them.
+			if (!rotation.isZero()) {
+				Vector3f fll = new Vector3f(aabb.minExtents.x, aabb.minExtents.y, aabb.minExtents.z);
+				Vector3f.rotate(fll, rotation, fll);
+
+				Vector3f flr = new Vector3f(aabb.maxExtents.x, aabb.minExtents.y, aabb.minExtents.z);
+				Vector3f.rotate(flr, rotation, flr);
+
+				Vector3f ful = new Vector3f(aabb.minExtents.x, aabb.maxExtents.y, aabb.minExtents.z);
+				Vector3f.rotate(ful, rotation, ful);
+
+				Vector3f fur = new Vector3f(aabb.maxExtents.x, aabb.maxExtents.y, aabb.minExtents.z);
+				Vector3f.rotate(fur, rotation, fur);
+
+				Vector3f bur = new Vector3f(aabb.maxExtents.x, aabb.maxExtents.y, aabb.maxExtents.z);
+				Vector3f.rotate(bur, rotation, bur);
+
+				Vector3f bul = new Vector3f(aabb.minExtents.x, aabb.maxExtents.y, aabb.maxExtents.z);
+				Vector3f.rotate(bul, rotation, bul);
+
+				Vector3f blr = new Vector3f(aabb.maxExtents.x, aabb.minExtents.y, aabb.maxExtents.z);
+				Vector3f.rotate(blr, rotation, blr);
+
+				Vector3f bll = new Vector3f(aabb.minExtents.x, aabb.minExtents.y, aabb.maxExtents.z);
+				Vector3f.rotate(bll, rotation, bll);
+
+				aabb.minExtents = Maths.min(fll, Maths.min(flr, Maths.min(ful, Maths.min(fur, Maths.min(bur, Maths.min(bul, Maths.min(blr, bll)))))));
+				aabb.maxExtents = Maths.max(fll, Maths.max(flr, Maths.max(ful, Maths.max(fur, Maths.max(bur, Maths.max(bul, Maths.max(blr, bll)))))));
+			}
+
+			// Transforms the AABB.
+			Vector3f.add(aabb.minExtents, position, aabb.minExtents);
+			Vector3f.add(aabb.maxExtents, position, aabb.maxExtents);
+		} else if (destination instanceof OBB) {
+			OBB obb = (OBB) destination;
+
+			// Sets the destinations values to the sources.
+			obb.getExtents().set(getWidth(), getHeight(), getDepth());
+
+			// Scales the dimensions for the OBB.
+			obb.getExtents().scale(scale);
+
+			// Sets the OBBs position and rotation.
+			obb.getPosition().set(getCentreX(), getCentreY(), getCentreZ());
+			obb.getPosition().scale(scale);
+			Vector3f.add(position, obb.getPosition(), obb.getPosition());
+			// obb.position.set(position);
+			obb.getRotation().set(rotation);
 		}
-
-		// Creates the 8 AABB corners and rotates them.
-		if (!rotation.isZero()) {
-			Vector3f fll = new Vector3f(aabb.minExtents.x, aabb.minExtents.y, aabb.minExtents.z);
-			Vector3f.rotate(fll, rotation, fll);
-
-			Vector3f flr = new Vector3f(aabb.maxExtents.x, aabb.minExtents.y, aabb.minExtents.z);
-			Vector3f.rotate(flr, rotation, flr);
-
-			Vector3f ful = new Vector3f(aabb.minExtents.x, aabb.maxExtents.y, aabb.minExtents.z);
-			Vector3f.rotate(ful, rotation, ful);
-
-			Vector3f fur = new Vector3f(aabb.maxExtents.x, aabb.maxExtents.y, aabb.minExtents.z);
-			Vector3f.rotate(fur, rotation, fur);
-
-			Vector3f bur = new Vector3f(aabb.maxExtents.x, aabb.maxExtents.y, aabb.maxExtents.z);
-			Vector3f.rotate(bur, rotation, bur);
-
-			Vector3f bul = new Vector3f(aabb.minExtents.x, aabb.maxExtents.y, aabb.maxExtents.z);
-			Vector3f.rotate(bul, rotation, bul);
-
-			Vector3f blr = new Vector3f(aabb.maxExtents.x, aabb.minExtents.y, aabb.maxExtents.z);
-			Vector3f.rotate(blr, rotation, blr);
-
-			Vector3f bll = new Vector3f(aabb.minExtents.x, aabb.minExtents.y, aabb.maxExtents.z);
-			Vector3f.rotate(bll, rotation, bll);
-
-			aabb.minExtents = Maths.min(fll, Maths.min(flr, Maths.min(ful, Maths.min(fur, Maths.min(bur, Maths.min(bul, Maths.min(blr, bll)))))));
-			aabb.maxExtents = Maths.max(fll, Maths.max(flr, Maths.max(ful, Maths.max(fur, Maths.max(bur, Maths.max(bul, Maths.max(blr, bll)))))));
-		}
-
-		// Transforms the AABB.
-		Vector3f.add(aabb.minExtents, position, aabb.minExtents);
-		Vector3f.add(aabb.maxExtents, position, aabb.maxExtents);
 
 		// Returns the final AABB.
-		return aabb;
+		return destination;
 	}
 
 	@Override
@@ -163,12 +180,6 @@ public class AABB extends Collider {
 					destination.z = newAmountZ;
 				}
 			}
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-		} else if (other instanceof Sphere) {
-			Sphere sphere2 = (Sphere) other;
 		}
 
 		return destination;
@@ -192,11 +203,6 @@ public class AABB extends Collider {
 			Vector3f distance2 = Vector3f.subtract(aabb.getMinExtents(), getMaxExtents(), null);
 			float maxDist = Maths.max(Maths.max(distance1, distance2));
 			return new IntersectData(maxDist < 0.0f, maxDist);
-		} else if (other instanceof OBB) {
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-			return new IntersectData(false, 0.0f);
 		} else if (other instanceof Sphere) {
 			Sphere sphere = (Sphere) other;
 
@@ -294,14 +300,6 @@ public class AABB extends Collider {
 					aabb2.maxExtents.getY() <= maxExtents.getY() &&
 					minExtents.getZ() <= aabb2.minExtents.getZ() &&
 					aabb2.maxExtents.getZ() <= maxExtents.getZ();
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-			return false;
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-			return false;
-		} else if (other instanceof Sphere) {
-			Sphere sphere = (Sphere) other;
 		}
 
 		return false;
@@ -355,49 +353,6 @@ public class AABB extends Collider {
 		destination.m22 = factor * (xSquare + ySquare);
 
 		return destination;
-	}
-
-	@Override
-	public ModelObject getRenderModel() {
-		return MODEL_OBJECT;
-	}
-
-	@Override
-	public Vector3f getRenderCentre(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		Vector3f.add(getMaxExtents(), getMinExtents(), destination);
-		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
-	}
-
-	@Override
-	public Vector3f getRenderRotation(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(0.0f, 0.0f, 0.0f);
-	}
-
-	@Override
-	public Vector3f getRenderScale(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		Vector3f.subtract(getMaxExtents(), getMinExtents(), destination);
-		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
-	}
-
-	@Override
-	public Colour getRenderColour(Colour destination) {
-		if (destination == null) {
-			destination = new Colour();
-		}
-
-		return destination.set(1.0f, 0.0f, 0.0f);
 	}
 
 	/**
@@ -633,6 +588,49 @@ public class AABB extends Collider {
 
 	public void setMaxExtents(float maxX, float maxY, float maxZ) {
 		this.maxExtents.set(maxX, maxY, maxZ);
+	}
+
+	@Override
+	public ModelObject getRenderModel() {
+		return MODEL_OBJECT;
+	}
+
+	@Override
+	public Vector3f getRenderCentre(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Vector3f.add(getMaxExtents(), getMinExtents(), destination);
+		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
+	}
+
+	@Override
+	public Vector3f getRenderRotation(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		return destination.set(0.0f, 0.0f, 0.0f);
+	}
+
+	@Override
+	public Vector3f getRenderScale(Vector3f destination) {
+		if (destination == null) {
+			destination = new Vector3f();
+		}
+
+		Vector3f.subtract(getMaxExtents(), getMinExtents(), destination);
+		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
+	}
+
+	@Override
+	public Colour getRenderColour(Colour destination) {
+		if (destination == null) {
+			destination = new Colour();
+		}
+
+		return destination.set(1.0f, 0.0f, 0.0f);
 	}
 
 	@Override

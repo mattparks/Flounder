@@ -25,9 +25,7 @@ public class ModelAnimated {
 
 		this.file = file;
 
-		float furthest = meshData.getFurthestPoint(); // TODOss
-		// this.collider = new Sphere(4.5f);
-		this.collider = new AABB(new Vector3f(-2, 0, -2), new Vector3f(2, 9, 2));//new AABB(new Vector3f(-furthest, -furthest, -furthest), new Vector3f(furthest, furthest, furthest));
+		this.collider = meshData.getAABB();
 
 		this.skeletonData = skeletonData;
 		this.headJoint = createJoints(skeletonData.getHeadJoint());

@@ -81,13 +81,7 @@ public class Sphere extends Collider {
 			return destination;
 		}
 
-		if (other instanceof AABB) {
-			AABB aabb2 = (AABB) other;
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-		} else if (other instanceof Sphere) {
+		if (other instanceof Sphere) {
 			Sphere sphere2 = (Sphere) other;
 			float d = sphere2.radius + radius;
 
@@ -135,12 +129,6 @@ public class Sphere extends Collider {
 			}
 
 			return new IntersectData(distanceSquared > 0.0f, (float) Math.sqrt(distanceSquared));
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-			return new IntersectData(false, 0.0f);
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-			return new IntersectData(false, 0.0f);
 		} else if (other instanceof Sphere) {
 			Sphere sphere = (Sphere) other;
 
@@ -216,16 +204,7 @@ public class Sphere extends Collider {
 			return false;
 		}
 
-		if (other instanceof AABB) {
-			AABB aabb2 = (AABB) other;
-			return false;
-		} else if (other instanceof OBB) {
-			OBB obb2 = (OBB) other;
-			return false;
-		} else if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-			return false;
-		} else if (other instanceof Sphere) {
+		if (other instanceof Sphere) {
 			Sphere sphere = (Sphere) other;
 
 			return sphere.position.x + sphere.radius - 1.0f <= position.x + radius - 1.0f
@@ -269,6 +248,33 @@ public class Sphere extends Collider {
 		return destination;
 	}
 
+	/**
+	 * Gets the radius of the sphere.
+	 *
+	 * @return The radius of the sphere.
+	 */
+	public float getRadius() {
+		return radius;
+	}
+
+	/**
+	 * Sets the radius of the sphere.
+	 *
+	 * @param radius The new sphere radius.
+	 */
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+
+	/**
+	 * Gets the radius of the position.
+	 *
+	 * @return The radius of the position.
+	 */
+	public Vector3f getPosition() {
+		return position;
+	}
+
 	@Override
 	public ModelObject getRenderModel() {
 		return MODEL_OBJECT;
@@ -308,33 +314,6 @@ public class Sphere extends Collider {
 		}
 
 		return destination.set(0.0f, 0.0f, 1.0f);
-	}
-
-	/**
-	 * Gets the radius of the sphere.
-	 *
-	 * @return The radius of the sphere.
-	 */
-	public float getRadius() {
-		return radius;
-	}
-
-	/**
-	 * Sets the radius of the sphere.
-	 *
-	 * @param radius The new sphere radius.
-	 */
-	public void setRadius(float radius) {
-		this.radius = radius;
-	}
-
-	/**
-	 * Gets the radius of the position.
-	 *
-	 * @return The radius of the position.
-	 */
-	public Vector3f getPosition() {
-		return position;
 	}
 
 	@Override
