@@ -63,6 +63,8 @@ public class GuisRenderer extends Renderer {
 
 		OpenGlUtils.bindVAO(vaoID, 0);
 		OpenGlUtils.bindTexture(gui.getTexture(), 0);
+		//	GL11.glEnable(GL11.GL_SCISSOR_TEST); // TODO: Scissor test for scroll panels.
+		//	GL11.glScissor(x, y, width, height);
 		shader.getUniformVec2("size").loadVec2(gui.getMeshSize());
 		shader.getUniformVec4("transform").loadVec4(
 				gui.getScreenPosition().x, gui.getScreenPosition().y,

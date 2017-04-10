@@ -65,6 +65,8 @@ public class FontRenderer extends Renderer {
 
 		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
 		OpenGlUtils.bindTexture(text.getFont().getTexture(), 0);
+		//	GL11.glEnable(GL11.GL_SCISSOR_TEST); // TODO: Scissor test for scroll panels.
+		//	GL11.glScissor(x, y, width, height);
 		shader.getUniformVec2("size").loadVec2(text.getMeshSize());
 		shader.getUniformVec4("transform").loadVec4(
 				text.getScreenPosition().x, text.getScreenPosition().y,
