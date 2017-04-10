@@ -16,6 +16,7 @@ public class ModelAnimated {
 	private MyFile file;
 
 	private Collider collider;
+	private QuickHull quickHull;
 
 	private int vaoID;
 	private int vaoLength;
@@ -26,6 +27,9 @@ public class ModelAnimated {
 		this.file = file;
 
 		this.collider = meshData.getAABB();
+		this.quickHull = new QuickHull();
+
+		this.quickHull.loadData(meshData.getVertices());
 
 		this.skeletonData = skeletonData;
 		this.headJoint = createJoints(skeletonData.getHeadJoint());
@@ -64,6 +68,10 @@ public class ModelAnimated {
 
 	public Collider getCollider() {
 		return collider;
+	}
+
+	public QuickHull getQuickHull() {
+		return quickHull;
 	}
 
 	public int getVaoID() {

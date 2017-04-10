@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -10,7 +11,7 @@ import java.util.*;
 /**
  * This algorithm calculates the convex hull for a given set of points. This is a Java port of the algorithm written in PHP by Jakob Westhoff.
  */
-public class ConvexHull extends Collider {
+public class QuickHull extends Collider {
 	private List<Vector3f> inputPoints;
 	private List<Vector3f> hullPoints;
 	private Matrix4f modelMatrix;
@@ -19,20 +20,62 @@ public class ConvexHull extends Collider {
 	/**
 	 * Initializes the QuickHull algorithm with no values.
 	 */
-	public ConvexHull() {
+	public QuickHull() {
 		inputPoints = new ArrayList<>();
 		hullPoints = new ArrayList<>();
 		modelMatrix = new Matrix4f();
 		iterativeProceeding = false;
 	}
 
+	/**
+	 * Initializes the QuickHull algorithm with a point cloud.
+	 *
+	 * @param points The point cloud to put in.
+	 */
+	public QuickHull(List<Vector3f> points) {
+		inputPoints = points;
+		hullPoints = new ArrayList<>();
+		modelMatrix = new Matrix4f();
+		iterativeProceeding = false;
+	}
+
+	/**
+	 * Initializes the QuickHull algorithm with a point cloud.
+	 *
+	 * @param points The point cloud to put in.
+	 * @param iterative Flag to indicate how the algorithm should work.
+	 */
+	public QuickHull(List<Vector3f> points, boolean iterative) {
+		inputPoints = points;
+		hullPoints = new ArrayList<>();
+		modelMatrix = new Matrix4f();
+		iterativeProceeding = iterative;
+	}
+
+	public QuickHull(List<Vector3f> inputPoints, List<Vector3f> hullPoints, boolean iterativeProceeding) {
+		this.inputPoints = inputPoints;
+		this.hullPoints = hullPoints;
+		this.modelMatrix = new Matrix4f();
+		this.iterativeProceeding = iterativeProceeding;
+	}
+
 	@Override
 	public Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination) {
-		if (destination == null || !(destination instanceof ConvexHull)) {
-			destination = new ConvexHull();
+		if (destination == null || !(destination instanceof QuickHull)) {
+			destination = new QuickHull();
 		}
 
-		ConvexHull hull = (ConvexHull) destination;
+		QuickHull hull = (QuickHull) destination;
+
+		if (!this.equals(destination)) {
+			hull.inputPoints.clear();
+			hull.inputPoints.addAll(inputPoints);
+
+			hull.hullPoints.clear();
+			hull.hullPoints.addAll(hullPoints);
+		}
+
+		Matrix4f.transformationMatrix(position, rotation, scale, hull.modelMatrix);
 
 		// Returns the final Convex Hull.
 		return hull;
@@ -48,8 +91,9 @@ public class ConvexHull extends Collider {
 			return destination;
 		}
 
-		if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
+		if (other instanceof QuickHull) {
+			QuickHull hull2 = (QuickHull) other;
+			// TODO
 		}
 
 		return destination;
@@ -57,7 +101,7 @@ public class ConvexHull extends Collider {
 
 	@Override
 	public Collider clone() {
-		return null;
+		return new QuickHull(this.inputPoints, this.hullPoints, this.iterativeProceeding);
 	}
 
 	@Override
@@ -66,8 +110,9 @@ public class ConvexHull extends Collider {
 			return new IntersectData(true, 0.0f);
 		}
 
-		if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
+		if (other instanceof QuickHull) {
+			QuickHull hull2 = (QuickHull) other;
+			// TODO
 			return new IntersectData(false, 0.0f);
 		}
 
@@ -76,12 +121,12 @@ public class ConvexHull extends Collider {
 
 	@Override
 	public IntersectData intersects(Ray other) throws IllegalArgumentException {
-		return null;
+		return null; // Done with AABB / Sphere.
 	}
 
 	@Override
 	public boolean inFrustum(Frustum frustum) {
-		return false;
+		return false; // Done with AABB / Sphere.
 	}
 
 	@Override
@@ -90,9 +135,9 @@ public class ConvexHull extends Collider {
 			return false;
 		}
 
-		if (other instanceof ConvexHull) {
-			ConvexHull hull2 = (ConvexHull) other;
-			return false;
+		if (other instanceof QuickHull) {
+			QuickHull hull2 = (QuickHull) other;
+			return false; // Done with AABB / Sphere.
 		}
 
 		return false;
@@ -100,26 +145,41 @@ public class ConvexHull extends Collider {
 
 	@Override
 	public boolean contains(Vector3f point) {
-		return false;
+		return false; // Done with AABB / Sphere.
 	}
 
-	@Override
-	public float getVolume() {
-		return 0;
+	public void loadData(List<Vector3f> points) {
+		this.inputPoints.clear();
+		this.inputPoints.addAll(points);
+		this.hullPoints = getHullPoints();
 	}
 
-	@Override
-	public float getSurfaceArea() {
-		return 0;
-	}
+	public void loadData(float[] vertices) {
+		List<Vector3f> points = new ArrayList<>();
+		Vector3f v = new Vector3f();
+		int w = 0;
 
-	@Override
-	public Matrix3f getInertiaTensor(float mass, Matrix3f destination) {
-		if (destination == null) {
-			destination = new Matrix3f();
+		for (int i = 0; i < vertices.length; i++) {
+			if (w == 0) {
+				v.x = vertices[i];
+				w++;
+			} else if (w == 1) {
+				v.y = vertices[i];
+				w++;
+			} else if (w == 2) {
+				v.z = vertices[i];
+				points.add(new Vector3f(v));
+				v = new Vector3f();
+				w = 0;
+			}
 		}
 
-		return destination;
+		loadData(points);
+
+	//	FlounderLogger.log("=====================================");
+	//	for (Vector3f hp : hullPoints) {
+	//		FlounderLogger.log(hp);
+	//	}
 	}
 
 	/**

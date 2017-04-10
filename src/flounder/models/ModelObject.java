@@ -20,6 +20,7 @@ public class ModelObject extends FactoryObject {
 	private MyFile file;
 
 	private Collider collider;
+	private QuickHull quickHull;
 
 	private int vaoID;
 	private int vaoLength;
@@ -39,6 +40,9 @@ public class ModelObject extends FactoryObject {
 		this.name = null;
 		this.file = null;
 
+		this.collider = null;
+		this.quickHull = new QuickHull();
+
 		this.vaoID = -1;
 		this.vaoLength = -1;
 	}
@@ -55,6 +59,7 @@ public class ModelObject extends FactoryObject {
 		this.file = file;
 
 		this.collider = collider;
+		this.quickHull.loadData(vertices);
 
 		setDataLoaded(true);
 	}
@@ -110,6 +115,10 @@ public class ModelObject extends FactoryObject {
 
 	public Collider getCollider() {
 		return collider;
+	}
+
+	public QuickHull getQuickHull() {
+		return quickHull;
 	}
 
 	public int getVaoID() {
