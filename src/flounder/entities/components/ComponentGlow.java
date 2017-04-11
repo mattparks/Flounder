@@ -4,13 +4,14 @@ import flounder.entities.*;
 import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.resources.*;
+import flounder.shaders.*;
 import flounder.textures.*;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class ComponentGlow extends IComponentEntity implements IComponentEditor {
+public class ComponentGlow extends IComponentEntity implements IComponentRender, IComponentEditor {
 	private TextureObject textureGlow;
 
 	private MyFile editorPathTexture;
@@ -46,6 +47,20 @@ public class ComponentGlow extends IComponentEntity implements IComponentEditor 
 
 	public void setTextureGlow(TextureObject textureGlow) {
 		this.textureGlow = textureGlow;
+	}
+
+	@Override
+	public void render(ShaderObject shader, Single<Integer> vaoLength) {
+		shader.getUniformBool("useGlowMap").loadBoolean(true);
+
+		if (textureGlow != null && textureGlow.isLoaded()) {
+			OpenGlUtils.bindTexture(textureGlow, 1);
+		}
+	}
+
+	@Override
+	public void renderClear(ShaderObject shader) {
+		shader.getUniformBool("useGlowMap").loadBoolean(false);
 	}
 
 	@Override

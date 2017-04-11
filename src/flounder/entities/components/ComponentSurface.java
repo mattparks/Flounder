@@ -2,6 +2,7 @@ package flounder.entities.components;
 
 import flounder.entities.*;
 import flounder.helpers.*;
+import flounder.shaders.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -10,7 +11,7 @@ import java.awt.event.*;
 /**
  * Creates a set of lighting data for a entity.
  */
-public class ComponentSurface extends IComponentEntity implements IComponentEditor {
+public class ComponentSurface extends IComponentEntity implements IComponentRender, IComponentEditor {
 	private float shineDamper;
 	private float reflectivity;
 
@@ -79,6 +80,22 @@ public class ComponentSurface extends IComponentEntity implements IComponentEdit
 
 	public void setIgnoreFog(boolean ignoreFog) {
 		this.ignoreFog = ignoreFog;
+	}
+
+	@Override
+	public void render(ShaderObject shader, Single<Integer> vaoLength) {
+		shader.getUniformFloat("shineDamper").loadFloat(shineDamper);
+		shader.getUniformFloat("reflectivity").loadFloat(reflectivity);
+		shader.getUniformBool("ignoreFog").loadBoolean(ignoreFog);
+		shader.getUniformBool("ignoreLighting").loadBoolean(ignoreLighting);
+	}
+
+	@Override
+	public void renderClear(ShaderObject shader) {
+		shader.getUniformFloat("shineDamper").loadFloat(1.0f);
+		shader.getUniformFloat("reflectivity").loadFloat(0.0f);
+		shader.getUniformBool("ignoreFog").loadBoolean(false);
+		shader.getUniformBool("ignoreLighting").loadBoolean(false);
 	}
 
 	@Override

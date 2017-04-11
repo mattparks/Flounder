@@ -1,5 +1,8 @@
 package flounder.entities;
 
+import flounder.helpers.*;
+import flounder.shaders.*;
+
 /**
  * Defines a function to be called when rendering the entity.
  */
@@ -9,6 +12,11 @@ public interface IComponentRender {
 	 * If the entity is null the this should clear any data that is not wanted for the entity when the component is absent.
 	 * <p>
 	 * For example a animation component loads animation matrices and flips animated to true in the shader. If the entity is null animated should be false.
+	 *
+	 * @param shader The shader to add info to.
+	 * @param vaoLength The length of the vao, change if this is a model component.
 	 */
-	void render();
+	void render(ShaderObject shader, Single<Integer> vaoLength);
+
+	void renderClear(ShaderObject shader);
 }

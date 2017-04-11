@@ -5,13 +5,14 @@ import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.resources.*;
+import flounder.shaders.*;
 import flounder.textures.*;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class ComponentSway extends IComponentEntity implements IComponentEditor {
+public class ComponentSway extends IComponentEntity implements IComponentRender, IComponentEditor {
 	private TextureObject textureSway;
 
 	private MyFile editorPathTexture;
@@ -61,6 +62,21 @@ public class ComponentSway extends IComponentEntity implements IComponentEditor 
 		float windPower = 0.24f;
 		float systemTime = Framework.getTimeSec() * wz;
 		return windPower * (float) (Math.cos(0.25 * systemTime) - Math.cos(1.2 * systemTime) + Math.sin(0.5 * systemTime));
+	}
+
+	@Override
+	public void render(ShaderObject shader, Single<Integer> vaoLength) {
+		shader.getUniformBool("swaying").loadBoolean(true);
+		shader.getUniformVec2("swayOffset").loadVec2(getSwayOffsetX(), getSwayOffsetZ());
+
+		if (textureSway != null && textureSway.isLoaded()) {
+			OpenGlUtils.bindTexture(textureSway, 2);
+		}
+	}
+
+	@Override
+	public void renderClear(ShaderObject shader) {
+		shader.getUniformBool("swaying").loadBoolean(false);
 	}
 
 	@Override

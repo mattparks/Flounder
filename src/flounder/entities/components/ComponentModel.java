@@ -10,6 +10,7 @@ import flounder.models.*;
 import flounder.physics.*;
 import flounder.physics.bounding.*;
 import flounder.resources.*;
+import flounder.shaders.*;
 import flounder.textures.*;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ import java.io.*;
 /**
  * Creates a model with a texture that can be rendered into the world.
  */
-public class ComponentModel extends IComponentEntity implements IComponentEditor, IComponentScale, IComponentCollider {
+public class ComponentModel extends IComponentEntity implements IComponentCollider, IComponentScale, IComponentRender, IComponentEditor {
 	private float scale;
 	private ModelObject model;
 	private Matrix4f modelMatrix;
@@ -141,6 +142,73 @@ public class ComponentModel extends IComponentEntity implements IComponentEditor
 
 	public void setColourOffset(Colour colourOffset) {
 		this.colourOffset.set(colourOffset);
+	}
+
+	@Override
+	public float getScale() {
+		return scale;
+	}
+
+	/**
+	 * Sets the scale for this model.
+	 *
+	 * @param scale The new scale.
+	 */
+	public void setScale(float scale) {
+		this.scale = scale;
+		getEntity().setMoved();
+	}
+
+	@Override
+	public Collider getCollider() {
+		return collider;
+	}
+
+	@Override
+	public void render(ShaderObject shader, Single<Integer> vaoLength) {
+		if (vaoLength.getSingle() == -1) {
+			return;
+		}
+
+		if (model != null && model.isLoaded()) {
+			OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3);
+			shader.getUniformBool("animated").loadBoolean(false);
+
+			if (modelMatrix != null) {
+				shader.getUniformMat4("modelMatrix").loadMat4(modelMatrix);
+			}
+
+			if (collider != null) {
+				float height = 0.0f;
+
+				if (collider instanceof AABB) {
+					height = ((AABB) collider).getHeight();
+				} else if (collider instanceof Sphere) {
+					height = 2.0f * ((Sphere) collider).getRadius();
+				}
+
+				shader.getUniformFloat("swayHeight").loadFloat(height);
+			}
+
+			vaoLength.setSingle(model.getVaoLength());
+		}
+
+		if (texture != null && texture.isLoaded()) {
+			shader.getUniformFloat("atlasRows").loadFloat(texture.getNumberOfRows());
+			shader.getUniformVec2("atlasOffset").loadVec2(getTextureOffset());
+			shader.getUniformVec3("colourOffset").loadVec3(colourOffset);
+			OpenGlUtils.cullBackFaces(!texture.hasAlpha());
+			OpenGlUtils.bindTexture(texture, 0);
+		}
+	}
+
+	@Override
+	public void renderClear(ShaderObject shader) {
+		shader.getUniformBool("animated").loadBoolean(false);
+		shader.getUniformFloat("swayHeight").loadFloat(0.0f);
+		shader.getUniformFloat("atlasRows").loadFloat(1);
+		shader.getUniformVec2("atlasOffset").loadVec2(0.0f, 0.0f);
+		shader.getUniformVec3("colourOffset").loadVec3(0.0f, 0.0f, 0.0f);
 	}
 
 	@Override
@@ -276,26 +344,6 @@ public class ComponentModel extends IComponentEntity implements IComponentEditor
 				new String[]{"private static final ModelObject MODEL = " + saveModel, "private static final TextureObject TEXTURE = " + saveTexture}, // Static variables
 				new String[]{saveScale, "MODEL", "TEXTURE", saveTextureIndex} // Class constructor
 		);
-	}
-
-	@Override
-	public float getScale() {
-		return scale;
-	}
-
-	/**
-	 * Sets the scale for this model.
-	 *
-	 * @param scale The new scale.
-	 */
-	public void setScale(float scale) {
-		this.scale = scale;
-		getEntity().setMoved();
-	}
-
-	@Override
-	public Collider getCollider() {
-		return collider;
 	}
 
 	@Override

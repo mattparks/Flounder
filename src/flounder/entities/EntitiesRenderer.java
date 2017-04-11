@@ -45,7 +45,7 @@ public class EntitiesRenderer extends Renderer {
 		prepareRendering(clipPlane, camera);
 
 		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : FlounderEntities.getEntities().queryInFrustum(FlounderCamera.getCamera().getViewFrustum())) {
+			for (Entity entity : FlounderEntities.getEntities().queryInFrustum(camera.getViewFrustum())) {
 				renderEntity(entity);
 			}
 		}
@@ -71,119 +71,23 @@ public class EntitiesRenderer extends Renderer {
 			return;
 		}
 
-		//	if (!renderPlayer && entity.getComponent(ComponentPlayer.class) != null) {
-		//		return; // TODO
-		//	}
+		OpenGlUtils.bindTexture(textureUndefined, 0);
+		Single<Integer> vaoLength = new Single<>(0);
 
-		ComponentModel componentModel = (ComponentModel) entity.getComponent(ComponentModel.class);
-		ComponentAnimation componentAnimation = (ComponentAnimation) entity.getComponent(ComponentAnimation.class);
-		ComponentSurface componentSurface = (ComponentSurface) entity.getComponent(ComponentSurface.class);
-		ComponentGlow componentGlow = (ComponentGlow) entity.getComponent(ComponentGlow.class);
-		ComponentSway componentSway = (ComponentSway) entity.getComponent(ComponentSway.class);
-		int vaoLength;
-
-		if (componentModel != null && componentModel.getModel() != null && componentModel.getModel().isLoaded()) {
-			OpenGlUtils.bindVAO(componentModel.getModel().getVaoID(), 0, 1, 2, 3);
-			shader.getUniformBool("animated").loadBoolean(false);
-
-			if (componentModel.getModelMatrix() != null) {
-				shader.getUniformMat4("modelMatrix").loadMat4(componentModel.getModelMatrix());
+		for (IComponentEntity component : entity.getComponents()) {
+			if (component instanceof IComponentRender) {
+				((IComponentRender) component).render(shader, vaoLength);
 			}
-
-			if (componentModel.getModel().getCollider() != null) {
-				float height = 0.0f;
-
-				if (componentModel.getModel().getCollider() instanceof AABB) {
-					height = ((AABB) componentModel.getModel().getCollider()).getHeight();
-				} else if (componentModel.getModel().getCollider() instanceof Sphere) {
-					height = 2.0f * ((Sphere) componentModel.getModel().getCollider()).getRadius();
-				}
-
-				shader.getUniformFloat("swayHeight").loadFloat(height);
-			}
-
-			vaoLength = componentModel.getModel().getVaoLength();
-		} else if (componentAnimation != null && componentAnimation.getModel() != null && componentAnimation.getModel().isLoaded()) {
-			OpenGlUtils.bindVAO(componentAnimation.getModel().getVaoID(), 0, 1, 2, 3, 4, 5);
-			shader.getUniformBool("animated").loadBoolean(true);
-
-			if (componentAnimation.getModelMatrix() != null) {
-				shader.getUniformMat4("modelMatrix").loadMat4(componentAnimation.getModelMatrix());
-			}
-
-			// Just stop if you are trying to apply a sway to a animated object, rethink life.
-			shader.getUniformFloat("swayHeight").loadFloat(0.0f);
-			vaoLength = componentAnimation.getModel().getVaoLength();
-
-			// Loads joint transforms.
-			Matrix4f[] jointMatrices = componentAnimation.getJointTransforms();
-
-			for (int i = 0; i < jointMatrices.length; i++) {
-				shader.getUniformMat4("jointTransforms[" + i + "]").loadMat4(jointMatrices[i]);
-			}
-		} else {
-			// No model, so no render!
-			return;
 		}
 
-		if (componentModel != null && componentModel.getTexture() != null && componentModel.getTexture().isLoaded()) {
-			shader.getUniformFloat("atlasRows").loadFloat(componentModel.getTexture().getNumberOfRows());
-			shader.getUniformVec2("atlasOffset").loadVec2(componentModel.getTextureOffset());
-			shader.getUniformVec3("colourOffset").loadVec3(componentModel.getColourOffset());
-			OpenGlUtils.cullBackFaces(!componentModel.getTexture().hasAlpha());
-			OpenGlUtils.bindTexture(componentModel.getTexture(), 0);
-		} else if (componentAnimation != null && componentAnimation.getTexture() != null && componentAnimation.getTexture().isLoaded()) {
-			shader.getUniformFloat("atlasRows").loadFloat(componentAnimation.getTexture().getNumberOfRows());
-			shader.getUniformVec2("atlasOffset").loadVec2(componentAnimation.getTextureOffset());
-			shader.getUniformVec3("colourOffset").loadVec3(componentAnimation.getColourOffset());
-			OpenGlUtils.cullBackFaces(!componentAnimation.getTexture().hasAlpha());
-			OpenGlUtils.bindTexture(componentAnimation.getTexture(), 0);
-		} else if (textureUndefined != null && textureUndefined.isLoaded()) {
-			// No texture, so load a 'undefined' texture.
-			shader.getUniformFloat("atlasRows").loadFloat(textureUndefined.getNumberOfRows());
-			shader.getUniformVec2("atlasOffset").loadVec2(0, 0);
-			shader.getUniformVec3("colourOffset").loadVec3(0.0f, 0.0f, 0.0f);
-			OpenGlUtils.cullBackFaces(!textureUndefined.hasAlpha());
-			OpenGlUtils.bindTexture(textureUndefined, 0);
+		if (vaoLength.getSingle() > 0) {
+			OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, vaoLength.getSingle());
 		}
 
-		if (componentSurface != null) {
-			shader.getUniformFloat("shineDamper").loadFloat(componentSurface.getShineDamper());
-			shader.getUniformFloat("reflectivity").loadFloat(componentSurface.getReflectivity());
-
-			shader.getUniformBool("ignoreFog").loadBoolean(componentSurface.isIgnoreFog());
-			shader.getUniformBool("ignoreLighting").loadBoolean(componentSurface.isIgnoreLighting());
-		} else {
-			shader.getUniformFloat("shineDamper").loadFloat(1.0f);
-			shader.getUniformFloat("reflectivity").loadFloat(0.0f);
-
-			shader.getUniformBool("ignoreFog").loadBoolean(false);
-			shader.getUniformBool("ignoreLighting").loadBoolean(false);
-		}
-
-		if (componentGlow != null) {
-			shader.getUniformBool("useGlowMap").loadBoolean(true);
-
-			if (componentGlow.getTextureGlow() != null && componentGlow.getTextureGlow().isLoaded()) {
-				OpenGlUtils.bindTexture(componentGlow.getTextureGlow(), 1);
+		for (IComponentEntity component : entity.getComponents()) {
+			if (component instanceof IComponentRender) {
+				((IComponentRender) component).renderClear(shader);
 			}
-		} else {
-			shader.getUniformBool("useGlowMap").loadBoolean(false);
-		}
-
-		if (componentSway != null) {
-			shader.getUniformBool("swaying").loadBoolean(true);
-			shader.getUniformVec2("swayOffset").loadVec2(componentSway.getSwayOffsetX(), componentSway.getSwayOffsetZ());
-
-			if (componentSway.getTextureSway() != null && componentSway.getTextureSway().isLoaded()) {
-				OpenGlUtils.bindTexture(componentSway.getTextureSway(), 2);
-			}
-		} else {
-			shader.getUniformBool("swaying").loadBoolean(false);
-		}
-
-		if (vaoLength > 0) {
-			OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, vaoLength);
 		}
 
 		OpenGlUtils.unbindVAO(0, 1, 2, 3, 4, 5);

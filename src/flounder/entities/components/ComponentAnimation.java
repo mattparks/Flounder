@@ -12,6 +12,7 @@ import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.physics.bounding.*;
 import flounder.resources.*;
+import flounder.shaders.*;
 import flounder.textures.*;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ import java.io.*;
 /**
  * Creates a animation used to set animation properties.
  */
-public class ComponentAnimation extends IComponentEntity implements IComponentEditor, IComponentScale, IComponentCollider {
+public class ComponentAnimation extends IComponentEntity implements IComponentCollider, IComponentScale, IComponentRender, IComponentEditor {
 	private float scale;
 	private ModelAnimated model;
 	private Matrix4f modelMatrix;
@@ -256,6 +257,70 @@ public class ComponentAnimation extends IComponentEntity implements IComponentEd
 	}
 
 	@Override
+	public Collider getCollider() {
+		return collider;
+	}
+
+	@Override
+	public float getScale() {
+		return scale;
+	}
+
+	/**
+	 * Sets the scale for this model.
+	 *
+	 * @param scale The new scale.
+	 */
+	public void setScale(float scale) {
+		this.scale = scale;
+		getEntity().setMoved();
+	}
+
+	@Override
+	public void render(ShaderObject shader, Single<Integer> vaoLength) {
+		if (vaoLength.getSingle() == -1) {
+			return;
+		}
+
+		if (model != null && model.isLoaded()) {
+			OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3, 4, 5);
+			shader.getUniformBool("animated").loadBoolean(true);
+
+			if (modelMatrix != null) {
+				shader.getUniformMat4("modelMatrix").loadMat4(modelMatrix);
+			}
+
+			// Just stop if you are trying to apply a sway to a animated object, rethink life.
+			shader.getUniformFloat("swayHeight").loadFloat(0.0f);
+			vaoLength.setSingle(model.getVaoLength());
+
+			// Loads joint transforms.
+			Matrix4f[] jointMatrices = getJointTransforms();
+
+			for (int i = 0; i < jointMatrices.length; i++) {
+				shader.getUniformMat4("jointTransforms[" + i + "]").loadMat4(jointMatrices[i]);
+			}
+		}
+
+		if (texture != null && texture.isLoaded()) {
+			shader.getUniformFloat("atlasRows").loadFloat(texture.getNumberOfRows());
+			shader.getUniformVec2("atlasOffset").loadVec2(getTextureOffset());
+			shader.getUniformVec3("colourOffset").loadVec3(colourOffset);
+			OpenGlUtils.cullBackFaces(!texture.hasAlpha());
+			OpenGlUtils.bindTexture(texture, 0);
+		}
+	}
+
+	@Override
+	public void renderClear(ShaderObject shader) {
+		shader.getUniformBool("animated").loadBoolean(false);
+		shader.getUniformFloat("swayHeight").loadFloat(0.0f);
+		shader.getUniformFloat("atlasRows").loadFloat(1);
+		shader.getUniformVec2("atlasOffset").loadVec2(0.0f, 0.0f);
+		shader.getUniformVec3("colourOffset").loadVec3(0.0f, 0.0f, 0.0f);
+	}
+
+	@Override
 	public void addToPanel(JPanel panel) {
 		// Load Collada.
 		JButton loadCollada = new JButton("Select Collada");
@@ -392,26 +457,6 @@ public class ComponentAnimation extends IComponentEntity implements IComponentEd
 				new String[]{"private static final MyFile COLLADA = " + saveModel, "private static final TextureObject TEXTURE = " + saveTexture}, // Static variables
 				new String[]{saveScale, "COLLADA", "TEXTURE", saveTextureIndex} // Class constructor
 		);
-	}
-
-	@Override
-	public float getScale() {
-		return scale;
-	}
-
-	/**
-	 * Sets the scale for this model.
-	 *
-	 * @param scale The new scale.
-	 */
-	public void setScale(float scale) {
-		this.scale = scale;
-		getEntity().setMoved();
-	}
-
-	@Override
-	public Collider getCollider() {
-		return collider;
 	}
 
 	@Override
