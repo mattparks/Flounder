@@ -1,4 +1,4 @@
-package flounder.entities.components;
+package flounder.entities;
 
 /**
  * Defines a function to be called when looking for entity scale.

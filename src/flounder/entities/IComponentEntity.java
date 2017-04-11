@@ -1,6 +1,4 @@
-package flounder.entities.components;
-
-import flounder.entities.*;
+package flounder.entities;
 
 /**
  * Base class for all components that can be attached to engine.entities. (Have a constructor that takes in '(Entity entity, EntityTemplate template)' for the entity loader).

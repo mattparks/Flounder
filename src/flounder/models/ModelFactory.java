@@ -3,7 +3,6 @@ package flounder.models;
 import flounder.factory.*;
 import flounder.loaders.*;
 import flounder.logger.*;
-import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 import flounder.resources.*;

@@ -1,4 +1,4 @@
-package flounder.entities.components;
+package flounder.entities;
 
 import flounder.helpers.*;
 

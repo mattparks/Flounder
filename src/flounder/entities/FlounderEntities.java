@@ -1,6 +1,5 @@
 package flounder.entities;
 
-import flounder.entities.components.*;
 import flounder.events.*;
 import flounder.framework.*;
 import flounder.guis.*;

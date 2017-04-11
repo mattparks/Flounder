@@ -1,8 +1,6 @@
 package flounder.physics;
 
-import flounder.logger.*;
 import flounder.maths.*;
-import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.resources.*;

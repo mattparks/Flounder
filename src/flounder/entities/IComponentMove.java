@@ -1,6 +1,5 @@
-package flounder.entities.components;
+package flounder.entities;
 
-import flounder.entities.*;
 import flounder.maths.vectors.*;
 
 /**

@@ -1,6 +1,4 @@
-package flounder.entities.components;
-
-import flounder.entities.*;
+package flounder.entities;
 
 /**
  * Defines a function to be called when visiting entities.

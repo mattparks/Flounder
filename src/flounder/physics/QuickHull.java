@@ -1,6 +1,5 @@
 package flounder.physics;
 
-import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -176,10 +175,10 @@ public class QuickHull extends Collider {
 
 		loadData(points);
 
-	//	FlounderLogger.log("=====================================");
-	//	for (Vector3f hp : hullPoints) {
-	//		FlounderLogger.log(hp);
-	//	}
+		//	FlounderLogger.log("=====================================");
+		//	for (Vector3f hp : hullPoints) {
+		//		FlounderLogger.log(hp);
+		//	}
 	}
 
 	/**
