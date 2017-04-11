@@ -18,15 +18,6 @@ public class FlounderSkybox extends Module {
 
 	public static final MyFile SKYBOX_FOLDER = new MyFile(MyFile.RES_FOLDER, "skybox");
 
-	private static MyFile[] TEXTURE_FILES = {
-			new MyFile(SKYBOX_FOLDER, "starsRight.png"),
-			new MyFile(SKYBOX_FOLDER, "starsLeft.png"),
-			new MyFile(SKYBOX_FOLDER, "starsTop.png"),
-			new MyFile(SKYBOX_FOLDER, "starsBottom.png"),
-			new MyFile(SKYBOX_FOLDER, "starsBack.png"),
-			new MyFile(SKYBOX_FOLDER, "starsFront.png")
-	};
-
 	private TextureObject cubemap;
 	private Vector3f rotation;
 	private Matrix4f modelMatrix;
@@ -40,7 +31,7 @@ public class FlounderSkybox extends Module {
 
 	@Override
 	public void init() {
-		this.cubemap = TextureFactory.newBuilder().setCubemap(TEXTURE_FILES).create();
+		this.cubemap = null;
 		this.rotation = new Vector3f();
 		this.modelMatrix = new Matrix4f();
 
@@ -62,6 +53,10 @@ public class FlounderSkybox extends Module {
 
 	public static TextureObject getCubemap() {
 		return INSTANCE.cubemap;
+	}
+
+	public static void setCubemap(TextureObject cubemap) {
+		INSTANCE.cubemap = cubemap;
 	}
 
 	public static Vector3f getRotation() {
@@ -95,6 +90,8 @@ public class FlounderSkybox extends Module {
 
 	@Override
 	public void dispose() {
-		this.cubemap.delete();
+		if (cubemap != null) {
+			this.cubemap.delete();
+		}
 	}
 }

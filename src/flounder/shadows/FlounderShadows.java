@@ -34,12 +34,12 @@ public class FlounderShadows extends Module {
 	@Override
 	public void init() {
 		this.lightPosition = new Vector3f(0.5f, 0.0f, 0.5f);
-		this.brightnessBoost = 0.123f;//KosmosConfigs.BRIGHTNESS_BOOST.getFloat();
-// TODO: CONFIGS
-		this.shadowSize = 8192;//KosmosConfigs.SHADOWMAP_SIZE.setReference(() -> shadowSize).getInteger();
-		this.shadowPCF = 0;//KosmosConfigs.SHADOWMAP_PCF.setReference(() -> shadowPCF).getInteger();
-		this.shadowBias = 0.001f;//KosmosConfigs.SHADOWMAP_BIAS.setReference(() -> shadowBias).getFloat();
-		this.shadowDarkness = 0.6f;//KosmosConfigs.SHADOWMAP_DARKNESS.setReference(() -> shadowDarkness).getFloat();
+		this.brightnessBoost = 0.123f;
+
+		this.shadowSize = 8192;
+		this.shadowPCF = 0;
+		this.shadowBias = 0.001f;
+		this.shadowDarkness = 0.6f;
 		this.shadowTransition = 11.0f; // TODO: This is a strange setting, but works.
 
 		this.projectionMatrix = new Matrix4f();
