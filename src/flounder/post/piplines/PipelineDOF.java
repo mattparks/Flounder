@@ -18,19 +18,16 @@ public class PipelineDOF extends PostPipeline {
 		filterDOF = new FilterDOF();
 	}
 
-	public void renderMRT(FBO fboMRT, FBO fboColour) {
-		filterFXAA.applyFilter(fboColour.getColourTexture(0));
-		pipelineGaussian.setScale(0.5f);
-		pipelineGaussian.renderPipeline(filterFXAA.fbo);
-		filterDOF.applyFilter(filterFXAA.fbo.getColourTexture(0), fboMRT.getDepthTexture(), pipelineGaussian.getOutput().getColourTexture(0));
-	}
-
 	@Override
-	public void renderPipeline(FBO startFBO) {
-		filterFXAA.applyFilter(startFBO.getColourTexture(0));
+	public void renderPipeline(int... textures) {
+		filterFXAA.applyFilter(textures);
 		pipelineGaussian.setScale(0.5f);
-		pipelineGaussian.renderPipeline(filterFXAA.fbo);
-		filterDOF.applyFilter(filterFXAA.fbo.getColourTexture(0), startFBO.getDepthTexture(), pipelineGaussian.getOutput().getColourTexture(0));
+		pipelineGaussian.renderPipeline(filterFXAA.fbo.getColourTexture(0));
+		filterDOF.applyFilter(
+				filterFXAA.fbo.getColourTexture(0), // Original.
+				textures[textures.length - 1], // Depth texture.
+				pipelineGaussian.getOutput().getColourTexture(0) // Blurred
+		);
 	}
 
 	@Override

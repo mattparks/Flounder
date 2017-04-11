@@ -19,8 +19,8 @@ public class PipelineGaussian extends PostPipeline {
 	}
 
 	@Override
-	public void renderPipeline(FBO startFBO) {
-		filterBlurHorizontal.applyFilter(startFBO.getColourTexture(0));
+	public void renderPipeline(int... textures) {
+		filterBlurHorizontal.applyFilter(textures);
 		filterBlurVertical.applyFilter(filterBlurHorizontal.fbo.getColourTexture(0));
 	}
 
@@ -29,14 +29,14 @@ public class PipelineGaussian extends PostPipeline {
 		return filterBlurVertical.fbo;
 	}
 
+	public void setScale(float scale) {
+		filterBlurHorizontal.setScale(scale);
+		filterBlurVertical.setScale(scale);
+	}
+
 	@Override
 	public void dispose() {
 		filterBlurHorizontal.dispose();
 		filterBlurVertical.dispose();
-	}
-
-	public void setScale(float scale) {
-		filterBlurHorizontal.setScale(scale);
-		filterBlurVertical.setScale(scale);
 	}
 }

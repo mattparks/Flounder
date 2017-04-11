@@ -11,6 +11,7 @@ public class FlounderShadows extends Module {
 	private static final FlounderShadows INSTANCE = new FlounderShadows();
 	public static final String PROFILE_TAB_NAME = "Kosmos Shadows";
 
+	private Vector3f lightPosition;
 	private float brightnessBoost;
 
 	private int shadowSize;
@@ -32,12 +33,13 @@ public class FlounderShadows extends Module {
 
 	@Override
 	public void init() {
-		this.brightnessBoost = KosmosConfigs.BRIGHTNESS_BOOST.getFloat();
-
-		this.shadowSize = KosmosConfigs.SHADOWMAP_SIZE.setReference(() -> shadowSize).getInteger();
-		this.shadowPCF = KosmosConfigs.SHADOWMAP_PCF.setReference(() -> shadowPCF).getInteger();
-		this.shadowBias = KosmosConfigs.SHADOWMAP_BIAS.setReference(() -> shadowBias).getFloat();
-		this.shadowDarkness = KosmosConfigs.SHADOWMAP_DARKNESS.setReference(() -> shadowDarkness).getFloat();
+		this.lightPosition = new Vector3f(0.5f, 0.0f, 0.5f);
+		this.brightnessBoost = 0.123f;//KosmosConfigs.BRIGHTNESS_BOOST.getFloat();
+// TODO: CONFIGS
+		this.shadowSize = 8192;//KosmosConfigs.SHADOWMAP_SIZE.setReference(() -> shadowSize).getInteger();
+		this.shadowPCF = 0;//KosmosConfigs.SHADOWMAP_PCF.setReference(() -> shadowPCF).getInteger();
+		this.shadowBias = 0.001f;//KosmosConfigs.SHADOWMAP_BIAS.setReference(() -> shadowBias).getFloat();
+		this.shadowDarkness = 0.6f;//KosmosConfigs.SHADOWMAP_DARKNESS.setReference(() -> shadowDarkness).getFloat();
 		this.shadowTransition = 11.0f; // TODO: This is a strange setting, but works.
 
 		this.projectionMatrix = new Matrix4f();
@@ -98,7 +100,7 @@ public class FlounderShadows extends Module {
 	public void update() {
 		shadowBox.update(FlounderCamera.getCamera());
 		updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
-		updateLightViewMatrix(KosmosSkybox.getLightPosition(), shadowBox.getCenter());
+		updateLightViewMatrix(lightPosition, shadowBox.getCenter());
 		Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
 	}
 
@@ -108,6 +110,14 @@ public class FlounderShadows extends Module {
 		FlounderProfiler.add(PROFILE_TAB_NAME, "PCF Count", shadowPCF);
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Surface Bias", shadowBias);
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Surface Darkness", shadowDarkness);
+	}
+
+	public static Vector3f getLightPosition() {
+		return INSTANCE.lightPosition;
+	}
+
+	public static void setLightPosition(Vector3f lightPosition) {
+		INSTANCE.lightPosition.set(lightPosition);
 	}
 
 	public static float getBrightnessBoost() {

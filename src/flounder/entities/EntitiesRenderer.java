@@ -71,16 +71,16 @@ public class EntitiesRenderer extends Renderer {
 			return;
 		}
 
-		if (!renderPlayer && entity.getComponent(ComponentPlayer.class) != null) {
-			return;
-		}
+		//	if (!renderPlayer && entity.getComponent(ComponentPlayer.class) != null) {
+		//		return; // TODO
+		//	}
 
 		ComponentModel componentModel = (ComponentModel) entity.getComponent(ComponentModel.class);
 		ComponentAnimation componentAnimation = (ComponentAnimation) entity.getComponent(ComponentAnimation.class);
 		ComponentSurface componentSurface = (ComponentSurface) entity.getComponent(ComponentSurface.class);
 		ComponentGlow componentGlow = (ComponentGlow) entity.getComponent(ComponentGlow.class);
 		ComponentSway componentSway = (ComponentSway) entity.getComponent(ComponentSway.class);
-		final int vaoLength;
+		int vaoLength;
 
 		if (componentModel != null && componentModel.getModel() != null && componentModel.getModel().isLoaded()) {
 			OpenGlUtils.bindVAO(componentModel.getModel().getVaoID(), 0, 1, 2, 3);

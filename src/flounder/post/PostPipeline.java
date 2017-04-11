@@ -9,9 +9,9 @@ public abstract class PostPipeline {
 	/**
 	 * Renders the post pipeline.
 	 *
-	 * @param startFBO The original screen FBO.
+	 * @param textures A list of textures in indexed order to be bound for the shader program.
 	 */
-	public abstract void renderPipeline(FBO startFBO);
+	public abstract void renderPipeline(int... textures);
 
 	/**
 	 * @return Returns the FBO containing the result.

@@ -183,11 +183,11 @@ public class Entity implements ISpatialObject {
 	 *
 	 * @param structure The new structure too be contained in.
 	 */
-	public void switchStructure(ISpatialStructure<Entity> structure) {
-		structure.remove(this);
-		this.structure = structure;
-		structure.add(this);
-	}
+	//public void switchStructure(ISpatialStructure<Entity> structure) {
+	//	structure.remove(this);
+	//	this.structure = structure;
+	//	structure.add(this);
+	//}
 
 	public ISpatialStructure<Entity> getStructure() {
 		return structure;
@@ -195,15 +195,9 @@ public class Entity implements ISpatialObject {
 
 	/**
 	 * Forcibly removes this entity from the spatial structure without triggering remove actions. Use with caution; this function may fail or cause errors if used inappropriately.
-	 *
-	 * @param structureRemove If the entity will be removed from the structure from this method.
 	 */
-	public void forceRemove(boolean structureRemove) {
+	public void forceRemove() {
 		removed = true;
-
-		if (structureRemove) {
-			structure.remove(this);
-		}
 
 		for (IComponentEntity component : components) {
 			component.dispose();

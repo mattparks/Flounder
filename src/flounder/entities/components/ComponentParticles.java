@@ -1,6 +1,7 @@
 package flounder.entities.components;
 
 import flounder.entities.*;
+import flounder.entities.components.particles.*;
 import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.maths.vectors.*;
@@ -16,18 +17,18 @@ import java.lang.reflect.*;
 import java.util.*;
 
 public class ComponentParticles extends IComponentEntity implements IComponentEditor {
-	private kosmos.entities.components.particles.IEditorParticleSpawn[] spawns = new kosmos.entities.components.particles.IEditorParticleSpawn[]{
-			new kosmos.entities.components.particles.EditorParticleCircle(),
-			new kosmos.entities.components.particles.EditorParticleLine(),
-			new kosmos.entities.components.particles.EditorParticlePoint(),
-			new kosmos.entities.components.particles.EditorParticleSphere(),
+	private IEditorParticleSpawn[] spawns = new IEditorParticleSpawn[]{
+			new EditorParticleCircle(),
+			new EditorParticleLine(),
+			new EditorParticlePoint(),
+			new EditorParticleSphere(),
 	};
 
 	private ParticleSystem particleSystem;
 	private Vector3f centreOffset;
 	private Vector3f lastPosition;
 
-	public kosmos.entities.components.particles.IEditorParticleSpawn editorSystemSpawn;
+	public IEditorParticleSpawn editorSystemSpawn;
 
 	/**
 	 * Creates a new ComponentParticles.
@@ -189,7 +190,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 		componentAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String spawn = (String) componentDropdown.getSelectedItem();
-				kosmos.entities.components.particles.IEditorParticleSpawn particleSpawn = null;
+				IEditorParticleSpawn particleSpawn = null;
 
 				for (int i = 0; i < spawns.length; i++) {
 					if (spawns[i].getTabName().equals(spawn)) {
@@ -199,7 +200,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 							Class[] componentTypes = new Class[]{};
 							@SuppressWarnings("unchecked") Constructor componentConstructor = componentClass.getConstructor(componentTypes);
 							Object[] componentParameters = new Object[]{};
-							particleSpawn = (kosmos.entities.components.particles.IEditorParticleSpawn) componentConstructor.newInstance(componentParameters);
+							particleSpawn = (IEditorParticleSpawn) componentConstructor.newInstance(componentParameters);
 						} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
 							FlounderLogger.error("While loading particle spawn" + spawns[i] + "'s constructor could not be found!");
 							FlounderLogger.exception(ex);
@@ -209,7 +210,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 
 				if (particleSystem.getSpawn() != null) {
 					String classname = particleSystem.getSpawn().getClass().getName();
-					ComponentsList.REMOVE_SIDE_TAB.add("Particles (" + classname.split("\\.")[ByteWork.getCharCount(classname, '.')].replace("Spawn", "") + ")");
+					//	ComponentsList.REMOVE_SIDE_TAB.add("Particles (" + classname.split("\\.")[ByteWork.getCharCount(classname, '.')].replace("Spawn", "") + ")"); // TODO
 				}
 
 				if (particleSpawn != null) {
@@ -218,7 +219,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 
 					JPanel panel = IComponentEditor.makeTextPanel();
 					particleSpawn.addToPanel(panel);
-					ComponentsList.ADD_SIDE_TAB.add(new Pair<>("Particles (" + particleSpawn.getTabName() + ")", panel));
+					//	ComponentsList.ADD_SIDE_TAB.add(new Pair<>("Particles (" + particleSpawn.getTabName() + ")", panel)); // TODO
 				}
 			}
 		});

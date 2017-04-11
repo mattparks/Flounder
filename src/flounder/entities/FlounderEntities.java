@@ -70,7 +70,7 @@ public class FlounderEntities extends Module {
 	@Override
 	public void update() {
 		if (entityStructure != null) {
-			Iterator<Entity> iterator = entityStructure.getAll().iterator();
+			Iterator<Entity> iterator = new ArrayList<>(entityStructure.getAll()).iterator(); // TODO: Optimize
 
 			while (iterator.hasNext()) {
 				Entity entity = iterator.next();
@@ -79,6 +79,7 @@ public class FlounderEntities extends Module {
 					entity.update();
 				} else {
 					iterator.remove();
+					entityStructure.remove(entity);
 				}
 			}
 		}
@@ -93,7 +94,7 @@ public class FlounderEntities extends Module {
 	 * Clears the world of all entities.
 	 */
 	public static void clear() {
-		INSTANCE.entityStructure.getAll().forEach((Entity entity) -> entity.forceRemove(false));
+		INSTANCE.entityStructure.getAll().forEach(Entity::forceRemove);
 		INSTANCE.entityStructure.clear();
 	}
 

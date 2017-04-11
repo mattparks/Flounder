@@ -15,17 +15,14 @@ public class PipelineBloom extends PostPipeline {
 		filterBloom2 = new FilterBloom2();
 	}
 
-	public void renderMRT(FBO fboMRT, FBO fboColour) {
-		filterBloom1.applyFilter(fboColour.getColourTexture(0));
-		pipelineGaussian.renderPipeline(filterBloom1.fbo);
-		filterBloom2.applyFilter(fboColour.getColourTexture(0), pipelineGaussian.getOutput().getColourTexture(0));
-	}
-
 	@Override
-	public void renderPipeline(FBO startFBO) {
-		filterBloom1.applyFilter(startFBO.getColourTexture(0));
-		pipelineGaussian.renderPipeline(filterBloom1.fbo);
-		filterBloom2.applyFilter(startFBO.getColourTexture(0), pipelineGaussian.getOutput().getColourTexture(0));
+	public void renderPipeline(int... textures) {
+		filterBloom1.applyFilter(textures);
+		pipelineGaussian.renderPipeline(filterBloom1.fbo.getColourTexture(0));
+		filterBloom2.applyFilter(
+				textures[0], // Colour
+				pipelineGaussian.getOutput().getColourTexture(0) // Blurred
+		);
 	}
 
 	@Override

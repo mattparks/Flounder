@@ -32,7 +32,7 @@ public class ComponentChild extends IComponentEntity implements IComponentEditor
 	@Override
 	public void update() {
 		if (parent == null || parent.isRemoved()) {
-			getEntity().forceRemove(false);
+			getEntity().forceRemove();
 		}
 	}
 

@@ -4,7 +4,6 @@ import flounder.devices.*;
 import flounder.fbos.*;
 import flounder.post.*;
 import flounder.post.filters.*;
-import flounder.renderer.*;
 
 public class PipelineMRT extends PostPipeline {
 	private FilterMRT filterMRT;
@@ -17,16 +16,16 @@ public class PipelineMRT extends PostPipeline {
 	}
 
 	@Override
-	public void renderPipeline(FBO startFBO) {
+	public void renderPipeline(int... textures) {
 		runFXAA = FlounderDisplay.isAntialiasing();
 
-		filterMRT.applyFilter(
-				startFBO.getColourTexture(0), // Colours
-				startFBO.getColourTexture(1), // Normals
-				startFBO.getColourTexture(2), // Extras
-				startFBO.getDepthTexture(), // Depth
-				((KosmosRenderer) FlounderRenderer.getRendererMaster()).getShadowRenderer().getShadowMap() // Shadow Map
-		);
+		// Texture data used in filter:
+		// textures[0], // Colours
+		// textures[1], // Normals
+		// textures[2], // Extras
+		// textures[3], // Depth
+		// textures[4], // Shadow Map
+		filterMRT.applyFilter(textures);
 
 		if (runFXAA) {
 			filterFXAA.applyFilter(filterMRT.fbo.getColourTexture(0));
@@ -40,6 +39,10 @@ public class PipelineMRT extends PostPipeline {
 		} else {
 			return filterMRT.fbo;
 		}
+	}
+
+	public void setShadowFactor(float shadowFactor) {
+		filterMRT.setShadowFactor(shadowFactor);
 	}
 
 	@Override

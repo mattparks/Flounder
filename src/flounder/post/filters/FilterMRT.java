@@ -7,16 +7,24 @@ import flounder.fbos.*;
 import flounder.post.*;
 import flounder.resources.*;
 import flounder.shadows.*;
+import flounder.skybox.*;
 
 public class FilterMRT extends PostFilter {
 	private static final int LIGHTS = 64;
+	private float shadowFactor;
 
 	public FilterMRT() {
 		super("filterMrt", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"));
+		this.shadowFactor = 1.0f;
 	}
 
 	public FilterMRT(FBO fbo) {
 		super("filterMrt", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"), fbo);
+		this.shadowFactor = 1.0f;
+	}
+
+	public void setShadowFactor(float shadowFactor) {
+		this.shadowFactor = shadowFactor;
 	}
 
 	@Override
@@ -57,14 +65,14 @@ public class FilterMRT extends PostFilter {
 		shader.getUniformInt("shadowMapSize").loadInt(FlounderShadows.getShadowSize());
 		shader.getUniformInt("shadowPCF").loadInt(FlounderShadows.getShadowPCF());
 		shader.getUniformFloat("shadowBias").loadFloat(FlounderShadows.getShadowBias());
-		shader.getUniformFloat("shadowDarkness").loadFloat(FlounderShadows.getShadowDarkness() * KosmosSkybox.getShadowFactor());
+		shader.getUniformFloat("shadowDarkness").loadFloat(FlounderShadows.getShadowDarkness() * shadowFactor);
 
 		shader.getUniformFloat("brightnessBoost").loadFloat(FlounderShadows.getBrightnessBoost());
 
-		if (KosmosSkybox.getFog() != null) {
-			shader.getUniformVec3("fogColour").loadVec3(KosmosSkybox.getFog().getFogColour());
-			shader.getUniformFloat("fogDensity").loadFloat(KosmosSkybox.getFog().getFogDensity());
-			shader.getUniformFloat("fogGradient").loadFloat(KosmosSkybox.getFog().getFogGradient());
+		if (FlounderSkybox.getFog() != null) {
+			shader.getUniformVec3("fogColour").loadVec3(FlounderSkybox.getFog().getFogColour());
+			shader.getUniformFloat("fogDensity").loadFloat(FlounderSkybox.getFog().getFogDensity());
+			shader.getUniformFloat("fogGradient").loadFloat(FlounderSkybox.getFog().getFogGradient());
 		} else {
 			shader.getUniformVec3("fogColour").loadVec3(1.0f, 1.0f, 1.0f);
 			shader.getUniformFloat("fogDensity").loadFloat(0.003f);
