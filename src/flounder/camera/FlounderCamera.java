@@ -1,6 +1,7 @@
 package flounder.camera;
 
 import flounder.devices.*;
+import flounder.entities.*;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.profiling.*;
@@ -19,7 +20,7 @@ public class FlounderCamera extends Module {
 	 * Creates a new camera manager.
 	 */
 	public FlounderCamera() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderEntities.class);
 	}
 
 	@Override

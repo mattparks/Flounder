@@ -7,6 +7,7 @@ import flounder.loaders.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.models.*;
 import flounder.physics.bounding.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -17,6 +18,12 @@ public class FlounderSkybox extends Module {
 	public static final String PROFILE_TAB_NAME = "Kosmos Skybox";
 
 	public static final MyFile SKYBOX_FOLDER = new MyFile(MyFile.RES_FOLDER, "skybox");
+
+	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
+
+	private static final float SIZE = 250.0f;
+
+	private ModelObject model;
 
 	private TextureObject cubemap;
 	private Vector3f rotation;
@@ -31,6 +38,8 @@ public class FlounderSkybox extends Module {
 
 	@Override
 	public void init() {
+		this.model = ModelFactory.newBuilder().setFile(MODEL_FILE).create();
+
 		this.cubemap = null;
 		this.rotation = new Vector3f();
 		this.modelMatrix = new Matrix4f();
@@ -43,12 +52,20 @@ public class FlounderSkybox extends Module {
 	public void update() {
 		// Update the skybox transformation.
 		if (FlounderCamera.getCamera() != null) {
-			Matrix4f.transformationMatrix(FlounderCamera.getCamera().getPosition(), rotation, 1.0f, modelMatrix);
+			Matrix4f.transformationMatrix(FlounderCamera.getCamera().getPosition(), rotation, SIZE, modelMatrix);
 		}
 	}
 
 	@Override
 	public void profile() {
+	}
+
+	public static ModelObject getModel() {
+		return INSTANCE.model;
+	}
+
+	public static void setModel(ModelObject model) {
+		INSTANCE.model = model;
 	}
 
 	public static TextureObject getCubemap() {
