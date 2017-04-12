@@ -21,7 +21,7 @@ public class FlounderNetwork extends Module {
 	 * Creates a new network manager.
 	 */
 	public FlounderNetwork() {
-		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderLogger.class);
+		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME);
 	}
 
 	@Override

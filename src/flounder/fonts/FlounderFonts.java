@@ -25,7 +25,7 @@ public class FlounderFonts extends Module {
 	 * Creates a new font manager.
 	 */
 	public FlounderFonts() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderLoader.class, FlounderShaders.class, FlounderTextures.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
 	@Override

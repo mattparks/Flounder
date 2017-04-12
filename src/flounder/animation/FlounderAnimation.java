@@ -3,6 +3,7 @@ package flounder.animation;
 import flounder.collada.*;
 import flounder.collada.animation.*;
 import flounder.framework.*;
+import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -21,7 +22,7 @@ public class FlounderAnimation extends Module {
 	 * Creates a new animation loader class.
 	 */
 	public FlounderAnimation() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProcessors.class, FlounderCollada.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class, FlounderLoader.class, FlounderCollada.class);
 	}
 
 	@Override

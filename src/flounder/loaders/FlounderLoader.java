@@ -28,7 +28,7 @@ public class FlounderLoader extends Module {
 	 * Creates a new OpenGL loader class.
 	 */
 	public FlounderLoader() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProfiler.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
 	}
 
 	@Override

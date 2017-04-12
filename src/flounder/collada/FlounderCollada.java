@@ -33,7 +33,7 @@ public class FlounderCollada extends Module {
 	 * Creates a new collada loader class.
 	 */
 	public FlounderCollada() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderProcessors.class, FlounderLoader.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class, FlounderLoader.class);
 	}
 
 	@Override

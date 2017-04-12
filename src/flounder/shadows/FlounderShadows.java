@@ -1,6 +1,7 @@
 package flounder.shadows;
 
 import flounder.camera.*;
+import flounder.entities.*;
 import flounder.framework.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -29,7 +30,7 @@ public class FlounderShadows extends Module {
 	private ShadowBox shadowBox;
 
 	public FlounderShadows() {
-		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderRenderer.class);
+		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderCamera.class, FlounderEntities.class);
 	}
 
 	@Override

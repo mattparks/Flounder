@@ -30,7 +30,7 @@ public class FlounderGuis extends Module {
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderShaders.class, FlounderSound.class, FlounderTextures.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderTextures.class);
 		guiMaster = null;
 	}
 

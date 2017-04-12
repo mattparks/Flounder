@@ -1,14 +1,18 @@
 package flounder.entities;
 
+import flounder.animation.*;
 import flounder.events.*;
 import flounder.framework.*;
 import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.inputs.*;
 import flounder.logger.*;
+import flounder.models.*;
+import flounder.physics.bounding.*;
 import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.space.*;
+import flounder.textures.*;
 
 import java.io.*;
 import java.util.*;
@@ -30,7 +34,7 @@ public class FlounderEntities extends Module {
 	 * Creates a new game manager for entities.
 	 */
 	public FlounderEntities() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class);
+		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
 	}
 
 	@Override
