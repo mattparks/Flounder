@@ -23,6 +23,7 @@ public class FlounderShadows extends Module {
 	private Matrix4f projectionMatrix;
 	private Matrix4f lightViewMatrix;
 	private Matrix4f projectionViewMatrix;
+	private Matrix4f shadowMapSpaceMatrix;
 	private Matrix4f offset;
 
 	private ShadowBox shadowBox;
@@ -45,6 +46,7 @@ public class FlounderShadows extends Module {
 		this.projectionMatrix = new Matrix4f();
 		this.lightViewMatrix = new Matrix4f();
 		this.projectionViewMatrix = new Matrix4f();
+		this.shadowMapSpaceMatrix = new Matrix4f();
 		this.offset = createOffset();
 
 		this.shadowBox = new ShadowBox(lightViewMatrix);
@@ -102,6 +104,7 @@ public class FlounderShadows extends Module {
 		updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
 		updateLightViewMatrix(lightPosition, shadowBox.getCenter());
 		Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
+		Matrix4f.multiply(INSTANCE.offset, INSTANCE.projectionViewMatrix, shadowMapSpaceMatrix);
 	}
 
 	@Override
@@ -189,7 +192,7 @@ public class FlounderShadows extends Module {
 	 * @return The to-shadow-map-space matrix.
 	 */
 	public static Matrix4f getToShadowMapSpaceMatrix() {
-		return Matrix4f.multiply(INSTANCE.offset, INSTANCE.projectionViewMatrix, null); // TODO
+		return INSTANCE.shadowMapSpaceMatrix;
 	}
 
 	/**

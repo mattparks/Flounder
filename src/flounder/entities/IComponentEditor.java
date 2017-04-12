@@ -3,8 +3,12 @@ package flounder.entities;
 import flounder.helpers.*;
 
 import javax.swing.*;
+import java.util.*;
 
 public interface IComponentEditor {
+	public static final List<Pair<String, JPanel>> ADD_SIDE_TAB = new ArrayList<>();
+	public static final List<String> REMOVE_SIDE_TAB = new ArrayList<>();
+
 	void addToPanel(JPanel panel);
 
 	void editorUpdate();

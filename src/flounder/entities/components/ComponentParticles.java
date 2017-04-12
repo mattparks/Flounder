@@ -210,7 +210,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 
 				if (particleSystem.getSpawn() != null) {
 					String classname = particleSystem.getSpawn().getClass().getName();
-					//	ComponentsList.REMOVE_SIDE_TAB.add("Particles (" + classname.split("\\.")[ByteWork.getCharCount(classname, '.')].replace("Spawn", "") + ")"); // TODO
+					IComponentEditor.REMOVE_SIDE_TAB.add("Particles (" + classname.split("\\.")[ByteWork.getCharCount(classname, '.')].replace("Spawn", "") + ")"); // TODO
 				}
 
 				if (particleSpawn != null) {
@@ -219,7 +219,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 
 					JPanel panel = IComponentEditor.makeTextPanel();
 					particleSpawn.addToPanel(panel);
-					//	ComponentsList.ADD_SIDE_TAB.add(new Pair<>("Particles (" + particleSpawn.getTabName() + ")", panel)); // TODO
+					IComponentEditor.ADD_SIDE_TAB.add(new Pair<>("Particles (" + particleSpawn.getTabName() + ")", panel)); // TODO
 				}
 			}
 		});
