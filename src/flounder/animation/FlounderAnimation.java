@@ -4,7 +4,6 @@ import flounder.collada.*;
 import flounder.collada.animation.*;
 import flounder.framework.*;
 import flounder.loaders.*;
-import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.processing.*;

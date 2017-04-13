@@ -4,7 +4,6 @@ import flounder.devices.*;
 import flounder.framework.*;
 import flounder.loaders.*;
 import flounder.resources.*;
-import flounder.shaders.*;
 import flounder.textures.*;
 
 /**

@@ -30,5 +30,5 @@ void main(void) {
 	}
 
 	out_normals = vec4(0.0, 1.0, 0.0, 1.0);
-	out_extras = vec4(0.25, 0.0, 0.0, 1.0);
+	out_extras = vec4(1.0, 0.0, 1.0 / 3.0, 1.0);
 }

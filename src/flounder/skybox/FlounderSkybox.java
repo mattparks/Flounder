@@ -44,7 +44,7 @@ public class FlounderSkybox extends Module {
 		this.rotation = new Vector3f();
 		this.modelMatrix = new Matrix4f();
 
-		this.fog = new Fog(new Colour(), 0.032f, 2.56f, -1.28f, 51.2f);
+		this.fog = new Fog(new Colour(), 0.001f, 2.0f, -1.28f, 51.2f);
 		this.blendFactor = 1.0f;
 	}
 

@@ -6,7 +6,6 @@ import flounder.framework.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
 import flounder.resources.*;
-import flounder.shaders.*;
 import flounder.textures.*;
 
 /**

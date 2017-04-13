@@ -1,7 +1,6 @@
 package flounder.entities;
 
 import flounder.animation.*;
-import flounder.camera.*;
 import flounder.events.*;
 import flounder.framework.*;
 import flounder.guis.*;

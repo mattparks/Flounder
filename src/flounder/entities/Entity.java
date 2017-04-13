@@ -188,7 +188,6 @@ public class Entity implements ISpatialObject {
 	//	this.structure = structure;
 	//	structure.add(this);
 	//}
-
 	public ISpatialStructure<Entity> getStructure() {
 		return structure;
 	}

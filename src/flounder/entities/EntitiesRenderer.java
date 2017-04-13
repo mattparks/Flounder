@@ -2,11 +2,8 @@ package flounder.entities;
 
 import flounder.camera.*;
 import flounder.devices.*;
-import flounder.entities.components.*;
 import flounder.helpers.*;
-import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
-import flounder.physics.*;
 import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;

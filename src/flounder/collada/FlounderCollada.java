@@ -6,7 +6,6 @@ import flounder.collada.skeleton.*;
 import flounder.collada.skin.*;
 import flounder.framework.*;
 import flounder.loaders.*;
-import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.parsing.xml.*;

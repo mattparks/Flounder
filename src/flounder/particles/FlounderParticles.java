@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class FlounderParticles extends Module {
 	private static final FlounderParticles INSTANCE = new FlounderParticles();
-	public static final String PROFILE_TAB_NAME = "Kosmos Particles";
+	public static final String PROFILE_TAB_NAME = "Particles";
 
 	public static final MyFile PARTICLES_FOLDER = new MyFile(MyFile.RES_FOLDER, "particles");
 	public static final float MAX_ELAPSED_TIME = 5.0f;

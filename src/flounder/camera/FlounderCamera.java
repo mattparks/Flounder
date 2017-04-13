@@ -3,7 +3,6 @@ package flounder.camera;
 import flounder.devices.*;
 import flounder.entities.*;
 import flounder.framework.*;
-import flounder.logger.*;
 import flounder.profiling.*;
 
 /**

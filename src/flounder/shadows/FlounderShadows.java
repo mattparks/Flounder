@@ -6,7 +6,6 @@ import flounder.framework.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
-import flounder.renderer.*;
 
 public class FlounderShadows extends Module {
 	private static final FlounderShadows INSTANCE = new FlounderShadows();
