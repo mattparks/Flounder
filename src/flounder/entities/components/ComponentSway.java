@@ -51,16 +51,20 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 	}
 
 	public float getSwayOffsetX() {
-		float wx = 1.0f; // (float) Math.sin(x * 0.6f); // TODO
+		float wx = (float) Math.sin(getEntity().getPosition().x * 0.6f);
+		float wz = (float) Math.sin(getEntity().getPosition().z * 0.5f);
+		float sx = Math.abs(wx) + Math.abs(wz);
 		float windPower = 0.24f;
-		float systemTime = Framework.getTimeSec() * wx;
+		float systemTime = Framework.getTimeSec() * sx;
 		return windPower * (float) (Math.sin(0.25 * systemTime) - Math.sin(1.2 * systemTime) + Math.cos(0.5 * systemTime));
 	}
 
 	public float getSwayOffsetZ() {
-		float wz = 1.0f; // (float) Math.sin(z * 0.6f); // TODO
+		float wx = (float) Math.sin(getEntity().getPosition().x * 0.6f);
+		float wz = (float) Math.sin(getEntity().getPosition().z * 0.5f);
+		float sz = Math.abs(wx) - Math.abs(wz);
 		float windPower = 0.24f;
-		float systemTime = Framework.getTimeSec() * wz;
+		float systemTime = Framework.getTimeSec() * sz;
 		return windPower * (float) (Math.cos(0.25 * systemTime) - Math.cos(1.2 * systemTime) + Math.sin(0.5 * systemTime));
 	}
 
