@@ -11,7 +11,7 @@ public class PipelineBloom extends PostPipeline {
 
 	public PipelineBloom() {
 		filterBloom1 = new FilterBloom1();
-		pipelineGaussian = new PipelineGaussian(0.5f);
+		pipelineGaussian = new PipelineGaussian(0.3f);
 		filterBloom2 = new FilterBloom2();
 	}
 
