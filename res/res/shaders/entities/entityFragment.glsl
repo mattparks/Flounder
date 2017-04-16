@@ -35,9 +35,11 @@ void main(void) {
 	}
 
 	bool glowing = false;
+	float glow = reflectivity;
 
 	if (useGlowMap) {
 	    vec4 glowColour = texture(glowMap, pass_textureCoords);
+	    glow += length(glowColour.rgb);
 
 	    if (glowColour.r > 0.5) {
 	        glowing = true;
@@ -46,5 +48,5 @@ void main(void) {
 
 	out_albedo = vec4(diffuseColour + vec4(colourOffset, 0.0));
 	out_normals = vec4(pass_surfaceNormal, 1.0);
-	out_extras = vec4(shineDamper, reflectivity, (1.0 / 3.0) * (float(ignoreFog) + (2.0 * float(ignoreLighting || glowing))), 1.0);
+	out_extras = vec4(shineDamper, glow, (1.0 / 3.0) * (float(ignoreFog) + (2.0 * float(ignoreLighting || glowing))), 1.0);
 }

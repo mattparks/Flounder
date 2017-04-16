@@ -92,7 +92,7 @@ void main(void) {
 
 	vec4 extras = texture(originalExtras, pass_textureCoords);
 	float shineDamper = extras.r;
-	float reflectivity = extras.g;
+	float glow = extras.g;
 	bool ignoreFog = extras.b == (1.0 / 3.0) || extras.b == (3.0 / 3.0);
 	bool ignoreLighting = extras.b == (2.0 / 3.0) || extras.b == (3.0 / 3.0);
 
@@ -130,7 +130,7 @@ void main(void) {
                 float dampedFactor = pow(specularFactor, shineDamper);
 
                 totalDiffuse = totalDiffuse + (brightness * lightColour[i]) / attinuationFactor;
-                totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColour[i]) / attinuationFactor;
+             //   totalSpecular = totalSpecular + (dampedFactor * glow * lightColour[i]) / attinuationFactor;
             }
         }
 

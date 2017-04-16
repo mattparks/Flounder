@@ -11,7 +11,7 @@ public class PipelineBloom extends PostPipeline {
 
 	public PipelineBloom() {
 		filterBloom1 = new FilterBloom1();
-		pipelineGaussian = new PipelineGaussian(0.3f);
+		pipelineGaussian = new PipelineGaussian(0.5f);
 		filterBloom2 = new FilterBloom2();
 	}
 
@@ -28,10 +28,6 @@ public class PipelineBloom extends PostPipeline {
 	@Override
 	public FBO getOutput() {
 		return filterBloom2.fbo;
-	}
-
-	public void setBloomThreshold(float bloomThreshold) {
-		this.filterBloom1.setBloomThreshold(bloomThreshold);
 	}
 
 	@Override
