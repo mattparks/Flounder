@@ -22,7 +22,7 @@ layout(location = 0) out vec4 out_colour;
 
 //---------CALCULATE LOCATION------------
 vec3 decodeLocation() {
-    float depth = texture(originalDepth, pass_textureCoords).x;
+    float depth = texture(originalDepth, pass_textureCoords).r;
     vec4 p = inverse(projectionMatrix) * (vec4(pass_textureCoords, depth, 1.0) * 2.0 - 1.0);
     return vec3(inverse(viewMatrix) * vec4(p.xyz / p.w, 1.0));
 }

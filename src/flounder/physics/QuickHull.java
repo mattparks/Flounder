@@ -1,5 +1,6 @@
 package flounder.physics;
 
+import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
@@ -20,10 +21,10 @@ public class QuickHull extends Collider {
 	 * Initializes the QuickHull algorithm with no values.
 	 */
 	public QuickHull() {
-		inputPoints = new ArrayList<>();
-		hullPoints = new ArrayList<>();
-		modelMatrix = new Matrix4f();
-		iterativeProceeding = false;
+		this.inputPoints = new ArrayList<>();
+		this.hullPoints = new ArrayList<>();
+		this.modelMatrix = new Matrix4f();
+		this.iterativeProceeding = false;
 	}
 
 	/**
@@ -32,23 +33,25 @@ public class QuickHull extends Collider {
 	 * @param points The point cloud to put in.
 	 */
 	public QuickHull(List<Vector3f> points) {
-		inputPoints = points;
-		hullPoints = new ArrayList<>();
-		modelMatrix = new Matrix4f();
-		iterativeProceeding = false;
+		this.inputPoints = points;
+		this.hullPoints = new ArrayList<>();
+		this.modelMatrix = new Matrix4f();
+		this.iterativeProceeding = false;
 	}
 
 	/**
 	 * Initializes the QuickHull algorithm with a point cloud.
 	 *
 	 * @param points The point cloud to put in.
-	 * @param iterative Flag to indicate how the algorithm should work.
+	 * @param iterativeProceeding Flag that indicates how the algorithm should work. Either imperative or recursive.
+	 * You should use an iterative approach if the point set is very large. This will avoid stack overflows at a certain number of points.
+	 * The number of stack overflow depends mainly on the structure of the points and the systems architecture (32/64 bit).
 	 */
-	public QuickHull(List<Vector3f> points, boolean iterative) {
-		inputPoints = points;
-		hullPoints = new ArrayList<>();
-		modelMatrix = new Matrix4f();
-		iterativeProceeding = iterative;
+	public QuickHull(List<Vector3f> points, boolean iterativeProceeding) {
+		this.inputPoints = points;
+		this.hullPoints = new ArrayList<>();
+		this.modelMatrix = new Matrix4f();
+		this.iterativeProceeding = iterativeProceeding;
 	}
 
 	public QuickHull(List<Vector3f> inputPoints, List<Vector3f> hullPoints, boolean iterativeProceeding) {
@@ -175,10 +178,10 @@ public class QuickHull extends Collider {
 
 		loadData(points);
 
-		//	FlounderLogger.log("=====================================");
-		//	for (Vector3f hp : hullPoints) {
-		//		FlounderLogger.log(hp);
-		//	}
+			FlounderLogger.log("=====================================");
+			for (Vector3f hp : hullPoints) {
+				FlounderLogger.log(hp);
+			}
 	}
 
 	/**
@@ -400,43 +403,27 @@ public class QuickHull extends Collider {
 
 	@Override
 	public ModelObject getRenderModel() {
-		return null;
+		return null; // Not implemented.
 	}
 
 	@Override
 	public Vector3f getRenderCentre(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(0.0f, 0.0f, 0.0f);
+		return destination; // Not implemented.
 	}
 
 	@Override
 	public Vector3f getRenderRotation(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(0.0f, 0.0f, 0.0f);
+		return destination; // Not implemented.
 	}
 
 	@Override
 	public Vector3f getRenderScale(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(1.0f, 1.0f, 1.0f);
+		return destination; // Not implemented.
 	}
 
 	@Override
 	public Colour getRenderColour(Colour destination) {
-		if (destination == null) {
-			destination = new Colour();
-		}
-
-		return destination.set(0.0f, 1.0f, 0.0f);
+		return destination; // Not implemented.
 	}
 
 	/**
