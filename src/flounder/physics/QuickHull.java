@@ -178,10 +178,10 @@ public class QuickHull extends Collider {
 
 		loadData(points);
 
-			FlounderLogger.log("=====================================");
-			for (Vector3f hp : hullPoints) {
-				FlounderLogger.log(hp);
-			}
+		//	FlounderLogger.log("=====================================");
+		//	for (Vector3f hp : hullPoints) {
+		//		FlounderLogger.log(hp);
+		//	}
 	}
 
 	/**
