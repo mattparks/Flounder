@@ -88,7 +88,7 @@ void main(void) {
 	    return;
 	}
 
-	vec4 normals = texture(originalNormals, pass_textureCoords);
+	vec4 normals = vec4(texture(originalNormals, pass_textureCoords).xyz * 2.0 - 1.0, 1.0);
 
 	vec4 extras = texture(originalExtras, pass_textureCoords);
 	float shineDamper = extras.r;
