@@ -45,7 +45,7 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 	@Override
 	public void update() {
 		//	if (super.getEntity().hasMoved()) { // TODO
-		Vector3f.add(super.getEntity().getPosition(), offset, light.getPosition());
+		Vector3f.add(getEntity().getPosition(), offset, light.getPosition());
 		//	}
 	}
 

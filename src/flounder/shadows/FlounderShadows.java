@@ -20,6 +20,9 @@ public class FlounderShadows extends Module {
 	private float shadowDarkness;
 	private float shadowTransition;
 
+	private float shadowBoxOffset;
+	private float shadowBoxDistance;
+
 	private Matrix4f projectionMatrix;
 	private Matrix4f lightViewMatrix;
 	private Matrix4f projectionViewMatrix;
@@ -35,13 +38,16 @@ public class FlounderShadows extends Module {
 	@Override
 	public void init() {
 		this.lightPosition = new Vector3f(0.5f, 0.0f, 0.5f);
-		this.brightnessBoost = 0.123f;
+		this.brightnessBoost = 0.1f;
 
 		this.shadowSize = 8192;
 		this.shadowPCF = 0;
 		this.shadowBias = 0.001f;
 		this.shadowDarkness = 0.6f;
 		this.shadowTransition = 11.0f; // TODO: This is a strange setting, but works.
+
+		this.shadowBoxOffset = 25.0f;
+		this.shadowBoxDistance = 40.0f;
 
 		this.projectionMatrix = new Matrix4f();
 		this.lightViewMatrix = new Matrix4f();
@@ -163,16 +169,28 @@ public class FlounderShadows extends Module {
 		INSTANCE.shadowDarkness = shadowDarkness;
 	}
 
-	public static float getShadowDistance() {
-		return INSTANCE.shadowBox.getShadowDistance();
-	}
-
 	public static float getShadowTransition() {
 		return INSTANCE.shadowTransition;
 	}
 
 	public static void setShadowTransition(float shadowTransition) {
 		INSTANCE.shadowTransition = shadowTransition;
+	}
+
+	public static float getShadowBoxOffset() {
+		return INSTANCE.shadowBoxOffset;
+	}
+
+	public static void setShadowBoxOffset(float shadowBoxOffset) {
+		INSTANCE.shadowBoxOffset = shadowBoxOffset;
+	}
+
+	public static float getShadowBoxDistance() {
+		return INSTANCE.shadowBoxDistance;
+	}
+
+	public static void setShadowBoxDistance(float shadowBoxDistance) {
+		INSTANCE.shadowBoxDistance = shadowBoxDistance;
 	}
 
 	/**

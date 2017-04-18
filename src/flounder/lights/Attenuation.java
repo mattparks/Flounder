@@ -90,4 +90,13 @@ public class Attenuation {
 	public float getDistance() {
 		return (float) Math.abs((-Math.sqrt((linear * linear) + (4 * exponent * constant)) - linear) / (2 * exponent));
 	}
+
+	@Override
+	public String toString() {
+		return "Attenuation{" +
+				"constant=" + constant +
+				", linear=" + linear +
+				", exponent=" + exponent +
+				'}';
+	}
 }

@@ -4,6 +4,7 @@ import flounder.camera.*;
 import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
+import flounder.logger.*;
 import flounder.post.*;
 import flounder.resources.*;
 import flounder.shadows.*;
@@ -60,7 +61,7 @@ public class FilterMRT extends PostFilter {
 		}
 
 		shader.getUniformMat4("shadowSpaceMatrix").loadMat4(FlounderShadows.getToShadowMapSpaceMatrix());
-		shader.getUniformFloat("shadowDistance").loadFloat(FlounderShadows.getShadowDistance());
+		shader.getUniformFloat("shadowDistance").loadFloat(FlounderShadows.getShadowBoxDistance());
 		shader.getUniformFloat("shadowTransition").loadFloat(FlounderShadows.getShadowTransition());
 		shader.getUniformInt("shadowMapSize").loadInt(FlounderShadows.getShadowSize());
 		shader.getUniformInt("shadowPCF").loadInt(FlounderShadows.getShadowPCF());

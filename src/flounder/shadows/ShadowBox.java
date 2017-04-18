@@ -15,11 +15,7 @@ public class ShadowBox {
 	private static final Vector4f UP = new Vector4f(0.0f, 1.0f, 0.0f, 0.0f);
 	private static final Vector4f FORWARD = new Vector4f(0.0f, 0.0f, -1.0f, 0.0f);
 
-	private static final float OFFSET = 25.0f;
-	private static final float SHADOW_DISTANCE = 40.0f;
-
 	private Matrix4f lightViewMatrix;
-	private float shadowDistance;
 
 	private float minX, maxX;
 	private float minY, maxY;
@@ -33,7 +29,6 @@ public class ShadowBox {
 	 */
 	protected ShadowBox(Matrix4f lightViewMatrix) {
 		this.lightViewMatrix = lightViewMatrix;
-		this.shadowDistance = SHADOW_DISTANCE;
 	}
 
 	/**
@@ -50,7 +45,7 @@ public class ShadowBox {
 		Vector3f forwardVector = new Vector3f(Matrix4f.transform(rotation, FORWARD, null));
 
 		Vector3f toFar = new Vector3f(forwardVector);
-		toFar.scale(shadowDistance);
+		toFar.scale(FlounderShadows.getShadowBoxDistance());
 		Vector3f toNear = new Vector3f(forwardVector);
 		toNear.scale(camera.getNearPlane());
 		Vector3f centreNear = Vector3f.add(toNear, camera.getPosition(), null);
@@ -91,7 +86,7 @@ public class ShadowBox {
 			}
 		}
 
-		maxZ += OFFSET;
+		maxZ += FlounderShadows.getShadowBoxOffset();
 	}
 
 	/**
@@ -100,7 +95,7 @@ public class ShadowBox {
 	 * @param camera The camera object.
 	 */
 	private void updateWidthsAndHeights(Camera camera) {
-		farWidth = (float) (shadowDistance * Math.tan(Math.toRadians(camera.getFOV())));
+		farWidth = (float) (FlounderShadows.getShadowBoxDistance() * Math.tan(Math.toRadians(camera.getFOV())));
 		nearWidth = (float) (camera.getNearPlane() * Math.tan(Math.toRadians(camera.getFOV())));
 		farHeight = farWidth / FlounderDisplay.getAspectRatio();
 		nearHeight = nearWidth / FlounderDisplay.getAspectRatio();
@@ -225,14 +220,5 @@ public class ShadowBox {
 	 */
 	protected float getLength() {
 		return maxZ - minZ;
-	}
-
-	/**
-	 * Gets the distance the shadow extends.
-	 *
-	 * @return The distance the shadow extends.
-	 */
-	protected float getShadowDistance() {
-		return shadowDistance;
 	}
 }

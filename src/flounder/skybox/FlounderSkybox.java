@@ -15,7 +15,7 @@ import flounder.textures.*;
 
 public class FlounderSkybox extends Module {
 	private static final FlounderSkybox INSTANCE = new FlounderSkybox();
-	public static final String PROFILE_TAB_NAME = "Kosmos Skybox";
+	public static final String PROFILE_TAB_NAME = "Skybox";
 
 	public static final MyFile SKYBOX_FOLDER = new MyFile(MyFile.RES_FOLDER, "skybox");
 
