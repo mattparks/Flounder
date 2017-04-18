@@ -2,6 +2,7 @@ package flounder.physics.bounding;
 
 import flounder.devices.*;
 import flounder.framework.*;
+import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.models.*;
 import flounder.physics.*;
@@ -17,7 +18,6 @@ public class FlounderBounding extends Module {
 	public static final String PROFILE_TAB_NAME = "Bounding";
 
 	private Map<ModelObject, List<Collider>> renderShapes;
-	private boolean renders;
 	private int boundingCount;
 
 	/**
@@ -41,7 +41,7 @@ public class FlounderBounding extends Module {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Enabled", renders);
+		FlounderProfiler.add(PROFILE_TAB_NAME, "Enabled", OpenGlUtils.isInWireframe());
 		FlounderProfiler.add(PROFILE_TAB_NAME, "Count", boundingCount);
 	}
 
@@ -51,7 +51,7 @@ public class FlounderBounding extends Module {
 	 * @param shape The shape to add.
 	 */
 	public static void addShapeRender(Collider shape) {
-		if (!renders() || shape == null) {
+		if (!OpenGlUtils.isInWireframe() || shape == null) {
 			return;
 		}
 
@@ -76,14 +76,6 @@ public class FlounderBounding extends Module {
 		return INSTANCE.renderShapes;
 	}
 
-	public static boolean renders() {
-		return INSTANCE.renders;
-	}
-
-	public static void toggle(boolean renders) {
-		INSTANCE.renders = renders;
-	}
-
 	/**
 	 * Clears the renderable Boundings.
 	 */
@@ -98,7 +90,6 @@ public class FlounderBounding extends Module {
 
 	@Override
 	public void dispose() {
-		this.renders = true;
 		clear();
 	}
 }

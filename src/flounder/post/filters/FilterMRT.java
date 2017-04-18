@@ -4,7 +4,6 @@ import flounder.camera.*;
 import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
-import flounder.logger.*;
 import flounder.post.*;
 import flounder.resources.*;
 import flounder.shadows.*;

@@ -4,19 +4,20 @@
 in vec2 pass_textureCoords;
 
 //---------UNIFORM------------
-layout(binding = 0) uniform sampler2D originalTexture;
+layout(binding = 0) uniform sampler2D originalAlbedo;
+layout(binding = 2) uniform sampler2D originalExtras;
 uniform vec3 sunPosition;
 uniform float worldHeight;
-uniform float aspectRatio;
+uniform vec2 displaySize;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
 
-vec3 lensflare(vec2 uv, vec3 pos) {
+vec3 lensflare(bool process, vec2 uv, vec3 pos) {
 	vec2 uvd = uv * length(uv);
 	vec3 colour = vec3(0.0);
 
-    if (sunPosition.z >= 0.0) {
+    if (process) {
         vec2 uvx = mix(uv, uvd, 1.0);
         float f2 = max(1.0 / (1.0 + 32.0 * pow(length(uvx + 0.8 * pos.xy), 2.0)), 0.0) * 0.25;
         float f22 = max(1.0 / (1.0 + 32.0 * pow(length(uvx + 0.85 * pos.xy), 2.0)), 0.0) * 0.23;
@@ -51,6 +52,10 @@ vec3 lensflare(vec2 uv, vec3 pos) {
 
 //---------MAIN------------
 void main(void) {
-	vec3 colour = vec3(1.4, 1.2, 1.0) * lensflare((pass_textureCoords - 0.5) * aspectRatio, sunPosition);
-	out_colour = texture(originalTexture, pass_textureCoords) + vec4(colour, 0.0);
+	vec4 albedo = texture(originalAlbedo, pass_textureCoords);
+	float glow = texture(originalExtras, sunPosition.xy).g; // TODO
+	bool process = sunPosition.z >= 0.0; // && glow > 0.2
+
+	vec3 colour = vec3(1.4, 1.2, 1.0) * lensflare(process, (pass_textureCoords - 0.5) * (displaySize.x / displaySize.y), sunPosition);
+	out_colour = albedo + vec4(colour, 0.0);
 }

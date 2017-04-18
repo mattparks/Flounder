@@ -28,19 +28,17 @@ public class BoundingRenderer extends Renderer {
 	private static Colour COLOUR_REUSABLE = new Colour();
 
 	private ShaderObject shader;
-	private boolean lastWireframe;
 
 	/**
 	 * Creates a new Boundings renderer.
 	 */
 	public BoundingRenderer() {
 		shader = ShaderFactory.newBuilder().setName("bounding").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
-		lastWireframe = false;
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || !FlounderBounding.renders() || FlounderBounding.getRenderShapes() == null) {
+		if (!shader.isLoaded() || !OpenGlUtils.isInWireframe() || FlounderBounding.getRenderShapes() == null) {
 			return;
 		}
 
@@ -66,8 +64,6 @@ public class BoundingRenderer extends Renderer {
 		shader.getUniformMat4("projectionMatrix").loadMat4(camera.getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
-
-		lastWireframe = OpenGlUtils.isInWireframe();
 
 		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.cullBackFaces(false);
@@ -103,7 +99,6 @@ public class BoundingRenderer extends Renderer {
 	}
 
 	private void endRendering() {
-		OpenGlUtils.goWireframe(lastWireframe);
 		shader.stop();
 	}
 

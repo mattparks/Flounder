@@ -30,6 +30,6 @@ public class FilterLensFlare extends PostFilter {
 	public void storeValues() {
 		shader.getUniformVec3("sunPosition").loadVec3(sunPosition);
 		shader.getUniformFloat("worldHeight").loadFloat(worldHeight);
-		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
+		shader.getUniformVec2("displaySize").loadVec2(FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
 	}
 }
