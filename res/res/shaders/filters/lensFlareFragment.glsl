@@ -13,6 +13,7 @@ uniform vec2 displaySize;
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
 
+//---------LENS FLARE------------
 vec3 lensflare(bool process, vec2 uv, vec3 pos) {
 	vec2 uvd = uv * length(uv);
 	vec3 colour = vec3(0.0);
@@ -50,11 +51,18 @@ vec3 lensflare(bool process, vec2 uv, vec3 pos) {
 	return colour * 1.3 - vec3(length(uvd) * 0.05);
 }
 
+//---------INSIDE SCREEN------------
+bool insideScreen(vec2 test) {
+    return test.x >= 0.0 && test.x <= 1.0 && test.y >= 0.0 && test.y <= 1.0;
+}
+
 //---------MAIN------------
 void main(void) {
+    vec2 sunCoord = (sunPosition.xy + 1.0) / 2.0;
+
 	vec4 albedo = texture(originalAlbedo, pass_textureCoords);
-	float glow = texture(originalExtras, sunPosition.xy).g; // TODO
-	bool process = sunPosition.z >= 0.0; // && glow > 0.2
+	float glow = texture(originalExtras, sunCoord).g;
+	bool process = sunPosition.z >= 0.0 && (glow > 0.2 || !insideScreen(sunCoord));
 
 	vec3 colour = vec3(1.4, 1.2, 1.0) * lensflare(process, (pass_textureCoords - 0.5) * (displaySize.x / displaySize.y), sunPosition);
 	out_colour = albedo + vec4(colour, 0.0);
