@@ -64,7 +64,7 @@ public class GuiSelector {
 		cursorX = FlounderMouse.getPositionX();
 		cursorY = FlounderMouse.getPositionY();
 
-		if (joysticksInitialized && FlounderJoysticks.isConnected(selectedJoystick)) {
+		if (joysticksInitialized && FlounderJoysticks.isConnected(selectedJoystick) && FlounderGuis.getGuiMaster().isGamePaused()) {
 			if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
 				cursorX += (joystickAxisX.getAmount()) * 0.75f * Framework.getDelta();
 				cursorY += (-joystickAxisY.getAmount()) * 0.75f * Framework.getDelta();

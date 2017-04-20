@@ -101,7 +101,7 @@ void main(void) {
 	vec3 toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
 
-    out_colour = vec4(albedo.rgb, 1.0);
+    out_colour = albedo;
 
     if (!ignoreLighting) {
         // Shadow mapping.
@@ -135,7 +135,7 @@ void main(void) {
         }
 
         vec3 boost = vec3(brightnessBoost, brightnessBoost, brightnessBoost);
-        out_colour = (vec4(max(totalDiffuse, boost), 1.0) * out_colour) + vec4(totalSpecular, 1.0);
+        out_colour = (vec4(max(totalDiffuse, boost), 1.0) * out_colour) + vec4(totalSpecular, 0.0);
     }
 
     if (!ignoreFog) {
