@@ -27,6 +27,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 	private Matrix4f modelMatrix;
 
 	private Collider collider;
+	private boolean createCollider;
 
 	private TextureObject texture;
 	private int textureIndex;
@@ -44,7 +45,11 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 	 * @param entity The entity this component is attached to.
 	 */
 	public ComponentModel(Entity entity) {
-		this(entity, 1.0f, null, TextureFactory.newBuilder().setFile(new MyFile(MyFile.RES_FOLDER, "undefined.png")).create(), 0);
+		this(entity, 1.0f, true, null, TextureFactory.newBuilder().setFile(new MyFile(MyFile.RES_FOLDER, "undefined.png")).create(), 0);
+	}
+
+	public ComponentModel(Entity entity, float scale, ModelObject model, TextureObject texture, int textureIndex) {
+		this(entity, scale, true, model, texture, textureIndex);
 	}
 
 	/**
@@ -52,11 +57,12 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 	 *
 	 * @param entity The entity this component is attached to.
 	 * @param scale The scale of the entity.
+	 * @param createCollider If there should be a collider created.
 	 * @param model The model that will be attached to this entity.
 	 * @param texture The diffuse texture for the entity.
 	 * @param textureIndex What texture index this entity should renderObjects from (0 default).
 	 */
-	public ComponentModel(Entity entity, float scale, ModelObject model, TextureObject texture, int textureIndex) {
+	public ComponentModel(Entity entity, float scale, boolean createCollider, ModelObject model, TextureObject texture, int textureIndex) {
 		super(entity);
 
 		this.scale = scale;
@@ -64,6 +70,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		this.modelMatrix = new Matrix4f();
 
 		this.collider = null;
+		this.createCollider = createCollider;
 
 		this.texture = texture;
 		this.textureIndex = textureIndex;
@@ -83,12 +90,14 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		if (getEntity().hasMoved()) {
 			Matrix4f.transformationMatrix(super.getEntity().getPosition(), super.getEntity().getRotation(), scale, modelMatrix);
 
-			if (model != null && model.getCollider() != null) {
+			if (createCollider && model != null && model.getCollider() != null) {
 				if (collider == null || !model.getCollider().getClass().isInstance(collider)) {
 					collider = model.getCollider().clone();
 				}
 
 				model.getCollider().update(super.getEntity().getPosition(), super.getEntity().getRotation(), scale, collider);
+			} else {
+				collider = null;
 			}
 		}
 
@@ -162,6 +171,14 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 	@Override
 	public Collider getCollider() {
 		return collider;
+	}
+
+	public boolean isCreateCollider() {
+		return createCollider;
+	}
+
+	public void setCreateCollider(boolean createCollider) {
+		this.createCollider = createCollider;
 	}
 
 	@Override
