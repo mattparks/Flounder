@@ -1,6 +1,7 @@
 package flounder.shadows;
 
 import flounder.camera.*;
+import flounder.devices.*;
 import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
@@ -59,7 +60,7 @@ public class ShadowRenderer extends Renderer {
 		shader.start();
 
 		OpenGlUtils.prepareNewRenderParse(0.0f, 0.0f, 0.0f);
-		OpenGlUtils.antialias(true);
+		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.cullBackFaces(false);
 		OpenGlUtils.enableDepthTesting();
 	}

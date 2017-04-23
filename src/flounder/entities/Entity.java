@@ -1,5 +1,6 @@
 package flounder.entities;
 
+import flounder.entities.components.*;
 import flounder.logger.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
@@ -183,13 +184,24 @@ public class Entity implements ISpatialObject {
 	 *
 	 * @param structure The new structure too be contained in.
 	 */
-	//public void switchStructure(ISpatialStructure<Entity> structure) {
-	//	structure.remove(this);
-	//	this.structure = structure;
-	//	structure.add(this);
-	//}
+	public void switchStructure(ISpatialStructure<Entity> structure) {
+		structure.remove(this);
+		this.structure = structure;
+		structure.add(this);
+	}
+
 	public ISpatialStructure<Entity> getStructure() {
 		return structure;
+	}
+
+	public void remove() {
+		ComponentRemoveFade remove = (ComponentRemoveFade) getComponent(ComponentRemoveFade.class);
+
+		if (remove != null) {
+			remove.trigger();
+		} else {
+			forceRemove();
+		}
 	}
 
 	/**
@@ -233,9 +245,24 @@ public class Entity implements ISpatialObject {
 	}
 
 	/**
+	 * Gets the alpha of the entity.
+	 *
+	 * @return The alpha of the entity.
+	 */
+	public float getAlpha() {
+		for (IComponentEntity component : components) {
+			if (component instanceof IComponentAlpha) {
+				return ((IComponentAlpha) component).getAlpha();
+			}
+		}
+
+		return 1.0f;
+	}
+
+	/**
 	 * Gets the scale of the entity.
 	 *
-	 * @return The sale of the entity.
+	 * @return The scale of the entity.
 	 */
 	public float getScale() {
 		for (IComponentEntity component : components) {

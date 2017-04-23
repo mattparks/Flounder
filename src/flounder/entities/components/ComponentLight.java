@@ -11,6 +11,9 @@ import javax.swing.event.*;
 
 public class ComponentLight extends IComponentEntity implements IComponentEditor {
 	private Vector3f offset;
+	private Colour colour;
+	private Attenuation attenuation;
+
 	private Light light;
 
 	/**
@@ -34,6 +37,8 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 		super(entity);
 
 		this.offset = offset;
+		this.colour = colour;
+		this.attenuation = attenuation;
 
 		if (entity != null) {
 			this.light = new Light(colour, Vector3f.add(entity.getPosition(), offset, null), attenuation);
@@ -45,8 +50,30 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 	@Override
 	public void update() {
 		//	if (super.getEntity().hasMoved()) { // TODO
-		Vector3f.add(getEntity().getPosition(), offset, light.getPosition());
+		if (offset != null) {
+			Vector3f.add(getEntity().getPosition(), offset, light.getPosition());
+		}
+
+		if (colour != null) {
+			light.colour.set(colour).scale(getEntity().getAlpha());
+		}
+
+		if (attenuation != null) {
+			light.attenuation.set(attenuation);
+		}
 		//	}
+	}
+
+	public Vector3f getOffset() {
+		return offset;
+	}
+
+	public Colour getColour() {
+		return colour;
+	}
+
+	public Attenuation getAttenuation() {
+		return attenuation;
 	}
 
 	public Light getLight() {

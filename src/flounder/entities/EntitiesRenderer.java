@@ -57,6 +57,7 @@ public class EntitiesRenderer extends Renderer {
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
 		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.enableDepthTesting();
 		OpenGlUtils.enableAlphaBlending();
 
