@@ -59,7 +59,6 @@ public class EntitiesRenderer extends Renderer {
 		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.enableDepthTesting();
-		OpenGlUtils.enableAlphaBlending();
 
 		renderedCount = 0;
 	}
