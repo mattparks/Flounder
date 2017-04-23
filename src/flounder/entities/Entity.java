@@ -202,6 +202,12 @@ public class Entity implements ISpatialObject {
 		} else {
 			forceRemove();
 		}
+
+		ComponentModel model = (ComponentModel) getComponent(ComponentModel.class);
+
+		if (model != null) {
+			model.setCreateCollider(false);
+		}
 	}
 
 	/**

@@ -7,8 +7,6 @@ import flounder.logger.*;
 import flounder.maths.vectors.*;
 import flounder.particles.*;
 import flounder.particles.spawns.*;
-import flounder.resources.*;
-import flounder.textures.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -65,10 +63,10 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 	@Override
 	public void update() {
 		if (particleSystem != null) {
-			if (particleSystem.getTypes().isEmpty()) {
-				particleSystem.addParticleType(new ParticleType("rain", TextureFactory.newBuilder().setFile(new MyFile(FlounderParticles.PARTICLES_FOLDER, "rainParticle.png")).setNumberOfRows(4).create(), 3.5f, 0.15f));
-				particleSystem.addParticleType(new ParticleType("snow", TextureFactory.newBuilder().setFile(new MyFile(FlounderParticles.PARTICLES_FOLDER, "snowParticle.png")).setNumberOfRows(4).create(), 3.5f, 0.20f));
-			}
+			//	if (particleSystem.getTypes().isEmpty()) {
+			//		particleSystem.addParticleType(new ParticleType("rain", TextureFactory.newBuilder().setFile(new MyFile(FlounderParticles.PARTICLES_FOLDER, "rainParticle.png")).setNumberOfRows(4).create(), 3.5f, 0.15f));
+			//		particleSystem.addParticleType(new ParticleType("snow", TextureFactory.newBuilder().setFile(new MyFile(FlounderParticles.PARTICLES_FOLDER, "snowParticle.png")).setNumberOfRows(4).create(), 3.5f, 0.20f));
+			//	}
 
 			if (super.getEntity().hasMoved()) {
 				Vector3f translated = new Vector3f(centreOffset);

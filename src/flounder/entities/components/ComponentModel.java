@@ -96,9 +96,11 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 				}
 
 				model.getCollider().update(super.getEntity().getPosition(), super.getEntity().getRotation(), scale, collider);
-			} else {
-				collider = null;
 			}
+		}
+
+		if (!createCollider) {
+			collider = null;
 		}
 
 		FlounderBounding.addShapeRender(collider);
