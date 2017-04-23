@@ -17,6 +17,7 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 
 	private boolean ignoreLighting;
 	private boolean ignoreFog;
+	private boolean projectsShadow;
 
 	/**
 	 * Creates a new ComponentSurface.
@@ -24,7 +25,7 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 	 * @param entity The entity this component is attached to.
 	 */
 	public ComponentSurface(Entity entity) {
-		this(entity, 1.0f, 0.0f, false, false);
+		this(entity, 1.0f, 0.0f, false, false, true);
 	}
 
 	/**
@@ -35,8 +36,9 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 	 * @param reflectivity The rendered objects reflectivity when lighted.
 	 * @param ignoreLighting If the rendered object will ignore shadows and lights.
 	 * @param ignoreFog If the rendered object will ignore fog.
+	 * @param projectsShadow If a shadow will be projected from the entities model.
 	 */
-	public ComponentSurface(Entity entity, float shineDamper, float reflectivity, boolean ignoreLighting, boolean ignoreFog) {
+	public ComponentSurface(Entity entity, float shineDamper, float reflectivity, boolean ignoreLighting, boolean ignoreFog, boolean projectsShadow) {
 		super(entity);
 
 		this.shineDamper = shineDamper;
@@ -44,6 +46,7 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 
 		this.ignoreLighting = ignoreLighting;
 		this.ignoreFog = ignoreFog;
+		this.projectsShadow = projectsShadow;
 	}
 
 	@Override
@@ -80,6 +83,14 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 
 	public void setIgnoreFog(boolean ignoreFog) {
 		this.ignoreFog = ignoreFog;
+	}
+
+	public boolean isProjectsShadow() {
+		return projectsShadow;
+	}
+
+	public void setProjectsShadow(boolean projectsShadow) {
+		this.projectsShadow = projectsShadow;
 	}
 
 	@Override
@@ -143,6 +154,14 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 			this.ignoreLighting = boxIgnoreShadows.isSelected();
 		});
 		panel.add(boxIgnoreShadows);
+
+		// Project Shadows Checkbox.
+		JCheckBox boxProjectShadows = new JCheckBox("Project Shadows");
+		boxProjectShadows.setSelected(this.ignoreLighting);
+		boxProjectShadows.addItemListener((ItemEvent e) -> {
+			this.projectsShadow = boxProjectShadows.isSelected();
+		});
+		panel.add(boxProjectShadows);
 	}
 
 	@Override
@@ -156,10 +175,11 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 		String saveReflectivity = reflectivity + "f";
 		String saveIgnoreFog = ignoreFog + "";
 		String saveIgnoreShadows = ignoreLighting + "";
+		String saveProjectShadows = projectsShadow + "";
 
 		return new Pair<>(
 				new String[]{}, // Static variables
-				new String[]{saveShineDamper, saveReflectivity, saveIgnoreFog, saveIgnoreShadows} // Class constructor
+				new String[]{saveShineDamper, saveReflectivity, saveIgnoreFog, saveIgnoreShadows, saveProjectShadows} // Class constructor
 		);
 	}
 
