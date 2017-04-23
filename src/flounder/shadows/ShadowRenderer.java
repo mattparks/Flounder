@@ -15,6 +15,8 @@ import flounder.resources.*;
 import flounder.shaders.*;
 import org.lwjgl.opengl.*;
 
+import java.util.*;
+
 public class ShadowRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "shadows", "shadowVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "shadows", "shadowFragment.glsl");
@@ -43,7 +45,7 @@ public class ShadowRenderer extends Renderer {
 		prepareRendering(clipPlane, camera);
 
 		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : FlounderEntities.getEntities().getAll()) {
+			for (Entity entity : new ArrayList<>(FlounderEntities.getEntities().getAll())) {
 				renderEntity(entity);
 			}
 		}

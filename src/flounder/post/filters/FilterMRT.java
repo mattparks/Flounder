@@ -9,6 +9,8 @@ import flounder.resources.*;
 import flounder.shadows.*;
 import flounder.skybox.*;
 
+import java.util.*;
+
 public class FilterMRT extends PostFilter {
 	private static final int LIGHTS = 64;
 	private float shadowFactor;
@@ -35,7 +37,7 @@ public class FilterMRT extends PostFilter {
 		int lightsLoaded = 0;
 
 		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : FlounderEntities.getEntities().getAll()) {
+			for (Entity entity : new ArrayList<>(FlounderEntities.getEntities().getAll())) {
 				ComponentLight componentLight = (ComponentLight) entity.getComponent(ComponentLight.class);
 
 				if (lightsLoaded < LIGHTS && componentLight != null) {

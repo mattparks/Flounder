@@ -52,7 +52,7 @@ public class FlounderParticles extends Module {
 			return;
 		}
 
-		particleSystems.forEach(ParticleSystem::generateParticles);
+		new ArrayList<>(particleSystems).forEach(ParticleSystem::generateParticles);
 
 		if (!particles.isEmpty()) {
 			for (StructureBasic<Particle> list : particles) {

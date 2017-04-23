@@ -50,7 +50,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 			return result;
 		}
 
-		for (T current : objects) {
+		for (T current : new ArrayList<>(objects)) {
 			if (current != null && (current.getCollider() == null || current.getCollider().inFrustum(range))) {
 				result.add(current);
 			}
@@ -67,7 +67,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 			return result;
 		}
 
-		for (T current : objects) {
+		for (T current : new ArrayList<>(objects)) {
 			if (current != null && current.getCollider() != null && (current.getCollider().intersects(range).isIntersection() || range.contains(current.getCollider()))) {
 				result.add(current);
 			}

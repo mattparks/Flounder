@@ -41,7 +41,9 @@ public class Entity implements ISpatialObject {
 
 		this.removed = false;
 
-		this.structure.add(this);
+		if (structure != null) {
+			this.structure.add(this);
+		}
 	}
 
 	/**
