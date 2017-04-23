@@ -39,7 +39,7 @@ public class ComponentRemoveFade extends IComponentEntity implements IComponentA
 
 	public void trigger() {
 		if (driver == null || driver instanceof ConstantDriver) {
-			driver = new SlideDriver(alpha, 0.0f, 0.5f);
+			driver = new SlideDriver(alpha, 0.0f, 0.3f);
 		}
 	}
 
