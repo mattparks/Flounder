@@ -72,7 +72,7 @@ public class SoundLoader {
 		AL10.alDeleteBuffers(bufferID);
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			FlounderLogger.error("Problem deleting sound buffer.");
+			FlounderLogger.warning("Problem deleting sound buffer.");
 		}
 	}
 
@@ -87,7 +87,7 @@ public class SoundLoader {
 		});
 
 		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			FlounderLogger.error("Problem deleting sound buffers.");
+			FlounderLogger.warning("Problem deleting sound buffers.");
 		}
 	}
 }
