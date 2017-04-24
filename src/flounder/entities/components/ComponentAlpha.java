@@ -1,12 +1,12 @@
 package flounder.entities.components;
 
 import flounder.entities.*;
-import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.shaders.*;
-import flounder.visual.*;
 
 import javax.swing.*;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class ComponentAlpha extends IComponentEntity implements IComponentAlpha, IComponentRender, IComponentEditor {
 	private float alpha;
@@ -47,12 +47,14 @@ public class ComponentAlpha extends IComponentEntity implements IComponentAlpha,
 	@Override
 	public void render(ShaderObject shader, Single<Integer> vaoLength) {
 		OpenGlUtils.cullBackFaces(alpha == 1.0f);
+		glDepthMask(false);
 		shader.getUniformFloat("transparency").loadFloat(1.0f - alpha);
 	}
 
 	@Override
 	public void renderClear(ShaderObject shader) {
 		OpenGlUtils.cullBackFaces(true);
+		glDepthMask(true);
 		shader.getUniformFloat("transparency").loadFloat(0.0f);
 	}
 
