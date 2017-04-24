@@ -198,7 +198,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 			}
 
 			if (collider != null) {
-				float height = 0.0f;
+				float height = 1.0f;
 
 				if (collider instanceof AABB) {
 					height = ((AABB) collider).getHeight();
