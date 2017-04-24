@@ -75,7 +75,7 @@ public class ShadowRenderer extends Renderer {
 		ComponentModel componentModel = (ComponentModel) entity.getComponent(ComponentModel.class);
 		ComponentAnimation componentAnimation = (ComponentAnimation) entity.getComponent(ComponentAnimation.class);
 		ComponentSway componentSway = (ComponentSway) entity.getComponent(ComponentSway.class);
-		ComponentSurface componentSurface  = (ComponentSurface) entity.getComponent(ComponentSurface.class);
+		ComponentSurface componentSurface = (ComponentSurface) entity.getComponent(ComponentSurface.class);
 
 		if (componentSurface != null && !componentSurface.isProjectsShadow()) {
 			return;

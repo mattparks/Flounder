@@ -57,7 +57,7 @@ void main(void) {
 
 	if (swaying) {
 	    vec4 swayColour = texture(swayMap, in_textureCoords);
-	    float swayPower = 0.5 * exp(log(length(swayColour.rgb)) / 3.0) * (totalLocalPos.y / swayHeight) * length(totalLocalPos.xyz);
+	    float swayPower = 0.5 * exp(log(length(swayColour.rgb) * swayColour.a) / 3.0) * (totalLocalPos.y / swayHeight) * length(totalLocalPos.xyz);
 	    totalLocalPos.x += swayPower * swayOffset.x;
 	    totalLocalPos.z += swayPower * swayOffset.y;
 	}
