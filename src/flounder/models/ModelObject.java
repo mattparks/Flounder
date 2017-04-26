@@ -59,7 +59,10 @@ public class ModelObject extends FactoryObject {
 		this.file = file;
 
 		this.collider = collider;
-		this.quickHull.loadData(vertices);
+
+		if (vertices != null) {
+			this.quickHull.loadData(vertices);
+		}
 
 		setDataLoaded(true);
 	}

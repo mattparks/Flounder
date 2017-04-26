@@ -45,7 +45,7 @@ public class ShadowRenderer extends Renderer {
 		prepareRendering(clipPlane, camera);
 
 		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : new ArrayList<>(FlounderEntities.getEntities().getAll())) {
+			for (Entity entity : FlounderEntities.getEntities().getAll()) {
 				renderEntity(entity);
 			}
 		}

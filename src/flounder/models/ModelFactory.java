@@ -74,6 +74,7 @@ public class ModelFactory extends Factory {
 		try {
 			while ((line = reader.readLine()) != null) {
 				String prefix = line.split(" ")[0];
+				line = line.trim();
 
 				if (prefix.equals("#")) {
 					continue;
@@ -107,6 +108,14 @@ public class ModelFactory extends Factory {
 						break;
 					case "f":
 						String[] currentLineF = line.split(" ");
+
+						// The split length of 3 faced + 1 for the f prefix.
+						if (currentLineF.length != 4 || line.contains("//")) {
+							FlounderLogger.error("Error reading the OBJ " + file + ", it does not appear to be UV mapped! The model will not be loaded.");
+							object.loadData(null, null, null, null, null, false, null, name, file);
+							return;
+						}
+
 						String[] vertex1 = currentLineF[1].split("/");
 						String[] vertex2 = currentLineF[2].split("/");
 						String[] vertex3 = currentLineF[3].split("/");
@@ -278,6 +287,10 @@ public class ModelFactory extends Factory {
 		// Takes OpenGL compatible data and loads it to the GPU and factory object.
 		ModelBuilder b = (ModelBuilder) builder;
 		ModelObject o = (ModelObject) object;
+
+		if (o.getIndices() == null && o.getVertices() == null) {
+			return;
+		}
 
 		int vaoID = FlounderLoader.createVAO();
 		FlounderLoader.createIndicesVBO(vaoID, o.getIndices());
