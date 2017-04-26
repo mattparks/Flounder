@@ -29,7 +29,7 @@ public class OpenGlUtils {
 	public static boolean isModern() {
 		int major = glGetInteger(GL_MAJOR_VERSION);
 		int minor = glGetInteger(GL_MINOR_VERSION);
-		return major > 3 || (major == 3 && minor > 3);
+		return major > 3 || (major == 3 && minor > 0); // major == 3 && minor > 3
 	}
 
 	/**
@@ -265,8 +265,8 @@ public class OpenGlUtils {
 	public static void renderInstanced(int glMode, int glLength, int glPrimCount) {
 		if (isModern()) {
 			glDrawArraysInstanced(glMode, 0, glLength, glPrimCount);
-		} else {
-			ARBDrawInstanced.glDrawArraysInstancedARB(glMode, 0, glLength, glPrimCount);
-		}
+		}// else {
+		//	ARBDrawInstanced.glDrawArraysInstancedARB(glMode, 0, glLength, glPrimCount);
+		//}
 	}
 }

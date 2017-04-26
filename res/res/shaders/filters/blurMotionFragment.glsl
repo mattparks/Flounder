@@ -42,12 +42,11 @@ void main(void) {
     vec2 velocity = (currentPos.xy - previousPos.xy) * 0.02 * delta;
 
     // Samples the texture to produce a blur in the velocity.
-    vec2 texcoord = pass_textureCoords;
+    vec3 sampled_colour = vec3(0.0);
 
     for (float i = 1.0; i < numSamples; ++i){
-        out_colour += texture(originalTexture, texcoord);
-        texcoord += velocity;
+        sampled_colour += texture(originalTexture, pass_textureCoords + (i * velocity)).rgb;
     }
 
-    out_colour = vec4(out_colour.rgb / numSamples, 1.0);
+    out_colour = vec4(sampled_colour / numSamples, 1.0);
 }

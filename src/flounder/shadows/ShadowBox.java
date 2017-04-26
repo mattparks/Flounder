@@ -39,6 +39,10 @@ public class ShadowBox {
 	 * @param camera The camera object to be used when calculating the shadow boxes size.
 	 */
 	protected void update(Camera camera) {
+		if (camera == null) {
+			return;
+		}
+
 		updateWidthsAndHeights(camera);
 
 		Matrix4f rotation = calculateCameraRotationMatrix(camera);

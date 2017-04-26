@@ -189,9 +189,9 @@ public class FlounderLoader extends Module {
 			if (instanced) {
 				if (OpenGlUtils.isModern()) {
 					glVertexAttribDivisor(i + startingAttribute, 1); // TODO: Find non GL 3.3 version.
-				} else {
-					ARBInstancedArrays.glVertexAttribDivisorARB(i + startingAttribute, 1);
-				}
+				}// else {
+				//	ARBInstancedArrays.glVertexAttribDivisorARB(i + startingAttribute, 1);
+				//}
 			}
 
 			total += lengths[i];
@@ -285,9 +285,9 @@ public class FlounderLoader extends Module {
 
 		if (OpenGlUtils.isModern()) {
 			glVertexAttribDivisor(attribute, 1);
-		} else {
-			ARBInstancedArrays.glVertexAttribDivisorARB(attribute, 1);
-		}
+		}// else {
+		//	ARBInstancedArrays.glVertexAttribDivisorARB(attribute, 1);
+		//}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);

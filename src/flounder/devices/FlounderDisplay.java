@@ -163,7 +163,7 @@ public class FlounderDisplay extends Module {
 
 		// Gets any window errors.
 		if (window == NULL) {
-			FlounderLogger.error("Could not create the window!");
+			FlounderLogger.error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL 3.0!");
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -174,7 +174,7 @@ public class FlounderDisplay extends Module {
 		try {
 			setWindowIcon();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not load custom display image!");
+			FlounderLogger.error("Could not load custom display icon!");
 			FlounderLogger.exception(e);
 		}
 
@@ -185,7 +185,7 @@ public class FlounderDisplay extends Module {
 		long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
-			FlounderLogger.error("OpenGL Error: " + glError);
+			FlounderLogger.error("OpenGL Capability Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
