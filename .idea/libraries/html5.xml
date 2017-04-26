@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="html5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/gwt-al-0.2-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/webgl4j-0.2.8.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/gwt-al-0.2-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/webgl4j-0.2.8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/gwt-al-0.2-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/webgl4j-0.2.8-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/gwt-al-0.2-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Backend-HTML5/libs/webgl4j-0.2.8.jar!/" />
+    </SOURCES>
+  </library>
+</component>
