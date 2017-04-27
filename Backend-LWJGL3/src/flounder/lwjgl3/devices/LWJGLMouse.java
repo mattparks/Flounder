@@ -1,5 +1,6 @@
 package flounder.lwjgl3.devices;
 
+import flounder.devices.*;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
@@ -15,5 +16,5 @@ import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class LWJGLMouse {
+public class LWJGLMouse implements IDeviceMouse {
 }

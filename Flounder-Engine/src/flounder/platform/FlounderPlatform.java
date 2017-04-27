@@ -21,17 +21,35 @@ public class FlounderPlatform extends Module {
 	 */
 	public FlounderPlatform() {
 		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME);
-		this.platform = new PlatformLWJGL3(); // TODO
 	}
 
 	@Override
 	public void init() {
-		Framework.getUpdater().setTiming(platform.getTiming());
-		FlounderLogger.log(platform.getTiming());
+		update();
+		if (platform != null) {
+			Framework.getUpdater().setTiming(platform.getTiming());
+		//	FlounderLogger.log(platform.getTiming());
+		}
 	}
 
 	@Override
 	public void update() {
+		// Gets a new platform, if available.
+		IPlatform newPlatform = (IPlatform) getExtensionMatch(platform, IPlatform.class, true);
+
+		// If there is a new player, disable the old one and start to use the new one.
+		if (newPlatform != null) {
+			if (platform != null) {
+				platform.setInitialized(false);
+			}
+
+			if (!newPlatform.isInitialized()) {
+			//	newPlatform.init();
+				newPlatform.setInitialized(true);
+			}
+
+			platform = newPlatform;
+		}
 	}
 
 	@Override

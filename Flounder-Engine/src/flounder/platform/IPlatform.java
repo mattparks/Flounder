@@ -1,5 +1,6 @@
 package flounder.platform;
 
+import flounder.framework.*;
 import flounder.framework.updater.*;
 
 import java.nio.*;
@@ -7,11 +8,15 @@ import java.nio.*;
 /**
  * An implementation for objects in a platform.
  */
-public interface IPlatform {
+public abstract class IPlatform extends Extension {
+	public IPlatform(Class... requires) {
+		super(FlounderPlatform.class, requires);
+	}
+
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	Platform getPlatform();
+	public abstract Platform getPlatform();
 
 	/**
 	 * Gets the time manager for this platform.
@@ -21,7 +26,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	TimingReference getTiming();
+	public abstract TimingReference getTiming();
 
 	/**
 	 * Allocates a direct native-ordered bytebuffer with the specified capacity.
@@ -33,7 +38,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	ByteBuffer createByteBuffer(int capacity);
+	public abstract ByteBuffer createByteBuffer(int capacity);
 
 	/**
 	 * Allocates a direct native-order shortbuffer with the specified number of elements.
@@ -45,7 +50,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	ShortBuffer createShortBuffer(int capacity);
+	public abstract ShortBuffer createShortBuffer(int capacity);
 
 	/**
 	 * Allocates a direct native-order charbuffer with the specified number of elements.
@@ -57,7 +62,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	CharBuffer createCharBuffer(int capacity);
+	public abstract CharBuffer createCharBuffer(int capacity);
 
 	/**
 	 * Allocates a direct native-order intbuffer with the specified number of elements.
@@ -69,7 +74,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	IntBuffer createIntBuffer(int capacity);
+	public abstract IntBuffer createIntBuffer(int capacity);
 
 	/**
 	 * Allocates a direct native-order longbuffer with the specified number of elements.
@@ -81,7 +86,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	LongBuffer createLongBuffer(int capacity);
+	public abstract LongBuffer createLongBuffer(int capacity);
 
 	/**
 	 * Allocates a direct native-order floatbuffer with the specified number of elements.
@@ -93,7 +98,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	FloatBuffer createFloatBuffer(int capacity);
+	public abstract FloatBuffer createFloatBuffer(int capacity);
 
 	/**
 	 * Allocates a direct native-order doublebuffer with the specified number of elements.
@@ -105,7 +110,7 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	DoubleBuffer createDoubleBuffer(int capacity);
+	public abstract DoubleBuffer createDoubleBuffer(int capacity);
 
 	/**
 	 * Gets the max anisotropy level for textures on this device.
@@ -115,5 +120,10 @@ public interface IPlatform {
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
-	float getMaxAnisotropy();
+	public abstract float getMaxAnisotropy();
+
+	@Override
+	public boolean isActive() {
+		return true;
+	}
 }

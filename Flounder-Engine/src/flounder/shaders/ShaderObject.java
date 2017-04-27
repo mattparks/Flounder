@@ -7,8 +7,6 @@ import flounder.processing.*;
 
 import java.util.*;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * Class that represents a loaded shader.
  */
@@ -88,14 +86,14 @@ public class ShaderObject extends FactoryObject {
 	 * Starts the shader program.
 	 */
 	public void start() {
-		glUseProgram(programID);
+		FlounderShaders.useShader(programID);
 	}
 
 	/**
 	 * Stops the shader program.
 	 */
 	public void stop() {
-		glUseProgram(0);
+		FlounderShaders.useShader(0);
 	}
 
 	/**

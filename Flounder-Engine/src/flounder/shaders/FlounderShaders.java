@@ -189,6 +189,10 @@ public class FlounderShaders extends Module {
 		}
 	}
 
+	public static void useShader(int shaderID) {
+		glUseProgram(shaderID);
+	}
+
 	public static void deleteShader(int shaderID) {
 		glUseProgram(0);
 		glDeleteProgram(shaderID);

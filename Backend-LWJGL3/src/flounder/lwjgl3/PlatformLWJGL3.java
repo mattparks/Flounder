@@ -1,6 +1,7 @@
 package flounder.lwjgl3;
 
 import flounder.framework.updater.*;
+import flounder.lwjgl3.devices.*;
 import flounder.platform.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -10,7 +11,11 @@ import java.nio.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 
-public class PlatformLWJGL3 implements IPlatform {
+public class PlatformLWJGL3 extends IPlatform {
+	public PlatformLWJGL3() {
+		super();
+	}
+
 	@Override
 	public Platform getPlatform() {
 		final String OS = System.getProperty("os.name").toLowerCase();

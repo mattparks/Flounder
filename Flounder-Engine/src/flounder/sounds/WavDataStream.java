@@ -35,7 +35,7 @@ public class WavDataStream {
 	private WavDataStream(AudioInputStream stream, int chunkSize) {
 		AudioFormat format = stream.getFormat();
 
-		alFormat = FlounderSound.getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
+		alFormat = FlounderSound.getDevice().getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
 		sampleRate = (int) format.getSampleRate();
 		totalBytes = (int) (stream.getFrameLength() * format.getFrameSize());
 		bytesPerFrame = format.getFrameSize();

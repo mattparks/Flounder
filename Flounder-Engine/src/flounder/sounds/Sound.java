@@ -96,7 +96,7 @@ public class Sound {
 	 */
 	public void delete() {
 		if (loaded) {
-			FlounderProcessors.sendRequest((RequestOpenGL) () -> FlounderSound.deleteBuffer(bufferID));
+			FlounderProcessors.sendRequest((RequestOpenGL) () -> FlounderSound.getDevice().deleteBuffer(bufferID));
 			loaded = false;
 		}
 	}

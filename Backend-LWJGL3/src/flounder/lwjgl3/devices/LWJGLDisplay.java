@@ -1,5 +1,6 @@
 package flounder.lwjgl3.devices;
 
+import flounder.devices.*;
 import flounder.fbos.*;
 import flounder.framework.*;
 import flounder.helpers.*;
@@ -21,5 +22,5 @@ import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class LWJGLDisplay {
+public class LWJGLDisplay implements IDeviceDisplay {
 }
