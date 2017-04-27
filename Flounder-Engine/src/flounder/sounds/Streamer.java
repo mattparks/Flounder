@@ -1,5 +1,7 @@
 package flounder.sounds;
 
+import flounder.devices.*;
+
 import java.nio.*;
 import java.util.*;
 
@@ -41,7 +43,7 @@ public class Streamer {
 		bufferQueue = new ArrayList<>();
 
 		for (int i = 0; i < NUM_BUFFERS; i++) {
-			unusedBuffers.add(SoundLoader.generateBuffer());
+			unusedBuffers.add(FlounderSound.generateBuffer());
 		}
 	}
 
@@ -82,7 +84,7 @@ public class Streamer {
 	 */
 	private void loadNextDataIntoBuffer(int buffer) {
 		ByteBuffer data = stream.loadNextData();
-		SoundLoader.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
+		FlounderSound.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
 	}
 
 	/**
@@ -137,7 +139,7 @@ public class Streamer {
 	 */
 	protected void delete() {
 		stream.close();
-		bufferQueue.forEach(SoundLoader::deleteBuffer);
-		unusedBuffers.forEach(SoundLoader::deleteBuffer);
+		bufferQueue.forEach(FlounderSound::deleteBuffer);
+		unusedBuffers.forEach(FlounderSound::deleteBuffer);
 	}
 }

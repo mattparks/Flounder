@@ -4,18 +4,15 @@ import flounder.lights.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * Represents a 3 value vector uniform type that can be loaded to the shader.
  */
 public class UniformVec3 extends Uniform {
-	private float currentX;
-	private float currentY;
-	private float currentZ;
+	private Vector3f current;
 
 	public UniformVec3(String name, ShaderObject shader) {
 		super(name, shader);
+		this.current = new Vector3f();
 	}
 
 	/**
@@ -53,11 +50,9 @@ public class UniformVec3 extends Uniform {
 	 * @param z The new z value.
 	 */
 	public void loadVec3(float x, float y, float z) {
-		if (x != currentX || y != currentY || z != currentZ) {
-			glUniform3f(super.getLocation(), x, y, z);
-			currentX = x;
-			currentY = y;
-			currentZ = z;
+		if (x != current.x || y != current.y || z != current.z) {
+			current.set(x, y, z);
+			FlounderShaders.storeVectorData(super.getLocation(), current);
 		}
 	}
 }

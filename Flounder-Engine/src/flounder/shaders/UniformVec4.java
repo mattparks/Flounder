@@ -3,19 +3,15 @@ package flounder.shaders;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * Represents a 4 value vector uniform type that can be loaded to the shader.
  */
 public class UniformVec4 extends Uniform {
-	private float currentX;
-	private float currentY;
-	private float currentZ;
-	private float currentW;
+	private Vector4f current;
 
 	public UniformVec4(String name, ShaderObject shader) {
 		super(name, shader);
+		this.current = new Vector4f();
 	}
 
 	/**
@@ -45,12 +41,9 @@ public class UniformVec4 extends Uniform {
 	 * @param w The new w value.
 	 */
 	public void loadVec4(float x, float y, float z, float w) {
-		if (x != currentX || y != currentY || z != currentZ || w != currentW) {
-			glUniform4f(super.getLocation(), x, y, z, w);
-			currentX = x;
-			currentY = y;
-			currentZ = z;
-			currentW = w;
+		if (x != current.x || y != current.y || z != current.z || w != current.w) {
+			current.set(x, y, z, w);
+			FlounderShaders.storeVectorData(super.getLocation(), current);
 		}
 	}
 }

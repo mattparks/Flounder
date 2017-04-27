@@ -13,9 +13,8 @@ import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
-import org.lwjgl.opengl.*;
 
-import java.util.*;
+import static flounder.platform.Constants.*;
 
 public class ShadowRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "shadows", "shadowVertex.glsl");
@@ -31,7 +30,7 @@ public class ShadowRenderer extends Renderer {
 	 */
 	public ShadowRenderer() {
 		this.shadowFBO = FBO.newFBO(FlounderShadows.getShadowSize(), FlounderShadows.getShadowSize()).noColourBuffer().disableTextureWrap().depthBuffer(DepthBufferType.TEXTURE).create();
-		this.shader = ShaderFactory.newBuilder().setName("shadows").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("shadows").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 
 		this.mvpReusableMatrix = new Matrix4f();
 	}
@@ -141,7 +140,7 @@ public class ShadowRenderer extends Renderer {
 		}
 
 		if (vaoLength > 0) {
-			OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, vaoLength);
+			OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength);
 		}
 
 		OpenGlUtils.unbindVAO(0, 4, 5);

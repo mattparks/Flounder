@@ -1,9 +1,9 @@
 package flounder.sounds;
 
+import flounder.devices.*;
 import flounder.logger.*;
+import flounder.platform.*;
 import flounder.resources.*;
-import org.lwjgl.*;
-import org.lwjgl.openal.*;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -35,7 +35,7 @@ public class WavDataStream {
 	private WavDataStream(AudioInputStream stream, int chunkSize) {
 		AudioFormat format = stream.getFormat();
 
-		alFormat = getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
+		alFormat = FlounderSound.getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
 		sampleRate = (int) format.getSampleRate();
 		totalBytes = (int) (stream.getFrameLength() * format.getFrameSize());
 		bytesPerFrame = format.getFrameSize();
@@ -43,26 +43,10 @@ public class WavDataStream {
 		this.chunkSize = chunkSize;
 		audioStream = stream;
 
-		buffer = BufferUtils.createByteBuffer(chunkSize);
+		buffer = FlounderPlatform.createByteBuffer(chunkSize);
 		data = new byte[chunkSize];
 
 		totalBytesRead = 0;
-	}
-
-	/**
-	 * Determines the OpenAL ID of the sound data format.
-	 *
-	 * @param channels Number of channels in the audio data.
-	 * @param bitsPerSample Number of bits per sample (either 8 or 16).
-	 *
-	 * @return The OpenAL format ID of the sound data.
-	 */
-	private static int getOpenAlFormat(int channels, int bitsPerSample) {
-		if (channels == 1) {
-			return bitsPerSample == 8 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_MONO16;
-		} else {
-			return bitsPerSample == 8 ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_STEREO16;
-		}
 	}
 
 	/**
@@ -75,7 +59,7 @@ public class WavDataStream {
 	 *
 	 * @throws Exception If something goes wrong.
 	 */
-	protected static WavDataStream openWavStream(MyFile wavFile, int chunkSize) throws Exception {
+	public static WavDataStream openWavStream(MyFile wavFile, int chunkSize) throws Exception {
 		InputStream bufferedInput = new BufferedInputStream(wavFile.getInputStream());
 		AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedInput);
 		WavDataStream wavStream = new WavDataStream(audioStream, chunkSize);
@@ -105,7 +89,7 @@ public class WavDataStream {
 	 *
 	 * @return The loaded byte buffer.
 	 */
-	protected ByteBuffer loadNextData() {
+	public ByteBuffer loadNextData() {
 		try {
 			int bytesRead = audioStream.read(data, 0, chunkSize);
 			totalBytesRead += bytesRead;
@@ -145,7 +129,7 @@ public class WavDataStream {
 	/**
 	 * Closes the stream.
 	 */
-	protected void close() {
+	public void close() {
 		try {
 			audioStream.close();
 		} catch (IOException e) {

@@ -3,6 +3,7 @@ package flounder.devices;
 import flounder.camera.*;
 import flounder.framework.*;
 import flounder.logger.*;
+import flounder.lwjgl3.sounds.*;
 import flounder.maths.vectors.*;
 import flounder.processing.*;
 import flounder.resources.*;
@@ -10,6 +11,7 @@ import flounder.sounds.*;
 import org.lwjgl.openal.*;
 
 import java.nio.*;
+import java.util.*;
 
 import static org.lwjgl.openal.AL.createCapabilities;
 import static org.lwjgl.openal.AL10.*;
@@ -29,6 +31,8 @@ public class FlounderSound extends Module {
 
 	private Vector3f cameraPosition;
 	private long device;
+
+	private List<Integer> buffers;
 
 	private SourcePoolManager sourcePool;
 	private StreamManager streamManager;
@@ -50,6 +54,8 @@ public class FlounderSound extends Module {
 		ALCCapabilities deviceCaps = createCapabilities(device);
 		alcMakeContextCurrent(alcCreateContext(device, (IntBuffer) null));
 		createCapabilities(deviceCaps);
+
+		this.buffers = new ArrayList<>();
 
 		// Checks for errors.
 		int alError = alGetError();
@@ -81,6 +87,15 @@ public class FlounderSound extends Module {
 
 	@Override
 	public void profile() {
+	}
+
+	/**
+	 * Creates a new platform specific sound source.
+	 *
+	 * @return A new sound source.
+	 */
+	public static SoundSource createPlatformSource() {
+		return new LWJGLSoundSource();
 	}
 
 	/**
@@ -122,6 +137,86 @@ public class FlounderSound extends Module {
 		return INSTANCE.sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
 	}
 
+	/**
+	 * Determines the OpenAL ID of the sound data format.
+	 *
+	 * @param channels Number of channels in the audio data.
+	 * @param bitsPerSample Number of bits per sample (either 8 or 16).
+	 *
+	 * @return The OpenAL format ID of the sound data.
+	 */
+	public static int getOpenAlFormat(int channels, int bitsPerSample) {
+		if (channels == 1) {
+			return bitsPerSample == 8 ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16;
+		} else {
+			return bitsPerSample == 8 ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16;
+		}
+	}
+
+	/**
+	 * Generates an OpenAL buffer and loads some, if not all, of the sound data into it. The buffer and other information about the audio data gets
+	 * set in the sound object. This is called to load a new sound for the first time.
+	 *
+	 * @param sound The sound to be loaded.
+	 */
+	public static void doInitialSoundLoad(Sound sound) {
+		try {
+			FlounderLogger.log("Loading sound " + sound.getSoundFile().getPath());
+			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
+			sound.setTotalBytes(stream.getTotalBytes());
+			ByteBuffer byteBuffer = stream.loadNextData();
+			int bufferID = generateBuffer();
+			loadSoundDataIntoBuffer(bufferID, byteBuffer, stream.getAlFormat(), stream.getSampleRate());
+			sound.setBuffer(bufferID, byteBuffer.limit());
+			stream.close();
+		} catch (Exception e) {
+			FlounderLogger.error("Couldn't load sound file " + sound.getSoundFile());
+			FlounderLogger.exception(e);
+		}
+	}
+
+	/**
+	 * Loads audio data of a certain format into an OpenAL buffer.
+	 *
+	 * @param bufferID The buffer to which the data should be loaded.
+	 * @param data The audio data.
+	 * @param format The OpenAL format of the data (mono, stereo, etc.)
+	 * @param sampleRate The sample rate of the audio.
+	 */
+	public static void loadSoundDataIntoBuffer(int bufferID, ByteBuffer data, int format, int sampleRate) {
+		alBufferData(bufferID, format, data, sampleRate);
+		int error = alGetError();
+
+		if (error != AL_NO_ERROR) {
+			FlounderLogger.error("Problem loading sound data into buffer. " + error);
+		}
+	}
+
+	/**
+	 * Generates an empty sound buffer.
+	 *
+	 * @return The ID of the buffer.
+	 */
+	public static int generateBuffer() {
+		int bufferID = alGenBuffers();
+		INSTANCE.buffers.add(bufferID);
+		return bufferID;
+	}
+
+	/**
+	 * Removes a certain sound buffer from memory by removing from the list of buffers and deleting it.
+	 *
+	 * @param bufferID The ID of the buffer to be deleted.
+	 */
+	public static void deleteBuffer(Integer bufferID) {
+		INSTANCE.buffers.remove(bufferID);
+		alDeleteBuffers(bufferID);
+
+		if (alGetError() != AL_NO_ERROR) {
+			FlounderLogger.warning("Problem deleting sound buffer.");
+		}
+	}
+
 	public static SourcePoolManager getSourcePool() {
 		return INSTANCE.sourcePool;
 	}
@@ -154,7 +249,17 @@ public class FlounderSound extends Module {
 		streamManager.kill();
 		sourcePool.dispose();
 		musicPlayer.dispose();
-		SoundLoader.dispose();
+
+		buffers.forEach(buffer -> {
+			if (buffer != null) {
+				alDeleteBuffers(buffer);
+			}
+		});
+
+		if (alGetError() != AL_NO_ERROR) {
+			FlounderLogger.warning("Problem deleting sound buffers.");
+		}
+
 		alcCloseDevice(device);
 	}
 }

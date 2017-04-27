@@ -2,8 +2,6 @@ package flounder.shaders;
 
 import flounder.processing.opengl.*;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * A class that can process a request to delete a shader.
  */
@@ -27,8 +25,6 @@ public class ShaderDeleteRequest implements RequestOpenGL {
 
 		FlounderShaders.getLoaded().get(shader.getName()).clear();
 		FlounderShaders.getLoaded().remove(shader.getName());
-
-		glUseProgram(0);
-		glDeleteProgram(shader.getProgramID());
+		FlounderShaders.deleteShader(shader.getProgramID());
 	}
 }

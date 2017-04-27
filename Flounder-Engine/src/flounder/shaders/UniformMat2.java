@@ -1,23 +1,21 @@
 package flounder.shaders;
 
 import flounder.maths.matrices.*;
-import org.lwjgl.*;
+import flounder.platform.*;
 
 import java.nio.*;
-
-import static org.lwjgl.opengl.GL20.*;
 
 /**
  * Represents a Matrix2F uniform type that can be loaded to the shader.
  */
 public class UniformMat2 extends Uniform {
-	private Matrix2f currentValue;
+	private Matrix2f current;
 	private FloatBuffer floatBuffer;
 
 	public UniformMat2(String name, ShaderObject shader) {
 		super(name, shader);
-		currentValue = new Matrix2f();
-		floatBuffer = BufferUtils.createFloatBuffer(4);
+		this.current = new Matrix2f();
+		this.floatBuffer = FlounderPlatform.createFloatBuffer(4);
 	}
 
 	/**
@@ -26,13 +24,9 @@ public class UniformMat2 extends Uniform {
 	 * @param value The new value.
 	 */
 	public void loadMat2(Matrix2f value) {
-		if (value != null && !currentValue.equals(value)) {
-			floatBuffer.clear();
-			value.store(floatBuffer);
-			floatBuffer.flip();
-
-			glUniformMatrix2fv(super.getLocation(), false, floatBuffer);
-			currentValue.set(value);
+		if (value != null && !current.equals(value)) {
+			current.set(value);
+			FlounderShaders.storeMatrixData(super.getLocation(), floatBuffer, value);
 		}
 	}
 }

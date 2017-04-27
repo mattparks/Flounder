@@ -2,7 +2,7 @@ package flounder.devices;
 
 import flounder.framework.*;
 import flounder.logger.*;
-import org.lwjgl.*;
+import flounder.platform.*;
 
 import java.nio.*;
 
@@ -40,8 +40,8 @@ public class FlounderJoysticks extends Module {
 			if (glfwJoystickPresent(i)) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {
 					FlounderLogger.log("Connecting Joystick: " + i);
-					joystickAxes[i] = BufferUtils.createFloatBuffer(glfwGetJoystickAxes(i).capacity());
-					joystickButtons[i] = BufferUtils.createByteBuffer(glfwGetJoystickButtons(i).capacity());
+					joystickAxes[i] = FlounderPlatform.createFloatBuffer(glfwGetJoystickAxes(i).capacity());
+					joystickButtons[i] = FlounderPlatform.createByteBuffer(glfwGetJoystickButtons(i).capacity());
 					joystickNames[i] = glfwGetJoystickName(i);
 				}
 

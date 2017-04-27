@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.image.*;
 import java.nio.*;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 /**
  * A module used for rendering a invisible display into a JPanel.
  */
@@ -67,7 +65,7 @@ public class FlounderDisplayJPanel extends Module {
 
 		// Updates the invisible displays size.
 		if ((panel.getHeight() != 0 && panel.getWidth() != 0) && (FlounderDisplay.getWidth() != panel.getWidth() || FlounderDisplay.getHeight() != panel.getHeight())) {
-			glfwSetWindowSize(FlounderDisplay.getWindow(), panel.getWidth(), panel.getHeight());
+			FlounderDisplay.setWindowSize(panel.getWidth(), panel.getHeight());
 		}
 
 		// Copies the image from the invisible to a BufferedImage.

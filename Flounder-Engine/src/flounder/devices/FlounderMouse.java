@@ -3,9 +3,9 @@ package flounder.devices;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
+import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.resources.*;
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
@@ -131,7 +131,7 @@ public class FlounderMouse extends Module {
 		image.getRGB(0, 0, width, height, pixels, 0, width);
 
 		// Converts image to RGBA format.
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		ByteBuffer buffer = FlounderPlatform.createByteBuffer(width * height * 4);
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -240,6 +240,10 @@ public class FlounderMouse extends Module {
 	 */
 	public static float getPositionY() {
 		return INSTANCE.mousePositionY;
+	}
+
+	public static void setPosition(float cursorX, float cursorY) {
+		glfwSetCursorPos(FlounderDisplay.getWindow(), cursorX, cursorY);
 	}
 
 	/**

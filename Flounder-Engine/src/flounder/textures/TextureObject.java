@@ -6,7 +6,7 @@ import flounder.resources.*;
 
 import java.nio.*;
 
-import static org.lwjgl.opengl.GL11.*;
+import static flounder.platform.Constants.*;
 
 /**
  * Class that represents a loaded texture.

@@ -6,7 +6,7 @@ import flounder.post.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
-import static org.lwjgl.opengl.GL20.*;
+import static flounder.platform.Constants.*;
 
 public class FilterBlurVertical extends PostFilter {
 	private int heightValue;

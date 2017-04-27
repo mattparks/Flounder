@@ -6,8 +6,7 @@ import flounder.loaders.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
+import static flounder.platform.Constants.*;
 
 /**
  * Represents a post effect shader and on application saves the result into a FBO.
@@ -65,7 +64,7 @@ public abstract class PostFilter {
 			OpenGlUtils.bindTexture(textures[i], GL_TEXTURE_2D, i);
 		}
 
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, POSITIONS.length); // Render post filter.
+		OpenGlUtils.renderArrays(GL_TRIANGLE_STRIP, POSITIONS.length); // Render post filter.
 
 		OpenGlUtils.unbindVAO(0);
 		OpenGlUtils.goWireframe(lastWireframe);

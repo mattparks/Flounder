@@ -1,5 +1,6 @@
 package flounder.sounds;
 
+import flounder.devices.*;
 import flounder.framework.*;
 import flounder.maths.*;
 import flounder.visual.*;
@@ -35,7 +36,7 @@ public class MusicPlayer {
 	 * Sets up the sound source that the music player will be using to play sounds, and sets the relevant settings.
 	 */
 	public MusicPlayer() {
-		source = new SoundSource();
+		source = FlounderSound.createPlatformSource();
 		source.pause();
 		source.loop(false);
 		source.setUndiminishing();

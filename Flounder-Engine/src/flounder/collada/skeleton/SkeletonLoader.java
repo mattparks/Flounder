@@ -3,7 +3,7 @@ package flounder.collada.skeleton;
 import flounder.collada.*;
 import flounder.maths.matrices.*;
 import flounder.parsing.xml.*;
-import org.lwjgl.*;
+import flounder.platform.*;
 
 import java.nio.*;
 import java.util.*;
@@ -61,7 +61,7 @@ public class SkeletonLoader {
 			matrixData[i] = Float.parseFloat(rawData[i]);
 		}
 
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+		FloatBuffer buffer = FlounderPlatform.createFloatBuffer(16);
 		buffer.put(matrixData);
 		buffer.flip();
 		return buffer;

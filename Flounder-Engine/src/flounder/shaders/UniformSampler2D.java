@@ -1,12 +1,10 @@
 package flounder.shaders;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * Represents a texture sampler uniform type that can be loaded to the shader.
  */
 public class UniformSampler2D extends Uniform {
-	private int currentValue;
+	private int current;
 
 	public UniformSampler2D(String name, ShaderObject shader) {
 		super(name, shader);
@@ -18,9 +16,9 @@ public class UniformSampler2D extends Uniform {
 	 * @param value The new value.
 	 */
 	public void loadTexUnit(int value) {
-		if (currentValue != value) {
-			glUniform1i(super.getLocation(), value);
-			currentValue = value;
+		if (current != value) {
+			current = value;
+			FlounderShaders.storeSimpleData(super.getLocation(), value);
 		}
 	}
 }

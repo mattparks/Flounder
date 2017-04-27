@@ -3,7 +3,7 @@ package flounder.collada.animation;
 import flounder.collada.*;
 import flounder.maths.matrices.*;
 import flounder.parsing.xml.*;
-import org.lwjgl.*;
+import flounder.platform.*;
 
 import java.nio.*;
 import java.util.*;
@@ -78,7 +78,7 @@ public class AnimationLoader {
 	}
 
 	private void processTransforms(String jointName, String[] rawData, KeyFrameData[] keyFrames, boolean root) {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+		FloatBuffer buffer = FlounderPlatform.createFloatBuffer(16);
 		float[] matrixData = new float[16];
 
 		for (int i = 0; i < keyFrames.length; i++) {

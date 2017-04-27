@@ -21,7 +21,7 @@ public class AudioController {
 	 *
 	 * @param source The sound source that this controller can control.
 	 */
-	protected AudioController(SoundSource source) {
+	public AudioController(SoundSource source) {
 		this.source = source;
 		this.active = true;
 		this.fading = false;
@@ -74,7 +74,7 @@ public class AudioController {
 	/**
 	 * Stops the source playing the sound.
 	 */
-	protected void stop() {
+	public void stop() {
 		if (active) {
 			source.stop();
 		}
@@ -83,21 +83,21 @@ public class AudioController {
 	/**
 	 * @return {@code true} if the source that the controller is assigned to is still playing the sound.
 	 */
-	protected boolean isActive() {
+	public boolean isActive() {
 		return active;
 	}
 
 	/**
 	 * Indicates that the source is no longer playing the sound that this controller was created for, rendering the controller inactive.
 	 */
-	protected void setInactive() {
+	public void setInactive() {
 		active = false;
 	}
 
 	/**
 	 * Indicates that the sound needs to be faded out.
 	 */
-	protected void fadeOut() {
+	public void fadeOut() {
 		fading = true;
 		volume = source.getVolume();
 	}

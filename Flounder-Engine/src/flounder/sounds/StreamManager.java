@@ -99,7 +99,7 @@ public class StreamManager extends Thread {
 	 * @param controller The controller which can be used to find out when the source
 	 * has finished playing the sound in question.
 	 */
-	protected synchronized void stream(Sound sound, SoundSource source, AudioController controller) {
+	public synchronized void stream(Sound sound, SoundSource source, AudioController controller) {
 		try {
 			streamers.add(new Streamer(sound, source, controller));
 		} catch (Exception e) {

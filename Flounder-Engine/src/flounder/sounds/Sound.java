@@ -1,5 +1,6 @@
 package flounder.sounds;
 
+import flounder.devices.*;
 import flounder.logger.*;
 import flounder.processing.*;
 import flounder.processing.opengl.*;
@@ -58,7 +59,7 @@ public class Sound {
 			FlounderLogger.log(file.getPath() + " is being loaded into the sound builder right now!");
 			loadedSounds.remove(file.getPath());
 			data = new Sound(file, volume, pitch);
-			SoundLoader.doInitialSoundLoad(data);
+			FlounderSound.doInitialSoundLoad(data);
 			loadedSounds.put(file.getPath(), new SoftReference<>(data));
 		}
 
@@ -82,7 +83,7 @@ public class Sound {
 			FlounderLogger.log(file.getPath() + " is being loaded into the sound builder in the background!");
 			loadedSounds.remove(file.getPath());
 			Sound data2 = new Sound(file, volume, pitch);
-			FlounderProcessors.sendRequest((RequestResource) () -> SoundLoader.doInitialSoundLoad(data2));
+			FlounderProcessors.sendRequest((RequestResource) () -> FlounderSound.doInitialSoundLoad(data2));
 			data = data2;
 			loadedSounds.put(file.getPath(), new SoftReference<>(data));
 		}
@@ -95,7 +96,7 @@ public class Sound {
 	 */
 	public void delete() {
 		if (loaded) {
-			FlounderProcessors.sendRequest((RequestOpenGL) () -> SoundLoader.deleteBuffer(bufferID));
+			FlounderProcessors.sendRequest((RequestOpenGL) () -> FlounderSound.deleteBuffer(bufferID));
 			loaded = false;
 		}
 	}

@@ -4,9 +4,9 @@ import flounder.fbos.*;
 import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
+import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.resources.*;
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
@@ -289,7 +289,7 @@ public class FlounderDisplay extends Module {
 		image.getRGB(0, 0, width, height, pixels, 0, width);
 
 		// Converts image to RGBA format.
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		ByteBuffer buffer = FlounderPlatform.createByteBuffer(width * height * 4);
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -388,7 +388,7 @@ public class FlounderDisplay extends Module {
 		// Creates a new destination if it does not exist, or fixes a old one,
 		if (destination == null || buffer == null || destination.getWidth() != getWidth() || destination.getHeight() != getHeight()) {
 			destination = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-			buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 4);
+			buffer = FlounderPlatform.createByteBuffer(getWidth() * getHeight() * 4);
 		}
 
 		// Creates a new buffer and stores the displays data into it.
@@ -429,6 +429,12 @@ public class FlounderDisplay extends Module {
 
 	public static int getWindowHeight() {
 		return INSTANCE.windowHeight;
+	}
+
+	public static void setWindowSize(int width, int height) {
+		glfwSetWindowSize(INSTANCE.window, width, height);
+		INSTANCE.windowWidth = width;
+		INSTANCE.windowHeight = height;
 	}
 
 	/**

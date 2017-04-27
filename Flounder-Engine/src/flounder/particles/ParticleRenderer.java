@@ -7,16 +7,17 @@ import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.space.*;
-import org.lwjgl.*;
-import org.lwjgl.opengl.*;
 
 import java.nio.*;
 import java.util.*;
+
+import static flounder.platform.Constants.*;
 
 public class ParticleRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "particles", "particleVertex.glsl");
@@ -27,7 +28,7 @@ public class ParticleRenderer extends Renderer {
 	private static final int INSTANCE_DATA_LENGTH = 22;
 
 	private static final int VAO = FlounderLoader.createInterleavedVAO(VERTICES, 2);
-	private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH);
+	private static final FloatBuffer BUFFER = FlounderPlatform.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH);
 	private static final int VBO = FlounderLoader.createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
 
 	private ShaderObject shader;
@@ -35,7 +36,7 @@ public class ParticleRenderer extends Renderer {
 	private int rendered;
 
 	public ParticleRenderer() {
-		this.shader = ShaderFactory.newBuilder().setName("particles").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("particles").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		this.pointer = 0;
 		this.rendered = 0;
 
@@ -81,7 +82,7 @@ public class ParticleRenderer extends Renderer {
 
 				// Renders the particles list.
 				FlounderLoader.updateVBO(VBO, vboData, BUFFER);
-				OpenGlUtils.renderInstanced(GL11.GL_TRIANGLE_STRIP, VERTICES.length, particles.size());
+				OpenGlUtils.renderInstanced(GL_TRIANGLE_STRIP, VERTICES.length, particles.size());
 				unbindTexturedModel();
 			}
 		}

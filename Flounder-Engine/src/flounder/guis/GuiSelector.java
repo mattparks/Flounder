@@ -6,7 +6,7 @@ import flounder.inputs.*;
 import flounder.maths.*;
 import flounder.profiling.*;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static flounder.platform.Constants.*;
 
 /**
  * Represents a virtual cursor that will be used to determine if a GUI action was preformed by a device.
@@ -70,7 +70,7 @@ public class GuiSelector {
 				cursorY += (-joystickAxisY.getAmount()) * 0.75f * Framework.getDelta();
 				cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
 				cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
-				glfwSetCursorPos(FlounderDisplay.getWindow(), cursorX * FlounderDisplay.getWidth(), cursorY * FlounderDisplay.getHeight());
+				FlounderMouse.setPosition(cursorX * FlounderDisplay.getWidth(), cursorY * FlounderDisplay.getHeight());
 			}
 
 			leftClick = leftClick || joystickLeft.isDown();

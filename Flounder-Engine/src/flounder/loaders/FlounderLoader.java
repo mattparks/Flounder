@@ -2,9 +2,8 @@ package flounder.loaders;
 
 import flounder.framework.*;
 import flounder.helpers.*;
+import flounder.platform.*;
 import flounder.profiling.*;
-import org.lwjgl.*;
-import org.lwjgl.opengl.*;
 
 import java.nio.*;
 import java.util.*;
@@ -147,7 +146,7 @@ public class FlounderLoader extends Module {
 	 */
 	public static void deleteVAOFromCache(int vao) {
 		if (INSTANCE.vaoCache.containsKey(vao)) {
-			INSTANCE.vaoCache.get(vao).forEach(GL15::glDeleteBuffers);
+			INSTANCE.vaoCache.get(vao).forEach(key -> glDeleteBuffers(key));
 			INSTANCE.vaoCache.get(vao).clear();
 			INSTANCE.vaoCache.remove(vao);
 			glDeleteVertexArrays(vao);
@@ -230,7 +229,7 @@ public class FlounderLoader extends Module {
 			return 0;
 		}
 
-		IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
+		IntBuffer indicesBuffer = FlounderPlatform.createIntBuffer(indices.length);
 		indicesBuffer.put(indices);
 		indicesBuffer.flip();
 		int indicesBufferId = glGenBuffers();
@@ -438,7 +437,7 @@ public class FlounderLoader extends Module {
 	 * @return The data in a float buffer.
 	 */
 	private FloatBuffer storeDataInBuffer(float[] data) {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+		FloatBuffer buffer = FlounderPlatform.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
@@ -452,7 +451,7 @@ public class FlounderLoader extends Module {
 	 * @return The data in a int buffer.
 	 */
 	private IntBuffer storeDataInBuffer(int[] data) {
-		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
+		IntBuffer buffer = FlounderPlatform.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;

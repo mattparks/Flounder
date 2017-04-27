@@ -8,7 +8,8 @@ import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
-import org.lwjgl.opengl.*;
+
+import static flounder.platform.Constants.*;
 
 public class SkyboxRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "skybox", "skyboxVertex.glsl");
@@ -17,7 +18,7 @@ public class SkyboxRenderer extends Renderer {
 	private ShaderObject shader;
 
 	public SkyboxRenderer() {
-		this.shader = ShaderFactory.newBuilder().setName("skybox").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("skybox").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class SkyboxRenderer extends Renderer {
 		OpenGlUtils.bindVAO(FlounderSkybox.getModel().getVaoID(), 0);
 		OpenGlUtils.bindTexture(FlounderSkybox.getCubemap(), 0);
 
-		OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, FlounderSkybox.getModel().getVaoLength());
+		OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, FlounderSkybox.getModel().getVaoLength());
 
 		OpenGlUtils.unbindVAO(0);
 		shader.stop();

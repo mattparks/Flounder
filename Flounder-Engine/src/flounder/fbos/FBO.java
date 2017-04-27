@@ -2,7 +2,7 @@ package flounder.fbos;
 
 import flounder.devices.*;
 import flounder.logger.*;
-import org.lwjgl.*;
+import flounder.platform.*;
 
 import java.nio.*;
 
@@ -144,7 +144,7 @@ public class FBO {
 	}
 
 	private void determineDrawBuffers() {
-		IntBuffer drawBuffers = BufferUtils.createIntBuffer(attachments);
+		IntBuffer drawBuffers = FlounderPlatform.createIntBuffer(attachments);
 
 		for (int i = 0; i < attachments; i++) {
 			drawBuffers.put(GL_COLOR_ATTACHMENT0 + i);

@@ -9,7 +9,8 @@ import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;
-import org.lwjgl.opengl.*;
+
+import static flounder.platform.Constants.*;
 
 /**
  * A renderer that is used to render entity's.
@@ -27,7 +28,7 @@ public class EntitiesRenderer extends Renderer {
 	 * Creates a new entity renderer.
 	 */
 	public EntitiesRenderer() {
-		this.shader = ShaderFactory.newBuilder().setName("entities").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("entities").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		this.textureUndefined = TextureFactory.newBuilder().setFile(new MyFile(MyFile.RES_FOLDER, "undefined.png")).create();
 		this.renderedCount = 0;
 		this.renderPlayer = true;
@@ -78,7 +79,7 @@ public class EntitiesRenderer extends Renderer {
 		}
 
 		if (vaoLength.getSingle() > 0) {
-			OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, vaoLength.getSingle());
+			OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength.getSingle());
 		}
 
 		for (IComponentEntity component : entity.getComponents()) {

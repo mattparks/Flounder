@@ -3,9 +3,7 @@ package flounder.entities;
 import flounder.animation.*;
 import flounder.events.*;
 import flounder.framework.*;
-import flounder.guis.*;
 import flounder.helpers.*;
-import flounder.inputs.*;
 import flounder.logger.*;
 import flounder.models.*;
 import flounder.physics.bounding.*;
@@ -16,8 +14,6 @@ import flounder.textures.*;
 
 import java.io.*;
 import java.util.*;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * A class that manages game entities.
@@ -40,35 +36,6 @@ public class FlounderEntities extends Module {
 	@Override
 	public void init() {
 		this.entityStructure = new StructureBasic<>();
-
-		FlounderEvents.addEvent(new IEvent() {
-			private KeyButton saveEntities1 = new KeyButton(GLFW_KEY_E);
-			private KeyButton saveEntities2 = new KeyButton(GLFW_KEY_R);
-
-			@Override
-			public boolean eventTriggered() {
-				return saveEntities1.wasDown() && saveEntities2.wasDown() && !FlounderGuis.getGuiMaster().isGamePaused();
-			}
-
-			@Override
-			public void onEvent() {
-				for (Entity entity : FlounderEntities.getEntities().getAll()) {
-					String[] path = entity.getClass().getName().split("\\.");
-					String name = path[path.length - 1].trim().replace("Instance", "");
-					name = name.substring(0, 1).toLowerCase() + name.substring(1);
-
-					List<IComponentEditor> editorList = new ArrayList<>();
-
-					for (IComponentEntity ce : entity.getComponents()) {
-						if (ce instanceof IComponentEditor) {
-							editorList.add((IComponentEditor) ce);
-						}
-					}
-
-					FlounderEntities.save("kosmos.entities.instances", editorList, name);
-				}
-			}
-		});
 	}
 
 	@Override
