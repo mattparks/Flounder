@@ -27,7 +27,7 @@ public class FlounderEntities extends Module {
 	 * Creates a new game manager for entities.
 	 */
 	public FlounderEntities() {
-		super( FlounderEvents.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
+		super(FlounderEvents.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)

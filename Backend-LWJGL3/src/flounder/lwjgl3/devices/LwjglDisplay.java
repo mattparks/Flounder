@@ -48,20 +48,41 @@ public class LwjglDisplay extends FlounderDisplay {
 	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
 	public LwjglDisplay() {
+		this(1080, 720, "Flounder Engine", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, false, true, 0, false, false);
+	}
+
+	public LwjglDisplay(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay) {
 		super();
+		this.windowWidth = width;
+		this.windowHeight = height;
+		this.title = title;
+		this.icons = icons;
+		this.vsync = vsync;
+		this.antialiasing = antialiasing;
+		this.samples = samples;
+		this.fullscreen = fullscreen;
+		this.hiddenDisplay = hiddenDisplay;
+
+		// Fix any invalid parameters.
+		if (this.windowWidth <= 0) {
+			this.windowWidth = 1080;
+		}
+
+		if (this.windowHeight <= 0) {
+			this.windowHeight = 720;
+		}
+
+		if (this.title == null || this.title.isEmpty()) {
+			this.title = "Testing 1";
+		}
+
+		if (this.icons == null) {
+			this.icons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
+		}
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
-		this.windowWidth = 1080;
-		this.windowHeight = 720;
-		this.title = "Testing 1";
-		this.icons = new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")};
-		this.vsync = true;
-		this.antialiasing = true;
-		this.samples = 0;
-		this.fullscreen = false;
-
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
 			FlounderLogger.get().error("Could not init GLFW!");
@@ -193,6 +214,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		});
 
 		// System logs.
+		FlounderLogger.get().log("If you are getting errors, please write a description of how you get the error, and copy this log: https://github.com/Equilibrium-Games/Flounder-Engine/issues");
 		FlounderLogger.get().log("");
 		FlounderLogger.get().log("===== This is not an error message, it is a system info log. =====");
 		FlounderLogger.get().log("Flounder Engine Version: " + Framework.getVersion().getVersion());
@@ -410,6 +432,9 @@ public class LwjglDisplay extends FlounderDisplay {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		super.update();
+
+		// Polls for window events. The key callback will only be invoked during this call.
+		glfwPollEvents();
 	}
 
 	@Handler.Function(Handler.FLAG_PROFILE)
