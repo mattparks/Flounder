@@ -35,7 +35,7 @@ public class FlounderShadows extends Module {
 		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderCamera.class, FlounderEntities.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.lightPosition = new Vector3f(0.5f, 0.0f, 0.5f);
 		this.brightnessBoost = 0.1f;
@@ -104,7 +104,7 @@ public class FlounderShadows extends Module {
 		return offset;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		shadowBox.update(FlounderCamera.getCamera());
 		updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
@@ -113,12 +113,12 @@ public class FlounderShadows extends Module {
 		Matrix4f.multiply(INSTANCE.offset, INSTANCE.projectionViewMatrix, shadowMapSpaceMatrix);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Map Size", shadowSize);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "PCF Count", shadowPCF);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Surface Bias", shadowBias);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Surface Darkness", shadowDarkness);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Map Size", shadowSize);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "PCF Count", shadowPCF);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Surface Bias", shadowBias);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Surface Darkness", shadowDarkness);
 	}
 
 	public static Vector3f getLightPosition() {
@@ -220,12 +220,8 @@ public class FlounderShadows extends Module {
 		return INSTANCE.lightViewMatrix;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

@@ -38,7 +38,7 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 		this.textureSway = textureSway;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
@@ -138,7 +138,7 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 
@@ -150,7 +150,7 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 		);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

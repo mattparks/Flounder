@@ -33,13 +33,13 @@ public class FlounderGuis extends Module {
 		guiMaster = null;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.selector = new GuiSelector();
 		this.container = new ScreenObjectEmpty(null, new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), false);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		GuiMaster newManager = (GuiMaster) getExtensionMatch(guiMaster, GuiMaster.class, true);
 
@@ -67,9 +67,9 @@ public class FlounderGuis extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
 	}
 
 	/**
@@ -99,12 +99,8 @@ public class FlounderGuis extends Module {
 		return INSTANCE.selector;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		if (guiMaster != null) {
 			guiMaster.dispose();

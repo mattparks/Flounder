@@ -1,18 +1,17 @@
 package flounder.lwjgl3;
 
 import flounder.framework.updater.*;
-import flounder.lwjgl3.devices.*;
 import flounder.platform.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import java.nio.*;
 
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
+import static org.lwjgl.opengl.GL11.*;
 
-public class PlatformLWJGL3 extends IPlatform {
-	public PlatformLWJGL3() {
+public class PlatformLwjgl extends IPlatform {
+	public PlatformLwjgl() {
 		super();
 	}
 

@@ -118,7 +118,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		if (model != null && model.isLoaded() != wasLoaded) {
 			getEntity().setMoved();
@@ -418,7 +418,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 
@@ -444,7 +444,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 
@@ -459,7 +459,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 		);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

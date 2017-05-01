@@ -100,13 +100,13 @@ public class EntitiesRenderer extends Renderer {
 		this.renderPlayer = renderPlayer;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(FlounderEntities.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
-		FlounderProfiler.add(FlounderEntities.PROFILE_TAB_NAME, "Rendered Count", renderedCount);
+		FlounderProfiler.get().add(FlounderEntities.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderEntities.PROFILE_TAB_NAME, "Rendered Count", renderedCount);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		shader.delete();
 	}

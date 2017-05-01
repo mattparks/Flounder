@@ -87,14 +87,14 @@ public class FlounderDisplay extends Module {
 			INSTANCE.hiddenDisplay = hiddenDisplay;
 			INSTANCE.setup = true;
 		} else {
-			FlounderLogger.error("Flounder Display setup MUST be called before the INSTANCE is initialized.");
+			FlounderLogger.get().error("Flounder Display setup MUST be called before the INSTANCE is initialized.");
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		if (!setup) {
-			FlounderLogger.error("Flounder Display setup can be used to configure the display, default settings were set!");
+			FlounderLogger.get().error("Flounder Display setup can be used to configure the display, default settings were set!");
 			//	this.windowWidth = 1080;
 			//	this.windowHeight = 720;
 			//	this.title = "Testing 1";
@@ -125,7 +125,7 @@ public class FlounderDisplay extends Module {
 
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
-			FlounderLogger.error("Could not init GLFW!");
+			FlounderLogger.get().error("Could not init GLFW!");
 			System.exit(-1);
 		}
 
@@ -163,7 +163,7 @@ public class FlounderDisplay extends Module {
 
 		// Gets any window errors.
 		if (window == NULL) {
-			FlounderLogger.error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL 3.0!");
+			FlounderLogger.get().error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL 3.0!");
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -174,8 +174,8 @@ public class FlounderDisplay extends Module {
 		try {
 			setWindowIcon();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not load custom display icon!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Could not load custom display icon!");
+			FlounderLogger.get().exception(e);
 		}
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
@@ -185,7 +185,7 @@ public class FlounderDisplay extends Module {
 		long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
-			FlounderLogger.error("OpenGL Capability Error: " + glError);
+			FlounderLogger.get().error("OpenGL Capability Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
@@ -254,20 +254,20 @@ public class FlounderDisplay extends Module {
 		});
 
 		// System logs.
-		FlounderLogger.log("");
-		FlounderLogger.log("===== This is not an error message, it is a system info log. =====");
-		FlounderLogger.log("Flounder Engine Version: " + Framework.getVersion().getVersion());
-		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
-		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
-		FlounderLogger.log("Flounder Is OpenGL Modern: " + OpenGlUtils.isModern());
-		FlounderLogger.log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
-		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
-		FlounderLogger.log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
-		FlounderLogger.log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
-		FlounderLogger.log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
-		FlounderLogger.log("Flounder Maximum FBO Size: " + FBO.getMaxFBOSize());
-		FlounderLogger.log("Flounder Maximum Anisotropy: " + glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
-		FlounderLogger.log("===== End of system info log. =====\n");
+		FlounderLogger.get().log("");
+		FlounderLogger.get().log("===== This is not an error message, it is a system info log. =====");
+		FlounderLogger.get().log("Flounder Engine Version: " + Framework.getVersion().getVersion());
+		FlounderLogger.get().log("Flounder Operating System: " + System.getProperty("os.name"));
+		FlounderLogger.get().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
+		FlounderLogger.get().log("Flounder Is OpenGL Modern: " + OpenGlUtils.isModern());
+		FlounderLogger.get().log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
+		FlounderLogger.get().log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
+		FlounderLogger.get().log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
+		FlounderLogger.get().log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
+		FlounderLogger.get().log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
+		FlounderLogger.get().log("Flounder Maximum FBO Size: " + FBO.getMaxFBOSize());
+		FlounderLogger.get().log("Flounder Maximum Anisotropy: " + glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+		FlounderLogger.get().log("===== End of system info log. =====\n");
 	}
 
 	private void setWindowIcon() throws IOException {
@@ -311,7 +311,7 @@ public class FlounderDisplay extends Module {
 		return glfwImage;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Polls for window events. The key callback will only be invoked during this call.
 		glfwPollEvents();
@@ -326,20 +326,20 @@ public class FlounderDisplay extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Width", windowWidth);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Height", windowHeight);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Title", title);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "VSync", vsync);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Antialiasing", antialiasing);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Samples", samples);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Fullscreen", fullscreen);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Width", windowWidth);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Height", windowHeight);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Title", title);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "VSync", vsync);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Antialiasing", antialiasing);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Samples", samples);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Fullscreen", fullscreen);
 
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Closed", closed);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Focused", focused);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Window Pos.X", windowPosX);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Window Pos.Y", windowPosY);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Closed", closed);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Focused", focused);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Window Pos.X", windowPosX);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Window Pos.Y", windowPosY);
 	}
 
 	/**
@@ -353,11 +353,11 @@ public class FlounderDisplay extends Module {
 		if (!saveDirectory.exists()) {
 			try {
 				if (!saveDirectory.mkdir()) {
-					FlounderLogger.error("The screenshot directory could not be created.");
+					FlounderLogger.get().error("The screenshot directory could not be created.");
 				}
 			} catch (SecurityException e) {
-				FlounderLogger.error("The screenshot directory could not be created.");
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("The screenshot directory could not be created.");
+				FlounderLogger.get().exception(e);
 				return;
 			}
 		}
@@ -365,14 +365,14 @@ public class FlounderDisplay extends Module {
 		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
 		String format = "png"; // "PNG" or "JPG".
 
-		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+		FlounderLogger.get().log("Taking screenshot and outputting it to " + file.getAbsolutePath());
 
 		// Tries to create image.
 		try {
 			ImageIO.write(getImage(null, null), format, file);
 		} catch (Exception e) {
-			FlounderLogger.error("Failed to take screenshot.");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Failed to take screenshot.");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -538,7 +538,7 @@ public class FlounderDisplay extends Module {
 		long monitor = glfwGetPrimaryMonitor();
 		GLFWVidMode mode = glfwGetVideoMode(monitor);
 
-		FlounderLogger.log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
+		FlounderLogger.get().log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
 
 		if (fullscreen) {
 			INSTANCE.fullscreenWidth = mode.width();
@@ -603,12 +603,8 @@ public class FlounderDisplay extends Module {
 		return (float) (glfwGetTime() * 1000.0f);
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		callbackWindowClose.free();
 		callbackWindowFocus.free();

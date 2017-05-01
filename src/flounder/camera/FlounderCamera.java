@@ -22,13 +22,13 @@ public class FlounderCamera extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderEntities.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.player = null;
 		this.camera = null;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets a new player and camera, if available.
 		Player newPlayer = (Player) getExtensionMatch(player, Player.class, true);
@@ -73,10 +73,10 @@ public class FlounderCamera extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Camera Selected", camera == null ? "NULL" : camera.getClass());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Player Selected", player == null ? "NULL" : player.getClass());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Camera Selected", camera == null ? "NULL" : camera.getClass());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Player Selected", player == null ? "NULL" : player.getClass());
 	}
 
 	/**
@@ -97,12 +97,8 @@ public class FlounderCamera extends Module {
 		return INSTANCE.camera;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		// Disposes the player with the module.
 		if (player != null) {

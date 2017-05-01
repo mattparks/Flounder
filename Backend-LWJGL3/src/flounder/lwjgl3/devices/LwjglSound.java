@@ -1,13 +1,10 @@
 package flounder.lwjgl3.devices;
 
-import flounder.camera.*;
 import flounder.devices.*;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.lwjgl3.sounds.*;
 import flounder.maths.vectors.*;
-import flounder.processing.*;
-import flounder.resources.*;
 import flounder.sounds.*;
 import org.lwjgl.openal.*;
 
@@ -21,16 +18,16 @@ import static org.lwjgl.openal.ALC.createCapabilities;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class LWJGLSound extends IDeviceSound {
+public class LwjglSound extends IDeviceSound {
 	private long device;
 
 	private List<Integer> buffers;
 
-	public LWJGLSound() {
+	public LwjglSound() {
 		super();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		// Creates the OpenAL contexts.
 		this.device = alcOpenDevice((ByteBuffer) null);
@@ -44,14 +41,14 @@ public class LWJGLSound extends IDeviceSound {
 		int alError = alGetError();
 
 		if (alError != GL_NO_ERROR) {
-			FlounderLogger.error("OpenAL Error " + alError);
+			FlounderLogger.get().error("OpenAL Error " + alError);
 		}
 
 		// Creates a new sound model.
 		alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		Vector3f cameraPosition = FlounderSound.getCameraPosition();
 		alListener3f(AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
@@ -59,7 +56,7 @@ public class LWJGLSound extends IDeviceSound {
 
 	@Override
 	public SoundSource createPlatformSource() {
-		return new LWJGLSoundSource();
+		return new LwjglSoundSource();
 	}
 
 	@Override
@@ -77,7 +74,7 @@ public class LWJGLSound extends IDeviceSound {
 		int error = alGetError();
 
 		if (error != AL_NO_ERROR) {
-			FlounderLogger.error("Problem loading sound data into buffer. " + error);
+			FlounderLogger.get().error("Problem loading sound data into buffer. " + error);
 		}
 	}
 
@@ -94,11 +91,11 @@ public class LWJGLSound extends IDeviceSound {
 		alDeleteBuffers(bufferID);
 
 		if (alGetError() != AL_NO_ERROR) {
-			FlounderLogger.warning("Problem deleting sound buffer.");
+			FlounderLogger.get().warning("Problem deleting sound buffer.");
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		buffers.forEach(buffer -> {
 			if (buffer != null) {
@@ -107,7 +104,7 @@ public class LWJGLSound extends IDeviceSound {
 		});
 
 		if (alGetError() != AL_NO_ERROR) {
-			FlounderLogger.warning("Problem deleting sound buffers.");
+			FlounderLogger.get().warning("Problem deleting sound buffers.");
 		}
 
 		alcCloseDevice(device);

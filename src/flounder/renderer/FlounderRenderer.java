@@ -22,12 +22,12 @@ public class FlounderRenderer extends Module {
 		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderCamera.class, FlounderShaders.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.renderer = null;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets a new renderer, if available.
 		RendererMaster newRenderer = (RendererMaster) getExtensionMatch(renderer, RendererMaster.class, true);
@@ -53,9 +53,9 @@ public class FlounderRenderer extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected", renderer == null ? "NULL" : renderer.getClass());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Selected", renderer == null ? "NULL" : renderer.getClass());
 	}
 
 	/**
@@ -67,12 +67,8 @@ public class FlounderRenderer extends Module {
 		return INSTANCE.renderer;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		// Disposes the renderer with the module.
 		if (renderer != null) {

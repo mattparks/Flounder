@@ -34,7 +34,7 @@ public class PipelineGaussian extends PostPipeline {
 		filterBlurVertical.setScale(scale);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		filterBlurHorizontal.dispose();
 		filterBlurVertical.dispose();

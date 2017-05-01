@@ -33,7 +33,7 @@ public class FlounderSound extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		update();
 
@@ -47,7 +47,7 @@ public class FlounderSound extends Module {
 		this.device = null;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets a new device, if available.
 		IDeviceSound newDevice = (IDeviceSound) getExtensionMatch(device, IDeviceSound.class, true);
@@ -75,7 +75,7 @@ public class FlounderSound extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
@@ -96,7 +96,7 @@ public class FlounderSound extends Module {
 	 */
 	public static void doInitialSoundLoad(Sound sound) {
 		try {
-			FlounderLogger.log("Loading sound " + sound.getSoundFile().getPath());
+			FlounderLogger.get().log("Loading sound " + sound.getSoundFile().getPath());
 			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			ByteBuffer byteBuffer = stream.loadNextData();
@@ -105,8 +105,8 @@ public class FlounderSound extends Module {
 			sound.setBuffer(bufferID, byteBuffer.limit());
 			stream.close();
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't load sound file " + sound.getSoundFile());
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Couldn't load sound file " + sound.getSoundFile());
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -171,12 +171,8 @@ public class FlounderSound extends Module {
 		return INSTANCE.device;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		streamManager.kill();
 		sourcePool.dispose();

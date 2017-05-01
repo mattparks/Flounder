@@ -49,7 +49,7 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 		this.projectsShadow = projectsShadow;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
@@ -183,7 +183,7 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 		);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

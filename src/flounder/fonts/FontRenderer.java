@@ -87,12 +87,12 @@ public class FontRenderer extends Renderer {
 		shader.stop();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(FlounderFonts.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderFonts.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		shader.delete();
 	}

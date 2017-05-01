@@ -27,22 +27,22 @@ public class FlounderBounding extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.renderShapes = new HashMap<>();
 		this.boundingCount = 0;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		boundingCount = renderShapes.size();
 		clear(); // Clears before the next batch of rendering.
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Enabled", OpenGlUtils.isInWireframe());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Count", boundingCount);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Enabled", OpenGlUtils.isInWireframe());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Count", boundingCount);
 	}
 
 	/**
@@ -83,12 +83,8 @@ public class FlounderBounding extends Module {
 		INSTANCE.renderShapes.clear();
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		clear();
 	}

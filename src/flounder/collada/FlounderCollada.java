@@ -35,18 +35,18 @@ public class FlounderCollada extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class, FlounderLoader.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		loaded = new HashMap<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Loaded", loaded.size());
 	}
 
 	/**
@@ -99,12 +99,8 @@ public class FlounderCollada extends Module {
 		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getVertexWeights(), 5, 3);
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> loaded.get(key).get().delete());
 		loaded.clear();

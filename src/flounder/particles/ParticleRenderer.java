@@ -124,7 +124,7 @@ public class ParticleRenderer extends Renderer {
 
 	private void prepareInstance(Particle particle, Camera camera, float[] vboData) {
 		if (rendered >= MAX_INSTANCES) {
-			FlounderLogger.error("Particles overflow: " + rendered);
+			FlounderLogger.get().error("Particles overflow: " + rendered);
 			return;
 		}
 
@@ -174,12 +174,12 @@ public class ParticleRenderer extends Renderer {
 		shader.stop();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(FlounderParticles.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderParticles.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		shader.delete();
 	}

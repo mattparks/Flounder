@@ -22,7 +22,7 @@ public class ComponentCollision extends IComponentEntity implements IComponentMo
 		super(entity);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
@@ -125,7 +125,7 @@ public class ComponentCollision extends IComponentEntity implements IComponentMo
 		);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

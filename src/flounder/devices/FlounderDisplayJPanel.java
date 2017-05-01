@@ -26,7 +26,7 @@ public class FlounderDisplayJPanel extends Module {
 		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderEvents.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		panel = null;
 		image = null;
@@ -56,7 +56,7 @@ public class FlounderDisplayJPanel extends Module {
 		return INSTANCE.panel;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Updates only if the JPanel exists.
 		if (panel == null) {
@@ -75,16 +75,12 @@ public class FlounderDisplayJPanel extends Module {
 		SwingUtilities.getWindowAncestor(panel).repaint();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

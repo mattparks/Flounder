@@ -26,20 +26,20 @@ public class FlounderJoysticks extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderDisplay.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.joystickAxes = new FloatBuffer[GLFW_JOYSTICK_LAST];
 		this.joystickButtons = new ByteBuffer[GLFW_JOYSTICK_LAST];
 		this.joystickNames = new String[GLFW_JOYSTICK_LAST];
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// For each joystick check if connected and update.
 		for (int i = 0; i < GLFW_JOYSTICK_LAST; i++) {
 			if (glfwJoystickPresent(i)) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {
-					FlounderLogger.log("Connecting Joystick: " + i);
+					FlounderLogger.get().log("Connecting Joystick: " + i);
 					joystickAxes[i] = FlounderPlatform.createFloatBuffer(glfwGetJoystickAxes(i).capacity());
 					joystickButtons[i] = FlounderPlatform.createByteBuffer(glfwGetJoystickButtons(i).capacity());
 					joystickNames[i] = glfwGetJoystickName(i);
@@ -52,7 +52,7 @@ public class FlounderJoysticks extends Module {
 				joystickButtons[i].put(glfwGetJoystickButtons(i));
 			} else {
 				if (joystickAxes[i] != null || joystickButtons[i] != null || joystickNames[i] != null) {
-					FlounderLogger.log("Disconnecting Joystick: " + i);
+					FlounderLogger.get().log("Disconnecting Joystick: " + i);
 					joystickAxes[i].clear();
 					joystickAxes[i] = null;
 
@@ -64,7 +64,7 @@ public class FlounderJoysticks extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
@@ -136,12 +136,8 @@ public class FlounderJoysticks extends Module {
 		return INSTANCE.joystickButtons[joystick].capacity();
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

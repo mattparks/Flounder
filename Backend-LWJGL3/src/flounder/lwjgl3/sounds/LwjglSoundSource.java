@@ -6,10 +6,10 @@ import flounder.sounds.*;
 
 import static org.lwjgl.openal.AL10.*;
 
-public class LWJGLSoundSource extends SoundSource {
+public class LwjglSoundSource extends SoundSource {
 	private int sourceID;
 
-	public LWJGLSoundSource() {
+	public LwjglSoundSource() {
 		super();
 		this.sourceID = createSource();
 

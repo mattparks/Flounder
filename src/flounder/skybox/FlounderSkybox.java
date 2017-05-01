@@ -36,7 +36,7 @@ public class FlounderSkybox extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderBounding.class, FlounderLoader.class, FlounderTextures.class, FlounderShaders.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.model = ModelFactory.newBuilder().setFile(MODEL_FILE).create();
 
@@ -48,7 +48,7 @@ public class FlounderSkybox extends Module {
 		this.blendFactor = 1.0f;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Update the skybox transformation.
 		if (FlounderCamera.getCamera() != null) {
@@ -56,7 +56,7 @@ public class FlounderSkybox extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
@@ -100,12 +100,8 @@ public class FlounderSkybox extends Module {
 		INSTANCE.blendFactor = blendFactor;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		if (cubemap != null) {
 			this.cubemap.delete();

@@ -37,18 +37,18 @@ public class FlounderShaders extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Loaded", loaded.size());
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class FlounderShaders extends Module {
 			glCompileShader(shaderID);
 
 			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-				FlounderLogger.error(glGetShaderInfoLog(shaderID, 500));
+				FlounderLogger.get().error(glGetShaderInfoLog(shaderID, 500));
 				throw new RuntimeException("Could not compile shader " + o.getName() + ", type=" + type);
 			}
 
@@ -88,7 +88,7 @@ public class FlounderShaders extends Module {
 			} else if (type.contains("out")) {
 				glBindFragDataLocation(programID, locationValue, locationName);
 			} else {
-				FlounderLogger.error("Could not find location type of: " + type);
+				FlounderLogger.get().error("Could not find location type of: " + type);
 			}
 		}
 
@@ -125,7 +125,7 @@ public class FlounderShaders extends Module {
 				Object uobject = ctor.newInstance(new Object[]{pair.getSecond(), o});
 				uniformObject = (Uniform) uobject;
 			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-				FlounderLogger.error("Shader could not create the uniform type of " + uniformClass);
+				FlounderLogger.get().error("Shader could not create the uniform type of " + uniformClass);
 				e.printStackTrace();
 			}
 
@@ -198,12 +198,8 @@ public class FlounderShaders extends Module {
 		glDeleteProgram(shaderID);
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> ((ShaderObject) loaded.get(key).get()).delete());
 		loaded.clear();

@@ -5,6 +5,7 @@ import flounder.maths.vectors.*;
 /**
  * A interface that defines a particle spawn type.
  */
+@FunctionalInterface
 public interface IParticleSpawn {
 	/**
 	 * Gets the base spawn position.

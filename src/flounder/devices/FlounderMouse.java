@@ -65,13 +65,13 @@ public class FlounderMouse extends Module {
 			try {
 				INSTANCE.createCustomMouse();
 			} catch (IOException e) {
-				FlounderLogger.error("Could not load custom mouse!");
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("Could not load custom mouse!");
+				FlounderLogger.get().exception(e);
 			}
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		if (FlounderMouse.customMouse == null) {
 			FlounderMouse.customMouse = new MyFile(MyFile.RES_FOLDER, "guis", "cursor.png");
@@ -118,8 +118,8 @@ public class FlounderMouse extends Module {
 		try {
 			createCustomMouse();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not load custom mouse!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Could not load custom mouse!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -160,7 +160,7 @@ public class FlounderMouse extends Module {
 		glfwSetCursor(FlounderDisplay.getWindow(), cursorID);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Updates the mouses delta.
 		mouseDeltaX = Framework.getDelta() * (lastMousePositionX - mousePositionX);
@@ -185,14 +185,14 @@ public class FlounderMouse extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Position X", mousePositionX);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Position Y", mousePositionY);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta X", mouseDeltaX);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta Y", mouseDeltaY);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta Wheel", mouseDeltaWheel);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected Display", displaySelected);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Position X", mousePositionX);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Position Y", mousePositionY);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Delta X", mouseDeltaX);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Delta Y", mouseDeltaY);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Delta Wheel", mouseDeltaWheel);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Selected Display", displaySelected);
 	}
 
 	/**
@@ -291,12 +291,8 @@ public class FlounderMouse extends Module {
 		return INSTANCE.cursorDisabled;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		callbackScroll.free();
 		callbackMouseButton.free();

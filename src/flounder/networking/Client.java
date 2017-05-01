@@ -28,7 +28,7 @@ public class Client extends Thread {
 			this.ipAddress = InetAddress.getByName(ipAddress);
 			this.serverPort = port;
 		} catch (SocketException | UnknownHostException e) {
-			FlounderLogger.exception(e);
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -43,8 +43,8 @@ public class Client extends Thread {
 			} catch (SocketException e) {
 				// Ignore.
 			} catch (IOException e) {
-				FlounderLogger.error("Client socket could not receive data!");
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("Client socket could not receive data!");
+				FlounderLogger.get().exception(e);
 				System.exit(-1);
 			}
 
@@ -68,7 +68,7 @@ public class Client extends Thread {
 			Object object = ctor.newInstance(new Object[]{data});
 			packet = (Packet) object;
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-			FlounderLogger.error("Client could not load packet with the class of " + className);
+			FlounderLogger.get().error("Client could not load packet with the class of " + className);
 			e.printStackTrace();
 		}
 

@@ -68,8 +68,8 @@ public class StreamManager extends Thread {
 		try {
 			sleep(SLEEP_TIME);
 		} catch (InterruptedException e) {
-			FlounderLogger.error("Thread could not sleep!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Thread could not sleep!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -103,8 +103,8 @@ public class StreamManager extends Thread {
 		try {
 			streamers.add(new Streamer(sound, source, controller));
 		} catch (Exception e) {
-			FlounderLogger.error("Couldn't open stream for sound " + sound.getSoundFile().getPath());
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Couldn't open stream for sound " + sound.getSoundFile().getPath());
+			FlounderLogger.get().exception(e);
 		}
 	}
 }

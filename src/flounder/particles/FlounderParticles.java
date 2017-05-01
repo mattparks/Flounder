@@ -37,7 +37,7 @@ public class FlounderParticles extends Module {
 		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
 
@@ -46,7 +46,7 @@ public class FlounderParticles extends Module {
 		this.deadParticles = new ArrayList<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		if (FlounderGuis.getGuiMaster().isGamePaused()) {
 			return;
@@ -85,11 +85,11 @@ public class FlounderParticles extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Systems", particleSystems.size());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Types", particles.size());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Dead Particles", deadParticles.size());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Systems", particleSystems.size());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Types", particles.size());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Dead Particles", deadParticles.size());
 	}
 
 	/**
@@ -159,12 +159,8 @@ public class FlounderParticles extends Module {
 		INSTANCE.particles.add(list);
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.clear();
 

@@ -47,7 +47,7 @@ public class FlounderTextures extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLoader.class, FlounderProcessors.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
 
@@ -58,14 +58,14 @@ public class FlounderTextures extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Max Anisotropy", FlounderPlatform.getMaxAnisotropy());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Loaded", loaded.size());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Max Anisotropy", FlounderPlatform.getMaxAnisotropy());
 	}
 
 	/**
@@ -141,8 +141,8 @@ public class FlounderTextures extends Module {
 					buffer.flip();
 					in.close();
 				} catch (Exception e) {
-					FlounderLogger.error("Tried to load texture '" + builder.getCubemap()[i] + "', didn't work");
-					FlounderLogger.exception(e);
+					FlounderLogger.get().error("Tried to load texture '" + builder.getCubemap()[i] + "', didn't work");
+					FlounderLogger.get().exception(e);
 					System.exit(-1);
 				}
 
@@ -176,12 +176,8 @@ public class FlounderTextures extends Module {
 		INSTANCE.anisotropyLevel = anisotropyLevel;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> ((TextureObject) loaded.get(key).get()).delete());
 		loaded.clear();

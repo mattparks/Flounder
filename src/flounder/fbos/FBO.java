@@ -235,7 +235,7 @@ public class FBO {
 		if (this.attachments != outputFBO.attachments && this.hasGivenResolveError != outputFBO.hasGivenResolveError) {
 			this.hasGivenResolveError = true;
 			outputFBO.hasGivenResolveError = true;
-			FlounderLogger.log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
+			FlounderLogger.get().log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
 		}
 
 		for (int a = 0; a < attachments; a++) {
@@ -282,7 +282,7 @@ public class FBO {
 				limitFBOSize();
 
 				delete();
-				FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+				FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 				initializeFBO();
 			}
 		}
@@ -337,7 +337,7 @@ public class FBO {
 	public void setSamples(int samples) {
 		if (this.samples != samples) {
 			delete();
-			FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+			FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 			initializeFBO();
 		}
 
@@ -353,7 +353,7 @@ public class FBO {
 		this.height = height;
 		fitToScreen = false;
 		delete();
-		FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+		FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 		initializeFBO();
 	}
 

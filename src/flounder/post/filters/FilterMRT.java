@@ -50,8 +50,8 @@ public class FilterMRT extends PostFilter {
 			}
 		}
 
-		// FlounderProfiler.add(KosmosPost.PROFILE_TAB_NAME, "Maximum Lights", LIGHTS);
-		// FlounderProfiler.add(KosmosPost.PROFILE_TAB_NAME, "Loaded Lights", lightsLoaded);
+		// FlounderProfiler.get().add(KosmosPost.PROFILE_TAB_NAME, "Maximum Lights", LIGHTS);
+		// FlounderProfiler.get().add(KosmosPost.PROFILE_TAB_NAME, "Loaded Lights", lightsLoaded);
 
 		if (lightsLoaded < LIGHTS) {
 			for (int i = lightsLoaded; i < LIGHTS; i++) {

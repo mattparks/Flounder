@@ -24,18 +24,18 @@ public class FlounderNetwork extends Module {
 		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Username", username);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Port", getPort());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Username", username);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Port", getPort());
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class FlounderNetwork extends Module {
 	public static void startServer(int port) {
 		INSTANCE.username = "server";
 
-		FlounderLogger.log("Starting server on port " + port);
+		FlounderLogger.get().log("Starting server on port " + port);
 		INSTANCE.socketServer = new Server(port);
 		INSTANCE.socketServer.start();
 	}
@@ -61,7 +61,7 @@ public class FlounderNetwork extends Module {
 	public static void startClient(String username, String ipAddress, int port) {
 		INSTANCE.username = username;
 
-		FlounderLogger.log("Starting Client on server " + ipAddress + ":" + port);
+		FlounderLogger.get().log("Starting Client on server " + ipAddress + ":" + port);
 		INSTANCE.socketClient = new Client(ipAddress, port);
 		INSTANCE.socketClient.start();
 	}
@@ -71,7 +71,7 @@ public class FlounderNetwork extends Module {
 	 */
 	public static void closeServer() {
 		if (INSTANCE.socketServer != null) {
-			FlounderLogger.log("Closing server!");
+			FlounderLogger.get().log("Closing server!");
 			INSTANCE.socketServer.dispose();
 			INSTANCE.socketServer = null;
 		}
@@ -82,7 +82,7 @@ public class FlounderNetwork extends Module {
 	 */
 	public static void closeClient() {
 		if (INSTANCE.socketClient != null) {
-			FlounderLogger.log("Closing client!");
+			FlounderLogger.get().log("Closing client!");
 			INSTANCE.socketClient.dispose();
 			INSTANCE.socketClient = null;
 		}
@@ -120,12 +120,8 @@ public class FlounderNetwork extends Module {
 		return DEFAULT_PORT;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		closeServer();
 		closeClient();

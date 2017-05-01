@@ -10,36 +10,32 @@ public class FlounderSteam extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		/*try {
 			if (!SteamAPI.init()) {
 				// Steamworks initialization error, e.g. Steam client not running
 			}
 		} catch (SteamException e) {
-			FlounderLogger.exception(e);
+			FlounderLogger.get().exception(e);
 		}
 
 		SteamAPI.printDebugInfo(System.out);*/
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	/*	if (SteamAPI.isSteamRunning()) {
 			SteamAPI.runCallbacks();
 		}*/
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		//	SteamAPI.shutdown();
 	}

@@ -22,7 +22,7 @@ public abstract class Uniform {
 		location = FlounderShaders.getUniformLocation(programID, name);
 
 		if (location == NOT_FOUND) {
-			FlounderLogger.warning("No uniform variable called " + name + " found in shader " + shader.getName() + "!");
+			FlounderLogger.get().warning("No uniform variable called " + name + " found in shader " + shader.getName() + "!");
 		}
 	}
 

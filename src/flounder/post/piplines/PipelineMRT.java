@@ -45,7 +45,7 @@ public class PipelineMRT extends PostPipeline {
 		filterMRT.setShadowFactor(shadowFactor);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		filterMRT.dispose();
 		filterFXAA.dispose();

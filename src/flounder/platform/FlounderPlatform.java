@@ -1,8 +1,6 @@
 package flounder.platform;
 
 import flounder.framework.*;
-import flounder.logger.*;
-import flounder.lwjgl3.PlatformLWJGL3;
 import flounder.profiling.*;
 
 import java.nio.*;
@@ -23,16 +21,16 @@ public class FlounderPlatform extends Module {
 		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		update();
 		if (platform != null) {
 			Framework.getUpdater().setTiming(platform.getTiming());
-			//	FlounderLogger.log(platform.getTiming());
+			//	FlounderLogger.get().log(platform.getTiming());
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets a new platform, if available.
 		IPlatform newPlatform = (IPlatform) getExtensionMatch(platform, IPlatform.class, true);
@@ -52,9 +50,9 @@ public class FlounderPlatform extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Platform", platform);
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Platform", platform);
 	}
 
 	public static Platform getPlatform() {
@@ -93,12 +91,8 @@ public class FlounderPlatform extends Module {
 		return INSTANCE.platform.getMaxAnisotropy();
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

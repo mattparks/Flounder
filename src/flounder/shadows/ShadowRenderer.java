@@ -151,9 +151,9 @@ public class ShadowRenderer extends Renderer {
 		shadowFBO.unbindFrameBuffer();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add("Shadows", "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add("Shadows", "Render Time", super.getRenderTime());
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class ShadowRenderer extends Renderer {
 		return shadowFBO.getDepthTexture();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		shader.delete();
 		shadowFBO.delete();

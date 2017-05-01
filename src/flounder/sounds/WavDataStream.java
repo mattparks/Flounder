@@ -77,8 +77,8 @@ public class WavDataStream {
 		try {
 			audioStream.read(data, 0, bytesRead);
 		} catch (IOException e) {
-			FlounderLogger.error("Could not set Wav Data Stream start point!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Could not set Wav Data Stream start point!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -97,8 +97,8 @@ public class WavDataStream {
 			buffer.put(data, 0, bytesRead);
 			buffer.flip();
 		} catch (IOException e) {
-			FlounderLogger.error("Couldn't read more bytes from audio stream!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Couldn't read more bytes from audio stream!");
+			FlounderLogger.get().exception(e);
 		}
 		return buffer;
 	}
@@ -133,8 +133,8 @@ public class WavDataStream {
 		try {
 			audioStream.close();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not close Wav Data Streamer!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Could not close Wav Data Streamer!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 }

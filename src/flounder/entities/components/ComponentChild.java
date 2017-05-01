@@ -29,7 +29,7 @@ public class ComponentChild extends IComponentEntity implements IComponentEditor
 		this.parent = parent;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		if (parent == null || parent.isRemoved()) {
 			getEntity().forceRemove();
@@ -53,7 +53,7 @@ public class ComponentChild extends IComponentEntity implements IComponentEditor
 		return null;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

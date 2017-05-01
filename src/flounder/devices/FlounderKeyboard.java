@@ -26,7 +26,7 @@ public class FlounderKeyboard extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderDisplay.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.keyboardKeys = new int[GLFW_KEY_LAST + 1];
 		this.keyboardChar = 0;
@@ -36,7 +36,7 @@ public class FlounderKeyboard extends Module {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (key < 0 || key > GLFW_KEY_LAST) {
-					FlounderLogger.error("Invalid action attempted with key " + key);
+					FlounderLogger.get().error("Invalid action attempted with key " + key);
 				} else {
 					keyboardKeys[key] = action;
 				}
@@ -51,11 +51,11 @@ public class FlounderKeyboard extends Module {
 		});
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
@@ -80,12 +80,8 @@ public class FlounderKeyboard extends Module {
 		return INSTANCE.keyboardChar;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		callbackKey.free();
 		callbackChar.free();

@@ -55,8 +55,8 @@ public class ShaderFactory extends Factory {
 						type.getShaderBuilder().append(INSTANCE.processShaderLine(line.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, type.getShaderType()) + "\n");
 					}
 				} catch (Exception e) {
-					FlounderLogger.error("Could not read file " + file.getName());
-					FlounderLogger.exception(e);
+					FlounderLogger.get().error("Could not read file " + file.getName());
+					FlounderLogger.get().exception(e);
 					System.exit(-1);
 				}
 			} else if (type.getShaderString().isPresent()) {
@@ -86,8 +86,8 @@ public class ShaderFactory extends Factory {
 					includeSource.append(processShaderLine(includeLine.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, shaderType) + "\n");
 				}
 			} catch (Exception e) {
-				FlounderLogger.error("Could not read file " + includeFile.getName());
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("Could not read file " + includeFile.getName());
+				FlounderLogger.get().exception(e);
 				System.exit(-1);
 			}
 

@@ -80,7 +80,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		this.wasLoaded = false;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		if (model != null && model.isLoaded() != wasLoaded) {
 			getEntity().setMoved();
@@ -324,7 +324,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 
@@ -350,7 +350,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 
@@ -365,7 +365,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }

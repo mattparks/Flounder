@@ -33,12 +33,12 @@ public class FlounderEntities extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.entityStructure = new StructureBasic<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		if (entityStructure != null) {
 			Iterator<Entity> iterator = new ArrayList<>(entityStructure.getAll()).iterator(); // TODO: Optimize
@@ -56,9 +56,9 @@ public class FlounderEntities extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Count", entityStructure.getSize());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Count", entityStructure.getSize());
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class FlounderEntities extends Module {
 
 			// Date and save info.
 			String savedDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "." + Calendar.getInstance().get(Calendar.YEAR) + " - " + Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE);
-			FlounderLogger.log("Entity " + name + " is being saved at: " + savedDate);
+			FlounderLogger.get().log("Entity " + name + " is being saved at: " + savedDate);
 			fileWriterHelper.addComment("Automatically generated entity source", "Date generated: " + savedDate, "Created by: " + System.getProperty("user.name"));
 
 			// Entity instance class.
@@ -167,8 +167,8 @@ public class FlounderEntities extends Module {
 			// Closes the file for writing.
 			fileWriter.close();
 		} catch (IOException e) {
-			FlounderLogger.error("File saver for entity " + name + " did not execute successfully!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("File saver for entity " + name + " did not execute successfully!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -181,12 +181,8 @@ public class FlounderEntities extends Module {
 		return INSTANCE.entityStructure;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		if (entityStructure != null) {
 			entityStructure.clear();

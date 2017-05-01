@@ -54,8 +54,8 @@ public class TextureFactory extends Factory {
 				buffer.flip();
 				in.close();
 			} catch (Exception e) {
-				FlounderLogger.error("Tried to load texture '" + b.getFile() + "', didn't work");
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("Tried to load texture '" + b.getFile() + "', didn't work");
+				FlounderLogger.get().exception(e);
 				System.exit(-1);
 			}
 

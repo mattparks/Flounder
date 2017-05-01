@@ -26,7 +26,7 @@ public class Word {
 	 */
 	protected void addCharacter(Character character) {
 		if (character == null) {
-			FlounderLogger.error("Invalid character detected!");
+			FlounderLogger.get().error("Invalid character detected!");
 			return;
 		}
 

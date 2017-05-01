@@ -30,18 +30,18 @@ public class FlounderLoader extends Module {
 		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.vaoCache = new HashMap<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", vaoCache.size());
+		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Loaded", vaoCache.size());
 	}
 
 	/**
@@ -457,12 +457,8 @@ public class FlounderLoader extends Module {
 		return buffer;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		glDisableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

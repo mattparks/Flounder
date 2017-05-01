@@ -47,7 +47,7 @@ public class PipelinePaused extends PostPipeline {
 		this.blurFactor = blurFactor;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		filterDarken.dispose();
 		pipelineGaussian1.dispose();

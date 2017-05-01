@@ -23,7 +23,7 @@ public class ComponentRemoveFade extends IComponentEntity implements IComponentA
 		this.driver = new ConstantDriver(1.0f);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		alpha = driver.update(Framework.getDelta());
 
@@ -72,7 +72,7 @@ public class ComponentRemoveFade extends IComponentEntity implements IComponentA
 		return null;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 }
