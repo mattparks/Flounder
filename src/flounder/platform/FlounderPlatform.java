@@ -1,5 +1,7 @@
 package flounder.platform;
 
+import flounder.devices.*;
+import flounder.events.*;
 import flounder.framework.*;
 import flounder.profiling.*;
 
@@ -15,7 +17,7 @@ public class FlounderPlatform extends Module {
 	 * Creates a new network manager.
 	 */
 	public FlounderPlatform() {
-		super();
+		super(FlounderSound.class, FlounderEvents.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -24,6 +26,7 @@ public class FlounderPlatform extends Module {
 		if (platform != null) {
 			Framework.getUpdater().setTiming(platform.getTiming());
 			//	FlounderLogger.get().log(platform.getTiming());
+			platform.init();
 		}
 	}
 

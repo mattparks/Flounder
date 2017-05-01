@@ -26,7 +26,7 @@ public class SourcePoolManager {
 		this.systemVolume = 1.0f;
 
 		for (int i = 0; i < NUMBER_SOURCES; i++) {
-			sourcePool.add(FlounderSound.get().getDevice().createPlatformSource());
+			sourcePool.add(FlounderSound.get().createPlatformSource());
 		}
 	}
 

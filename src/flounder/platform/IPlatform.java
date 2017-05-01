@@ -13,6 +13,8 @@ public abstract class IPlatform extends Extension {
 		super(FlounderPlatform.class, requires);
 	}
 
+	public abstract void init();
+
 	@PlatformAndroid
 	@PlatformHTML5
 	@PlatformLWJGL3
@@ -27,6 +29,11 @@ public abstract class IPlatform extends Extension {
 	@PlatformHTML5
 	@PlatformLWJGL3
 	public abstract TimingReference getTiming();
+
+	/**
+	 * @return The current time time in seconds.
+	 */
+	public abstract float getTime();
 
 	/**
 	 * Allocates a direct native-ordered bytebuffer with the specified capacity.

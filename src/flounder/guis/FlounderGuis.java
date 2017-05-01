@@ -34,6 +34,7 @@ public class FlounderGuis extends Module {
 	public void init() {
 		this.selector = new GuiSelector();
 		this.container = new ScreenObjectEmpty(null, new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), false);
+		update();
 	}
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)

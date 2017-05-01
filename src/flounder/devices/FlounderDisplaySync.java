@@ -1,6 +1,7 @@
 package flounder.devices;
 
 import flounder.framework.*;
+import flounder.platform.*;
 
 /**
  * A module used for synchronizing to the display after rendering.
@@ -10,7 +11,7 @@ public class FlounderDisplaySync extends Module {
 	 * Creates a new GLFW display synchronizer.
 	 */
 	public FlounderDisplaySync() {
-		super(FlounderDisplay.class);
+		super(FlounderPlatform.class, FlounderDisplay.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)

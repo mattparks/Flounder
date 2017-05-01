@@ -2,6 +2,7 @@ package flounder.devices;
 
 import flounder.framework.*;
 import flounder.logger.*;
+import flounder.platform.*;
 import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -20,7 +21,7 @@ public class FlounderKeyboard extends Module {
 	 * Creates a new GLFW keyboard manager.
 	 */
 	public FlounderKeyboard() {
-		super(FlounderLogger.class, FlounderDisplay.class);
+		super(FlounderPlatform.class, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)

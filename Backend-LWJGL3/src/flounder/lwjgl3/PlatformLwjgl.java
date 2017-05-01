@@ -7,12 +7,17 @@ import org.lwjgl.glfw.*;
 
 import java.nio.*;
 
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class PlatformLwjgl extends IPlatform {
 	public PlatformLwjgl() {
 		super();
+	}
+
+	@Override
+	public void init() {
 	}
 
 	@Override
@@ -45,6 +50,11 @@ public class PlatformLwjgl extends IPlatform {
 	@Override
 	public TimingReference getTiming() {
 		return GLFW::glfwGetTime;
+	}
+
+	@Override
+	public float getTime() {
+		return (float) (glfwGetTime() * 1000.0f);
 	}
 
 	@Override

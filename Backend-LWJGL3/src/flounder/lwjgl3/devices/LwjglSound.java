@@ -18,7 +18,7 @@ import static org.lwjgl.openal.ALC.createCapabilities;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class LwjglSound extends IDeviceSound {
+public class LwjglSound extends FlounderSound {
 	private long device;
 
 	private List<Integer> buffers;
@@ -46,12 +46,24 @@ public class LwjglSound extends IDeviceSound {
 
 		// Creates a new sound model.
 		alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
+
+		super.init();
 	}
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
+		super.update();
+
 		Vector3f cameraPosition = FlounderSound.get().getCameraPosition();
-		alListener3f(AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+
+		if (cameraPosition != null) {
+			alListener3f(AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+		}
+	}
+
+	@Handler.Function(Handler.FLAG_PROFILE)
+	public void profile() {
+		super.profile();
 	}
 
 	@Override
@@ -97,6 +109,8 @@ public class LwjglSound extends IDeviceSound {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+		super.dispose();
+
 		buffers.forEach(buffer -> {
 			if (buffer != null) {
 				alDeleteBuffers(buffer);

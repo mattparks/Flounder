@@ -43,7 +43,7 @@ public class FlounderMouse extends Module {
 	 * Creates a new GLFW mouse manager.
 	 */
 	public FlounderMouse() {
-		super(FlounderLogger.class, FlounderDisplay.class);
+		super(FlounderPlatform.class, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	/**

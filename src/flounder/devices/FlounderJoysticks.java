@@ -20,7 +20,7 @@ public class FlounderJoysticks extends Module {
 	 * Creates a new GLFW joystick manager.
 	 */
 	public FlounderJoysticks() {
-		super(FlounderLogger.class, FlounderDisplay.class);
+		super(FlounderPlatform.class, FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)

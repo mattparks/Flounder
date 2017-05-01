@@ -4,6 +4,7 @@ import flounder.camera.*;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.vectors.*;
+import flounder.platform.*;
 import flounder.processing.*;
 import flounder.resources.*;
 import flounder.sounds.*;
@@ -21,13 +22,11 @@ public class FlounderSound extends Module {
 	private StreamManager streamManager;
 	private MusicPlayer musicPlayer;
 
-	private IDeviceSound device;
-
 	/**
 	 * Creates a new OpenAL audio manager.
 	 */
 	public FlounderSound() {
-		super(FlounderProcessors.class);
+		super(FlounderPlatform.class, FlounderProcessors.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -40,29 +39,10 @@ public class FlounderSound extends Module {
 		streamManager.start();
 		this.musicPlayer = new MusicPlayer();
 		musicPlayer.setVolume(MusicPlayer.SOUND_VOLUME);
-
-		this.device = null;
 	}
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		// Gets a new device, if available.
-		IDeviceSound newDevice = (IDeviceSound) getExtension(device, IDeviceSound.class, true);
-
-		// If there is a new player, disable the old one and start to use the new one.
-		if (newDevice != null) {
-			if (device != null) {
-				device.setInitialized(false);
-			}
-
-			if (!newDevice.isInitialized()) {
-				newDevice.init();
-				newDevice.setInitialized(true);
-			}
-
-			device = newDevice;
-		}
-
 		Camera camera = FlounderCamera.get().getCamera();
 
 		if (camera != null && camera.getPosition() != null) {
@@ -97,8 +77,8 @@ public class FlounderSound extends Module {
 			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			ByteBuffer byteBuffer = stream.loadNextData();
-			int bufferID = this.device.generateBuffer();
-			this.device.loadSoundDataIntoBuffer(bufferID, byteBuffer, stream.getAlFormat(), stream.getSampleRate());
+			int bufferID = generateBuffer();
+			loadSoundDataIntoBuffer(bufferID, byteBuffer, stream.getAlFormat(), stream.getSampleRate());
 			sound.setBuffer(bufferID, byteBuffer.limit());
 			stream.close();
 		} catch (Exception e) {
@@ -160,14 +140,55 @@ public class FlounderSound extends Module {
 	}
 
 	/**
-	 * Gets the current playform device.
+	 * Creates a new platform specific sound source.
 	 *
-	 * @return The device.
+	 * @return A new sound source.
 	 */
-	public IDeviceSound getDevice() {
-		return this.device;
+	public SoundSource createPlatformSource() {
+		return null; // OVERRIDE
 	}
 
+	/**
+	 * Determines the OpenAL ID of the sound data format.
+	 *
+	 * @param channels Number of channels in the audio data.
+	 * @param bitsPerSample Number of bits per sample (either 8 or 16).
+	 *
+	 * @return The OpenAL format ID of the sound data.
+	 */
+	public int getOpenAlFormat(int channels, int bitsPerSample) {
+		return -1; // OVERRIDE
+	}
+
+	/**
+	 * Loads audio data of a certain format into an OpenAL buffer.
+	 *
+	 * @param bufferID The buffer to which the data should be loaded.
+	 * @param data The audio data.
+	 * @param format The OpenAL format of the data (mono, stereo, etc.)
+	 * @param sampleRate The sample rate of the audio.
+	 */
+	public void loadSoundDataIntoBuffer(int bufferID, ByteBuffer data, int format, int sampleRate) {
+		// OVERRIDE
+	}
+
+	/**
+	 * Generates an empty sound buffer.
+	 *
+	 * @return The ID of the buffer.
+	 */
+	public int generateBuffer() {
+		return -1; // OVERRIDE
+	}
+
+	/**
+	 * Removes a certain sound buffer from memory by removing from the list of buffers and deleting it.
+	 *
+	 * @param bufferID The ID of the buffer to be deleted.
+	 */
+	public void deleteBuffer(Integer bufferID) {
+		// OVERRIDE
+	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {

@@ -2,6 +2,7 @@ package flounder.devices;
 
 import flounder.events.*;
 import flounder.framework.*;
+import flounder.platform.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +21,7 @@ public class FlounderDisplayJPanel extends Module {
 	 * Creates a new JPanel renderer.
 	 */
 	public FlounderDisplayJPanel() {
-		super(FlounderDisplay.class, FlounderEvents.class);
+		super(FlounderPlatform.class, FlounderDisplay.class, FlounderEvents.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
