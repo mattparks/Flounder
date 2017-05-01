@@ -1,8 +1,6 @@
 package flounder.platform;
 
 import flounder.framework.*;
-import flounder.logger.*;
-import flounder.lwjgl3.PlatformLWJGL3;
 import flounder.profiling.*;
 
 import java.nio.*;

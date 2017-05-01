@@ -3,11 +3,9 @@ package flounder.lwjgl3.devices;
 import flounder.devices.*;
 import flounder.framework.*;
 import flounder.logger.*;
-import flounder.platform.*;
-
-import java.nio.*;
+import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class LWJGLJoysicks implements IDeviceJoysticks {
+public class LwjglKeyboard implements IDeviceKeyboard {
 }

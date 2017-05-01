@@ -11,8 +11,8 @@ import java.nio.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 
-public class PlatformLWJGL3 extends IPlatform {
-	public PlatformLWJGL3() {
+public class PlatformLwjgl extends IPlatform {
+	public PlatformLwjgl() {
 		super();
 	}
 

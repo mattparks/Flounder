@@ -1,13 +1,9 @@
 package flounder.lwjgl3.devices;
 
-import flounder.camera.*;
 import flounder.devices.*;
-import flounder.framework.*;
 import flounder.logger.*;
 import flounder.lwjgl3.sounds.*;
 import flounder.maths.vectors.*;
-import flounder.processing.*;
-import flounder.resources.*;
 import flounder.sounds.*;
 import org.lwjgl.openal.*;
 
@@ -21,12 +17,12 @@ import static org.lwjgl.openal.ALC.createCapabilities;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class LWJGLSound extends IDeviceSound {
+public class LwjglSound extends IDeviceSound {
 	private long device;
 
 	private List<Integer> buffers;
 
-	public LWJGLSound() {
+	public LwjglSound() {
 		super();
 	}
 
@@ -59,7 +55,7 @@ public class LWJGLSound extends IDeviceSound {
 
 	@Override
 	public SoundSource createPlatformSource() {
-		return new LWJGLSoundSource();
+		return new LwjglSoundSource();
 	}
 
 	@Override
