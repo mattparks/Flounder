@@ -32,12 +32,12 @@ public class FontRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || FlounderGuis.getContainer() == null) {
+		if (!shader.isLoaded() || FlounderGuis.get().getContainer() == null) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderGuis.getContainer().getAll(new ArrayList<>()).forEach(this::renderText);
+		FlounderGuis.get().getContainer().getAll(new ArrayList<>()).forEach(this::renderText);
 		endRendering();
 	}
 
@@ -49,7 +49,7 @@ public class FontRenderer extends Renderer {
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 
-		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.get().getAspectRatio());
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
@@ -87,12 +87,12 @@ public class FontRenderer extends Renderer {
 		shader.stop();
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
+	@Override
 	public void profile() {
-		FlounderProfiler.get().add(FlounderFonts.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderFonts.getTab(), "Render Time", super.getRenderTime());
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		shader.delete();
 	}

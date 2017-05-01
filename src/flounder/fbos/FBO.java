@@ -99,7 +99,7 @@ public class FBO {
 	 * @return A new FBO Builder.
 	 */
 	public static FBOBuilder newFBO(float sizeScalar) {
-		return new FBOBuilder(FlounderDisplay.getWidth(), FlounderDisplay.getHeight()).fitToScreen(sizeScalar);
+		return new FBOBuilder(FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight()).fitToScreen(sizeScalar);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class FBO {
 	}
 
 	private void determineDrawBuffers() {
-		IntBuffer drawBuffers = FlounderPlatform.createIntBuffer(attachments);
+		IntBuffer drawBuffers = FlounderPlatform.get().createIntBuffer(attachments);
 
 		for (int i = 0; i < attachments; i++) {
 			drawBuffers.put(GL_COLOR_ATTACHMENT0 + i);
@@ -213,7 +213,7 @@ public class FBO {
 	 */
 	public void unbindFrameBuffer() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
+		glViewport(0, 0, FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight());
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class FBO {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glDrawBuffer(GL_BACK);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDisplay.getWidth(), FlounderDisplay.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	/**
@@ -267,8 +267,8 @@ public class FBO {
 	 */
 	private void updateSize() {
 		if (fitToScreen) {
-			int displayWidth = FlounderDisplay.getWidth();
-			int displayHeight = FlounderDisplay.getHeight();
+			int displayWidth = FlounderDisplay.get().getWidth();
+			int displayHeight = FlounderDisplay.get().getHeight();
 			int reverseWidth = (int) (displayWidth * sizeScalar);
 			int reverseHeight = (int) (displayHeight * sizeScalar);
 

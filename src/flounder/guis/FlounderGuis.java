@@ -12,9 +12,6 @@ import flounder.textures.*;
  * A module used for that manages GUI textures in a container.
  */
 public class FlounderGuis extends Module {
-	private static final FlounderGuis INSTANCE = new FlounderGuis();
-	public static final String PROFILE_TAB_NAME = "Guis";
-
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
 	public static final float POSITION_MIN = 0.0f;
@@ -29,7 +26,7 @@ public class FlounderGuis extends Module {
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderTextures.class);
+		super(FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderTextures.class);
 		guiMaster = null;
 	}
 
@@ -41,7 +38,7 @@ public class FlounderGuis extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		GuiMaster newManager = (GuiMaster) getExtensionMatch(guiMaster, GuiMaster.class, true);
+		GuiMaster newManager = (GuiMaster) getExtension(guiMaster, GuiMaster.class, true);
 
 		if (newManager != null) {
 			if (guiMaster != null) {
@@ -69,7 +66,7 @@ public class FlounderGuis extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
+		FlounderProfiler.get().add(getTab(), "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
 	}
 
 	/**
@@ -77,8 +74,8 @@ public class FlounderGuis extends Module {
 	 *
 	 * @return The GUI master.
 	 */
-	public static GuiMaster getGuiMaster() {
-		return INSTANCE.guiMaster;
+	public GuiMaster getGuiMaster() {
+		return this.guiMaster;
 	}
 
 	/**
@@ -86,8 +83,8 @@ public class FlounderGuis extends Module {
 	 *
 	 * @return The screen container.
 	 */
-	public static ScreenObject getContainer() {
-		return INSTANCE.container;
+	public ScreenObject getContainer() {
+		return this.container;
 	}
 
 	/**
@@ -95,8 +92,8 @@ public class FlounderGuis extends Module {
 	 *
 	 * @return The GUI selector.
 	 */
-	public static GuiSelector getSelector() {
-		return INSTANCE.selector;
+	public GuiSelector getSelector() {
+		return this.selector;
 	}
 
 
@@ -108,5 +105,15 @@ public class FlounderGuis extends Module {
 		}
 
 		container.delete();
+	}
+
+	@Module.Instance
+	public static FlounderGuis get() {
+		return (FlounderGuis) Framework.getInstance(FlounderGuis.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Guis";
 	}
 }

@@ -37,7 +37,7 @@ public class ComponentGlow extends IComponentEntity implements IComponentRender,
 		this.textureGlow = textureGlow;
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Override
 	public void update() {
 	}
 
@@ -130,7 +130,7 @@ public class ComponentGlow extends IComponentEntity implements IComponentRender,
 		);
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 	}
 }

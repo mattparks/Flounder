@@ -24,34 +24,22 @@ import static org.lwjgl.opengl.GL30.*;
  * A module used for loading texture files.
  */
 public class FlounderTextures extends Module {
-	private static final FlounderTextures INSTANCE = new FlounderTextures();
-	public static final String PROFILE_TAB_NAME = "Textures";
-
 	private Map<String, SoftReference<FactoryObject>> loaded;
 
 	private float anisotropyLevel = -1;
 
 	/**
-	 * A function called before initialization to configure the textures.
-	 *
-	 * @param anisotropyLevel The new anisotropy target level.
-	 */
-	public static void setup(float anisotropyLevel) {
-		INSTANCE.anisotropyLevel = anisotropyLevel;
-	}
-
-	/**
 	 * Creates a new texture loader class.
 	 */
 	public FlounderTextures() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLoader.class, FlounderProcessors.class);
+		super(FlounderLoader.class, FlounderProcessors.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
 
-		float maxAnisotropy = FlounderPlatform.getMaxAnisotropy();
+		float maxAnisotropy = FlounderPlatform.get().getMaxAnisotropy();
 
 		if (anisotropyLevel == -1 || anisotropyLevel > maxAnisotropy) {
 			anisotropyLevel = maxAnisotropy;
@@ -64,8 +52,8 @@ public class FlounderTextures extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Loaded", loaded.size());
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Max Anisotropy", FlounderPlatform.getMaxAnisotropy());
+		FlounderProfiler.get().add(getTab(), "Loaded", loaded.size());
+		FlounderProfiler.get().add(getTab(), "Max Anisotropy", FlounderPlatform.get().getMaxAnisotropy());
 	}
 
 	/**
@@ -73,11 +61,11 @@ public class FlounderTextures extends Module {
 	 *
 	 * @return A list of loaded textures.
 	 */
-	public static Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return INSTANCE.loaded;
+	public Map<String, SoftReference<FactoryObject>> getLoaded() {
+		return this.loaded;
 	}
 
-	public static void loadTexture(TextureBuilder builder, TextureObject object) {
+	public void loadTexture(TextureBuilder builder, TextureObject object) {
 		if (builder.getFile() != null) {
 			int textureID = glGenTextures();
 			glActiveTexture(GL_TEXTURE0);
@@ -92,7 +80,7 @@ public class FlounderTextures extends Module {
 
 				if (builder.isAnisotropic()) {
 					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, FlounderTextures.getAnisotropyLevel());
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropyLevel);
 				}
 			} else if (builder.isNearest()) {
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -108,7 +96,7 @@ public class FlounderTextures extends Module {
 			} else if (builder.isClampToBorder()) {
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-				FloatBuffer buffer = FlounderPlatform.createFloatBuffer(4);
+				FloatBuffer buffer = FlounderPlatform.get().createFloatBuffer(4);
 				builder.getBorderColour().store(buffer);
 				buffer.flip();
 				glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, buffer);
@@ -159,7 +147,7 @@ public class FlounderTextures extends Module {
 		}
 	}
 
-	public static void deleteTexture(int textureID) {
+	public void deleteTexture(int textureID) {
 		glDeleteTextures(textureID);
 	}
 
@@ -168,18 +156,27 @@ public class FlounderTextures extends Module {
 	 *
 	 * @return The current anisotropy level.
 	 */
-	public static float getAnisotropyLevel() {
-		return INSTANCE.anisotropyLevel;
+	public float getAnisotropyLevel() {
+		return this.anisotropyLevel;
 	}
 
-	public static void setAnisotropyLevel(float anisotropyLevel) {
-		INSTANCE.anisotropyLevel = anisotropyLevel;
+	public void setAnisotropyLevel(float anisotropyLevel) {
+		this.anisotropyLevel = anisotropyLevel;
 	}
-
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> ((TextureObject) loaded.get(key).get()).delete());
 		loaded.clear();
+	}
+
+	@Module.Instance
+	public static FlounderTextures get() {
+		return (FlounderTextures) Framework.getInstance(FlounderTextures.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Textures";
 	}
 }

@@ -19,9 +19,6 @@ import java.util.*;
  * A class that manages game entities.
  */
 public class FlounderEntities extends Module {
-	private static final FlounderEntities INSTANCE = new FlounderEntities();
-	public static final String PROFILE_TAB_NAME = "Entities";
-
 	public static final MyFile ENTITIES_FOLDER = new MyFile(MyFile.RES_FOLDER, "entities");
 
 	private ISpatialStructure<Entity> entityStructure;
@@ -30,7 +27,7 @@ public class FlounderEntities extends Module {
 	 * Creates a new game manager for entities.
 	 */
 	public FlounderEntities() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderEvents.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
+		super( FlounderEvents.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -58,15 +55,7 @@ public class FlounderEntities extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Count", entityStructure.getSize());
-	}
-
-	/**
-	 * Clears the world of all entities.
-	 */
-	public static void clear() {
-		INSTANCE.entityStructure.getAll().forEach(Entity::forceRemove);
-		INSTANCE.entityStructure.clear();
+		FlounderProfiler.get().add(getTab(), "Count", entityStructure.getSize());
 	}
 
 	/**
@@ -76,7 +65,7 @@ public class FlounderEntities extends Module {
 	 * @param editorComponents The entity editor components to save.
 	 * @param name The nave for the entity and file.
 	 */
-	public static void save(String packageLocation, List<IComponentEditor> editorComponents, String name) {
+	public void save(String packageLocation, List<IComponentEditor> editorComponents, String name) {
 		try {
 			String className = "Instance" + name.substring(0, 1).toUpperCase() + name.substring(1);
 
@@ -177,10 +166,17 @@ public class FlounderEntities extends Module {
 	 *
 	 * @return A list of entities.
 	 */
-	public static ISpatialStructure<Entity> getEntities() {
-		return INSTANCE.entityStructure;
+	public ISpatialStructure<Entity> getEntities() {
+		return this.entityStructure;
 	}
 
+	/**
+	 * Clears the world of all entities.
+	 */
+	public void clear() {
+		this.entityStructure.getAll().forEach(Entity::forceRemove);
+		this.entityStructure.clear();
+	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
@@ -188,5 +184,15 @@ public class FlounderEntities extends Module {
 			entityStructure.clear();
 			entityStructure = null;
 		}
+	}
+
+	@Module.Instance
+	public static FlounderEntities get() {
+		return (FlounderEntities) Framework.getInstance(FlounderEntities.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Entities";
 	}
 }

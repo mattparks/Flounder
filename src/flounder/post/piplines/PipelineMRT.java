@@ -17,7 +17,7 @@ public class PipelineMRT extends PostPipeline {
 
 	@Override
 	public void renderPipeline(int... textures) {
-		runFXAA = FlounderDisplay.isAntialiasing();
+		runFXAA = FlounderDisplay.get().isAntialiasing();
 
 		// Texture data used in filter:
 		// textures[0], // Colours
@@ -45,7 +45,7 @@ public class PipelineMRT extends PostPipeline {
 		filterMRT.setShadowFactor(shadowFactor);
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		filterMRT.dispose();
 		filterFXAA.dispose();

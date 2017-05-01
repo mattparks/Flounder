@@ -19,12 +19,12 @@ public class ShaderDeleteRequest implements RequestOpenGL {
 
 	@Override
 	public void executeRequestGL() {
-		if (!FlounderShaders.getLoaded().containsKey(shader.getName())) {
+		if (!FlounderShaders.get().getLoaded().containsKey(shader.getName())) {
 			return;
 		}
 
-		FlounderShaders.getLoaded().get(shader.getName()).clear();
-		FlounderShaders.getLoaded().remove(shader.getName());
-		FlounderShaders.deleteShader(shader.getProgramID());
+		FlounderShaders.get().getLoaded().get(shader.getName()).clear();
+		FlounderShaders.get().getLoaded().remove(shader.getName());
+		FlounderShaders.get().deleteShader(shader.getProgramID());
 	}
 }

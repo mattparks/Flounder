@@ -30,7 +30,7 @@ public class PipelineBloom extends PostPipeline {
 		return filterBloom2.fbo;
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		filterBloom1.dispose();
 		pipelineGaussian.dispose();

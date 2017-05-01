@@ -61,16 +61,16 @@ public class GuiSelector {
 		leftWasClick = mouseLeft.wasDown();
 		rightWasClick = mouseRight.wasDown();
 
-		cursorX = FlounderMouse.getPositionX();
-		cursorY = FlounderMouse.getPositionY();
+		cursorX = FlounderMouse.get().getPositionX();
+		cursorY = FlounderMouse.get().getPositionY();
 
-		if (joysticksInitialized && FlounderJoysticks.isConnected(selectedJoystick) && FlounderGuis.getGuiMaster().isGamePaused()) {
+		if (joysticksInitialized && FlounderJoysticks.get().isConnected(selectedJoystick) && FlounderGuis.get().getGuiMaster().isGamePaused()) {
 			if (Math.abs(Maths.deadband(0.1f, joystickAxisX.getAmount())) > 0.0 || Math.abs(Maths.deadband(0.1f, joystickAxisY.getAmount())) > 0.0) {
 				cursorX += (joystickAxisX.getAmount()) * 0.75f * Framework.getDelta();
 				cursorY += (-joystickAxisY.getAmount()) * 0.75f * Framework.getDelta();
 				cursorX = Maths.clamp(cursorX, 0.0f, 1.0f);
 				cursorY = Maths.clamp(cursorY, 0.0f, 1.0f);
-				FlounderMouse.setPosition(cursorX * FlounderDisplay.getWidth(), cursorY * FlounderDisplay.getHeight());
+				FlounderMouse.get().setPosition(cursorX * FlounderDisplay.get().getWidth(), cursorY * FlounderDisplay.get().getHeight());
 			}
 
 			leftClick = leftClick || joystickLeft.isDown();
@@ -79,11 +79,11 @@ public class GuiSelector {
 			rightWasClick = rightWasClick || joystickRight.wasDown();
 		}
 
-		if (FlounderProfiler.isOpen()) {
-			FlounderProfiler.get().add(FlounderGuis.PROFILE_TAB_NAME, "Selector X", cursorX);
-			FlounderProfiler.get().add(FlounderGuis.PROFILE_TAB_NAME, "Selector Y", cursorY);
-			FlounderProfiler.get().add(FlounderGuis.PROFILE_TAB_NAME, "Click Left", leftClick);
-			FlounderProfiler.get().add(FlounderGuis.PROFILE_TAB_NAME, "Click Right", rightClick);
+		if (FlounderProfiler.get().isOpen()) {
+			FlounderProfiler.get().add(FlounderGuis.getTab(), "Selector X", cursorX);
+			FlounderProfiler.get().add(FlounderGuis.getTab(), "Selector Y", cursorY);
+			FlounderProfiler.get().add(FlounderGuis.getTab(), "Click Left", leftClick);
+			FlounderProfiler.get().add(FlounderGuis.getTab(), "Click Right", rightClick);
 		}
 	}
 
@@ -103,12 +103,12 @@ public class GuiSelector {
 		float positionX = object.getPosition().x;
 		float positionY = object.getPosition().y;
 
-		float width = 2.0f * object.getMeshSize().x * object.getScreenDimensions().x / FlounderDisplay.getAspectRatio();
+		float width = 2.0f * object.getMeshSize().x * object.getScreenDimensions().x / FlounderDisplay.get().getAspectRatio();
 		float height = 2.0f * object.getMeshSize().y * object.getScreenDimensions().y;
 
-		if (FlounderMouse.isDisplaySelected() && FlounderDisplay.isFocused()) {
-			if (FlounderGuis.getSelector().getCursorX() >= positionX - (width / 2.0f) && FlounderGuis.getSelector().getCursorX() <= positionX + (width / 2.0f)) {
-				if (FlounderGuis.getSelector().getCursorY() >= positionY - (height / 2.0f) && FlounderGuis.getSelector().getCursorY() <= positionY + (height / 2.0f)) {
+		if (FlounderMouse.get().isDisplaySelected() && FlounderDisplay.get().isFocused()) {
+			if (FlounderGuis.get().getSelector().getCursorX() >= positionX - (width / 2.0f) && FlounderGuis.get().getSelector().getCursorX() <= positionX + (width / 2.0f)) {
+				if (FlounderGuis.get().getSelector().getCursorY() >= positionY - (height / 2.0f) && FlounderGuis.get().getSelector().getCursorY() <= positionY + (height / 2.0f)) {
 					return true;
 				}
 			}

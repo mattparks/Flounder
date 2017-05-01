@@ -23,9 +23,6 @@ import static org.lwjgl.opengl.GL30.*;
  * A module used for loading GLSL files into shaders.
  */
 public class FlounderShaders extends Module {
-	private static final FlounderShaders INSTANCE = new FlounderShaders();
-	public static final String PROFILE_TAB_NAME = "Shaders";
-
 	public static final MyFile SHADERS_LOC = new MyFile(MyFile.RES_FOLDER, "shaders");
 
 	private Map<String, SoftReference<FactoryObject>> loaded;
@@ -34,7 +31,7 @@ public class FlounderShaders extends Module {
 	 * Creates a new shader loader class.
 	 */
 	public FlounderShaders() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class);
+		super(FlounderProcessors.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -48,7 +45,7 @@ public class FlounderShaders extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Loaded", loaded.size());
+		FlounderProfiler.get().add(getTab(), "Loaded", loaded.size());
 	}
 
 	/**
@@ -56,11 +53,11 @@ public class FlounderShaders extends Module {
 	 *
 	 * @return A list of loaded shaders.
 	 */
-	public static Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return INSTANCE.loaded;
+	public Map<String, SoftReference<FactoryObject>> getLoaded() {
+		return this.loaded;
 	}
 
-	public static void loadShader(ShaderBuilder b, ShaderObject o) {
+	public void loadShader(ShaderBuilder b, ShaderObject o) {
 		int programID = glCreateProgram();
 
 		for (ShaderType type : b.getTypes()) {
@@ -142,11 +139,11 @@ public class FlounderShaders extends Module {
 		o.loadGL(uniforms, programID);
 	}
 
-	public static int getUniformLocation(int programID, String uniformName) {
+	public int getUniformLocation(int programID, String uniformName) {
 		return glGetUniformLocation(programID, uniformName);
 	}
 
-	public static <T> void storeSimpleData(int location, T data) {
+	public <T> void storeSimpleData(int location, T data) {
 		if (data instanceof Boolean) {
 			glUniform1f(location, (Boolean) data ? 1.0f : 0.0f);
 		}
@@ -157,7 +154,7 @@ public class FlounderShaders extends Module {
 		}
 	}
 
-	public static <T> void storeMatrixData(int location, FloatBuffer buffer, T data) {
+	public <T> void storeMatrixData(int location, FloatBuffer buffer, T data) {
 		if (data instanceof Matrix2f) {
 			buffer.clear();
 			((Matrix2f) data).store(buffer);
@@ -179,7 +176,7 @@ public class FlounderShaders extends Module {
 		}
 	}
 
-	public static <T> void storeVectorData(int location, T data) {
+	public <T> void storeVectorData(int location, T data) {
 		if (data instanceof Vector2f) {
 			glUniform2f(location, ((Vector2f) data).x, ((Vector2f) data).y);
 		} else if (data instanceof Vector3f) {
@@ -189,19 +186,28 @@ public class FlounderShaders extends Module {
 		}
 	}
 
-	public static void useShader(int shaderID) {
+	public void useShader(int shaderID) {
 		glUseProgram(shaderID);
 	}
 
-	public static void deleteShader(int shaderID) {
+	public void deleteShader(int shaderID) {
 		glUseProgram(0);
 		glDeleteProgram(shaderID);
 	}
-
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> ((ShaderObject) loaded.get(key).get()).delete());
 		loaded.clear();
+	}
+
+	@Module.Instance
+	public static FlounderShaders get() {
+		return (FlounderShaders) Framework.getInstance(FlounderShaders.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Shaders";
 	}
 }

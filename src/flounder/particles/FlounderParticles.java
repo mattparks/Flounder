@@ -18,9 +18,6 @@ import java.util.*;
  * A manager that manages particles.
  */
 public class FlounderParticles extends Module {
-	private static final FlounderParticles INSTANCE = new FlounderParticles();
-	public static final String PROFILE_TAB_NAME = "Particles";
-
 	public static final MyFile PARTICLES_FOLDER = new MyFile(MyFile.RES_FOLDER, "particles");
 	public static final float MAX_ELAPSED_TIME = 5.0f;
 
@@ -34,7 +31,7 @@ public class FlounderParticles extends Module {
 	 * Creates a new particle systems manager.
 	 */
 	public FlounderParticles() {
-		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
+		super(FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -46,9 +43,9 @@ public class FlounderParticles extends Module {
 		this.deadParticles = new ArrayList<>();
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Handler.Function(Handler.FLAG_UPDATE_POST)
 	public void update() {
-		if (FlounderGuis.getGuiMaster().isGamePaused()) {
+		if (FlounderGuis.get().getGuiMaster().isGamePaused()) {
 			return;
 		}
 
@@ -87,16 +84,16 @@ public class FlounderParticles extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Systems", particleSystems.size());
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Types", particles.size());
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Dead Particles", deadParticles.size());
+		FlounderProfiler.get().add(getTab(), "Systems", particleSystems.size());
+		FlounderProfiler.get().add(getTab(), "Types", particles.size());
+		FlounderProfiler.get().add(getTab(), "Dead Particles", deadParticles.size());
 	}
 
 	/**
 	 * Clears all particles from the scene.
 	 */
-	public static void clear() {
-		INSTANCE.particles.clear();
+	public void clear() {
+		this.particles.clear();
 	}
 
 	/**
@@ -104,8 +101,8 @@ public class FlounderParticles extends Module {
 	 *
 	 * @param system The new system to add.
 	 */
-	public static void addSystem(ParticleSystem system) {
-		INSTANCE.particleSystems.add(system);
+	public void addSystem(ParticleSystem system) {
+		this.particleSystems.add(system);
 	}
 
 	/**
@@ -113,8 +110,8 @@ public class FlounderParticles extends Module {
 	 *
 	 * @param system The system to remove.
 	 */
-	public static void removeSystem(ParticleSystem system) {
-		INSTANCE.particleSystems.remove(system);
+	public void removeSystem(ParticleSystem system) {
+		this.particleSystems.remove(system);
 	}
 
 	/**
@@ -122,8 +119,8 @@ public class FlounderParticles extends Module {
 	 *
 	 * @return All particles.
 	 */
-	protected static List<StructureBasic<Particle>> getParticles() {
-		return INSTANCE.particles;
+	protected List<StructureBasic<Particle>> getParticles() {
+		return this.particles;
 	}
 
 	/**
@@ -137,17 +134,17 @@ public class FlounderParticles extends Module {
 	 * @param scale The particles scale.
 	 * @param gravityEffect The particles gravity effect.
 	 */
-	public static void addParticle(ParticleType particleType, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
+	public void addParticle(ParticleType particleType, Vector3f position, Vector3f velocity, float lifeLength, float rotation, float scale, float gravityEffect) {
 		Particle particle;
 
-		if (INSTANCE.deadParticles.size() > 0) {
-			particle = INSTANCE.deadParticles.get(0).set(particleType, position, velocity, lifeLength, rotation, scale, gravityEffect);
-			INSTANCE.deadParticles.remove(0);
+		if (deadParticles.size() > 0) {
+			particle = deadParticles.get(0).set(particleType, position, velocity, lifeLength, rotation, scale, gravityEffect);
+			deadParticles.remove(0);
 		} else {
 			particle = new Particle(particleType, position, velocity, lifeLength, rotation, scale, gravityEffect);
 		}
 
-		for (StructureBasic<Particle> list : INSTANCE.particles) {
+		for (StructureBasic<Particle> list : particles) {
 			if (list.getSize() > 0 && list.get(0).getParticleType().equals(particle.getParticleType())) {
 				list.add(particle);
 				return;
@@ -156,7 +153,7 @@ public class FlounderParticles extends Module {
 
 		StructureBasic<Particle> list = new StructureBasic<>();
 		list.add(particle);
-		INSTANCE.particles.add(list);
+		particles.add(list);
 	}
 
 
@@ -167,5 +164,15 @@ public class FlounderParticles extends Module {
 		particleSystems.clear();
 		particles.clear();
 		deadParticles.clear();
+	}
+
+	@Module.Instance
+	public static FlounderParticles get() {
+		return (FlounderParticles) Framework.getInstance(FlounderParticles.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Particles";
 	}
 }

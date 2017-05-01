@@ -86,14 +86,14 @@ public class ShaderObject extends FactoryObject {
 	 * Starts the shader program.
 	 */
 	public void start() {
-		FlounderShaders.useShader(programID);
+		FlounderShaders.get().useShader(programID);
 	}
 
 	/**
 	 * Stops the shader program.
 	 */
 	public void stop() {
-		FlounderShaders.useShader(0);
+		FlounderShaders.get().useShader(0);
 	}
 
 	/**
@@ -337,7 +337,7 @@ public class ShaderObject extends FactoryObject {
 	public void delete() {
 		if (isLoaded()) {
 			setFullyLoaded(false);
-			FlounderProcessors.sendRequest(new ShaderDeleteRequest(this));
+			FlounderProcessors.get().sendRequest(new ShaderDeleteRequest(this));
 		}
 	}
 }

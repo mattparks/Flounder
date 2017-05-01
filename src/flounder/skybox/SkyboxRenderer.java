@@ -23,39 +23,39 @@ public class SkyboxRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || !FlounderSkybox.getModel().isLoaded()) {
+		if (!shader.isLoaded() || !FlounderSkybox.get().getModel().isLoaded()) {
 			return;
 		}
 
 		shader.start();
 		shader.getUniformMat4("projectionMatrix").loadMat4(camera.getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
-		shader.getUniformMat4("modelMatrix").loadMat4(FlounderSkybox.getModelMatrix());
+		shader.getUniformMat4("modelMatrix").loadMat4(FlounderSkybox.get().getModelMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
-		shader.getUniformVec3("skyColour").loadVec3(FlounderSkybox.getFog().getFogColour());
-		shader.getUniformFloat("blendFactor").loadFloat(FlounderSkybox.getBlendFactor());
+		shader.getUniformVec3("skyColour").loadVec3(FlounderSkybox.get().getFog().getFogColour());
+		shader.getUniformFloat("blendFactor").loadFloat(FlounderSkybox.get().getBlendFactor());
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
 		OpenGlUtils.enableDepthTesting();
 		OpenGlUtils.cullBackFaces(false);
 		OpenGlUtils.disableBlending();
 
-		OpenGlUtils.bindVAO(FlounderSkybox.getModel().getVaoID(), 0);
-		OpenGlUtils.bindTexture(FlounderSkybox.getCubemap(), 0);
+		OpenGlUtils.bindVAO(FlounderSkybox.get().getModel().getVaoID(), 0);
+		OpenGlUtils.bindTexture(FlounderSkybox.get().getCubemap(), 0);
 
-		OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, FlounderSkybox.getModel().getVaoLength());
+		OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, FlounderSkybox.get().getModel().getVaoLength());
 
 		OpenGlUtils.unbindVAO(0);
 		shader.stop();
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
+	@Override
 	public void profile() {
-		FlounderProfiler.get().add(FlounderSkybox.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderSkybox.getTab(), "Render Time", super.getRenderTime());
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		shader.delete();
 	}

@@ -21,7 +21,7 @@ public class FilterBlurHorizontal extends PostFilter {
 		).create(), FBO.newFBO(sizeScalar).create());
 		this.fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
-		init((int) (FlounderDisplay.getWidth() * sizeScalar));
+		init((int) (FlounderDisplay.get().getWidth() * sizeScalar));
 	}
 
 	public FilterBlurHorizontal(int widthValue, int heightValue) {
@@ -46,7 +46,7 @@ public class FilterBlurHorizontal extends PostFilter {
 	@Override
 	public void storeValues() {
 		if (fitToDisplay) {
-			widthValue = (int) (FlounderDisplay.getWidth() * sizeScalar);
+			widthValue = (int) (FlounderDisplay.get().getWidth() * sizeScalar);
 		}
 
 		shader.getUniformFloat("width").loadFloat(widthValue);

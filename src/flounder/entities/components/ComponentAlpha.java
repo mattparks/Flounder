@@ -29,7 +29,7 @@ public class ComponentAlpha extends IComponentEntity implements IComponentAlpha,
 		this.alpha = alpha;
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Override
 	public void update() {
 	}
 
@@ -73,7 +73,7 @@ public class ComponentAlpha extends IComponentEntity implements IComponentAlpha,
 		return null;
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 	}
 }

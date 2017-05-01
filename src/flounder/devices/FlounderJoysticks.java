@@ -12,9 +12,6 @@ import static org.lwjgl.glfw.GLFW.*;
  * A module used for the creation, updating and destruction of joysticks.
  */
 public class FlounderJoysticks extends Module {
-	private static final FlounderJoysticks INSTANCE = new FlounderJoysticks();
-	public static final String PROFILE_TAB_NAME = "Joysticks";
-
 	private FloatBuffer joystickAxes[];
 	private ByteBuffer joystickButtons[];
 	private String joystickNames[];
@@ -23,7 +20,7 @@ public class FlounderJoysticks extends Module {
 	 * Creates a new GLFW joystick manager.
 	 */
 	public FlounderJoysticks() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderDisplay.class);
+		super(FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -40,8 +37,8 @@ public class FlounderJoysticks extends Module {
 			if (glfwJoystickPresent(i)) {
 				if (joystickAxes[i] == null || joystickButtons[i] == null || joystickNames[i] == null) {
 					FlounderLogger.get().log("Connecting Joystick: " + i);
-					joystickAxes[i] = FlounderPlatform.createFloatBuffer(glfwGetJoystickAxes(i).capacity());
-					joystickButtons[i] = FlounderPlatform.createByteBuffer(glfwGetJoystickButtons(i).capacity());
+					joystickAxes[i] = FlounderPlatform.get().createFloatBuffer(glfwGetJoystickAxes(i).capacity());
+					joystickButtons[i] = FlounderPlatform.get().createByteBuffer(glfwGetJoystickButtons(i).capacity());
 					joystickNames[i] = glfwGetJoystickName(i);
 				}
 
@@ -75,8 +72,8 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return If the joystick is connected.
 	 */
-	public static boolean isConnected(int joystick) {
-		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && INSTANCE.joystickNames[joystick] != null;
+	public boolean isConnected(int joystick) {
+		return joystick >= 0 && joystick < GLFW_JOYSTICK_LAST && this.joystickNames[joystick] != null;
 	}
 
 	/**
@@ -86,8 +83,8 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return The joysticks name.
 	 */
-	public static String getName(int joystick) {
-		return INSTANCE.joystickNames[joystick];
+	public String getName(int joystick) {
+		return this.joystickNames[joystick];
 	}
 
 	/**
@@ -98,8 +95,8 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return The value of the joystick's axis.
 	 */
-	public static float getAxis(int joystick, int axis) {
-		return INSTANCE.joystickAxes[joystick].get(axis);
+	public float getAxis(int joystick, int axis) {
+		return this.joystickAxes[joystick].get(axis);
 	}
 
 	/**
@@ -110,8 +107,8 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return Whether a button on a joystick is pressed.
 	 */
-	public static boolean getButton(int joystick, int button) {
-		return INSTANCE.joystickButtons[joystick].get(button) != 0;
+	public boolean getButton(int joystick, int button) {
+		return this.joystickButtons[joystick].get(button) != 0;
 	}
 
 	/**
@@ -121,8 +118,8 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return The number of axes the joystick offers.
 	 */
-	public static int getCountAxes(int joystick) {
-		return INSTANCE.joystickAxes[joystick].capacity();
+	public int getCountAxes(int joystick) {
+		return this.joystickAxes[joystick].capacity();
 	}
 
 	/**
@@ -132,12 +129,22 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return The number of buttons the joystick offers.
 	 */
-	public static int getCountButtons(int joystick) {
-		return INSTANCE.joystickButtons[joystick].capacity();
+	public int getCountButtons(int joystick) {
+		return this.joystickButtons[joystick].capacity();
 	}
 
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+	}
+
+	@Module.Instance
+	public static FlounderJoysticks get() {
+		return (FlounderJoysticks) Framework.getInstance(FlounderJoysticks.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Joysicks";
 	}
 }

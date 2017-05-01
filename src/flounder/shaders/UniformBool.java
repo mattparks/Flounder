@@ -18,7 +18,7 @@ public class UniformBool extends Uniform {
 	public void loadBoolean(boolean value) {
 		if (current != value) {
 			current = value;
-			FlounderShaders.storeSimpleData(super.getLocation(), value);
+			FlounderShaders.get().storeSimpleData(super.getLocation(), value);
 		}
 	}
 }

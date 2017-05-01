@@ -50,7 +50,7 @@ public class TextLoader {
 		Vector2f meshSize = getBounding(meshData.vertices);
 
 		// Load mesh data to OpenGL.
-		int vao = FlounderLoader.createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
+		int vao = FlounderLoader.get().createInterleavedVAO(meshData.vertices.length / 2, meshData.vertices, meshData.textures);
 		int verticesCount = meshData.vertices.length / 2;
 		text.setMeshInfo(vao, verticesCount);
 		text.setMeshSize(meshSize);

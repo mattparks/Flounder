@@ -10,16 +10,13 @@ import flounder.shaders.*;
  * A module used for OpenGL rendering and management.
  */
 public class FlounderRenderer extends Module {
-	private static final FlounderRenderer INSTANCE = new FlounderRenderer();
-	public static final String PROFILE_TAB_NAME = "Renderer";
-
 	private RendererMaster renderer;
 
 	/**
 	 * Creates a new OpenGL renderer manager.
 	 */
 	public FlounderRenderer() {
-		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderCamera.class, FlounderShaders.class);
+		super(FlounderDisplay.class, FlounderCamera.class, FlounderShaders.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -27,10 +24,10 @@ public class FlounderRenderer extends Module {
 		this.renderer = null;
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Handler.Function(Handler.FLAG_RENDER)
 	public void update() {
 		// Gets a new renderer, if available.
-		RendererMaster newRenderer = (RendererMaster) getExtensionMatch(renderer, RendererMaster.class, true);
+		RendererMaster newRenderer = (RendererMaster) getExtension(renderer, RendererMaster.class, true);
 
 		// If there is a new renderer, disable the old one and start to use the new one.
 		if (newRenderer != null) {
@@ -55,7 +52,7 @@ public class FlounderRenderer extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Selected", renderer == null ? "NULL" : renderer.getClass());
+		FlounderProfiler.get().add(getTab(), "Selected", renderer == null ? "NULL" : renderer.getClass());
 	}
 
 	/**
@@ -63,8 +60,8 @@ public class FlounderRenderer extends Module {
 	 *
 	 * @return The current renderer.
 	 */
-	public static RendererMaster getRendererMaster() {
-		return INSTANCE.renderer;
+	public RendererMaster getRendererMaster() {
+		return this.renderer;
 	}
 
 
@@ -75,5 +72,15 @@ public class FlounderRenderer extends Module {
 			renderer.dispose();
 			renderer.setInitialized(false);
 		}
+	}
+
+	@Module.Instance
+	public static FlounderRenderer get() {
+		return (FlounderRenderer) Framework.getInstance(FlounderRenderer.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Renderer";
 	}
 }

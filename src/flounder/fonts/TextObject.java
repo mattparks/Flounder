@@ -330,7 +330,7 @@ public class TextObject extends ScreenObject {
 	@Override
 	public void deleteObject() {
 		if (isLoaded()) {
-			FlounderLoader.deleteVAOFromCache(textMeshVao);
+			FlounderLoader.get().deleteVAOFromCache(textMeshVao);
 			textMeshVao = -1;
 			vertexCount = -1;
 		}

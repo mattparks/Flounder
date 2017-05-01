@@ -52,7 +52,7 @@ public class UniformVec3 extends Uniform {
 	public void loadVec3(float x, float y, float z) {
 		if (x != current.x || y != current.y || z != current.z) {
 			current.set(x, y, z);
-			FlounderShaders.storeVectorData(super.getLocation(), current);
+			FlounderShaders.get().storeVectorData(super.getLocation(), current);
 		}
 	}
 }

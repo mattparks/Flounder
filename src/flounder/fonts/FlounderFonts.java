@@ -10,9 +10,6 @@ import flounder.textures.*;
  * A module used for holding a list of available engine fonts and texts currently on the screen.
  */
 public class FlounderFonts extends Module {
-	private static final FlounderFonts INSTANCE = new FlounderFonts();
-	public static final String PROFILE_TAB_NAME = "Fonts";
-
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
 	public static final FontType ARIAL = new FontType(new MyFile(MyFile.RES_FOLDER, "fonts", "arial.png"), new MyFile(MyFile.RES_FOLDER, "fonts", "arial.fnt"));
@@ -24,7 +21,7 @@ public class FlounderFonts extends Module {
 	 * Creates a new font manager.
 	 */
 	public FlounderFonts() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
+		super(FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -42,5 +39,15 @@ public class FlounderFonts extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+	}
+
+	@Module.Instance
+	public static FlounderFonts get() {
+		return (FlounderFonts) Framework.getInstance(FlounderFonts.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Fonts";
 	}
 }

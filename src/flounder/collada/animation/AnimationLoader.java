@@ -78,7 +78,7 @@ public class AnimationLoader {
 	}
 
 	private void processTransforms(String jointName, String[] rawData, KeyFrameData[] keyFrames, boolean root) {
-		FloatBuffer buffer = FlounderPlatform.createFloatBuffer(16);
+		FloatBuffer buffer = FlounderPlatform.get().createFloatBuffer(16);
 		float[] matrixData = new float[16];
 
 		for (int i = 0; i < keyFrames.length; i++) {

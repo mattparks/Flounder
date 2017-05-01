@@ -47,7 +47,7 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 		}
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Override
 	public void update() {
 		//	if (super.getEntity().hasMoved()) { // TODO
 		if (offset != null) {
@@ -174,7 +174,7 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 		);
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 	}
 }

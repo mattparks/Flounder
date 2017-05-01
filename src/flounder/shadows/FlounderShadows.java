@@ -8,9 +8,6 @@ import flounder.maths.vectors.*;
 import flounder.profiling.*;
 
 public class FlounderShadows extends Module {
-	private static final FlounderShadows INSTANCE = new FlounderShadows();
-	public static final String PROFILE_TAB_NAME = "Kosmos Shadows";
-
 	private Vector3f lightPosition;
 	private float brightnessBoost;
 
@@ -32,7 +29,7 @@ public class FlounderShadows extends Module {
 	private ShadowBox shadowBox;
 
 	public FlounderShadows() {
-		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderCamera.class, FlounderEntities.class);
+		super(FlounderCamera.class, FlounderEntities.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -104,104 +101,104 @@ public class FlounderShadows extends Module {
 		return offset;
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Handler.Function(Handler.FLAG_RENDER)
 	public void update() {
-		shadowBox.update(FlounderCamera.getCamera());
+		shadowBox.update(FlounderCamera.get().getCamera());
 		updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
 		updateLightViewMatrix(lightPosition, shadowBox.getCenter());
 		Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
-		Matrix4f.multiply(INSTANCE.offset, INSTANCE.projectionViewMatrix, shadowMapSpaceMatrix);
+		Matrix4f.multiply(offset, projectionViewMatrix, shadowMapSpaceMatrix);
 	}
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Map Size", shadowSize);
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "PCF Count", shadowPCF);
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Surface Bias", shadowBias);
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Surface Darkness", shadowDarkness);
+		FlounderProfiler.get().add(getTab(), "Map Size", shadowSize);
+		FlounderProfiler.get().add(getTab(), "PCF Count", shadowPCF);
+		FlounderProfiler.get().add(getTab(), "Surface Bias", shadowBias);
+		FlounderProfiler.get().add(getTab(), "Surface Darkness", shadowDarkness);
 	}
 
-	public static Vector3f getLightPosition() {
-		return INSTANCE.lightPosition;
+	public Vector3f getLightPosition() {
+		return this.lightPosition;
 	}
 
-	public static void setLightPosition(Vector3f lightPosition) {
-		INSTANCE.lightPosition.set(lightPosition);
+	public void setLightPosition(Vector3f lightPosition) {
+		this.lightPosition.set(lightPosition);
 	}
 
-	public static float getBrightnessBoost() {
-		return INSTANCE.brightnessBoost;
+	public float getBrightnessBoost() {
+		return this.brightnessBoost;
 	}
 
-	public static void setBrightnessBoost(float brightnessBoost) {
-		INSTANCE.brightnessBoost = brightnessBoost;
+	public void setBrightnessBoost(float brightnessBoost) {
+		this.brightnessBoost = brightnessBoost;
 	}
 
-	public static int getShadowSize() {
-		return INSTANCE.shadowSize;
+	public int getShadowSize() {
+		return this.shadowSize;
 	}
 
-	public static void setShadowSize(int shadowSize) {
-		INSTANCE.shadowSize = shadowSize;
+	public void setShadowSize(int shadowSize) {
+		this.shadowSize = shadowSize;
 	}
 
-	public static int getShadowPCF() {
-		return INSTANCE.shadowPCF;
+	public int getShadowPCF() {
+		return this.shadowPCF;
 	}
 
-	public static void setShadowPCF(int shadowPCF) {
-		INSTANCE.shadowPCF = shadowPCF;
+	public void setShadowPCF(int shadowPCF) {
+		this.shadowPCF = shadowPCF;
 	}
 
-	public static float getShadowBias() {
-		return INSTANCE.shadowBias;
+	public float getShadowBias() {
+		return this.shadowBias;
 	}
 
-	public static void setShadowBias(float shadowBias) {
-		INSTANCE.shadowBias = shadowBias;
+	public void setShadowBias(float shadowBias) {
+		this.shadowBias = shadowBias;
 	}
 
-	public static float getShadowDarkness() {
-		return INSTANCE.shadowDarkness;
+	public float getShadowDarkness() {
+		return this.shadowDarkness;
 	}
 
-	public static void setShadowDarkness(float shadowDarkness) {
-		INSTANCE.shadowDarkness = shadowDarkness;
+	public void setShadowDarkness(float shadowDarkness) {
+		this.shadowDarkness = shadowDarkness;
 	}
 
-	public static float getShadowTransition() {
-		return INSTANCE.shadowTransition;
+	public float getShadowTransition() {
+		return this.shadowTransition;
 	}
 
-	public static void setShadowTransition(float shadowTransition) {
-		INSTANCE.shadowTransition = shadowTransition;
+	public void setShadowTransition(float shadowTransition) {
+		this.shadowTransition = shadowTransition;
 	}
 
-	public static float getShadowBoxOffset() {
-		return INSTANCE.shadowBoxOffset;
+	public float getShadowBoxOffset() {
+		return this.shadowBoxOffset;
 	}
 
-	public static void setShadowBoxOffset(float shadowBoxOffset) {
-		INSTANCE.shadowBoxOffset = shadowBoxOffset;
+	public void setShadowBoxOffset(float shadowBoxOffset) {
+		this.shadowBoxOffset = shadowBoxOffset;
 	}
 
-	public static float getShadowBoxDistance() {
-		return INSTANCE.shadowBoxDistance;
+	public float getShadowBoxDistance() {
+		return this.shadowBoxDistance;
 	}
 
-	public static void setShadowBoxDistance(float shadowBoxDistance) {
-		INSTANCE.shadowBoxDistance = shadowBoxDistance;
+	public void setShadowBoxDistance(float shadowBoxDistance) {
+		this.shadowBoxDistance = shadowBoxDistance;
 	}
 
 	/**
 	 * @return The shadow box, so that it can be used by other class to test if engine.entities are inside the box.
 	 */
-	public static ShadowBox getShadowBox() {
-		return INSTANCE.shadowBox;
+	public ShadowBox getShadowBox() {
+		return this.shadowBox;
 	}
 
-	public static Matrix4f getProjectionViewMatrix() {
-		return INSTANCE.projectionViewMatrix;
+	public Matrix4f getProjectionViewMatrix() {
+		return this.projectionViewMatrix;
 	}
 
 	/**
@@ -209,19 +206,29 @@ public class FlounderShadows extends Module {
 	 *
 	 * @return The to-shadow-map-space matrix.
 	 */
-	public static Matrix4f getToShadowMapSpaceMatrix() {
-		return INSTANCE.shadowMapSpaceMatrix;
+	public Matrix4f getToShadowMapSpaceMatrix() {
+		return this.shadowMapSpaceMatrix;
 	}
 
 	/**
 	 * @return The light's "view" matrix.
 	 */
-	protected static Matrix4f getLightSpaceTransform() {
-		return INSTANCE.lightViewMatrix;
+	protected Matrix4f getLightSpaceTransform() {
+		return this.lightViewMatrix;
 	}
 
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+	}
+
+	@Module.Instance
+	public static FlounderShadows get() {
+		return (FlounderShadows) Framework.getInstance(FlounderShadows.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Shadows";
 	}
 }

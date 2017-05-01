@@ -38,7 +38,7 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 		this.textureSway = textureSway;
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Override
 	public void update() {
 	}
 
@@ -150,7 +150,7 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 		);
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 	}
 }

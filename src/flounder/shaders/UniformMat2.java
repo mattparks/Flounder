@@ -15,7 +15,7 @@ public class UniformMat2 extends Uniform {
 	public UniformMat2(String name, ShaderObject shader) {
 		super(name, shader);
 		this.current = new Matrix2f();
-		this.floatBuffer = FlounderPlatform.createFloatBuffer(4);
+		this.floatBuffer = FlounderPlatform.get().createFloatBuffer(4);
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class UniformMat2 extends Uniform {
 	public void loadMat2(Matrix2f value) {
 		if (value != null && !current.equals(value)) {
 			current.set(value);
-			FlounderShaders.storeMatrixData(super.getLocation(), floatBuffer, value);
+			FlounderShaders.get().storeMatrixData(super.getLocation(), floatBuffer, value);
 		}
 	}
 }

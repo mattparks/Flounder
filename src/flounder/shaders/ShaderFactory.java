@@ -146,11 +146,11 @@ public class ShaderFactory extends Factory {
 	protected void create(FactoryObject object, FactoryBuilder builder) {
 		ShaderBuilder b = (ShaderBuilder) builder;
 		ShaderObject o = (ShaderObject) object;
-		FlounderShaders.loadShader(b, o);
+		FlounderShaders.get().loadShader(b, o);
 	}
 
 	@Override
 	public Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return FlounderShaders.getLoaded();
+		return FlounderShaders.get().getLoaded();
 	}
 }

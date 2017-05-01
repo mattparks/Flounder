@@ -35,7 +35,7 @@ public class WavDataStream {
 	private WavDataStream(AudioInputStream stream, int chunkSize) {
 		AudioFormat format = stream.getFormat();
 
-		alFormat = FlounderSound.getDevice().getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
+		alFormat = FlounderSound.get().getDevice().getOpenAlFormat(format.getChannels(), format.getSampleSizeInBits());
 		sampleRate = (int) format.getSampleRate();
 		totalBytes = (int) (stream.getFrameLength() * format.getFrameSize());
 		bytesPerFrame = format.getFrameSize();
@@ -43,7 +43,7 @@ public class WavDataStream {
 		this.chunkSize = chunkSize;
 		audioStream = stream;
 
-		buffer = FlounderPlatform.createByteBuffer(chunkSize);
+		buffer = FlounderPlatform.get().createByteBuffer(chunkSize);
 		data = new byte[chunkSize];
 
 		totalBytesRead = 0;

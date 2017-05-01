@@ -24,18 +24,18 @@ public class GuisRenderer extends Renderer {
 
 	public GuisRenderer() {
 		this.shader = ShaderFactory.newBuilder().setName("guis").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
-		this.vaoID = FlounderLoader.createInterleavedVAO(FlounderGuis.POSITIONS, 2);
+		this.vaoID = FlounderLoader.get().createInterleavedVAO(FlounderGuis.POSITIONS, 2);
 		this.vaoLength = FlounderGuis.POSITIONS.length / 2;
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || FlounderGuis.getContainer() == null) {
+		if (!shader.isLoaded() || FlounderGuis.get().getContainer() == null) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderGuis.getContainer().getAll(new ArrayList<>()).forEach(this::renderGui);
+		FlounderGuis.get().getContainer().getAll(new ArrayList<>()).forEach(this::renderGui);
 		endRendering();
 	}
 
@@ -47,7 +47,7 @@ public class GuisRenderer extends Renderer {
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.disableDepthTesting();
 
-		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.getAspectRatio());
+		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.get().getAspectRatio());
 		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
 	}
 
@@ -86,15 +86,15 @@ public class GuisRenderer extends Renderer {
 		shader.stop();
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
+	@Override
 	public void profile() {
-		FlounderProfiler.get().add(FlounderGuis.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderGuis.getTab(), "Render Time", super.getRenderTime());
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		if (vaoID != -1) {
-			FlounderLoader.deleteVAOFromCache(vaoID);
+			FlounderLoader.get().deleteVAOFromCache(vaoID);
 			vaoID = -1;
 		}
 

@@ -61,7 +61,7 @@ public class SkeletonLoader {
 			matrixData[i] = Float.parseFloat(rawData[i]);
 		}
 
-		FloatBuffer buffer = FlounderPlatform.createFloatBuffer(16);
+		FloatBuffer buffer = FlounderPlatform.get().createFloatBuffer(16);
 		buffer.put(matrixData);
 		buffer.flip();
 		return buffer;

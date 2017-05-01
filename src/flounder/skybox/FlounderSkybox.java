@@ -14,9 +14,6 @@ import flounder.shaders.*;
 import flounder.textures.*;
 
 public class FlounderSkybox extends Module {
-	private static final FlounderSkybox INSTANCE = new FlounderSkybox();
-	public static final String PROFILE_TAB_NAME = "Skybox";
-
 	public static final MyFile SKYBOX_FOLDER = new MyFile(MyFile.RES_FOLDER, "skybox");
 
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
@@ -33,7 +30,7 @@ public class FlounderSkybox extends Module {
 	private float blendFactor;
 
 	public FlounderSkybox() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderBounding.class, FlounderLoader.class, FlounderTextures.class, FlounderShaders.class);
+		super(FlounderBounding.class, FlounderLoader.class, FlounderTextures.class, FlounderShaders.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -51,8 +48,8 @@ public class FlounderSkybox extends Module {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Update the skybox transformation.
-		if (FlounderCamera.getCamera() != null) {
-			Matrix4f.transformationMatrix(FlounderCamera.getCamera().getPosition(), rotation, SIZE, modelMatrix);
+		if (FlounderCamera.get().getCamera() != null) {
+			Matrix4f.transformationMatrix(FlounderCamera.get().getCamera().getPosition(), rotation, SIZE, modelMatrix);
 		}
 	}
 
@@ -60,44 +57,44 @@ public class FlounderSkybox extends Module {
 	public void profile() {
 	}
 
-	public static ModelObject getModel() {
-		return INSTANCE.model;
+	public ModelObject getModel() {
+		return this.model;
 	}
 
-	public static void setModel(ModelObject model) {
-		INSTANCE.model = model;
+	public void setModel(ModelObject model) {
+		this.model = model;
 	}
 
-	public static TextureObject getCubemap() {
-		return INSTANCE.cubemap;
+	public TextureObject getCubemap() {
+		return this.cubemap;
 	}
 
-	public static void setCubemap(TextureObject cubemap) {
-		INSTANCE.cubemap = cubemap;
+	public void setCubemap(TextureObject cubemap) {
+		this.cubemap = cubemap;
 	}
 
-	public static Vector3f getRotation() {
-		return INSTANCE.rotation;
+	public Vector3f getRotation() {
+		return this.rotation;
 	}
 
-	public static void setRotation(Vector3f rotation) {
-		INSTANCE.rotation.set(rotation);
+	public void setRotation(Vector3f rotation) {
+		this.rotation.set(rotation);
 	}
 
-	public static Matrix4f getModelMatrix() {
-		return INSTANCE.modelMatrix;
+	public Matrix4f getModelMatrix() {
+		return this.modelMatrix;
 	}
 
-	public static Fog getFog() {
-		return INSTANCE.fog;
+	public Fog getFog() {
+		return this.fog;
 	}
 
-	public static float getBlendFactor() {
-		return INSTANCE.blendFactor;
+	public float getBlendFactor() {
+		return this.blendFactor;
 	}
 
-	public static void setBlendFactor(float blendFactor) {
-		INSTANCE.blendFactor = blendFactor;
+	public void setBlendFactor(float blendFactor) {
+		this.blendFactor = blendFactor;
 	}
 
 
@@ -106,5 +103,15 @@ public class FlounderSkybox extends Module {
 		if (cubemap != null) {
 			this.cubemap.delete();
 		}
+	}
+
+	@Module.Instance
+	public static FlounderSkybox get() {
+		return (FlounderSkybox) Framework.getInstance(FlounderSkybox.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Skybox";
 	}
 }

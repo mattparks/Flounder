@@ -35,7 +35,7 @@ public class PipelineDOF extends PostPipeline {
 		return filterDOF.fbo;
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		pipelineGaussian.dispose();
 		filterFXAA.dispose();

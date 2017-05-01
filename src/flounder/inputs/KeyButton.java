@@ -12,6 +12,6 @@ public class KeyButton extends BaseButton {
 	 * @param keyCodes The codes for the buttons being checked. They should be GLFW.KEY values.
 	 */
 	public KeyButton(int... keyCodes) {
-		super((int code) -> FlounderKeyboard.getKey(code), keyCodes);
+		super((int code) -> FlounderKeyboard.get().getKey(code), keyCodes);
 	}
 }

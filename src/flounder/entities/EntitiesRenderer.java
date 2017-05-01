@@ -42,8 +42,8 @@ public class EntitiesRenderer extends Renderer {
 
 		prepareRendering(clipPlane, camera);
 
-		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : FlounderEntities.getEntities().queryInFrustum(camera.getViewFrustum())) {
+		if (FlounderEntities.get().getEntities() != null) {
+			for (Entity entity : FlounderEntities.get().getEntities().queryInFrustum(camera.getViewFrustum())) {
 				renderEntity(entity);
 			}
 		}
@@ -57,7 +57,7 @@ public class EntitiesRenderer extends Renderer {
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.enableDepthTesting();
 
@@ -100,13 +100,13 @@ public class EntitiesRenderer extends Renderer {
 		this.renderPlayer = renderPlayer;
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
+	@Override
 	public void profile() {
-		FlounderProfiler.get().add(FlounderEntities.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
-		FlounderProfiler.get().add(FlounderEntities.PROFILE_TAB_NAME, "Rendered Count", renderedCount);
+		FlounderProfiler.get().add(FlounderEntities.getTab(), "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderEntities.getTab(), "Rendered Count", renderedCount);
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		shader.delete();
 	}

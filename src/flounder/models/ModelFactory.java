@@ -292,18 +292,18 @@ public class ModelFactory extends Factory {
 			return;
 		}
 
-		int vaoID = FlounderLoader.createVAO();
-		FlounderLoader.createIndicesVBO(vaoID, o.getIndices());
-		FlounderLoader.storeDataInVBO(vaoID, o.getVertices(), 0, 3);
-		FlounderLoader.storeDataInVBO(vaoID, o.getTextures(), 1, 2);
-		FlounderLoader.storeDataInVBO(vaoID, o.getNormals(), 2, 3);
-		FlounderLoader.storeDataInVBO(vaoID, o.getTangents(), 3, 3);
+		int vaoID = FlounderLoader.get().createVAO();
+		FlounderLoader.get().createIndicesVBO(vaoID, o.getIndices());
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getVertices(), 0, 3);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getTextures(), 1, 2);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getNormals(), 2, 3);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getTangents(), 3, 3);
 		int vaoLength = o.getIndices() != null ? o.getIndices().length : (o.getVertices().length / 3);
 		((ModelObject) object).loadGL(vaoID, vaoLength);
 	}
 
 	@Override
 	public Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return FlounderModels.getLoaded();
+		return FlounderModels.get().getLoaded();
 	}
 }

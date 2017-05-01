@@ -43,7 +43,7 @@ public class Streamer {
 		bufferQueue = new ArrayList<>();
 
 		for (int i = 0; i < NUM_BUFFERS; i++) {
-			unusedBuffers.add(FlounderSound.getDevice().generateBuffer());
+			unusedBuffers.add(FlounderSound.get().getDevice().generateBuffer());
 		}
 	}
 
@@ -84,7 +84,7 @@ public class Streamer {
 	 */
 	private void loadNextDataIntoBuffer(int buffer) {
 		ByteBuffer data = stream.loadNextData();
-		FlounderSound.getDevice().loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
+		FlounderSound.get().getDevice().loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class Streamer {
 	 */
 	protected void delete() {
 		stream.close();
-		bufferQueue.forEach(FlounderSound.getDevice()::deleteBuffer);
-		unusedBuffers.forEach(FlounderSound.getDevice()::deleteBuffer);
+		bufferQueue.forEach(FlounderSound.get().getDevice()::deleteBuffer);
+		unusedBuffers.forEach(FlounderSound.get().getDevice()::deleteBuffer);
 	}
 }

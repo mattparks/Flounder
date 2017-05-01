@@ -166,7 +166,7 @@ public class TextureObject extends FactoryObject {
 	public void delete() {
 		if (isLoaded()) {
 			setFullyLoaded(false);
-			FlounderProcessors.sendRequest(new TextureDeleteRequest(this));
+			FlounderProcessors.get().sendRequest(new TextureDeleteRequest(this));
 		}
 	}
 }

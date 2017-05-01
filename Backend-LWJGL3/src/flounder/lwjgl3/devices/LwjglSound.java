@@ -50,7 +50,7 @@ public class LwjglSound extends IDeviceSound {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		Vector3f cameraPosition = FlounderSound.getCameraPosition();
+		Vector3f cameraPosition = FlounderSound.get().getCameraPosition();
 		alListener3f(AL_POSITION, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 	}
 

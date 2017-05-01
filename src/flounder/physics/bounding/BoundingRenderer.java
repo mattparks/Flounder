@@ -39,17 +39,17 @@ public class BoundingRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || !OpenGlUtils.isInWireframe() || FlounderBounding.getRenderShapes() == null) {
+		if (!shader.isLoaded() || !OpenGlUtils.isInWireframe() || FlounderBounding.get().getRenderShapes() == null) {
 			return;
 		}
 
 		prepareRendering(clipPlane, camera);
 
-		for (ModelObject model : FlounderBounding.getRenderShapes().keySet()) {
+		for (ModelObject model : FlounderBounding.get().getRenderShapes().keySet()) {
 			if (model.isLoaded()) {
 				prepareModel(model);
 
-				for (Collider shape : FlounderBounding.getRenderShapes().get(model)) {
+				for (Collider shape : FlounderBounding.get().getRenderShapes().get(model)) {
 					renderShape(model, shape);
 				}
 
@@ -66,7 +66,7 @@ public class BoundingRenderer extends Renderer {
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
 		OpenGlUtils.cullBackFaces(false);
 		OpenGlUtils.goWireframe(true);
 		OpenGlUtils.enableDepthTesting();
@@ -103,12 +103,12 @@ public class BoundingRenderer extends Renderer {
 		shader.stop();
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
+	@Override
 	public void profile() {
-		FlounderProfiler.get().add(FlounderBounding.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderBounding.getTab(), "Render Time", super.getRenderTime());
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 		shader.delete();
 	}

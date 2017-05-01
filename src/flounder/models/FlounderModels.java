@@ -13,16 +13,13 @@ import java.util.*;
  * A module used for loading OBJ files into models.
  */
 public class FlounderModels extends Module {
-	private static final FlounderModels INSTANCE = new FlounderModels();
-	public static final String PROFILE_TAB_NAME = "Models";
-
 	private Map<String, SoftReference<FactoryObject>> loaded;
 
 	/**
 	 * Creates a new model loader class.
 	 */
 	public FlounderModels() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLoader.class, FlounderProcessors.class);
+		super(FlounderLoader.class, FlounderProcessors.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -36,7 +33,7 @@ public class FlounderModels extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(PROFILE_TAB_NAME, "Loaded", loaded.size());
+		FlounderProfiler.get().add(getTab(), "Loaded", loaded.size());
 	}
 
 	/**
@@ -44,8 +41,8 @@ public class FlounderModels extends Module {
 	 *
 	 * @return A list of loaded models.
 	 */
-	public static Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return INSTANCE.loaded;
+	public Map<String, SoftReference<FactoryObject>> getLoaded() {
+		return this.loaded;
 	}
 
 
@@ -59,5 +56,15 @@ public class FlounderModels extends Module {
 			}
 		});
 		loaded.clear();
+	}
+
+	@Module.Instance
+	public static FlounderModels get() {
+		return (FlounderModels) Framework.getInstance(FlounderModels.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Models";
 	}
 }

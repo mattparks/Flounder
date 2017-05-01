@@ -18,7 +18,7 @@ public class UniformSampler2D extends Uniform {
 	public void loadTexUnit(int value) {
 		if (current != value) {
 			current = value;
-			FlounderShaders.storeSimpleData(super.getLocation(), value);
+			FlounderShaders.get().storeSimpleData(super.getLocation(), value);
 		}
 	}
 }

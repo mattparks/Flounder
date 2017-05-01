@@ -14,9 +14,6 @@ import java.nio.*;
  * A module used for loading, managing and playing a variety of different sound types.
  */
 public class FlounderSound extends Module {
-	private static final FlounderSound INSTANCE = new FlounderSound();
-	public static final String PROFILE_TAB_NAME = "Sound";
-
 	public static final MyFile SOUND_FOLDER = new MyFile(MyFile.RES_FOLDER, "sounds");
 
 	private Vector3f cameraPosition;
@@ -30,7 +27,7 @@ public class FlounderSound extends Module {
 	 * Creates a new OpenAL audio manager.
 	 */
 	public FlounderSound() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class);
+		super(FlounderProcessors.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -50,7 +47,7 @@ public class FlounderSound extends Module {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets a new device, if available.
-		IDeviceSound newDevice = (IDeviceSound) getExtensionMatch(device, IDeviceSound.class, true);
+		IDeviceSound newDevice = (IDeviceSound) getExtension(device, IDeviceSound.class, true);
 
 		// If there is a new player, disable the old one and start to use the new one.
 		if (newDevice != null) {
@@ -66,7 +63,7 @@ public class FlounderSound extends Module {
 			device = newDevice;
 		}
 
-		Camera camera = FlounderCamera.getCamera();
+		Camera camera = FlounderCamera.get().getCamera();
 
 		if (camera != null && camera.getPosition() != null) {
 			cameraPosition.set(camera.getPosition());
@@ -84,8 +81,8 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The cameras position.
 	 */
-	public static Vector3f getCameraPosition() {
-		return INSTANCE.cameraPosition;
+	public Vector3f getCameraPosition() {
+		return this.cameraPosition;
 	}
 
 	/**
@@ -94,14 +91,14 @@ public class FlounderSound extends Module {
 	 *
 	 * @param sound The sound to be loaded.
 	 */
-	public static void doInitialSoundLoad(Sound sound) {
+	public void doInitialSoundLoad(Sound sound) {
 		try {
 			FlounderLogger.get().log("Loading sound " + sound.getSoundFile().getPath());
 			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			ByteBuffer byteBuffer = stream.loadNextData();
-			int bufferID = INSTANCE.device.generateBuffer();
-			INSTANCE.device.loadSoundDataIntoBuffer(bufferID, byteBuffer, stream.getAlFormat(), stream.getSampleRate());
+			int bufferID = this.device.generateBuffer();
+			this.device.loadSoundDataIntoBuffer(bufferID, byteBuffer, stream.getAlFormat(), stream.getSampleRate());
 			sound.setBuffer(bufferID, byteBuffer.limit());
 			stream.close();
 		} catch (Exception e) {
@@ -117,12 +114,12 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The controller for the source which plays the sound. Returns {@code null} if no source was available to play the sound.
 	 */
-	public static AudioController play3DSound(PlayRequest playRequest) {
+	public AudioController play3DSound(PlayRequest playRequest) {
 		if (playRequest.getSound() != null && !playRequest.getSound().isLoaded()) {
 			return null;
 		}
 
-		return INSTANCE.sourcePool.play(playRequest);
+		return this.sourcePool.play(playRequest);
 	}
 
 	/**
@@ -132,16 +129,16 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The controller for the playing of this sound.
 	 */
-	public static AudioController playSystemSound(Sound sound) {
+	public AudioController playSystemSound(Sound sound) {
 		if (sound != null && !sound.isLoaded()) {
 			return null;
 		}
 
-		return INSTANCE.sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
+		return this.sourcePool.play(PlayRequest.newSystemPlayRequest(sound));
 	}
 
-	public static SourcePoolManager getSourcePool() {
-		return INSTANCE.sourcePool;
+	public SourcePoolManager getSourcePool() {
+		return this.sourcePool;
 	}
 
 	/**
@@ -149,8 +146,8 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The sound stream manager.
 	 */
-	public static StreamManager getStreamManager() {
-		return INSTANCE.streamManager;
+	public StreamManager getStreamManager() {
+		return this.streamManager;
 	}
 
 	/**
@@ -158,8 +155,8 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The background music player.
 	 */
-	public static MusicPlayer getMusicPlayer() {
-		return INSTANCE.musicPlayer;
+	public MusicPlayer getMusicPlayer() {
+		return this.musicPlayer;
 	}
 
 	/**
@@ -167,8 +164,8 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The device.
 	 */
-	public static IDeviceSound getDevice() {
-		return INSTANCE.device;
+	public IDeviceSound getDevice() {
+		return this.device;
 	}
 
 
@@ -177,5 +174,15 @@ public class FlounderSound extends Module {
 		streamManager.kill();
 		sourcePool.dispose();
 		musicPlayer.dispose();
+	}
+
+	@Module.Instance
+	public static FlounderSound get() {
+		return (FlounderSound) Framework.getInstance(FlounderSound.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Sound";
 	}
 }

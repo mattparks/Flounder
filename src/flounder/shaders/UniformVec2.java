@@ -31,7 +31,7 @@ public class UniformVec2 extends Uniform {
 	public void loadVec2(float x, float y) {
 		if (x != current.x || y != current.y) {
 			current.set(x, y);
-			FlounderShaders.storeVectorData(super.getLocation(), current);
+			FlounderShaders.get().storeVectorData(super.getLocation(), current);
 		}
 	}
 }

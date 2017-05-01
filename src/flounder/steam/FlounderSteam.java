@@ -3,11 +3,8 @@ package flounder.steam;
 import flounder.framework.*;
 
 public class FlounderSteam extends Module {
-	private static final FlounderSteam INSTANCE = new FlounderSteam();
-	public static final String PROFILE_TAB_NAME = "Steam";
-
 	public FlounderSteam() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME);
+		super();
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -38,5 +35,15 @@ public class FlounderSteam extends Module {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		//	SteamAPI.shutdown();
+	}
+
+	@Module.Instance
+	public static FlounderSteam get() {
+		return (FlounderSteam) Framework.getInstance(FlounderSteam.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Steam";
 	}
 }

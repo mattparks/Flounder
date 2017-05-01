@@ -18,7 +18,7 @@ public class ComponentCollider extends IComponentEntity implements IComponentEdi
 		this.quickHull = quickHull;
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Override
 	public void update() {
 		if (quickHull == null) {
 			return;
@@ -71,7 +71,7 @@ public class ComponentCollider extends IComponentEntity implements IComponentEdi
 		);
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
 	}
 }

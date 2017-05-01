@@ -60,7 +60,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 		}
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	@Override
 	public void update() {
 		if (particleSystem != null) {
 			//	if (particleSystem.getTypes().isEmpty()) {
@@ -262,9 +262,9 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 		);
 	}
 
-	@Handler.Function(Handler.FLAG_DISPOSE)
+	@Override
 	public void dispose() {
-		FlounderParticles.removeSystem(particleSystem);
+		FlounderParticles.get().removeSystem(particleSystem);
 		particleSystem = null;
 	}
 }

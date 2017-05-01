@@ -54,8 +54,8 @@ public class Ray {
 		origin.set(currentPosition);
 
 		if (useMouse) {
-			float mouseX = FlounderMouse.getPositionX();
-			float mouseY = FlounderMouse.getPositionY();
+			float mouseX = FlounderMouse.get().getPositionX();
+			float mouseY = FlounderMouse.get().getPositionY();
 			updateNormalisedDeviceCoordinates(mouseX, mouseY);
 		} else {
 			if (screenStart != null) {
@@ -77,13 +77,13 @@ public class Ray {
 	}
 
 	private void updateEyeCoords(Vector4f clipCoords) {
-		invertedProjection = Matrix4f.invert(FlounderCamera.getCamera().getProjectionMatrix(), invertedProjection);
+		invertedProjection = Matrix4f.invert(FlounderCamera.get().getCamera().getProjectionMatrix(), invertedProjection);
 		Matrix4f.transform(invertedProjection, clipCoords, eyeCoords);
 		eyeCoords.set(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
 	}
 
 	private void updateWorldCoords(Vector4f eyeCoords) {
-		Matrix4f.invert(FlounderCamera.getCamera().getViewMatrix(), invertedView);
+		Matrix4f.invert(FlounderCamera.get().getCamera().getViewMatrix(), invertedView);
 		Matrix4f.transform(invertedView, eyeCoords, rayWorld);
 		currentRay.set(rayWorld.x, rayWorld.y, rayWorld.z);
 	}
@@ -136,8 +136,8 @@ public class Ray {
 		}
 
 		Vector4f coords = new Vector4f(position.x, position.y, position.z, 1.0f);
-		Matrix4f.transform(FlounderCamera.getCamera().getViewMatrix(), coords, coords);
-		Matrix4f.transform(FlounderCamera.getCamera().getProjectionMatrix(), coords, coords);
+		Matrix4f.transform(FlounderCamera.get().getCamera().getViewMatrix(), coords, coords);
+		Matrix4f.transform(FlounderCamera.get().getCamera().getProjectionMatrix(), coords, coords);
 
 		if (coords.w < 0.0f) {
 			return null;

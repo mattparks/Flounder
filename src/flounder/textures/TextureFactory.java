@@ -69,11 +69,11 @@ public class TextureFactory extends Factory {
 	protected void create(FactoryObject object, FactoryBuilder builder) {
 		TextureBuilder b = (TextureBuilder) builder;
 		TextureObject o = (TextureObject) object;
-		FlounderTextures.loadTexture(b, o);
+		FlounderTextures.get().loadTexture(b, o);
 	}
 
 	@Override
 	protected Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return FlounderTextures.getLoaded();
+		return FlounderTextures.get().getLoaded();
 	}
 }

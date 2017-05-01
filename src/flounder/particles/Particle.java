@@ -96,11 +96,11 @@ public class Particle implements ISpatialObject, Comparable<Particle> {
 			transparency += 1.0f * Framework.getDelta();
 		}
 
-		if (!isAlive() || FlounderCamera.getCamera() == null) {
+		if (!isAlive() || FlounderCamera.get().getCamera() == null) {
 			return;
 		}
 
-		distanceToCamera = Vector3f.subtract(FlounderCamera.getCamera().getPosition(), position, null).lengthSquared();
+		distanceToCamera = Vector3f.subtract(FlounderCamera.get().getCamera().getPosition(), position, null).lengthSquared();
 
 		float size = 0.5f * particleType.getScale();
 		aabb.getMinExtents().set(position.getX() - size, position.getY() - size, position.getZ() - size);

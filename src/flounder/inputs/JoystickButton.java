@@ -14,6 +14,6 @@ public class JoystickButton extends BaseButton {
 	 * @param joystickButtons The buttons on the joystick being checked.
 	 */
 	public JoystickButton(int joystick, int... joystickButtons) {
-		super((int code) -> FlounderJoysticks.isConnected(joystick) && FlounderJoysticks.getButton(joystick, code), joystickButtons);
+		super((int code) -> FlounderJoysticks.get().isConnected(joystick) && FlounderJoysticks.get().getButton(joystick, code), joystickButtons);
 	}
 }

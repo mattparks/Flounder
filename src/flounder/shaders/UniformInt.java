@@ -18,7 +18,7 @@ public class UniformInt extends Uniform {
 	public void loadInt(int value) {
 		if (current != value) {
 			current = value;
-			FlounderShaders.storeSimpleData(super.getLocation(), value);
+			FlounderShaders.get().storeSimpleData(super.getLocation(), value);
 		}
 	}
 }

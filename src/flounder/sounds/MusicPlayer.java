@@ -36,7 +36,7 @@ public class MusicPlayer {
 	 * Sets up the sound source that the music player will be using to play sounds, and sets the relevant settings.
 	 */
 	public MusicPlayer() {
-		source = FlounderSound.getDevice().createPlatformSource();
+		source = FlounderSound.get().getDevice().createPlatformSource();
 		source.pause();
 		source.loop(false);
 		source.setUndiminishing();

@@ -18,7 +18,7 @@ public class UniformFloat extends Uniform {
 	public void loadFloat(float value) {
 		if (current != value) {
 			current = value;
-			FlounderShaders.storeSimpleData(super.getLocation(), value);
+			FlounderShaders.get().storeSimpleData(super.getLocation(), value);
 		}
 	}
 }

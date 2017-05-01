@@ -60,36 +60,36 @@ public class GuiButtonText extends ScreenObject {
 		}
 
 		// Click updates.
-		if (FlounderGuis.getSelector().isSelected(text) && getAlpha() == 1.0f && FlounderGuis.getSelector().wasLeftClick()) {
-			FlounderSound.playSystemSound(SOUND_MOUSE_LEFT);
+		if (FlounderGuis.get().getSelector().isSelected(text) && getAlpha() == 1.0f && FlounderGuis.get().getSelector().wasLeftClick()) {
+			FlounderSound.get().playSystemSound(SOUND_MOUSE_LEFT);
 
 			if (listenerLeft != null) {
 				listenerLeft.eventOccurred();
 			}
 
-			FlounderGuis.getSelector().cancelWasEvent();
-		} else if (FlounderGuis.getSelector().isSelected(text) && getAlpha() == 1.0f && FlounderGuis.getSelector().wasRightClick()) {
-			FlounderSound.playSystemSound(SOUND_MOUSE_RIGHT);
+			FlounderGuis.get().getSelector().cancelWasEvent();
+		} else if (FlounderGuis.get().getSelector().isSelected(text) && getAlpha() == 1.0f && FlounderGuis.get().getSelector().wasRightClick()) {
+			FlounderSound.get().playSystemSound(SOUND_MOUSE_RIGHT);
 
 			if (listenerRight != null) {
 				listenerRight.eventOccurred();
 			}
 
-			FlounderGuis.getSelector().cancelWasEvent();
+			FlounderGuis.get().getSelector().cancelWasEvent();
 		}
 
 		// Mouse over updates.
-		if (FlounderGuis.getSelector().isSelected(text) && !mouseOver) {
-			FlounderSound.playSystemSound(SOUND_MOUSE_HOVER);
+		if (FlounderGuis.get().getSelector().isSelected(text) && !mouseOver) {
+			FlounderSound.get().playSystemSound(SOUND_MOUSE_HOVER);
 			text.setScaleDriver(new SlideDriver(text.getScale(), SCALE_SELECTED, CHANGE_TIME));
 			mouseOver = true;
-		} else if (!FlounderGuis.getSelector().isSelected(text) && mouseOver) {
+		} else if (!FlounderGuis.get().getSelector().isSelected(text) && mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), SCALE_NORMAL, CHANGE_TIME));
 			mouseOver = false;
 		}
 
 		// Update the background colour.
-		Colour.interpolate(COLOUR_NORMAL, FlounderGuis.getGuiMaster().getPrimaryColour(), (text.getScale() - SCALE_NORMAL) / (SCALE_SELECTED - SCALE_NORMAL), background.getColourOffset());
+		Colour.interpolate(COLOUR_NORMAL, FlounderGuis.get().getGuiMaster().getPrimaryColour(), (text.getScale() - SCALE_NORMAL) / (SCALE_SELECTED - SCALE_NORMAL), background.getColourOffset());
 
 		// Update background size.
 		background.getDimensions().set(text.getMeshSize());

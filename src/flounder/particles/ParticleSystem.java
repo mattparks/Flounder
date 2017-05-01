@@ -57,7 +57,7 @@ public class ParticleSystem {
 
 		this.paused = false;
 
-		FlounderParticles.addSystem(this);
+		FlounderParticles.get().addSystem(this);
 	}
 
 	public void generateParticles() {
@@ -105,7 +105,7 @@ public class ParticleSystem {
 		float lifeLength = generateValue(emitType.getLifeLength(), emitType.getLifeLength() * lifeError);
 		Vector3f spawnPos = Vector3f.add(systemCentre, spawn.getBaseSpawnPosition(), null);
 
-		FlounderParticles.addParticle(emitType, spawnPos, velocity, lifeLength, generateRotation(), scale, gravityEffect);
+		FlounderParticles.get().addParticle(emitType, spawnPos, velocity, lifeLength, generateRotation(), scale, gravityEffect);
 	}
 
 	private float generateValue(float average, float errorMargin) {
@@ -248,6 +248,6 @@ public class ParticleSystem {
 	 * Removes this system from the systems list.
 	 */
 	public void delete() {
-		FlounderParticles.removeSystem(this);
+		FlounderParticles.get().removeSystem(this);
 	}
 }
