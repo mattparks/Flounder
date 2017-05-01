@@ -118,7 +118,7 @@ public class ComponentGlow extends IComponentEntity implements IComponentRender,
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 

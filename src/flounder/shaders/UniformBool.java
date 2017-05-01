@@ -1,12 +1,10 @@
 package flounder.shaders;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * Represents a float uniform type that can be loaded to the shader.
  */
 public class UniformBool extends Uniform {
-	private boolean currentValue;
+	private boolean current;
 
 	public UniformBool(String name, ShaderObject shader) {
 		super(name, shader);
@@ -18,9 +16,9 @@ public class UniformBool extends Uniform {
 	 * @param value The new value.
 	 */
 	public void loadBoolean(boolean value) {
-		if (currentValue != value) {
-			glUniform1f(super.getLocation(), value ? 1.0f : 0.0f);
-			currentValue = value;
+		if (current != value) {
+			current = value;
+			FlounderShaders.get().storeSimpleData(super.getLocation(), value);
 		}
 	}
 }

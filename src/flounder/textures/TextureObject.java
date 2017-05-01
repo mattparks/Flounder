@@ -6,7 +6,7 @@ import flounder.resources.*;
 
 import java.nio.*;
 
-import static org.lwjgl.opengl.GL11.*;
+import static flounder.platform.Constants.*;
 
 /**
  * Class that represents a loaded texture.
@@ -166,7 +166,7 @@ public class TextureObject extends FactoryObject {
 	public void delete() {
 		if (isLoaded()) {
 			setFullyLoaded(false);
-			FlounderProcessors.sendRequest(new TextureDeleteRequest(this));
+			FlounderProcessors.get().sendRequest(new TextureDeleteRequest(this));
 		}
 	}
 }

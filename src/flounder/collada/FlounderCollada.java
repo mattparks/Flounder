@@ -20,9 +20,6 @@ import java.util.*;
  * A module used for loading and managing collada models and animations.
  */
 public class FlounderCollada extends Module {
-	private static final FlounderCollada INSTANCE = new FlounderCollada();
-	public static final String PROFILE_TAB_NAME = "Collada";
-
 	public static final Matrix4f CORRECTION = Matrix4f.rotate(new Matrix4f(), new Vector3f(1.0f, 0.0f, 0.0f), (float) Math.toRadians(-90.0f), null);
 	public static final int MAX_WEIGHTS = 3;
 
@@ -32,21 +29,21 @@ public class FlounderCollada extends Module {
 	 * Creates a new collada loader class.
 	 */
 	public FlounderCollada() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class, FlounderLoader.class);
+		super(FlounderProcessors.class, FlounderLoader.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		loaded = new HashMap<>();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Loaded", loaded.size());
+		FlounderProfiler.get().add(getTab(), "Loaded", loaded.size());
 	}
 
 	/**
@@ -56,7 +53,7 @@ public class FlounderCollada extends Module {
 	 *
 	 * @return The loaded model.
 	 */
-	public static ModelAnimated loadCollada(MyFile file) {
+	public ModelAnimated loadCollada(MyFile file) {
 		XmlNode node = XmlParser.loadXmlFile(file);
 
 		SkinLoader skinLoader = new SkinLoader(node.getChild("library_controllers"), FlounderCollada.MAX_WEIGHTS);
@@ -78,7 +75,7 @@ public class FlounderCollada extends Module {
 	 *
 	 * @return The loaded animation.
 	 */
-	public static AnimationData loadAnimation(MyFile file) {
+	public AnimationData loadAnimation(MyFile file) {
 		XmlNode node = XmlParser.loadXmlFile(file);
 
 		AnimationLoader animationLoader = new AnimationLoader(node.getChild("library_animations"), node.getChild("library_visual_scenes"));
@@ -87,26 +84,32 @@ public class FlounderCollada extends Module {
 		return animationData;
 	}
 
-	public static void loadModelToOpenGL(ModelAnimated model) {
-		model.setVaoID(FlounderLoader.createVAO());
+	public void loadModelToOpenGL(ModelAnimated model) {
+		model.setVaoID(FlounderLoader.get().createVAO());
 		model.setVaoLength(model.getMeshData().getIndices() != null ? model.getMeshData().getIndices().length : (model.getMeshData().getVertices().length / 3));
-		FlounderLoader.createIndicesVBO(model.getVaoID(), model.getMeshData().getIndices());
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getVertices(), 0, 3);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getTextures(), 1, 2);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getNormals(), 2, 3);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getTangents(), 3, 3);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getJointIds(), 4, 3);
-		FlounderLoader.storeDataInVBO(model.getVaoID(), model.getMeshData().getVertexWeights(), 5, 3);
+		FlounderLoader.get().createIndicesVBO(model.getVaoID(), model.getMeshData().getIndices());
+		FlounderLoader.get().storeDataInVBO(model.getVaoID(), model.getMeshData().getVertices(), 0, 3);
+		FlounderLoader.get().storeDataInVBO(model.getVaoID(), model.getMeshData().getTextures(), 1, 2);
+		FlounderLoader.get().storeDataInVBO(model.getVaoID(), model.getMeshData().getNormals(), 2, 3);
+		FlounderLoader.get().storeDataInVBO(model.getVaoID(), model.getMeshData().getTangents(), 3, 3);
+		FlounderLoader.get().storeDataInVBO(model.getVaoID(), model.getMeshData().getJointIds(), 4, 3);
+		FlounderLoader.get().storeDataInVBO(model.getVaoID(), model.getMeshData().getVertexWeights(), 5, 3);
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> loaded.get(key).get().delete());
 		loaded.clear();
+	}
+
+	@Module.Instance
+	public static FlounderCollada get() {
+		return (FlounderCollada) Framework.getInstance(FlounderCollada.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Collada";
 	}
 }

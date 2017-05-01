@@ -36,7 +36,7 @@ public class ModelAnimated {
 		this.vaoID = -1;
 		this.vaoLength = -1;
 
-		FlounderCollada.loadModelToOpenGL(this);
+		FlounderCollada.get().loadModelToOpenGL(this);
 	}
 
 	private static Joint createJoints(JointData data) {

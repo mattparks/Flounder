@@ -1,5 +1,7 @@
 package flounder.sounds;
 
+import flounder.devices.*;
+
 import java.nio.*;
 import java.util.*;
 
@@ -28,7 +30,7 @@ public class Streamer {
 	 * @throws Exception When something goes wrong :(
 	 */
 	protected Streamer(Sound sound, SoundSource source, AudioController controller) throws Exception {
-		//	FlounderLogger.log("Streaming " + sound.getSoundFile().getPath());
+		//	FlounderLogger.get().log("Streaming " + sound.getSoundFile().getPath());
 
 		this.source = source;
 		this.controller = controller;
@@ -41,7 +43,7 @@ public class Streamer {
 		bufferQueue = new ArrayList<>();
 
 		for (int i = 0; i < NUM_BUFFERS; i++) {
-			unusedBuffers.add(SoundLoader.generateBuffer());
+			unusedBuffers.add(FlounderSound.get().getDevice().generateBuffer());
 		}
 	}
 
@@ -82,7 +84,7 @@ public class Streamer {
 	 */
 	private void loadNextDataIntoBuffer(int buffer) {
 		ByteBuffer data = stream.loadNextData();
-		SoundLoader.loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
+		FlounderSound.get().getDevice().loadSoundDataIntoBuffer(buffer, data, stream.getAlFormat(), stream.getSampleRate());
 	}
 
 	/**
@@ -137,7 +139,7 @@ public class Streamer {
 	 */
 	protected void delete() {
 		stream.close();
-		bufferQueue.forEach(SoundLoader::deleteBuffer);
-		unusedBuffers.forEach(SoundLoader::deleteBuffer);
+		bufferQueue.forEach(FlounderSound.get().getDevice()::deleteBuffer);
+		unusedBuffers.forEach(FlounderSound.get().getDevice()::deleteBuffer);
 	}
 }

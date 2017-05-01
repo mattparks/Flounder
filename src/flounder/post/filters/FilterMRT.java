@@ -31,13 +31,13 @@ public class FilterMRT extends PostFilter {
 
 	@Override
 	public void storeValues() {
-		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.getCamera().getProjectionMatrix());
-		shader.getUniformMat4("viewMatrix").loadMat4(FlounderCamera.getCamera().getViewMatrix());
+		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.get().getCamera().getProjectionMatrix());
+		shader.getUniformMat4("viewMatrix").loadMat4(FlounderCamera.get().getCamera().getViewMatrix());
 
 		int lightsLoaded = 0;
 
-		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : new ArrayList<>(FlounderEntities.getEntities().getAll())) {
+		if (FlounderEntities.get().getEntities() != null) {
+			for (Entity entity : new ArrayList<>(FlounderEntities.get().getEntities().getAll())) {
 				ComponentLight componentLight = (ComponentLight) entity.getComponent(ComponentLight.class);
 
 				if (lightsLoaded < LIGHTS && componentLight != null) {
@@ -50,8 +50,8 @@ public class FilterMRT extends PostFilter {
 			}
 		}
 
-		// FlounderProfiler.add(KosmosPost.PROFILE_TAB_NAME, "Maximum Lights", LIGHTS);
-		// FlounderProfiler.add(KosmosPost.PROFILE_TAB_NAME, "Loaded Lights", lightsLoaded);
+		// FlounderProfiler.get().add(KosmosPost.getTab(), "Maximum Lights", LIGHTS);
+		// FlounderProfiler.get().add(KosmosPost.getTab(), "Loaded Lights", lightsLoaded);
 
 		if (lightsLoaded < LIGHTS) {
 			for (int i = lightsLoaded; i < LIGHTS; i++) {
@@ -61,20 +61,20 @@ public class FilterMRT extends PostFilter {
 			}
 		}
 
-		shader.getUniformMat4("shadowSpaceMatrix").loadMat4(FlounderShadows.getToShadowMapSpaceMatrix());
-		shader.getUniformFloat("shadowDistance").loadFloat(FlounderShadows.getShadowBoxDistance());
-		shader.getUniformFloat("shadowTransition").loadFloat(FlounderShadows.getShadowTransition());
-		shader.getUniformInt("shadowMapSize").loadInt(FlounderShadows.getShadowSize());
-		shader.getUniformInt("shadowPCF").loadInt(FlounderShadows.getShadowPCF());
-		shader.getUniformFloat("shadowBias").loadFloat(FlounderShadows.getShadowBias());
-		shader.getUniformFloat("shadowDarkness").loadFloat(FlounderShadows.getShadowDarkness() * shadowFactor);
+		shader.getUniformMat4("shadowSpaceMatrix").loadMat4(FlounderShadows.get().getToShadowMapSpaceMatrix());
+		shader.getUniformFloat("shadowDistance").loadFloat(FlounderShadows.get().getShadowBoxDistance());
+		shader.getUniformFloat("shadowTransition").loadFloat(FlounderShadows.get().getShadowTransition());
+		shader.getUniformInt("shadowMapSize").loadInt(FlounderShadows.get().getShadowSize());
+		shader.getUniformInt("shadowPCF").loadInt(FlounderShadows.get().getShadowPCF());
+		shader.getUniformFloat("shadowBias").loadFloat(FlounderShadows.get().getShadowBias());
+		shader.getUniformFloat("shadowDarkness").loadFloat(FlounderShadows.get().getShadowDarkness() * shadowFactor);
 
-		shader.getUniformFloat("brightnessBoost").loadFloat(FlounderShadows.getBrightnessBoost());
+		shader.getUniformFloat("brightnessBoost").loadFloat(FlounderShadows.get().getBrightnessBoost());
 
-		if (FlounderSkybox.getFog() != null) {
-			shader.getUniformVec3("fogColour").loadVec3(FlounderSkybox.getFog().getFogColour());
-			shader.getUniformFloat("fogDensity").loadFloat(FlounderSkybox.getFog().getFogDensity());
-			shader.getUniformFloat("fogGradient").loadFloat(FlounderSkybox.getFog().getFogGradient());
+		if (FlounderSkybox.get().getFog() != null) {
+			shader.getUniformVec3("fogColour").loadVec3(FlounderSkybox.get().getFog().getFogColour());
+			shader.getUniformFloat("fogDensity").loadFloat(FlounderSkybox.get().getFog().getFogDensity());
+			shader.getUniformFloat("fogGradient").loadFloat(FlounderSkybox.get().getFog().getFogGradient());
 		} else {
 			shader.getUniformVec3("fogColour").loadVec3(1.0f, 1.0f, 1.0f);
 			shader.getUniformFloat("fogDensity").loadFloat(0.003f);

@@ -49,7 +49,7 @@ public class ShadowBox {
 		Vector3f forwardVector = new Vector3f(Matrix4f.transform(rotation, FORWARD, null));
 
 		Vector3f toFar = new Vector3f(forwardVector);
-		toFar.scale(FlounderShadows.getShadowBoxDistance());
+		toFar.scale(FlounderShadows.get().getShadowBoxDistance());
 		Vector3f toNear = new Vector3f(forwardVector);
 		toNear.scale(camera.getNearPlane());
 		Vector3f centreNear = Vector3f.add(toNear, camera.getPosition(), null);
@@ -90,7 +90,7 @@ public class ShadowBox {
 			}
 		}
 
-		maxZ += FlounderShadows.getShadowBoxOffset();
+		maxZ += FlounderShadows.get().getShadowBoxOffset();
 	}
 
 	/**
@@ -99,10 +99,10 @@ public class ShadowBox {
 	 * @param camera The camera object.
 	 */
 	private void updateWidthsAndHeights(Camera camera) {
-		farWidth = (float) (FlounderShadows.getShadowBoxDistance() * Math.tan(Math.toRadians(camera.getFOV())));
+		farWidth = (float) (FlounderShadows.get().getShadowBoxDistance() * Math.tan(Math.toRadians(camera.getFOV())));
 		nearWidth = (float) (camera.getNearPlane() * Math.tan(Math.toRadians(camera.getFOV())));
-		farHeight = farWidth / FlounderDisplay.getAspectRatio();
-		nearHeight = nearWidth / FlounderDisplay.getAspectRatio();
+		farHeight = farWidth / FlounderDisplay.get().getAspectRatio();
+		nearHeight = nearWidth / FlounderDisplay.get().getAspectRatio();
 	}
 
 	/**

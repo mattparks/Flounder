@@ -6,35 +6,38 @@ import flounder.framework.*;
  * A module used for synchronizing to the display after rendering.
  */
 public class FlounderDisplaySync extends Module {
-	private static final FlounderDisplaySync INSTANCE = new FlounderDisplaySync();
-	public static final String PROFILE_TAB_NAME = "Display-Sync";
-
 	/**
 	 * Creates a new GLFW display synchronizer.
 	 */
 	public FlounderDisplaySync() {
-		super(ModuleUpdate.UPDATE_RENDER, PROFILE_TAB_NAME, FlounderDisplay.class);
+		super(FlounderDisplay.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_RENDER)
 	public void update() {
-		FlounderDisplay.swapBuffers();
+		FlounderDisplay.get().swapBuffers();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
+
+	@Handler.Function(Handler.FLAG_DISPOSE)
+	public void dispose() {
 	}
 
-	@Override
-	public void dispose() {
+	@Module.Instance
+	public static FlounderDisplaySync get() {
+		return (FlounderDisplaySync) Framework.getInstance(FlounderDisplaySync.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Display-Sync";
 	}
 }

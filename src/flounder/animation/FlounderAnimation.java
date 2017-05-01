@@ -14,25 +14,22 @@ import java.util.*;
  * A module used for loading the information from a collada, and then creates an animation from the extracted data.
  */
 public class FlounderAnimation extends Module {
-	private static final FlounderAnimation INSTANCE = new FlounderAnimation();
-	public static final String PROFILE_TAB_NAME = "Animation";
-
 	/**
 	 * Creates a new animation loader class.
 	 */
 	public FlounderAnimation() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderProcessors.class, FlounderLoader.class, FlounderCollada.class);
+		super(FlounderProcessors.class, FlounderLoader.class, FlounderCollada.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
@@ -43,7 +40,7 @@ public class FlounderAnimation extends Module {
 	 *
 	 * @return The animation made from the data in the file.
 	 */
-	public static Animation loadAnimation(AnimationData animationData) {
+	public Animation loadAnimation(AnimationData animationData) {
 		KeyFrames[] frames = new KeyFrames[animationData.getKeyFrames().length];
 		int pointer = 0;
 
@@ -54,7 +51,7 @@ public class FlounderAnimation extends Module {
 		return new Animation(animationData.getLengthSeconds(), frames);
 	}
 
-	private static KeyFrames createKeyFrame(KeyFrameData data) {
+	private KeyFrames createKeyFrame(KeyFrameData data) {
 		Map<String, JointTransform> map = new HashMap<>();
 
 		for (JointTransformData jointData : data.getJointTransforms()) {
@@ -65,20 +62,25 @@ public class FlounderAnimation extends Module {
 		return new KeyFrames(data.getTime(), map);
 	}
 
-	private static JointTransform createTransform(JointTransformData data) {
+	private JointTransform createTransform(JointTransformData data) {
 		Matrix4f matrix = data.getJointLocalTransform();
 		Vector3f translation = new Vector3f(matrix.m30, matrix.m31, matrix.m32);
 		Quaternion rotation = new Quaternion(matrix);
 		return new JointTransform(translation, rotation);
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
-
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 
+	}
+
+	@Module.Instance
+	public static FlounderAnimation get() {
+		return (FlounderAnimation) Framework.getInstance(FlounderAnimation.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Animation";
 	}
 }

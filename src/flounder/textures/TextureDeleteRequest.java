@@ -2,8 +2,6 @@ package flounder.textures;
 
 import flounder.processing.opengl.*;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * A class that can process a request to delete a texture.
  */
@@ -21,13 +19,12 @@ public class TextureDeleteRequest implements RequestOpenGL {
 
 	@Override
 	public void executeRequestGL() {
-		if (!FlounderTextures.getLoaded().containsKey(texture.getName())) {
+		if (!FlounderTextures.get().getLoaded().containsKey(texture.getName())) {
 			return;
 		}
 
-		FlounderTextures.getLoaded().get(texture.getName()).clear();
-		FlounderTextures.getLoaded().remove(texture.getName());
-
-		glDeleteTextures(texture.getTextureID());
+		FlounderTextures.get().getLoaded().get(texture.getName()).clear();
+		FlounderTextures.get().getLoaded().remove(texture.getName());
+		FlounderTextures.get().deleteTexture(texture.getTextureID());
 	}
 }

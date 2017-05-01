@@ -1,5 +1,7 @@
 package flounder.sounds;
 
+import flounder.devices.*;
+
 import java.util.*;
 
 /**
@@ -24,7 +26,7 @@ public class SourcePoolManager {
 		this.systemVolume = 1.0f;
 
 		for (int i = 0; i < NUMBER_SOURCES; i++) {
-			sourcePool.add(new SoundSource());
+			sourcePool.add(FlounderSound.get().getDevice().createPlatformSource());
 		}
 	}
 

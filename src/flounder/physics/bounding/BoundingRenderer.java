@@ -12,7 +12,8 @@ import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
-import org.lwjgl.opengl.*;
+
+import static flounder.platform.Constants.*;
 
 /**
  * A renderer that is used to render Boundings.
@@ -33,22 +34,22 @@ public class BoundingRenderer extends Renderer {
 	 * Creates a new Boundings renderer.
 	 */
 	public BoundingRenderer() {
-		shader = ShaderFactory.newBuilder().setName("bounding").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		shader = ShaderFactory.newBuilder().setName("bounding").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || !OpenGlUtils.isInWireframe() || FlounderBounding.getRenderShapes() == null) {
+		if (!shader.isLoaded() || !OpenGlUtils.isInWireframe() || FlounderBounding.get().getRenderShapes() == null) {
 			return;
 		}
 
 		prepareRendering(clipPlane, camera);
 
-		for (ModelObject model : FlounderBounding.getRenderShapes().keySet()) {
+		for (ModelObject model : FlounderBounding.get().getRenderShapes().keySet()) {
 			if (model.isLoaded()) {
 				prepareModel(model);
 
-				for (Collider shape : FlounderBounding.getRenderShapes().get(model)) {
+				for (Collider shape : FlounderBounding.get().getRenderShapes().get(model)) {
 					renderShape(model, shape);
 				}
 
@@ -65,7 +66,7 @@ public class BoundingRenderer extends Renderer {
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
 		OpenGlUtils.cullBackFaces(false);
 		OpenGlUtils.goWireframe(true);
 		OpenGlUtils.enableDepthTesting();
@@ -91,7 +92,7 @@ public class BoundingRenderer extends Renderer {
 		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
 		shader.getUniformVec3("colour").loadVec3(shape.getRenderColour(COLOUR_REUSABLE));
 
-		OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, model.getVaoLength());
+		OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, model.getVaoLength());
 	}
 
 	private void unbindModel() {
@@ -104,7 +105,7 @@ public class BoundingRenderer extends Renderer {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add(FlounderBounding.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderBounding.getTab(), "Render Time", super.getRenderTime());
 	}
 
 	@Override

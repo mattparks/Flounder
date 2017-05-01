@@ -8,15 +8,10 @@ import java.awt.*;
 import java.awt.image.*;
 import java.nio.*;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 /**
  * A module used for rendering a invisible display into a JPanel.
  */
 public class FlounderDisplayJPanel extends Module {
-	private static final FlounderDisplayJPanel INSTANCE = new FlounderDisplayJPanel();
-	public static final String PROFILE_TAB_NAME = "Display-JPanel";
-
 	private JPanel panel;
 	private BufferedImage image;
 	private ByteBuffer buffer;
@@ -25,10 +20,10 @@ public class FlounderDisplayJPanel extends Module {
 	 * Creates a new JPanel renderer.
 	 */
 	public FlounderDisplayJPanel() {
-		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderEvents.class);
+		super(FlounderDisplay.class, FlounderEvents.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		panel = null;
 		image = null;
@@ -40,25 +35,25 @@ public class FlounderDisplayJPanel extends Module {
 	 *
 	 * @return The new JPanel.
 	 */
-	public static JPanel createPanel() {
-		INSTANCE.panel = new JPanel() {
+	public JPanel createPanel() {
+		this.panel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				// Sets to paint with a new Graphics.
 				super.paintComponent(g);
 
 				// Draws the BufferedImage.
-				g.drawImage(INSTANCE.image, 0, 0, null);
+				g.drawImage(image, 0, 0, null);
 
 				// Draws the current engine FPS.
 				g.drawString("FPS: " + (1.0f / Framework.getDeltaRender()), 10, 15);
 			}
 		};
-		INSTANCE.panel.setSize(FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
-		return INSTANCE.panel;
+		this.panel.setSize(FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight());
+		return this.panel;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
 	public void update() {
 		// Updates only if the JPanel exists.
 		if (panel == null) {
@@ -66,27 +61,33 @@ public class FlounderDisplayJPanel extends Module {
 		}
 
 		// Updates the invisible displays size.
-		if ((panel.getHeight() != 0 && panel.getWidth() != 0) && (FlounderDisplay.getWidth() != panel.getWidth() || FlounderDisplay.getHeight() != panel.getHeight())) {
-			glfwSetWindowSize(FlounderDisplay.getWindow(), panel.getWidth(), panel.getHeight());
+		if ((panel.getHeight() != 0 && panel.getWidth() != 0) && (FlounderDisplay.get().getWidth() != panel.getWidth() || FlounderDisplay.get().getHeight() != panel.getHeight())) {
+			FlounderDisplay.get().setWindowSize(panel.getWidth(), panel.getHeight());
 		}
 
 		// Copies the image from the invisible to a BufferedImage.
-		image = FlounderDisplay.getImage(image, buffer);
+		image = FlounderDisplay.get().getImage(image, buffer);
 
 		// Forces a JFrame redraw event.
 		SwingUtilities.getWindowAncestor(panel).repaint();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
+
+	@Handler.Function(Handler.FLAG_DISPOSE)
+	public void dispose() {
 	}
 
-	@Override
-	public void dispose() {
+	@Module.Instance
+	public static FlounderDisplayJPanel get() {
+		return (FlounderDisplayJPanel) Framework.getInstance(FlounderDisplayJPanel.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Display-JPanel";
 	}
 }

@@ -8,9 +8,6 @@ import flounder.profiling.*;
  * A module used for handling networking, servers, clients, and packets.
  */
 public class FlounderNetwork extends Module {
-	private static final FlounderNetwork INSTANCE = new FlounderNetwork();
-	public static final String PROFILE_TAB_NAME = "Network";
-
 	public static final int DEFAULT_PORT = 2266;
 
 	private Server socketServer;
@@ -21,21 +18,21 @@ public class FlounderNetwork extends Module {
 	 * Creates a new network manager.
 	 */
 	public FlounderNetwork() {
-		super(ModuleUpdate.UPDATE_POST, PROFILE_TAB_NAME);
+		super();
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_POST)
 	public void update() {
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Username", username);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Port", getPort());
+		FlounderProfiler.get().add(getTab(), "Username", username);
+		FlounderProfiler.get().add(getTab(), "Port", getPort());
 	}
 
 	/**
@@ -43,12 +40,12 @@ public class FlounderNetwork extends Module {
 	 *
 	 * @param port The port to start the server on.
 	 */
-	public static void startServer(int port) {
-		INSTANCE.username = "server";
+	public void startServer(int port) {
+		this.username = "server";
 
-		FlounderLogger.log("Starting server on port " + port);
-		INSTANCE.socketServer = new Server(port);
-		INSTANCE.socketServer.start();
+		FlounderLogger.get().log("Starting server on port " + port);
+		this.socketServer = new Server(port);
+		this.socketServer.start();
 	}
 
 	/**
@@ -58,33 +55,33 @@ public class FlounderNetwork extends Module {
 	 * @param ipAddress The ip address to connect the client on.
 	 * @param port The port to connect the client on.
 	 */
-	public static void startClient(String username, String ipAddress, int port) {
-		INSTANCE.username = username;
+	public void startClient(String username, String ipAddress, int port) {
+		this.username = username;
 
-		FlounderLogger.log("Starting Client on server " + ipAddress + ":" + port);
-		INSTANCE.socketClient = new Client(ipAddress, port);
-		INSTANCE.socketClient.start();
+		FlounderLogger.get().log("Starting Client on server " + ipAddress + ":" + port);
+		this.socketClient = new Client(ipAddress, port);
+		this.socketClient.start();
 	}
 
 	/**
 	 * Closes the server.
 	 */
-	public static void closeServer() {
-		if (INSTANCE.socketServer != null) {
-			FlounderLogger.log("Closing server!");
-			INSTANCE.socketServer.dispose();
-			INSTANCE.socketServer = null;
+	public void closeServer() {
+		if (this.socketServer != null) {
+			FlounderLogger.get().log("Closing server!");
+			this.socketServer.dispose();
+			this.socketServer = null;
 		}
 	}
 
 	/**
 	 * Closes the client.
 	 */
-	public static void closeClient() {
-		if (INSTANCE.socketClient != null) {
-			FlounderLogger.log("Closing client!");
-			INSTANCE.socketClient.dispose();
-			INSTANCE.socketClient = null;
+	public void closeClient() {
+		if (this.socketClient != null) {
+			FlounderLogger.get().log("Closing client!");
+			this.socketClient.dispose();
+			this.socketClient = null;
 		}
 	}
 
@@ -93,8 +90,8 @@ public class FlounderNetwork extends Module {
 	 *
 	 * @return The server running from this server.
 	 */
-	public static Server getSocketServer() {
-		return INSTANCE.socketServer;
+	public Server getSocketServer() {
+		return this.socketServer;
 	}
 
 	/**
@@ -102,32 +99,38 @@ public class FlounderNetwork extends Module {
 	 *
 	 * @return The client running.
 	 */
-	public static Client getSocketClient() {
-		return INSTANCE.socketClient;
+	public Client getSocketClient() {
+		return this.socketClient;
 	}
 
-	public static String getUsername() {
-		return INSTANCE.username;
+	public String getUsername() {
+		return this.username;
 	}
 
-	public static int getPort() {
-		if (INSTANCE.socketClient != null) {
-			return INSTANCE.socketClient.getServerPort();
-		} else if (INSTANCE.socketServer != null) {
-			return INSTANCE.socketServer.getServerPort();
+	public int getPort() {
+		if (this.socketClient != null) {
+			return this.socketClient.getServerPort();
+		} else if (this.socketServer != null) {
+			return this.socketServer.getServerPort();
 		}
 
 		return DEFAULT_PORT;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		closeServer();
 		closeClient();
+	}
+
+	@Module.Instance
+	public static FlounderNetwork get() {
+		return (FlounderNetwork) Framework.getInstance(FlounderNetwork.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Network";
 	}
 }

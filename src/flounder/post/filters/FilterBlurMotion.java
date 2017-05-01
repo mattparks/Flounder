@@ -14,17 +14,17 @@ public class FilterBlurMotion extends PostFilter {
 		this.lastViewMatrix = new Matrix4f();
 
 		// Initial last view matrix.
-		if (FlounderCamera.getCamera() != null) {
-			this.lastViewMatrix.set(FlounderCamera.getCamera().getViewMatrix());
+		if (FlounderCamera.get().getCamera() != null) {
+			this.lastViewMatrix.set(FlounderCamera.get().getCamera().getViewMatrix());
 		}
 	}
 
 	@Override
 	public void storeValues() {
-		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.getCamera().getProjectionMatrix());
-		shader.getUniformMat4("viewMatrix").loadMat4(FlounderCamera.getCamera().getViewMatrix());
+		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.get().getCamera().getProjectionMatrix());
+		shader.getUniformMat4("viewMatrix").loadMat4(FlounderCamera.get().getCamera().getViewMatrix());
 		shader.getUniformMat4("lastViewMatrix").loadMat4(lastViewMatrix);
 		shader.getUniformFloat("delta").loadFloat(Framework.getDeltaRender());
-		this.lastViewMatrix.set(FlounderCamera.getCamera().getViewMatrix());
+		this.lastViewMatrix.set(FlounderCamera.get().getCamera().getViewMatrix());
 	}
 }

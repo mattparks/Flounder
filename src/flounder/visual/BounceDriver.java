@@ -1,7 +1,6 @@
 package flounder.visual;
 
 import flounder.framework.*;
-import flounder.logger.*;
 
 /**
  * A bounce driver that uses a sine wave.

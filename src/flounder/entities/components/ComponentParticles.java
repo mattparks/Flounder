@@ -193,15 +193,15 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 				for (int i = 0; i < spawns.length; i++) {
 					if (spawns[i].getTabName().equals(spawn)) {
 						try {
-							FlounderLogger.log("Adding component: " + spawn);
+							FlounderLogger.get().log("Adding component: " + spawn);
 							Class componentClass = Class.forName(spawns[i].getClass().getName());
 							Class[] componentTypes = new Class[]{};
 							@SuppressWarnings("unchecked") Constructor componentConstructor = componentClass.getConstructor(componentTypes);
 							Object[] componentParameters = new Object[]{};
 							particleSpawn = (IEditorParticleSpawn) componentConstructor.newInstance(componentParameters);
 						} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
-							FlounderLogger.error("While loading particle spawn" + spawns[i] + "'s constructor could not be found!");
-							FlounderLogger.exception(ex);
+							FlounderLogger.get().error("While loading particle spawn" + spawns[i] + "'s constructor could not be found!");
+							FlounderLogger.get().exception(ex);
 						}
 					}
 				}
@@ -264,7 +264,7 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 
 	@Override
 	public void dispose() {
-		FlounderParticles.removeSystem(particleSystem);
+		FlounderParticles.get().removeSystem(particleSystem);
 		particleSystem = null;
 	}
 }

@@ -2,17 +2,15 @@ package flounder.shaders;
 
 import flounder.maths.vectors.*;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * Represents a 2 value vector uniform type that can be loaded to the shader.
  */
 public class UniformVec2 extends Uniform {
-	private float currentX;
-	private float currentY;
+	private Vector2f current;
 
 	public UniformVec2(String name, ShaderObject shader) {
 		super(name, shader);
+		this.current = new Vector2f();
 	}
 
 	/**
@@ -31,10 +29,9 @@ public class UniformVec2 extends Uniform {
 	 * @param y The new y value.
 	 */
 	public void loadVec2(float x, float y) {
-		if (x != currentX || y != currentY) {
-			glUniform2f(super.getLocation(), x, y);
-			currentX = x;
-			currentY = y;
+		if (x != current.x || y != current.y) {
+			current.set(x, y);
+			FlounderShaders.get().storeVectorData(super.getLocation(), current);
 		}
 	}
 }

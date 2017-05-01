@@ -34,7 +34,7 @@ public class FilterCRT extends PostFilter {
 	@Override
 	public void storeValues() {
 		shader.getUniformVec3("screenColour").loadVec3(screenColour);
-		shader.getUniformFloat("curveAmountX").loadFloat(curveAmountX * FlounderDisplay.getAspectRatio());
+		shader.getUniformFloat("curveAmountX").loadFloat(curveAmountX * FlounderDisplay.get().getAspectRatio());
 		shader.getUniformFloat("curveAmountY").loadFloat(curveAmountY);
 		shader.getUniformFloat("scanLineSize").loadFloat(scanLineSize);
 		shader.getUniformFloat("scanIntensity").loadFloat(scanIntensity);

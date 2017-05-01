@@ -103,7 +103,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 			collider = null;
 		}
 
-		FlounderBounding.addShapeRender(collider);
+		FlounderBounding.get().addShapeRender(collider);
 	}
 
 	public ModelObject getModel() {
@@ -324,7 +324,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 
@@ -350,7 +350,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 

@@ -2,7 +2,7 @@ package flounder.fbos;
 
 import flounder.devices.*;
 import flounder.logger.*;
-import org.lwjgl.*;
+import flounder.platform.*;
 
 import java.nio.*;
 
@@ -99,7 +99,7 @@ public class FBO {
 	 * @return A new FBO Builder.
 	 */
 	public static FBOBuilder newFBO(float sizeScalar) {
-		return new FBOBuilder(FlounderDisplay.getWidth(), FlounderDisplay.getHeight()).fitToScreen(sizeScalar);
+		return new FBOBuilder(FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight()).fitToScreen(sizeScalar);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class FBO {
 	}
 
 	private void determineDrawBuffers() {
-		IntBuffer drawBuffers = BufferUtils.createIntBuffer(attachments);
+		IntBuffer drawBuffers = FlounderPlatform.get().createIntBuffer(attachments);
 
 		for (int i = 0; i < attachments; i++) {
 			drawBuffers.put(GL_COLOR_ATTACHMENT0 + i);
@@ -213,7 +213,7 @@ public class FBO {
 	 */
 	public void unbindFrameBuffer() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
+		glViewport(0, 0, FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight());
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class FBO {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glDrawBuffer(GL_BACK);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDisplay.getWidth(), FlounderDisplay.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class FBO {
 		if (this.attachments != outputFBO.attachments && this.hasGivenResolveError != outputFBO.hasGivenResolveError) {
 			this.hasGivenResolveError = true;
 			outputFBO.hasGivenResolveError = true;
-			FlounderLogger.log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
+			FlounderLogger.get().log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
 		}
 
 		for (int a = 0; a < attachments; a++) {
@@ -267,8 +267,8 @@ public class FBO {
 	 */
 	private void updateSize() {
 		if (fitToScreen) {
-			int displayWidth = FlounderDisplay.getWidth();
-			int displayHeight = FlounderDisplay.getHeight();
+			int displayWidth = FlounderDisplay.get().getWidth();
+			int displayHeight = FlounderDisplay.get().getHeight();
 			int reverseWidth = (int) (displayWidth * sizeScalar);
 			int reverseHeight = (int) (displayHeight * sizeScalar);
 
@@ -282,7 +282,7 @@ public class FBO {
 				limitFBOSize();
 
 				delete();
-				FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+				FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 				initializeFBO();
 			}
 		}
@@ -337,7 +337,7 @@ public class FBO {
 	public void setSamples(int samples) {
 		if (this.samples != samples) {
 			delete();
-			FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+			FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 			initializeFBO();
 		}
 
@@ -353,7 +353,7 @@ public class FBO {
 		this.height = height;
 		fitToScreen = false;
 		delete();
-		FlounderLogger.log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+		FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
 		initializeFBO();
 	}
 

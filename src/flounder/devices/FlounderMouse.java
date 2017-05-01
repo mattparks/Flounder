@@ -3,9 +3,9 @@ package flounder.devices;
 import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
+import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.resources.*;
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
@@ -19,9 +19,6 @@ import static org.lwjgl.glfw.GLFW.*;
  * A module used for the creation, updating and destruction of the mouse.
  */
 public class FlounderMouse extends Module {
-	private static final FlounderMouse INSTANCE = new FlounderMouse();
-	public static final String PROFILE_TAB_NAME = "Mouse";
-
 	private static MyFile customMouse;
 
 	private int mouseButtons[];
@@ -46,7 +43,7 @@ public class FlounderMouse extends Module {
 	 * Creates a new GLFW mouse manager.
 	 */
 	public FlounderMouse() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderLogger.class, FlounderDisplay.class);
+		super(FlounderLogger.class, FlounderDisplay.class);
 	}
 
 	/**
@@ -54,24 +51,24 @@ public class FlounderMouse extends Module {
 	 *
 	 * @param customMouse A png file containing a custom mouse cursor.
 	 */
-	public static void setup(MyFile customMouse) {
+	public void setup(MyFile customMouse) {
 		if (FlounderMouse.customMouse == customMouse) {
 			return;
 		}
 
 		FlounderMouse.customMouse = customMouse;
 
-		if (INSTANCE.isInitialized()) {
+	//	if (this.isInitialized()) {
 			try {
-				INSTANCE.createCustomMouse();
+				this.createCustomMouse();
 			} catch (IOException e) {
-				FlounderLogger.error("Could not load custom mouse!");
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("Could not load custom mouse!");
+				FlounderLogger.get().exception(e);
 			}
-		}
+	//	}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		if (FlounderMouse.customMouse == null) {
 			FlounderMouse.customMouse = new MyFile(MyFile.RES_FOLDER, "guis", "cursor.png");
@@ -86,29 +83,29 @@ public class FlounderMouse extends Module {
 		this.lastCursorDisabled = false;
 
 		// Sets the mouse callbacks.
-		glfwSetScrollCallback(FlounderDisplay.getWindow(), callbackScroll = new GLFWScrollCallback() {
+		glfwSetScrollCallback(FlounderDisplay.get().getWindow(), callbackScroll = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
 				mouseDeltaWheel = (float) yoffset;
 			}
 		});
 
-		glfwSetMouseButtonCallback(FlounderDisplay.getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(FlounderDisplay.get().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
 				mouseButtons[button] = action;
 			}
 		});
 
-		glfwSetCursorPosCallback(FlounderDisplay.getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
+		glfwSetCursorPosCallback(FlounderDisplay.get().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				mousePositionX = (float) (xpos / FlounderDisplay.getWidth());
-				mousePositionY = (float) (ypos / FlounderDisplay.getHeight());
+				mousePositionX = (float) (xpos / FlounderDisplay.get().getWidth());
+				mousePositionY = (float) (ypos / FlounderDisplay.get().getHeight());
 			}
 		});
 
-		glfwSetCursorEnterCallback(FlounderDisplay.getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
+		glfwSetCursorEnterCallback(FlounderDisplay.get().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
 			@Override
 			public void invoke(long window, boolean entered) {
 				displaySelected = entered;
@@ -118,8 +115,8 @@ public class FlounderMouse extends Module {
 		try {
 			createCustomMouse();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not load custom mouse!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Could not load custom mouse!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -131,7 +128,7 @@ public class FlounderMouse extends Module {
 		image.getRGB(0, 0, width, height, pixels, 0, width);
 
 		// Converts image to RGBA format.
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		ByteBuffer buffer = FlounderPlatform.get().createByteBuffer(width * height * 4);
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -157,10 +154,10 @@ public class FlounderMouse extends Module {
 		long cursorID = GLFW.glfwCreateCursor(cursorImg, hotspotX, hotspotY);
 
 		// Set current cursor.
-		glfwSetCursor(FlounderDisplay.getWindow(), cursorID);
+		glfwSetCursor(FlounderDisplay.get().getWindow(), cursorID);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Updates the mouses delta.
 		mouseDeltaX = Framework.getDelta() * (lastMousePositionX - mousePositionX);
@@ -185,14 +182,14 @@ public class FlounderMouse extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Position X", mousePositionX);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Position Y", mousePositionY);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta X", mouseDeltaX);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta Y", mouseDeltaY);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Delta Wheel", mouseDeltaWheel);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Selected Display", displaySelected);
+		FlounderProfiler.get().add(getTab(), "Position X", mousePositionX);
+		FlounderProfiler.get().add(getTab(), "Position Y", mousePositionY);
+		FlounderProfiler.get().add(getTab(), "Delta X", mouseDeltaX);
+		FlounderProfiler.get().add(getTab(), "Delta Y", mouseDeltaY);
+		FlounderProfiler.get().add(getTab(), "Delta Wheel", mouseDeltaWheel);
+		FlounderProfiler.get().add(getTab(), "Selected Display", displaySelected);
 	}
 
 	/**
@@ -200,16 +197,16 @@ public class FlounderMouse extends Module {
 	 *
 	 * @param disabled If the system cursor should be disabled or hidden when not shown.
 	 */
-	public static void setCursorHidden(boolean disabled) {
-		if (INSTANCE.cursorDisabled != disabled) {
-			glfwSetInputMode(FlounderDisplay.getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
+	public void setCursorHidden(boolean disabled) {
+		if (this.cursorDisabled != disabled) {
+			glfwSetInputMode(FlounderDisplay.get().getWindow(), GLFW_CURSOR, (disabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
 
-			if (!disabled && INSTANCE.cursorDisabled) {
-				glfwSetCursorPos(FlounderDisplay.getWindow(), INSTANCE.mousePositionX * FlounderDisplay.getWidth(), INSTANCE.mousePositionY * FlounderDisplay.getHeight());
+			if (!disabled && this.cursorDisabled) {
+				glfwSetCursorPos(FlounderDisplay.get().getWindow(), this.mousePositionX * FlounderDisplay.get().getWidth(), this.mousePositionY * FlounderDisplay.get().getHeight());
 			}
 		}
 
-		INSTANCE.cursorDisabled = disabled;
+		this.cursorDisabled = disabled;
 	}
 
 	/**
@@ -220,8 +217,8 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return If the mouse button is currently pressed.
 	 */
-	public static boolean getMouse(int button) {
-		return INSTANCE.mouseButtons[button] != GLFW_RELEASE;
+	public boolean getMouse(int button) {
+		return this.mouseButtons[button] != GLFW_RELEASE;
 	}
 
 	/**
@@ -229,8 +226,8 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses x position.
 	 */
-	public static float getPositionX() {
-		return INSTANCE.mousePositionX;
+	public float getPositionX() {
+		return this.mousePositionX;
 	}
 
 	/**
@@ -238,8 +235,12 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses y position.
 	 */
-	public static float getPositionY() {
-		return INSTANCE.mousePositionY;
+	public float getPositionY() {
+		return this.mousePositionY;
+	}
+
+	public void setPosition(float cursorX, float cursorY) {
+		glfwSetCursorPos(FlounderDisplay.get().getWindow(), cursorX, cursorY);
 	}
 
 	/**
@@ -247,8 +248,8 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses delta x.
 	 */
-	public static float getDeltaX() {
-		return INSTANCE.mouseDeltaX;
+	public float getDeltaX() {
+		return this.mouseDeltaX;
 	}
 
 	/**
@@ -256,8 +257,8 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses delta y.
 	 */
-	public static float getDeltaY() {
-		return INSTANCE.mouseDeltaY;
+	public float getDeltaY() {
+		return this.mouseDeltaY;
 	}
 
 	/**
@@ -265,8 +266,8 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses wheel delta.
 	 */
-	public static float getDeltaWheel() {
-		return INSTANCE.mouseDeltaWheel;
+	public float getDeltaWheel() {
+		return this.mouseDeltaWheel;
 	}
 
 	/**
@@ -274,8 +275,8 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return If the display is selected.
 	 */
-	public static boolean isDisplaySelected() {
-		return INSTANCE.displaySelected;
+	public boolean isDisplaySelected() {
+		return this.displaySelected;
 	}
 
 	/**
@@ -283,20 +284,26 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return If the cursor is hidden.
 	 */
-	public static boolean isCursorDisabled() {
-		return INSTANCE.cursorDisabled;
+	public boolean isCursorDisabled() {
+		return this.cursorDisabled;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		callbackScroll.free();
 		callbackMouseButton.free();
 		callbackCursorPos.free();
 		callbackCursorEnter.free();
+	}
+
+	@Module.Instance
+	public static FlounderMouse get() {
+		return (FlounderMouse) Framework.getInstance(FlounderMouse.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Mouse";
 	}
 }

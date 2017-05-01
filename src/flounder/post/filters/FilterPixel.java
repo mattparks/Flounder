@@ -20,6 +20,6 @@ public class FilterPixel extends PostFilter {
 	@Override
 	public void storeValues() {
 		shader.getUniformFloat("pixelSize").loadFloat(pixelSize);
-		shader.getUniformVec2("displaySize").loadVec2(FlounderDisplay.getWidth(), FlounderDisplay.getHeight());
+		shader.getUniformVec2("displaySize").loadVec2(FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight());
 	}
 }

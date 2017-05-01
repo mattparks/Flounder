@@ -9,7 +9,8 @@ import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;
-import org.lwjgl.opengl.*;
+
+import static flounder.platform.Constants.*;
 
 /**
  * A renderer that is used to render entity's.
@@ -27,7 +28,7 @@ public class EntitiesRenderer extends Renderer {
 	 * Creates a new entity renderer.
 	 */
 	public EntitiesRenderer() {
-		this.shader = ShaderFactory.newBuilder().setName("entities").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("entities").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		this.textureUndefined = TextureFactory.newBuilder().setFile(new MyFile(MyFile.RES_FOLDER, "undefined.png")).create();
 		this.renderedCount = 0;
 		this.renderPlayer = true;
@@ -41,8 +42,8 @@ public class EntitiesRenderer extends Renderer {
 
 		prepareRendering(clipPlane, camera);
 
-		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : FlounderEntities.getEntities().queryInFrustum(camera.getViewFrustum())) {
+		if (FlounderEntities.get().getEntities() != null) {
+			for (Entity entity : FlounderEntities.get().getEntities().queryInFrustum(camera.getViewFrustum())) {
 				renderEntity(entity);
 			}
 		}
@@ -56,7 +57,7 @@ public class EntitiesRenderer extends Renderer {
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
 		OpenGlUtils.enableAlphaBlending();
 		OpenGlUtils.enableDepthTesting();
 
@@ -78,7 +79,7 @@ public class EntitiesRenderer extends Renderer {
 		}
 
 		if (vaoLength.getSingle() > 0) {
-			OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, vaoLength.getSingle());
+			OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength.getSingle());
 		}
 
 		for (IComponentEntity component : entity.getComponents()) {
@@ -101,8 +102,8 @@ public class EntitiesRenderer extends Renderer {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add(FlounderEntities.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
-		FlounderProfiler.add(FlounderEntities.PROFILE_TAB_NAME, "Rendered Count", renderedCount);
+		FlounderProfiler.get().add(FlounderEntities.getTab(), "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderEntities.getTab(), "Rendered Count", renderedCount);
 	}
 
 	@Override

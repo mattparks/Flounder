@@ -2,8 +2,6 @@ package flounder.shaders;
 
 import flounder.logger.*;
 
-import static org.lwjgl.opengl.GL20.*;
-
 /**
  * Represents a uniform variable uploaded from Java to OpenGL shaders.
  */
@@ -21,10 +19,10 @@ public abstract class Uniform {
 	}
 
 	protected void storeUniformLocation(int programID) {
-		location = glGetUniformLocation(programID, name);
+		location = FlounderShaders.get().getUniformLocation(programID, name);
 
 		if (location == NOT_FOUND) {
-			FlounderLogger.warning("No uniform variable called " + name + " found in shader " + shader.getName() + "!");
+			FlounderLogger.get().warning("No uniform variable called " + name + " found in shader " + shader.getName() + "!");
 		}
 	}
 

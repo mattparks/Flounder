@@ -13,9 +13,8 @@ import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
-import org.lwjgl.opengl.*;
 
-import java.util.*;
+import static flounder.platform.Constants.*;
 
 public class ShadowRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "shadows", "shadowVertex.glsl");
@@ -30,8 +29,8 @@ public class ShadowRenderer extends Renderer {
 	 * Creates a new entity renderer.
 	 */
 	public ShadowRenderer() {
-		this.shadowFBO = FBO.newFBO(FlounderShadows.getShadowSize(), FlounderShadows.getShadowSize()).noColourBuffer().disableTextureWrap().depthBuffer(DepthBufferType.TEXTURE).create();
-		this.shader = ShaderFactory.newBuilder().setName("shadows").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shadowFBO = FBO.newFBO(FlounderShadows.get().getShadowSize(), FlounderShadows.get().getShadowSize()).noColourBuffer().disableTextureWrap().depthBuffer(DepthBufferType.TEXTURE).create();
+		this.shader = ShaderFactory.newBuilder().setName("shadows").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 
 		this.mvpReusableMatrix = new Matrix4f();
 	}
@@ -44,8 +43,8 @@ public class ShadowRenderer extends Renderer {
 
 		prepareRendering(clipPlane, camera);
 
-		if (FlounderEntities.getEntities() != null) {
-			for (Entity entity : FlounderEntities.getEntities().getAll()) {
+		if (FlounderEntities.get().getEntities() != null) {
+			for (Entity entity : FlounderEntities.get().getEntities().getAll()) {
 				renderEntity(entity);
 			}
 		}
@@ -54,15 +53,15 @@ public class ShadowRenderer extends Renderer {
 	}
 
 	private void prepareRendering(Vector4f clipPlane, Camera camera) {
-		if (shadowFBO.getWidth() != FlounderShadows.getShadowSize() || shadowFBO.getHeight() != FlounderShadows.getShadowSize()) {
-			shadowFBO.setSize(FlounderShadows.getShadowSize(), FlounderShadows.getShadowSize());
+		if (shadowFBO.getWidth() != FlounderShadows.get().getShadowSize() || shadowFBO.getHeight() != FlounderShadows.get().getShadowSize()) {
+			shadowFBO.setSize(FlounderShadows.get().getShadowSize(), FlounderShadows.get().getShadowSize());
 		}
 
 		shadowFBO.bindFrameBuffer();
 		shader.start();
 
 		OpenGlUtils.prepareNewRenderParse(0.0f, 0.0f, 0.0f);
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
 		OpenGlUtils.cullBackFaces(false);
 		OpenGlUtils.enableDepthTesting();
 	}
@@ -88,7 +87,7 @@ public class ShadowRenderer extends Renderer {
 			shader.getUniformBool("animated").loadBoolean(false);
 
 			if (componentModel.getModelMatrix() != null) {
-				Matrix4f.multiply(FlounderShadows.getProjectionViewMatrix(), componentModel.getModelMatrix(), mvpReusableMatrix);
+				Matrix4f.multiply(FlounderShadows.get().getProjectionViewMatrix(), componentModel.getModelMatrix(), mvpReusableMatrix);
 				shader.getUniformMat4("mvpMatrix").loadMat4(mvpReusableMatrix);
 			}
 
@@ -110,7 +109,7 @@ public class ShadowRenderer extends Renderer {
 			shader.getUniformBool("animated").loadBoolean(true);
 
 			if (componentAnimation.getModelMatrix() != null) {
-				Matrix4f.multiply(FlounderShadows.getProjectionViewMatrix(), componentAnimation.getModelMatrix(), mvpReusableMatrix);
+				Matrix4f.multiply(FlounderShadows.get().getProjectionViewMatrix(), componentAnimation.getModelMatrix(), mvpReusableMatrix);
 				shader.getUniformMat4("mvpMatrix").loadMat4(mvpReusableMatrix);
 			}
 
@@ -141,7 +140,7 @@ public class ShadowRenderer extends Renderer {
 		}
 
 		if (vaoLength > 0) {
-			OpenGlUtils.renderElements(GL11.GL_TRIANGLES, GL11.GL_UNSIGNED_INT, vaoLength);
+			OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength);
 		}
 
 		OpenGlUtils.unbindVAO(0, 4, 5);
@@ -154,7 +153,7 @@ public class ShadowRenderer extends Renderer {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add("Shadows", "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add("Shadows", "Render Time", super.getRenderTime());
 	}
 
 	/**

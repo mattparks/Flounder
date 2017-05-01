@@ -7,16 +7,17 @@ import flounder.loaders.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.space.*;
-import org.lwjgl.*;
-import org.lwjgl.opengl.*;
 
 import java.nio.*;
 import java.util.*;
+
+import static flounder.platform.Constants.*;
 
 public class ParticleRenderer extends Renderer {
 	private static final MyFile VERTEX_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "particles", "particleVertex.glsl");
@@ -26,37 +27,37 @@ public class ParticleRenderer extends Renderer {
 	private static final int MAX_INSTANCES = 27500;
 	private static final int INSTANCE_DATA_LENGTH = 22;
 
-	private static final int VAO = FlounderLoader.createInterleavedVAO(VERTICES, 2);
-	private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH);
-	private static final int VBO = FlounderLoader.createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
+	private static final int VAO = FlounderLoader.get().createInterleavedVAO(VERTICES, 2);
+	private static final FloatBuffer BUFFER = FlounderPlatform.get().createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH);
+	private static final int VBO = FlounderLoader.get().createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
 
 	private ShaderObject shader;
 	private int pointer;
 	private int rendered;
 
 	public ParticleRenderer() {
-		this.shader = ShaderFactory.newBuilder().setName("particles").addType(new ShaderType(GL20.GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
+		this.shader = ShaderFactory.newBuilder().setName("particles").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		this.pointer = 0;
 		this.rendered = 0;
 
-		FlounderLoader.addInstancedAttribute(VAO, VBO, 1, 4, INSTANCE_DATA_LENGTH, 0);
-		FlounderLoader.addInstancedAttribute(VAO, VBO, 2, 4, INSTANCE_DATA_LENGTH, 4);
-		FlounderLoader.addInstancedAttribute(VAO, VBO, 3, 4, INSTANCE_DATA_LENGTH, 8);
-		FlounderLoader.addInstancedAttribute(VAO, VBO, 4, 4, INSTANCE_DATA_LENGTH, 12);
-		FlounderLoader.addInstancedAttribute(VAO, VBO, 5, 4, INSTANCE_DATA_LENGTH, 16);
-		FlounderLoader.addInstancedAttribute(VAO, VBO, 6, 1, INSTANCE_DATA_LENGTH, 20);
-		FlounderLoader.addInstancedAttribute(VAO, VBO, 7, 1, INSTANCE_DATA_LENGTH, 21);
+		FlounderLoader.get().addInstancedAttribute(VAO, VBO, 1, 4, INSTANCE_DATA_LENGTH, 0);
+		FlounderLoader.get().addInstancedAttribute(VAO, VBO, 2, 4, INSTANCE_DATA_LENGTH, 4);
+		FlounderLoader.get().addInstancedAttribute(VAO, VBO, 3, 4, INSTANCE_DATA_LENGTH, 8);
+		FlounderLoader.get().addInstancedAttribute(VAO, VBO, 4, 4, INSTANCE_DATA_LENGTH, 12);
+		FlounderLoader.get().addInstancedAttribute(VAO, VBO, 5, 4, INSTANCE_DATA_LENGTH, 16);
+		FlounderLoader.get().addInstancedAttribute(VAO, VBO, 6, 1, INSTANCE_DATA_LENGTH, 20);
+		FlounderLoader.get().addInstancedAttribute(VAO, VBO, 7, 1, INSTANCE_DATA_LENGTH, 21);
 	}
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || FlounderParticles.getParticles() == null) {
+		if (!shader.isLoaded() || FlounderParticles.get().getParticles() == null) {
 			return;
 		}
 
 		prepareRendering(clipPlane, camera);
 
-		for (StructureBasic<Particle> list : FlounderParticles.getParticles()) {
+		for (StructureBasic<Particle> list : FlounderParticles.get().getParticles()) {
 			List<Particle> particles = list.queryInFrustum(camera.getViewFrustum());
 
 			if (particles.size() > 0) {
@@ -80,8 +81,8 @@ public class ParticleRenderer extends Renderer {
 				}
 
 				// Renders the particles list.
-				FlounderLoader.updateVBO(VBO, vboData, BUFFER);
-				OpenGlUtils.renderInstanced(GL11.GL_TRIANGLE_STRIP, VERTICES.length, particles.size());
+				FlounderLoader.get().updateVBO(VBO, vboData, BUFFER);
+				OpenGlUtils.renderInstanced(GL_TRIANGLE_STRIP, VERTICES.length, particles.size());
 				unbindTexturedModel();
 			}
 		}
@@ -101,7 +102,7 @@ public class ParticleRenderer extends Renderer {
 	private void prepareTexturedModel(ParticleType particleType) {
 		unbindTexturedModel();
 
-		OpenGlUtils.antialias(FlounderDisplay.isAntialiasing());
+		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
 		OpenGlUtils.cullBackFaces(true);
 		OpenGlUtils.enableDepthTesting();
 		OpenGlUtils.enableAlphaBlending();
@@ -123,7 +124,7 @@ public class ParticleRenderer extends Renderer {
 
 	private void prepareInstance(Particle particle, Camera camera, float[] vboData) {
 		if (rendered >= MAX_INSTANCES) {
-			FlounderLogger.error("Particles overflow: " + rendered);
+			FlounderLogger.get().error("Particles overflow: " + rendered);
 			return;
 		}
 
@@ -175,7 +176,7 @@ public class ParticleRenderer extends Renderer {
 
 	@Override
 	public void profile() {
-		FlounderProfiler.add(FlounderParticles.PROFILE_TAB_NAME, "Render Time", super.getRenderTime());
+		FlounderProfiler.get().add(FlounderParticles.getTab(), "Render Time", super.getRenderTime());
 	}
 
 	@Override

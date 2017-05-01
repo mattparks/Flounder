@@ -2,7 +2,6 @@ package flounder.helpers;
 
 import flounder.maths.*;
 import flounder.textures.*;
-import org.lwjgl.opengl.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
@@ -16,6 +15,7 @@ import static org.lwjgl.opengl.GL31.*;
  */
 public class OpenGlUtils {
 	private static boolean cullingBackFace = false;
+	private static boolean depthMask = true;
 	private static boolean inWireframe = false;
 	private static boolean isAlphaBlending = false;
 	private static boolean additiveBlending = false;
@@ -84,6 +84,11 @@ public class OpenGlUtils {
 	 */
 	public static void disableDepthTesting() {
 		glDisable(GL_DEPTH_TEST);
+	}
+
+	public static void depthMask(boolean depthMask) {
+		OpenGlUtils.depthMask = depthMask;
+		glDepthMask(depthMask);
 	}
 
 	/**

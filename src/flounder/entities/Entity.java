@@ -136,7 +136,7 @@ public class Entity implements ISpatialObject {
 		try {
 			components.forEach(IComponentEntity::update);
 		} catch (ConcurrentModificationException e) {
-			FlounderLogger.exception(e);
+			FlounderLogger.get().exception(e);
 		}
 
 		hasMoved = false;

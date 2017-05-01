@@ -80,7 +80,7 @@ public class AmbientNode {
 	 * @return the distance between the {@link IAudioListener} and the node's centre.
 	 */
 	private float getDistanceFromListener() {
-		return Vector3f.subtract(FlounderSound.getCameraPosition(), position, null).length();
+		return Vector3f.subtract(FlounderSound.get().getCameraPosition(), position, null).length();
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class AmbientNode {
 	private void playNewSound() {
 		Sound sound = chooseNextSound();
 		PlayRequest request = PlayRequest.new3dSoundPlayRequest(sound, volume, pitch, position, innerRadius.get(), getRange());
-		controller = FlounderSound.play3DSound(request);
+		controller = FlounderSound.get().play3DSound(request);
 		active = controller != null;
 	}
 

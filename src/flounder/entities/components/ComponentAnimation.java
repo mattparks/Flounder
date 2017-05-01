@@ -63,10 +63,10 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	public ComponentAnimation(Entity entity, float scale, MyFile file, TextureObject texture, int textureIndex) {
 		super(entity);
 
-		ModelAnimated modelAnimated = FlounderCollada.loadCollada(file);
+		ModelAnimated modelAnimated = FlounderCollada.get().loadCollada(file);
 
-		AnimationData animationData = FlounderCollada.loadAnimation(file);
-		Animation animation = FlounderAnimation.loadAnimation(animationData);
+		AnimationData animationData = FlounderCollada.get().loadAnimation(file);
+		Animation animation = FlounderAnimation.get().loadAnimation(animationData);
 
 		this.scale = scale;
 		this.model = modelAnimated;
@@ -141,7 +141,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 			}
 		}
 
-		FlounderBounding.addShapeRender(collider);
+		FlounderBounding.get().addShapeRender(collider);
 	}
 
 	/**
@@ -372,9 +372,9 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	public void editorUpdate() {
 		if (editorPathCollada != null/*  && (model == null|| !model.getFile().equals(editorPathCollada.getPath()))*/) {
 			if (editorPathCollada.getPath().contains(".dae")) {
-				ModelAnimated modelAnimated = FlounderCollada.loadCollada(new MyFile(editorPathCollada));
-				AnimationData animationData = FlounderCollada.loadAnimation(new MyFile(editorPathCollada));
-				Animation animation = FlounderAnimation.loadAnimation(animationData);
+				ModelAnimated modelAnimated = FlounderCollada.get().loadCollada(new MyFile(editorPathCollada));
+				AnimationData animationData = FlounderCollada.get().loadAnimation(new MyFile(editorPathCollada));
+				Animation animation = FlounderAnimation.get().loadAnimation(animationData);
 				setModel(modelAnimated);
 				doAnimation(animation);
 			}
@@ -418,7 +418,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 
@@ -444,7 +444,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 				input.close();
 				output.close();
 			} catch (IOException e) {
-				FlounderLogger.exception(e);
+				FlounderLogger.get().exception(e);
 			}
 		}
 

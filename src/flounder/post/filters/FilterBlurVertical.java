@@ -6,7 +6,7 @@ import flounder.post.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
-import static org.lwjgl.opengl.GL20.*;
+import static flounder.platform.Constants.*;
 
 public class FilterBlurVertical extends PostFilter {
 	private int heightValue;
@@ -21,7 +21,7 @@ public class FilterBlurVertical extends PostFilter {
 		).create(), FBO.newFBO(sizeScalar).create());
 		this.fitToDisplay = true;
 		this.sizeScalar = sizeScalar;
-		init((int) (FlounderDisplay.getWidth() * sizeScalar));
+		init((int) (FlounderDisplay.get().getWidth() * sizeScalar));
 	}
 
 	public FilterBlurVertical(int widthValue, int heightValue) {
@@ -46,7 +46,7 @@ public class FilterBlurVertical extends PostFilter {
 	@Override
 	public void storeValues() {
 		if (fitToDisplay) {
-			heightValue = (int) (FlounderDisplay.getHeight() * sizeScalar);
+			heightValue = (int) (FlounderDisplay.get().getHeight() * sizeScalar);
 		}
 
 		shader.getUniformFloat("height").loadFloat(heightValue);

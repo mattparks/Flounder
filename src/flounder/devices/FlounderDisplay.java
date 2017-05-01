@@ -4,9 +4,9 @@ import flounder.fbos.*;
 import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
+import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.resources.*;
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
@@ -25,9 +25,6 @@ import static org.lwjgl.system.MemoryUtil.*;
  * A module used for the creation, updating and destruction of the display.
  */
 public class FlounderDisplay extends Module {
-	private static final FlounderDisplay INSTANCE = new FlounderDisplay();
-	public static final String PROFILE_TAB_NAME = "Display";
-
 	private int windowWidth;
 	private int windowHeight;
 	private int fullscreenWidth;
@@ -58,7 +55,7 @@ public class FlounderDisplay extends Module {
 	 * Creates a new GLFW display manager.
 	 */
 	public FlounderDisplay() {
-		super(ModuleUpdate.UPDATE_ALWAYS, PROFILE_TAB_NAME, FlounderDisplaySync.class);
+		super(FlounderDisplaySync.class);
 	}
 
 	/**
@@ -74,27 +71,27 @@ public class FlounderDisplay extends Module {
 	 * @param fullscreen If the window will start fullscreen.
 	 * @param hiddenDisplay If the display should be hidden on start, should be true when {@link FlounderDisplayJPanel} is being used.
 	 */
-	public static void setup(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay) {
-		if (!INSTANCE.isInitialized()) {
-			INSTANCE.windowWidth = width;
-			INSTANCE.windowHeight = height;
-			INSTANCE.title = title;
-			INSTANCE.icons = icons;
-			INSTANCE.vsync = vsync;
-			INSTANCE.antialiasing = antialiasing;
-			INSTANCE.samples = samples;
-			INSTANCE.fullscreen = fullscreen;
-			INSTANCE.hiddenDisplay = hiddenDisplay;
-			INSTANCE.setup = true;
-		} else {
-			FlounderLogger.error("Flounder Display setup MUST be called before the INSTANCE is initialized.");
-		}
+	public void setup(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay) {
+		//if (!this.isInitialized()) {
+			this.windowWidth = width;
+			this.windowHeight = height;
+			this.title = title;
+			this.icons = icons;
+			this.vsync = vsync;
+			this.antialiasing = antialiasing;
+			this.samples = samples;
+			this.fullscreen = fullscreen;
+			this.hiddenDisplay = hiddenDisplay;
+			this.setup = true;
+	//	} else {
+		//	FlounderLogger.get().error("Flounder Display setup MUST be called before the this is initialized.");
+		//}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		if (!setup) {
-			FlounderLogger.error("Flounder Display setup can be used to configure the display, default settings were set!");
+			FlounderLogger.get().error("Flounder Display setup can be used to configure the display, default settings were set!");
 			//	this.windowWidth = 1080;
 			//	this.windowHeight = 720;
 			//	this.title = "Testing 1";
@@ -125,7 +122,7 @@ public class FlounderDisplay extends Module {
 
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
-			FlounderLogger.error("Could not init GLFW!");
+			FlounderLogger.get().error("Could not init GLFW!");
 			System.exit(-1);
 		}
 
@@ -163,7 +160,7 @@ public class FlounderDisplay extends Module {
 
 		// Gets any window errors.
 		if (window == NULL) {
-			FlounderLogger.error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL 3.0!");
+			FlounderLogger.get().error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL 3.0!");
 			glfwTerminate();
 			System.exit(-1);
 		}
@@ -174,8 +171,8 @@ public class FlounderDisplay extends Module {
 		try {
 			setWindowIcon();
 		} catch (IOException e) {
-			FlounderLogger.error("Could not load custom display icon!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Could not load custom display icon!");
+			FlounderLogger.get().exception(e);
 		}
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
@@ -185,7 +182,7 @@ public class FlounderDisplay extends Module {
 		long glError = glGetError();
 
 		if (glError != GL_NO_ERROR) {
-			FlounderLogger.error("OpenGL Capability Error: " + glError);
+			FlounderLogger.get().error("OpenGL Capability Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
 			System.exit(-1);
@@ -254,20 +251,20 @@ public class FlounderDisplay extends Module {
 		});
 
 		// System logs.
-		FlounderLogger.log("");
-		FlounderLogger.log("===== This is not an error message, it is a system info log. =====");
-		FlounderLogger.log("Flounder Engine Version: " + Framework.getVersion().getVersion());
-		FlounderLogger.log("Flounder Operating System: " + System.getProperty("os.name"));
-		FlounderLogger.log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
-		FlounderLogger.log("Flounder Is OpenGL Modern: " + OpenGlUtils.isModern());
-		FlounderLogger.log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
-		FlounderLogger.log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
-		FlounderLogger.log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
-		FlounderLogger.log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
-		FlounderLogger.log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
-		FlounderLogger.log("Flounder Maximum FBO Size: " + FBO.getMaxFBOSize());
-		FlounderLogger.log("Flounder Maximum Anisotropy: " + glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
-		FlounderLogger.log("===== End of system info log. =====\n");
+		FlounderLogger.get().log("");
+		FlounderLogger.get().log("===== This is not an error message, it is a system info log. =====");
+		FlounderLogger.get().log("Flounder Engine Version: " + Framework.getVersion().getVersion());
+		FlounderLogger.get().log("Flounder Operating System: " + System.getProperty("os.name"));
+		FlounderLogger.get().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
+		FlounderLogger.get().log("Flounder Is OpenGL Modern: " + OpenGlUtils.isModern());
+		FlounderLogger.get().log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
+		FlounderLogger.get().log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
+		FlounderLogger.get().log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
+		FlounderLogger.get().log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
+		FlounderLogger.get().log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
+		FlounderLogger.get().log("Flounder Maximum FBO Size: " + FBO.getMaxFBOSize());
+		FlounderLogger.get().log("Flounder Maximum Anisotropy: " + glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+		FlounderLogger.get().log("===== End of system info log. =====\n");
 	}
 
 	private void setWindowIcon() throws IOException {
@@ -289,7 +286,7 @@ public class FlounderDisplay extends Module {
 		image.getRGB(0, 0, width, height, pixels, 0, width);
 
 		// Converts image to RGBA format.
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		ByteBuffer buffer = FlounderPlatform.get().createByteBuffer(width * height * 4);
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -311,7 +308,7 @@ public class FlounderDisplay extends Module {
 		return glfwImage;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
 	public void update() {
 		// Polls for window events. The key callback will only be invoked during this call.
 		glfwPollEvents();
@@ -320,32 +317,32 @@ public class FlounderDisplay extends Module {
 	/**
 	 * Updates the display image by swapping the colour buffers.
 	 */
-	public static void swapBuffers() {
-		if (INSTANCE.window != 0) {
-			glfwSwapBuffers(INSTANCE.window);
+	public void swapBuffers() {
+		if (this.window != 0) {
+			glfwSwapBuffers(this.window);
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Width", windowWidth);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Height", windowHeight);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Title", title);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "VSync", vsync);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Antialiasing", antialiasing);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Samples", samples);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Fullscreen", fullscreen);
+		FlounderProfiler.get().add(getTab(), "Width", windowWidth);
+		FlounderProfiler.get().add(getTab(), "Height", windowHeight);
+		FlounderProfiler.get().add(getTab(), "Title", title);
+		FlounderProfiler.get().add(getTab(), "VSync", vsync);
+		FlounderProfiler.get().add(getTab(), "Antialiasing", antialiasing);
+		FlounderProfiler.get().add(getTab(), "Samples", samples);
+		FlounderProfiler.get().add(getTab(), "Fullscreen", fullscreen);
 
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Closed", closed);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Focused", focused);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Window Pos.X", windowPosX);
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Window Pos.Y", windowPosY);
+		FlounderProfiler.get().add(getTab(), "Closed", closed);
+		FlounderProfiler.get().add(getTab(), "Focused", focused);
+		FlounderProfiler.get().add(getTab(), "Window Pos.X", windowPosX);
+		FlounderProfiler.get().add(getTab(), "Window Pos.Y", windowPosY);
 	}
 
 	/**
 	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
 	 */
-	public static void screenshot() {
+	public void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
 		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
 		File saveDirectory = new File(Framework.getRoamingFolder().getPath(), "screenshots");
@@ -353,11 +350,11 @@ public class FlounderDisplay extends Module {
 		if (!saveDirectory.exists()) {
 			try {
 				if (!saveDirectory.mkdir()) {
-					FlounderLogger.error("The screenshot directory could not be created.");
+					FlounderLogger.get().error("The screenshot directory could not be created.");
 				}
 			} catch (SecurityException e) {
-				FlounderLogger.error("The screenshot directory could not be created.");
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("The screenshot directory could not be created.");
+				FlounderLogger.get().exception(e);
 				return;
 			}
 		}
@@ -365,14 +362,14 @@ public class FlounderDisplay extends Module {
 		File file = new File(saveDirectory + "/" + name + ".png"); // The file to save the pixels too.
 		String format = "png"; // "PNG" or "JPG".
 
-		FlounderLogger.log("Taking screenshot and outputting it to " + file.getAbsolutePath());
+		FlounderLogger.get().log("Taking screenshot and outputting it to " + file.getAbsolutePath());
 
 		// Tries to create image.
 		try {
 			ImageIO.write(getImage(null, null), format, file);
 		} catch (Exception e) {
-			FlounderLogger.error("Failed to take screenshot.");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Failed to take screenshot.");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -384,11 +381,11 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return A new buffered image containing the displays data.
 	 */
-	public static BufferedImage getImage(BufferedImage destination, ByteBuffer buffer) {
+	public BufferedImage getImage(BufferedImage destination, ByteBuffer buffer) {
 		// Creates a new destination if it does not exist, or fixes a old one,
 		if (destination == null || buffer == null || destination.getWidth() != getWidth() || destination.getHeight() != getHeight()) {
 			destination = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-			buffer = BufferUtils.createByteBuffer(getWidth() * getHeight() * 4);
+			buffer = FlounderPlatform.get().createByteBuffer(getWidth() * getHeight() * 4);
 		}
 
 		// Creates a new buffer and stores the displays data into it.
@@ -410,12 +407,12 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The width of the display.
 	 */
-	public static int getWidth() {
-		return INSTANCE.fullscreen ? INSTANCE.fullscreenWidth : INSTANCE.windowWidth;
+	public int getWidth() {
+		return this.fullscreen ? this.fullscreenWidth : this.windowWidth;
 	}
 
-	public static int getWindowWidth() {
-		return INSTANCE.windowWidth;
+	public int getWindowWidth() {
+		return this.windowWidth;
 	}
 
 	/**
@@ -423,12 +420,18 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The height of the display.
 	 */
-	public static int getHeight() {
-		return INSTANCE.fullscreen ? INSTANCE.fullscreenHeight : INSTANCE.windowHeight;
+	public int getHeight() {
+		return this.fullscreen ? this.fullscreenHeight : this.windowHeight;
 	}
 
-	public static int getWindowHeight() {
-		return INSTANCE.windowHeight;
+	public int getWindowHeight() {
+		return this.windowHeight;
+	}
+
+	public void setWindowSize(int width, int height) {
+		glfwSetWindowSize(this.window, width, height);
+		this.windowWidth = width;
+		this.windowHeight = height;
 	}
 
 	/**
@@ -436,7 +439,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The aspect ratio.
 	 */
-	public static float getAspectRatio() {
+	public float getAspectRatio() {
 		return ((float) getWidth()) / ((float) getHeight());
 	}
 
@@ -445,8 +448,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The window's title.
 	 */
-	public static String getTitle() {
-		return INSTANCE.title;
+	public String getTitle() {
+		return this.title;
 	}
 
 	/**
@@ -454,8 +457,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If VSync is enabled.
 	 */
-	public static boolean isVSync() {
-		return INSTANCE.vsync;
+	public boolean isVSync() {
+		return this.vsync;
 	}
 
 	/**
@@ -463,8 +466,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param vsync Weather or not to use vSync.
 	 */
-	public static void setVSync(boolean vsync) {
-		INSTANCE.vsync = vsync;
+	public void setVSync(boolean vsync) {
+		this.vsync = vsync;
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		if (vsync) {
@@ -477,8 +480,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If using antialiased images.
 	 */
-	public static boolean isAntialiasing() {
-		return INSTANCE.antialiasing;
+	public boolean isAntialiasing() {
+		return this.antialiasing;
 	}
 
 	/**
@@ -486,8 +489,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param antialiasing If the display should antialias.
 	 */
-	public static void setAntialiasing(boolean antialiasing) {
-		INSTANCE.antialiasing = antialiasing;
+	public void setAntialiasing(boolean antialiasing) {
+		this.antialiasing = antialiasing;
 	}
 
 	/**
@@ -495,8 +498,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return Amount of MFAA samples.
 	 */
-	public static int getSamples() {
-		return INSTANCE.samples;
+	public int getSamples() {
+		return this.samples;
 	}
 
 	/**
@@ -504,8 +507,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param samples The amount of MFSS samples.
 	 */
-	public static void setSamples(int samples) {
-		INSTANCE.samples = samples;
+	public void setSamples(int samples) {
+		this.samples = samples;
 		glfwWindowHint(GLFW_SAMPLES, samples);
 	}
 
@@ -514,8 +517,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return Fullscreen or windowed.
 	 */
-	public static boolean isFullscreen() {
-		return INSTANCE.fullscreen;
+	public boolean isFullscreen() {
+		return this.fullscreen;
 	}
 
 	/**
@@ -523,25 +526,25 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
-	public static void setFullscreen(boolean fullscreen) {
-		if (INSTANCE.fullscreen == fullscreen) {
+	public void setFullscreen(boolean fullscreen) {
+		if (this.fullscreen == fullscreen) {
 			return;
 		}
 
-		INSTANCE.fullscreen = fullscreen;
+		this.fullscreen = fullscreen;
 		long monitor = glfwGetPrimaryMonitor();
 		GLFWVidMode mode = glfwGetVideoMode(monitor);
 
-		FlounderLogger.log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
+		FlounderLogger.get().log(fullscreen ? "Display is going fullscreen." : "Display is going windowed.");
 
 		if (fullscreen) {
-			INSTANCE.fullscreenWidth = mode.width();
-			INSTANCE.fullscreenHeight = mode.height();
-			glfwSetWindowMonitor(INSTANCE.window, monitor, 0, 0, INSTANCE.fullscreenWidth, INSTANCE.fullscreenHeight, GLFW_DONT_CARE);
+			this.fullscreenWidth = mode.width();
+			this.fullscreenHeight = mode.height();
+			glfwSetWindowMonitor(this.window, monitor, 0, 0, this.fullscreenWidth, this.fullscreenHeight, GLFW_DONT_CARE);
 		} else {
-			INSTANCE.windowPosX = (mode.width() - INSTANCE.windowWidth) / 2;
-			INSTANCE.windowPosY = (mode.height() - INSTANCE.windowHeight) / 2;
-			glfwSetWindowMonitor(INSTANCE.window, NULL, INSTANCE.windowPosX, INSTANCE.windowPosY, INSTANCE.windowWidth, INSTANCE.windowHeight, GLFW_DONT_CARE);
+			this.windowPosX = (mode.width() - this.windowWidth) / 2;
+			this.windowPosY = (mode.height() - this.windowHeight) / 2;
+			glfwSetWindowMonitor(this.window, NULL, this.windowPosX, this.windowPosY, this.windowWidth, this.windowHeight, GLFW_DONT_CARE);
 		}
 	}
 
@@ -550,8 +553,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The current GLFW window.
 	 */
-	public static long getWindow() {
-		return INSTANCE.window;
+	public long getWindow() {
+		return this.window;
 	}
 
 	/**
@@ -559,8 +562,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If the GLFW display is closed.
 	 */
-	public static boolean isClosed() {
-		return INSTANCE.closed;
+	public boolean isClosed() {
+		return this.closed;
 	}
 
 	/**
@@ -568,8 +571,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If the GLFW display is selected.
 	 */
-	public static boolean isFocused() {
-		return INSTANCE.focused;
+	public boolean isFocused() {
+		return this.focused;
 	}
 
 	/**
@@ -577,8 +580,8 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The windows x position.
 	 */
-	public static int getWindowXPos() {
-		return INSTANCE.windowPosX;
+	public int getWindowXPos() {
+		return this.windowPosX;
 	}
 
 	/**
@@ -586,23 +589,19 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The windows Y position.
 	 */
-	public static int getWindowYPos() {
-		return INSTANCE.windowPosY;
+	public int getWindowYPos() {
+		return this.windowPosY;
 	}
 
 	/**
 	 * @return The current GLFW time time in seconds.
 	 */
-	public static float getTime() {
+	public float getTime() {
 		return (float) (glfwGetTime() * 1000.0f);
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		callbackWindowClose.free();
 		callbackWindowFocus.free();
@@ -614,7 +613,17 @@ public class FlounderDisplay extends Module {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 
-		INSTANCE.closed = false;
-		INSTANCE.setup = false;
+		this.closed = false;
+		this.setup = false;
+	}
+
+	@Module.Instance
+	public static FlounderDisplay get() {
+		return (FlounderDisplay) Framework.getInstance(FlounderDisplay.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Display";
 	}
 }

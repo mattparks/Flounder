@@ -14,9 +14,6 @@ import java.util.*;
  * A manager for Boundings that want to be renderer.
  */
 public class FlounderBounding extends Module {
-	private static final FlounderBounding INSTANCE = new FlounderBounding();
-	public static final String PROFILE_TAB_NAME = "Bounding";
-
 	private Map<ModelObject, List<Collider>> renderShapes;
 	private int boundingCount;
 
@@ -24,25 +21,25 @@ public class FlounderBounding extends Module {
 	 * Creates a new bounding manager.
 	 */
 	public FlounderBounding() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
+		super(FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.renderShapes = new HashMap<>();
 		this.boundingCount = 0;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		boundingCount = renderShapes.size();
 		clear(); // Clears before the next batch of rendering.
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Enabled", OpenGlUtils.isInWireframe());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Count", boundingCount);
+		FlounderProfiler.get().add(getTab(), "Enabled", OpenGlUtils.isInWireframe());
+		FlounderProfiler.get().add(getTab(), "Count", boundingCount);
 	}
 
 	/**
@@ -50,21 +47,21 @@ public class FlounderBounding extends Module {
 	 *
 	 * @param shape The shape to add.
 	 */
-	public static void addShapeRender(Collider shape) {
+	public void addShapeRender(Collider shape) {
 		if (!OpenGlUtils.isInWireframe() || shape == null) {
 			return;
 		}
 
-		for (ModelObject model : INSTANCE.renderShapes.keySet()) {
+		for (ModelObject model : renderShapes.keySet()) {
 			if (model.equals(shape.getRenderModel())) {
-				INSTANCE.renderShapes.get(model).add(shape);
+				renderShapes.get(model).add(shape);
 				return;
 			}
 		}
 
 		List<Collider> list = new ArrayList<>();
 		list.add(shape);
-		INSTANCE.renderShapes.put(shape.getRenderModel(), list);
+		renderShapes.put(shape.getRenderModel(), list);
 	}
 
 	/**
@@ -72,24 +69,30 @@ public class FlounderBounding extends Module {
 	 *
 	 * @return The renderable shapes.
 	 */
-	protected static Map<ModelObject, List<Collider>> getRenderShapes() {
-		return INSTANCE.renderShapes;
+	protected Map<ModelObject, List<Collider>> getRenderShapes() {
+		return this.renderShapes;
 	}
 
 	/**
 	 * Clears the renderable Boundings.
 	 */
-	protected static void clear() {
-		INSTANCE.renderShapes.clear();
+	protected void clear() {
+		this.renderShapes.clear();
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		clear();
+	}
+
+	@Module.Instance
+	public static FlounderBounding get() {
+		return (FlounderBounding) Framework.getInstance(FlounderBounding.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Bounding";
 	}
 }

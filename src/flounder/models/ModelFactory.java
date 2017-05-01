@@ -54,7 +54,7 @@ public class ModelFactory extends Factory {
 		try {
 			reader = file.getReader();
 		} catch (Exception e) {
-			FlounderLogger.log(e);
+			FlounderLogger.get().log(e);
 			return;
 		}
 
@@ -67,7 +67,7 @@ public class ModelFactory extends Factory {
 		String line;
 
 		if (reader == null) {
-			FlounderLogger.error("Error creating reader the OBJ: " + file);
+			FlounderLogger.get().error("Error creating reader the OBJ: " + file);
 			return;
 		}
 
@@ -111,7 +111,7 @@ public class ModelFactory extends Factory {
 
 						// The split length of 3 faced + 1 for the f prefix.
 						if (currentLineF.length != 4 || line.contains("//")) {
-							FlounderLogger.error("Error reading the OBJ " + file + ", it does not appear to be UV mapped! The model will not be loaded.");
+							FlounderLogger.get().error("Error reading the OBJ " + file + ", it does not appear to be UV mapped! The model will not be loaded.");
 							object.loadData(null, null, null, null, null, false, null, name, file);
 							return;
 						}
@@ -125,15 +125,15 @@ public class ModelFactory extends Factory {
 						calculateTangents(v0, v1, v2, textures);
 						break;
 					default:
-						FlounderLogger.warning("[OBJ " + file.getName() + "] Unknown Line: " + line);
+						FlounderLogger.get().warning("[OBJ " + file.getName() + "] Unknown Line: " + line);
 						break;
 				}
 			}
 
 			reader.close();
 		} catch (IOException e) {
-			FlounderLogger.error("Error reading the OBJ " + file);
-			FlounderLogger.exception(e);
+			FlounderLogger.get().error("Error reading the OBJ " + file);
+			FlounderLogger.get().exception(e);
 		}
 
 		// Averages out vertex tangents, and disabled non set vertices,
@@ -292,18 +292,18 @@ public class ModelFactory extends Factory {
 			return;
 		}
 
-		int vaoID = FlounderLoader.createVAO();
-		FlounderLoader.createIndicesVBO(vaoID, o.getIndices());
-		FlounderLoader.storeDataInVBO(vaoID, o.getVertices(), 0, 3);
-		FlounderLoader.storeDataInVBO(vaoID, o.getTextures(), 1, 2);
-		FlounderLoader.storeDataInVBO(vaoID, o.getNormals(), 2, 3);
-		FlounderLoader.storeDataInVBO(vaoID, o.getTangents(), 3, 3);
+		int vaoID = FlounderLoader.get().createVAO();
+		FlounderLoader.get().createIndicesVBO(vaoID, o.getIndices());
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getVertices(), 0, 3);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getTextures(), 1, 2);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getNormals(), 2, 3);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getTangents(), 3, 3);
 		int vaoLength = o.getIndices() != null ? o.getIndices().length : (o.getVertices().length / 3);
 		((ModelObject) object).loadGL(vaoID, vaoLength);
 	}
 
 	@Override
 	public Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return FlounderModels.getLoaded();
+		return FlounderModels.get().getLoaded();
 	}
 }

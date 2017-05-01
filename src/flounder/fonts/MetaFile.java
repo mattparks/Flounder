@@ -58,8 +58,8 @@ public class MetaFile {
 		try {
 			reader = file.getReader();
 		} catch (Exception e) {
-			FlounderLogger.log("Couldn't read font meta file!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().log("Couldn't read font meta file!");
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -75,8 +75,8 @@ public class MetaFile {
 		try {
 			line = reader.readLine();
 		} catch (IOException e) {
-			FlounderLogger.log("Couldn't process the next font line!");
-			FlounderLogger.exception(e);
+			FlounderLogger.get().log("Couldn't process the next font line!");
+			FlounderLogger.get().exception(e);
 		}
 
 		if (line == null) {

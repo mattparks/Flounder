@@ -28,7 +28,7 @@ public class Server extends Thread {
 			this.connected = new ArrayList<>();
 			this.serverPort = port;
 		} catch (SocketException e) {
-			FlounderLogger.exception(e);
+			FlounderLogger.get().exception(e);
 		}
 	}
 
@@ -43,8 +43,8 @@ public class Server extends Thread {
 			} catch (SocketException e) {
 				// Ignore.
 			} catch (IOException e) {
-				FlounderLogger.error("Server socket could not receive data!");
-				FlounderLogger.exception(e);
+				FlounderLogger.get().error("Server socket could not receive data!");
+				FlounderLogger.get().exception(e);
 				System.exit(-1);
 			}
 
@@ -68,7 +68,7 @@ public class Server extends Thread {
 			Object object = ctor.newInstance(new Object[]{data});
 			packet = (Packet) object;
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-			FlounderLogger.error("Server could not load packet with the class of " + className);
+			FlounderLogger.get().error("Server could not load packet with the class of " + className);
 			e.printStackTrace();
 		}
 

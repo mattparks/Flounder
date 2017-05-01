@@ -34,7 +34,7 @@ public abstract class Renderer {
 		profileTimer.reset();
 
 		// Profile some values to the profiler.
-		if (FlounderProfiler.isOpen() && timerProfile.isPassedTime()) {
+		if (FlounderProfiler.get().isOpen() && timerProfile.isPassedTime()) {
 			profile();
 
 			// Resets the timer.

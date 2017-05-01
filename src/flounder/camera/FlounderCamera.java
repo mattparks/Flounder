@@ -9,9 +9,6 @@ import flounder.profiling.*;
  * A module used for managing cameras in 2D and 3D worlds.
  */
 public class FlounderCamera extends Module {
-	private static final FlounderCamera INSTANCE = new FlounderCamera();
-	public static final String PROFILE_TAB_NAME = "Camera";
-
 	private Player player;
 	private Camera camera;
 
@@ -19,20 +16,20 @@ public class FlounderCamera extends Module {
 	 * Creates a new camera manager.
 	 */
 	public FlounderCamera() {
-		super(ModuleUpdate.UPDATE_PRE, PROFILE_TAB_NAME, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderEntities.class);
+		super(FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderEntities.class);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.player = null;
 		this.camera = null;
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets a new player and camera, if available.
-		Player newPlayer = (Player) getExtensionMatch(player, Player.class, true);
-		Camera newCamera = (Camera) getExtensionMatch(camera, Camera.class, true);
+		Player newPlayer = (Player) getExtension(player, Player.class, true);
+		Camera newCamera = (Camera) getExtension(camera, Camera.class, true);
 
 		// If there is a new player, disable the old one and start to use the new one.
 		if (newPlayer != null) {
@@ -73,10 +70,10 @@ public class FlounderCamera extends Module {
 		}
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Camera Selected", camera == null ? "NULL" : camera.getClass());
-		FlounderProfiler.add(PROFILE_TAB_NAME, "Player Selected", player == null ? "NULL" : player.getClass());
+		FlounderProfiler.get().add(getTab(), "Camera Selected", camera == null ? "NULL" : camera.getClass());
+		FlounderProfiler.get().add(getTab(), "Player Selected", player == null ? "NULL" : player.getClass());
 	}
 
 	/**
@@ -84,8 +81,8 @@ public class FlounderCamera extends Module {
 	 *
 	 * @return The current player.
 	 */
-	public static Player getPlayer() {
-		return INSTANCE.player;
+	public Player getPlayer() {
+		return this.player;
 	}
 
 	/**
@@ -93,16 +90,11 @@ public class FlounderCamera extends Module {
 	 *
 	 * @return The current camera.
 	 */
-	public static Camera getCamera() {
-		return INSTANCE.camera;
+	public Camera getCamera() {
+		return this.camera;
 	}
 
-	@Override
-	public Module getInstance() {
-		return INSTANCE;
-	}
-
-	@Override
+	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		// Disposes the player with the module.
 		if (player != null) {
@@ -113,5 +105,15 @@ public class FlounderCamera extends Module {
 		if (camera != null) {
 			camera.setInitialized(false);
 		}
+	}
+
+	@Module.Instance
+	public static FlounderCamera get() {
+		return (FlounderCamera) Framework.getInstance(FlounderCamera.class);
+	}
+
+	@Module.TabName
+	public static String getTab() {
+		return "Camera";
 	}
 }

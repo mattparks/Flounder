@@ -143,7 +143,7 @@ public class ModelObject extends FactoryObject {
 	public void delete() {
 		if (isLoaded()) {
 			setFullyLoaded(false);
-			FlounderProcessors.sendRequest(new ModelDeleteRequest(this));
+			FlounderProcessors.get().sendRequest(new ModelDeleteRequest(this));
 
 			this.vertices = null;
 			this.textures = null;

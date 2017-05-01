@@ -72,21 +72,21 @@ public class GuiSliderText extends ScreenObject {
 		}
 
 		// Click updates.
-		if (FlounderGuis.getSelector().isSelected(text) && getAlpha() == 1.0f && ((updating && FlounderGuis.getSelector().isLeftClick()) || FlounderGuis.getSelector().wasLeftClick())) {
+		if (FlounderGuis.get().getSelector().isSelected(text) && getAlpha() == 1.0f && ((updating && FlounderGuis.get().getSelector().isLeftClick()) || FlounderGuis.get().getSelector().wasLeftClick())) {
 			if (!updating) {
-				FlounderSound.playSystemSound(GuiButtonText.SOUND_MOUSE_LEFT);
+				FlounderSound.get().playSystemSound(GuiButtonText.SOUND_MOUSE_LEFT);
 				updating = true;
 			}
 
 			hasChange = true;
 
-			float width = 2.0f * background.getMeshSize().x * background.getScreenDimensions().x / FlounderDisplay.getAspectRatio();
+			float width = 2.0f * background.getMeshSize().x * background.getScreenDimensions().x / FlounderDisplay.get().getAspectRatio();
 			float positionX = background.getPosition().x;
-			float cursorX = FlounderGuis.getSelector().getCursorX() - positionX;
+			float cursorX = FlounderGuis.get().getSelector().getCursorX() - positionX;
 			progress = 2.0f * cursorX / width;
 			progress = (progress + 1.0f) * 0.5f;
 
-			FlounderGuis.getSelector().cancelWasEvent();
+			FlounderGuis.get().getSelector().cancelWasEvent();
 		} else {
 			updating = false;
 		}
@@ -102,17 +102,17 @@ public class GuiSliderText extends ScreenObject {
 		}
 
 		// Mouse over updates.
-		if (FlounderGuis.getSelector().isSelected(text) && !mouseOver) {
-			FlounderSound.playSystemSound(GuiButtonText.SOUND_MOUSE_HOVER);
+		if (FlounderGuis.get().getSelector().isSelected(text) && !mouseOver) {
+			FlounderSound.get().playSystemSound(GuiButtonText.SOUND_MOUSE_HOVER);
 			text.setScaleDriver(new SlideDriver(text.getScale(), GuiButtonText.SCALE_SELECTED, GuiButtonText.CHANGE_TIME));
 			mouseOver = true;
-		} else if (!FlounderGuis.getSelector().isSelected(text) && mouseOver) {
+		} else if (!FlounderGuis.get().getSelector().isSelected(text) && mouseOver) {
 			text.setScaleDriver(new SlideDriver(text.getScale(), GuiButtonText.SCALE_NORMAL, GuiButtonText.CHANGE_TIME));
 			mouseOver = false;
 		}
 
 		// Update the background colour.
-		Colour primary = FlounderGuis.getGuiMaster().getPrimaryColour();
+		Colour primary = FlounderGuis.get().getGuiMaster().getPrimaryColour();
 		Colour.interpolate(GuiButtonText.COLOUR_NORMAL, primary, (text.getScale() - GuiButtonText.SCALE_NORMAL) / (GuiButtonText.SCALE_SELECTED - GuiButtonText.SCALE_NORMAL), background.getColourOffset());
 		this.slider.getColourOffset().set(1.0f - primary.r, 1.0f - primary.g, 1.0f - primary.b);
 
