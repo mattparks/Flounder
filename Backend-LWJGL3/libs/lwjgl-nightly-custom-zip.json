@@ -1,5 +1,5 @@
 {
-  "build": "stable",
+  "build": "nightly",
   "mode": "zip",
   "selectedAddons": [
     "steamworks4j"
@@ -9,7 +9,7 @@
     "macos",
     "linux"
   ],
-  "descriptions": true,
+  "descriptions": false,
   "compact": false,
   "hardcoded": false,
   "javadoc": true,

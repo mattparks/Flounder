@@ -16,6 +16,8 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 
 	private Light light;
 
+	private boolean sun;
+
 	/**
 	 * Creates a new ComponentLight.
 	 *
@@ -39,6 +41,8 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 		this.offset = offset;
 		this.colour = colour;
 		this.attenuation = attenuation;
+
+		this.sun = true;
 
 		if (entity != null) {
 			this.light = new Light(colour, Vector3f.add(entity.getPosition(), offset, null), attenuation);
@@ -78,6 +82,14 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 
 	public Light getLight() {
 		return light;
+	}
+
+	public boolean isSun() {
+		return sun;
+	}
+
+	public void setSun(boolean sun) {
+		this.sun = sun;
 	}
 
 	@Override

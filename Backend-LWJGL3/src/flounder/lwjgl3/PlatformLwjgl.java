@@ -1,5 +1,6 @@
 package flounder.lwjgl3;
 
+import flounder.framework.*;
 import flounder.framework.updater.*;
 import flounder.platform.*;
 import org.lwjgl.*;

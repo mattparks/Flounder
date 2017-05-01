@@ -5,6 +5,7 @@ import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
 import flounder.post.*;
+import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shadows.*;
 import flounder.skybox.*;
@@ -50,11 +51,12 @@ public class FilterMRT extends PostFilter {
 			}
 		}
 
-		// FlounderProfiler.get().add(KosmosPost.getTab(), "Maximum Lights", LIGHTS);
-		// FlounderProfiler.get().add(KosmosPost.getTab(), "Loaded Lights", lightsLoaded);
+		FlounderProfiler.get().add("Filter MRT", "Maximum Lights", LIGHTS);
+		FlounderProfiler.get().add("Filter MRT", "Loaded Lights", lightsLoaded);
 
 		if (lightsLoaded < LIGHTS) {
 			for (int i = lightsLoaded; i < LIGHTS; i++) {
+				shader.getUniformBool("lightActive[" + i + "]").loadBoolean(false);
 				shader.getUniformVec3("lightColour[" + i + "]").loadVec3(0.0f, 0.0f, 0.0f);
 				shader.getUniformVec3("lightPosition[" + i + "]").loadVec3(0.0f, 0.0f, 0.0f);
 				shader.getUniformVec3("lightAttenuation[" + i + "]").loadVec3(1.0f, 0.0f, 0.0f);
