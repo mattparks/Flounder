@@ -57,9 +57,9 @@ public class EntitiesRenderer extends Renderer {
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
-		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
-		OpenGlUtils.enableAlphaBlending();
-		OpenGlUtils.enableDepthTesting();
+		FlounderOpenGL.get().antialias(FlounderDisplay.get().isAntialiasing());
+		FlounderOpenGL.get().enableAlphaBlending();
+		FlounderOpenGL.get().enableDepthTesting();
 
 		renderedCount = 0;
 	}
@@ -69,7 +69,7 @@ public class EntitiesRenderer extends Renderer {
 			return;
 		}
 
-		OpenGlUtils.bindTexture(textureUndefined, 0);
+		FlounderOpenGL.get().bindTexture(textureUndefined, 0);
 		Single<Integer> vaoLength = new Single<>(0);
 
 		for (IComponentEntity component : entity.getComponents()) {
@@ -79,7 +79,7 @@ public class EntitiesRenderer extends Renderer {
 		}
 
 		if (vaoLength.getSingle() > 0) {
-			OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength.getSingle());
+			FlounderOpenGL.get().renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength.getSingle());
 		}
 
 		for (IComponentEntity component : entity.getComponents()) {
@@ -88,7 +88,7 @@ public class EntitiesRenderer extends Renderer {
 			}
 		}
 
-		OpenGlUtils.unbindVAO(0, 1, 2, 3, 4, 5);
+		FlounderOpenGL.get().unbindVAO(0, 1, 2, 3, 4, 5);
 		renderedCount++;
 	}
 

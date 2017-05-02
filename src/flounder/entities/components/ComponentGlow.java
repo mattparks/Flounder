@@ -54,7 +54,7 @@ public class ComponentGlow extends IComponentEntity implements IComponentRender,
 		shader.getUniformBool("useGlowMap").loadBoolean(true);
 
 		if (textureGlow != null && textureGlow.isLoaded()) {
-			OpenGlUtils.bindTexture(textureGlow, 1);
+			FlounderOpenGL.get().bindTexture(textureGlow, 1);
 		}
 	}
 

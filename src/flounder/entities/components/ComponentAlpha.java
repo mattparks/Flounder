@@ -44,15 +44,15 @@ public class ComponentAlpha extends IComponentEntity implements IComponentAlpha,
 
 	@Override
 	public void render(ShaderObject shader, Single<Integer> vaoLength) {
-		OpenGlUtils.cullBackFaces(alpha == 1.0f);
-		OpenGlUtils.depthMask(false);
+		FlounderOpenGL.get().cullBackFaces(alpha == 1.0f);
+		FlounderOpenGL.get().depthMask(false);
 		shader.getUniformFloat("transparency").loadFloat(1.0f - alpha);
 	}
 
 	@Override
 	public void renderClear(ShaderObject shader) {
-		OpenGlUtils.cullBackFaces(true);
-		OpenGlUtils.depthMask(true);
+		FlounderOpenGL.get().cullBackFaces(true);
+		FlounderOpenGL.get().depthMask(true);
 		shader.getUniformFloat("transparency").loadFloat(0.0f);
 	}
 

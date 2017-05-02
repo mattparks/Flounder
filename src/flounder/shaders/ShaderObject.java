@@ -45,7 +45,7 @@ public class ShaderObject extends FactoryObject {
 		setDataLoaded(true);
 	}
 
-	protected void loadGL(Map<String, Uniform> uniforms, int shaderID) {
+	public void loadGL(Map<String, Uniform> uniforms, int shaderID) {
 		this.uniforms = uniforms;
 
 		this.programID = shaderID;

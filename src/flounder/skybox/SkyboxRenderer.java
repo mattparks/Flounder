@@ -32,21 +32,21 @@ public class SkyboxRenderer extends Renderer {
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformMat4("modelMatrix").loadMat4(FlounderSkybox.get().getModelMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
-		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
+		shader.getUniformBool("polygonMode").loadBoolean(FlounderOpenGL.get().isInWireframe());
 		shader.getUniformVec3("skyColour").loadVec3(FlounderSkybox.get().getFog().getFogColour());
 		shader.getUniformFloat("blendFactor").loadFloat(FlounderSkybox.get().getBlendFactor());
 
-		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
-		OpenGlUtils.enableDepthTesting();
-		OpenGlUtils.cullBackFaces(false);
-		OpenGlUtils.disableBlending();
+		FlounderOpenGL.get().antialias(FlounderDisplay.get().isAntialiasing());
+		FlounderOpenGL.get().enableDepthTesting();
+		FlounderOpenGL.get().cullBackFaces(false);
+		FlounderOpenGL.get().disableBlending();
 
-		OpenGlUtils.bindVAO(FlounderSkybox.get().getModel().getVaoID(), 0);
-		OpenGlUtils.bindTexture(FlounderSkybox.get().getCubemap(), 0);
+		FlounderOpenGL.get().bindVAO(FlounderSkybox.get().getModel().getVaoID(), 0);
+		FlounderOpenGL.get().bindTexture(FlounderSkybox.get().getCubemap(), 0);
 
-		OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, FlounderSkybox.get().getModel().getVaoLength());
+		FlounderOpenGL.get().renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, FlounderSkybox.get().getModel().getVaoLength());
 
-		OpenGlUtils.unbindVAO(0);
+		FlounderOpenGL.get().unbindVAO(0);
 		shader.stop();
 	}
 

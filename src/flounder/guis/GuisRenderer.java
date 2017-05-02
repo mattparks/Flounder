@@ -42,13 +42,13 @@ public class GuisRenderer extends Renderer {
 	private void prepareRendering() {
 		shader.start();
 
-		OpenGlUtils.antialias(false);
-		OpenGlUtils.cullBackFaces(true);
-		OpenGlUtils.enableAlphaBlending();
-		OpenGlUtils.disableDepthTesting();
+		FlounderOpenGL.get().antialias(false);
+		FlounderOpenGL.get().cullBackFaces(true);
+		FlounderOpenGL.get().enableAlphaBlending();
+		FlounderOpenGL.get().disableDepthTesting();
 
 		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.get().getAspectRatio());
-		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
+		shader.getUniformBool("polygonMode").loadBoolean(FlounderOpenGL.get().isInWireframe());
 	}
 
 	private void renderGui(ScreenObject object) {
@@ -62,8 +62,8 @@ public class GuisRenderer extends Renderer {
 			return;
 		}
 
-		OpenGlUtils.bindVAO(vaoID, 0);
-		OpenGlUtils.bindTexture(gui.getTexture(), 0);
+		FlounderOpenGL.get().bindVAO(vaoID, 0);
+		FlounderOpenGL.get().bindTexture(gui.getTexture(), 0);
 		//	GL11.glEnable(GL11.GL_SCISSOR_TEST); // TODO: Scissor test for scroll panels.
 		//	GL11.glScissor(x, y, width, height);
 		shader.getUniformVec2("size").loadVec2(gui.getMeshSize());
@@ -78,8 +78,8 @@ public class GuisRenderer extends Renderer {
 		shader.getUniformFloat("atlasRows").loadFloat(gui.getTexture().getNumberOfRows());
 		shader.getUniformVec2("atlasOffset").loadVec2(gui.getTextureOffset());
 		shader.getUniformVec3("colourOffset").loadVec3(gui.getColourOffset());
-		OpenGlUtils.renderArrays(GL_TRIANGLE_STRIP, vaoLength);
-		OpenGlUtils.unbindVAO(0);
+		FlounderOpenGL.get().renderArrays(GL_TRIANGLE_STRIP, vaoLength);
+		FlounderOpenGL.get().unbindVAO(0);
 	}
 
 	private void endRendering() {

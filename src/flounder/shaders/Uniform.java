@@ -18,7 +18,7 @@ public abstract class Uniform {
 		this.shader = shader;
 	}
 
-	protected void storeUniformLocation(int programID) {
+	public void storeUniformLocation(int programID) {
 		location = FlounderShaders.get().getUniformLocation(programID, name);
 
 		if (location == NOT_FOUND) {

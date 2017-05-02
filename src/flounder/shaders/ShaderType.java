@@ -42,7 +42,7 @@ public class ShaderType {
 		this.shaderProgramID = -1;
 	}
 
-	protected int getShaderType() {
+	public int getShaderType() {
 		return shaderType;
 	}
 
@@ -54,15 +54,15 @@ public class ShaderType {
 		return shaderString;
 	}
 
-	protected StringBuilder getShaderBuilder() {
+	public StringBuilder getShaderBuilder() {
 		return shaderBuilder;
 	}
 
-	protected int getShaderProgramID() {
+	public int getShaderProgramID() {
 		return shaderProgramID;
 	}
 
-	protected void setShaderProgramID(int shaderProgramID) {
+	public void setShaderProgramID(int shaderProgramID) {
 		this.shaderProgramID = shaderProgramID;
 	}
 }

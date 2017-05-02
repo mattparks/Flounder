@@ -39,7 +39,7 @@ public class TextureObject extends FactoryObject {
 		this.glType = GL_TEXTURE_2D;
 	}
 
-	protected void loadData(MyFile file, ByteBuffer buffer, int width, int height, boolean hasAlpha, int numberOfRows, String name) {
+	public void loadData(MyFile file, ByteBuffer buffer, int width, int height, boolean hasAlpha, int numberOfRows, String name) {
 		this.file = file;
 		this.buffer = buffer;
 		this.width = width;
@@ -54,7 +54,7 @@ public class TextureObject extends FactoryObject {
 		setDataLoaded(true);
 	}
 
-	protected void loadGL(int textureID, int glType) {
+	public void loadGL(int textureID, int glType) {
 		this.textureID = textureID;
 		this.glType = glType;
 

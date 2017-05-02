@@ -190,7 +190,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		}
 
 		if (model != null && model.isLoaded()) {
-			OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3);
+			FlounderOpenGL.get().bindVAO(model.getVaoID(), 0, 1, 2, 3);
 			shader.getUniformBool("animated").loadBoolean(false);
 
 			if (modelMatrix != null) {
@@ -216,8 +216,8 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 			shader.getUniformFloat("atlasRows").loadFloat(texture.getNumberOfRows());
 			shader.getUniformVec2("atlasOffset").loadVec2(getTextureOffset());
 			shader.getUniformVec3("colourOffset").loadVec3(colourOffset);
-			OpenGlUtils.cullBackFaces(!texture.hasAlpha());
-			OpenGlUtils.bindTexture(texture, 0);
+			FlounderOpenGL.get().cullBackFaces(!texture.hasAlpha());
+			FlounderOpenGL.get().bindTexture(texture, 0);
 		}
 	}
 

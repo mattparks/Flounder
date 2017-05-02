@@ -1,7 +1,6 @@
 package flounder.lwjgl3.devices;
 
 import flounder.devices.*;
-import flounder.fbos.*;
 import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
@@ -16,11 +15,13 @@ import java.io.*;
 import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+@Module.ModuleOverride
 public class LwjglDisplay extends FlounderDisplay {
 	private int windowWidth;
 	private int windowHeight;
@@ -220,13 +221,13 @@ public class LwjglDisplay extends FlounderDisplay {
 		FlounderLogger.get().log("Flounder Engine Version: " + Framework.getVersion().getVersion());
 		FlounderLogger.get().log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.get().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
-		FlounderLogger.get().log("Flounder Is OpenGL Modern: " + OpenGlUtils.isModern());
+		FlounderLogger.get().log("Flounder Is OpenGL Modern: " + FlounderOpenGL.get().isModern());
 		FlounderLogger.get().log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
 		FlounderLogger.get().log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
 		FlounderLogger.get().log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
 		FlounderLogger.get().log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
 		FlounderLogger.get().log("Flounder Total Memory Available To JVM (bytes): " + Runtime.getRuntime().totalMemory());
-		FlounderLogger.get().log("Flounder Maximum FBO Size: " + FBO.getMaxFBOSize());
+		FlounderLogger.get().log("Flounder Maximum FBO Size: " + glGetInteger(GL_MAX_RENDERBUFFER_SIZE_EXT));
 		FlounderLogger.get().log("Flounder Maximum Anisotropy: " + glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
 		FlounderLogger.get().log("===== End of system info log. =====\n");
 

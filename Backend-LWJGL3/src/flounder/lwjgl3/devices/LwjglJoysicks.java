@@ -9,6 +9,7 @@ import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+@Module.ModuleOverride
 public class LwjglJoysicks extends FlounderJoysticks {
 	private FloatBuffer joystickAxes[];
 	private ByteBuffer joystickButtons[];

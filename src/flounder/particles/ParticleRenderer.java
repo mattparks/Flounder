@@ -82,7 +82,7 @@ public class ParticleRenderer extends Renderer {
 
 				// Renders the particles list.
 				FlounderLoader.get().updateVBO(VBO, vboData, BUFFER);
-				OpenGlUtils.renderInstanced(GL_TRIANGLE_STRIP, VERTICES.length, particles.size());
+				FlounderOpenGL.get().renderInstanced(GL_TRIANGLE_STRIP, VERTICES.length, particles.size());
 				unbindTexturedModel();
 			}
 		}
@@ -102,24 +102,24 @@ public class ParticleRenderer extends Renderer {
 	private void prepareTexturedModel(ParticleType particleType) {
 		unbindTexturedModel();
 
-		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
-		OpenGlUtils.cullBackFaces(true);
-		OpenGlUtils.enableDepthTesting();
-		OpenGlUtils.enableAlphaBlending();
+		FlounderOpenGL.get().antialias(FlounderDisplay.get().isAntialiasing());
+		FlounderOpenGL.get().cullBackFaces(true);
+		FlounderOpenGL.get().enableDepthTesting();
+		FlounderOpenGL.get().enableAlphaBlending();
 		// glDepthMask(false); // Stops particles from being rendered to the depth BUFFER.
 
-		OpenGlUtils.bindVAO(VAO, 0, 1, 2, 3, 4, 5, 6, 7);
+		FlounderOpenGL.get().bindVAO(VAO, 0, 1, 2, 3, 4, 5, 6, 7);
 
 		if (particleType.getTexture() != null) {
 			shader.getUniformFloat("numberOfRows").loadFloat(particleType.getTexture().getNumberOfRows());
-			OpenGlUtils.bindTexture(particleType.getTexture(), 0);
+			FlounderOpenGL.get().bindTexture(particleType.getTexture(), 0);
 		}
 	}
 
 	private void unbindTexturedModel() {
 		// glDepthMask(true);
-		OpenGlUtils.disableBlending();
-		OpenGlUtils.unbindVAO(0, 1, 2, 3, 4, 5, 6, 7);
+		FlounderOpenGL.get().disableBlending();
+		FlounderOpenGL.get().unbindVAO(0, 1, 2, 3, 4, 5, 6, 7);
 	}
 
 	private void prepareInstance(Particle particle, Camera camera, float[] vboData) {

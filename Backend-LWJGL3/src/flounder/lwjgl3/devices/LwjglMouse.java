@@ -16,6 +16,7 @@ import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+@Module.ModuleOverride
 public class LwjglMouse extends FlounderMouse {
 	private MyFile customMouse;
 

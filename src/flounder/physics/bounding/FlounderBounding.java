@@ -38,7 +38,7 @@ public class FlounderBounding extends Module {
 
 	@Handler.Function(Handler.FLAG_PROFILE)
 	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Enabled", OpenGlUtils.isInWireframe());
+		FlounderProfiler.get().add(getTab(), "Enabled", FlounderOpenGL.get().isInWireframe());
 		FlounderProfiler.get().add(getTab(), "Count", boundingCount);
 	}
 
@@ -48,7 +48,7 @@ public class FlounderBounding extends Module {
 	 * @param shape The shape to add.
 	 */
 	public void addShapeRender(Collider shape) {
-		if (!OpenGlUtils.isInWireframe() || shape == null) {
+		if (!FlounderOpenGL.get().isInWireframe() || shape == null) {
 			return;
 		}
 

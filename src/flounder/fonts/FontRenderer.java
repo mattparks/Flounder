@@ -44,13 +44,13 @@ public class FontRenderer extends Renderer {
 	private void prepareRendering() {
 		shader.start();
 
-		OpenGlUtils.antialias(false);
-		OpenGlUtils.cullBackFaces(true);
-		OpenGlUtils.enableAlphaBlending();
-		OpenGlUtils.disableDepthTesting();
+		FlounderOpenGL.get().antialias(false);
+		FlounderOpenGL.get().cullBackFaces(true);
+		FlounderOpenGL.get().enableAlphaBlending();
+		FlounderOpenGL.get().disableDepthTesting();
 
 		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.get().getAspectRatio());
-		shader.getUniformBool("polygonMode").loadBoolean(OpenGlUtils.isInWireframe());
+		shader.getUniformBool("polygonMode").loadBoolean(FlounderOpenGL.get().isInWireframe());
 	}
 
 	private void renderText(ScreenObject object) {
@@ -64,8 +64,8 @@ public class FontRenderer extends Renderer {
 			return;
 		}
 
-		OpenGlUtils.bindVAO(text.getMesh(), 0, 1);
-		OpenGlUtils.bindTexture(text.getFont().getTexture(), 0);
+		FlounderOpenGL.get().bindVAO(text.getMesh(), 0, 1);
+		FlounderOpenGL.get().bindTexture(text.getFont().getTexture(), 0);
 		//	GL11.glEnable(GL11.GL_SCISSOR_TEST); // TODO: Scissor test for scroll panels.
 		//	GL11.glScissor(x, y, width, height);
 		shader.getUniformVec2("size").loadVec2(text.getMeshSize());
@@ -79,8 +79,8 @@ public class FontRenderer extends Renderer {
 		shader.getUniformVec3("borderColour").loadVec3(text.getBorderColour());
 		shader.getUniformVec2("edgeData").loadVec2(text.calculateEdgeStart(), text.calculateAntialiasSize());
 		shader.getUniformVec2("borderSizes").loadVec2(text.getTotalBorderSize(), text.getGlowSize());
-		OpenGlUtils.renderArrays(GL_TRIANGLES, text.getVertexCount());
-		OpenGlUtils.unbindVAO(0, 1);
+		FlounderOpenGL.get().renderArrays(GL_TRIANGLES, text.getVertexCount());
+		FlounderOpenGL.get().unbindVAO(0, 1);
 	}
 
 	private void endRendering() {

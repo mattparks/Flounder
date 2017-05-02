@@ -48,29 +48,29 @@ public abstract class PostFilter {
 			return;
 		}
 
-		boolean lastWireframe = OpenGlUtils.isInWireframe();
+		boolean lastWireframe = FlounderOpenGL.get().isInWireframe();
 
 		fbo.bindFrameBuffer();
-		OpenGlUtils.prepareNewRenderParse(1.0f, 1.0f, 1.0f);
+		FlounderOpenGL.get().prepareNewRenderParse(1.0f, 1.0f, 1.0f);
 		shader.start();
 		storeValues();
-		OpenGlUtils.antialias(false);
-		OpenGlUtils.disableDepthTesting();
-		OpenGlUtils.cullBackFaces(true);
-		OpenGlUtils.goWireframe(false);
-		OpenGlUtils.bindVAO(VAO, 0);
+		FlounderOpenGL.get().antialias(false);
+		FlounderOpenGL.get().disableDepthTesting();
+		FlounderOpenGL.get().cullBackFaces(true);
+		FlounderOpenGL.get().goWireframe(false);
+		FlounderOpenGL.get().bindVAO(VAO, 0);
 
 		for (int i = 0; i < textures.length; i++) {
-			OpenGlUtils.bindTexture(textures[i], GL_TEXTURE_2D, i);
+			FlounderOpenGL.get().bindTexture(textures[i], GL_TEXTURE_2D, i);
 		}
 
-		OpenGlUtils.renderArrays(GL_TRIANGLE_STRIP, POSITIONS.length); // Render post filter.
+		FlounderOpenGL.get().renderArrays(GL_TRIANGLE_STRIP, POSITIONS.length); // Render post filter.
 
-		OpenGlUtils.unbindVAO(0);
-		OpenGlUtils.goWireframe(lastWireframe);
+		FlounderOpenGL.get().unbindVAO(0);
+		FlounderOpenGL.get().goWireframe(lastWireframe);
 		shader.stop();
-		OpenGlUtils.disableBlending();
-		OpenGlUtils.enableDepthTesting();
+		FlounderOpenGL.get().disableBlending();
+		FlounderOpenGL.get().enableDepthTesting();
 		fbo.unbindFrameBuffer();
 	}
 

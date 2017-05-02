@@ -18,6 +18,7 @@ import static org.lwjgl.openal.ALC.createCapabilities;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 
+@Module.ModuleOverride
 public class LwjglSound extends FlounderSound {
 	private long device;
 

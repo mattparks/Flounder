@@ -45,13 +45,13 @@ public class ComponentRemoveFade extends IComponentEntity implements IComponentA
 
 	@Override
 	public void render(ShaderObject shader, Single<Integer> vaoLength) {
-		OpenGlUtils.cullBackFaces(alpha == 1.0f);
+		FlounderOpenGL.get().cullBackFaces(alpha == 1.0f);
 		shader.getUniformFloat("transparency").loadFloat(1.0f - alpha);
 	}
 
 	@Override
 	public void renderClear(ShaderObject shader) {
-		OpenGlUtils.cullBackFaces(true);
+		FlounderOpenGL.get().cullBackFaces(true);
 		shader.getUniformFloat("transparency").loadFloat(0.0f);
 	}
 

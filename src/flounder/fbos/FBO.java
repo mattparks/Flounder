@@ -2,16 +2,6 @@ package flounder.fbos;
 
 import flounder.devices.*;
 import flounder.logger.*;
-import flounder.platform.*;
-
-import java.nio.*;
-
-import static org.lwjgl.opengl.EXTFramebufferObject.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 /**
  * A class that represents a OpenGL Frame Buffer object.
@@ -76,7 +66,7 @@ public class FBO {
 
 		this.hasGivenResolveError = false;
 
-		initializeFBO();
+		FlounderFBOs.get().initializeFBO(this);
 	}
 
 	/**
@@ -103,169 +93,9 @@ public class FBO {
 	}
 
 	/**
-	 * Initializes the FBO.
-	 */
-	private void initializeFBO() {
-		createFBO();
-		limitFBOSize();
-
-		if (!antialiased) {
-			if (useColourBuffer) {
-				for (int i = 0; i < attachments; i++) {
-					createTextureAttachment(GL_COLOR_ATTACHMENT0 + i);
-				}
-			}
-
-			if (depthBufferType == DepthBufferType.RENDER_BUFFER) {
-				createDepthBufferAttachment();
-			} else if (depthBufferType == DepthBufferType.TEXTURE) {
-				createDepthTextureAttachment();
-			}
-		} else {
-			for (int i = 0; i < attachments; i++) {
-				attachMultisampleColourBuffer(GL_COLOR_ATTACHMENT0 + i);
-			}
-
-			createDepthBufferAttachment();
-		}
-
-		unbindFrameBuffer();
-	}
-
-	private void createFBO() {
-		frameBuffer = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-		if (useColourBuffer) {
-			determineDrawBuffers();
-		} else {
-			glDrawBuffer(GL_FALSE);
-		}
-	}
-
-	private void determineDrawBuffers() {
-		IntBuffer drawBuffers = FlounderPlatform.get().createIntBuffer(attachments);
-
-		for (int i = 0; i < attachments; i++) {
-			drawBuffers.put(GL_COLOR_ATTACHMENT0 + i);
-		}
-
-		drawBuffers.flip();
-		glDrawBuffers(drawBuffers);
-	}
-
-	private void createTextureAttachment(int attachment) {
-		colourTexture[attachment - GL_COLOR_ATTACHMENT0] = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, colourTexture[attachment - GL_COLOR_ATTACHMENT0]);
-		glTexImage2D(GL_TEXTURE_2D, 0, alphaChannel ? GL_RGBA : GL_RGB, width, height, 0, alphaChannel ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linearFiltering ? GL_LINEAR : GL_NEAREST);
-
-		if (wrapTextures) {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clampEdge ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-		}
-
-		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, colourTexture[attachment - GL_COLOR_ATTACHMENT0], 0);
-	}
-
-	private void createDepthBufferAttachment() {
-		depthBuffer = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-
-		if (antialiased) {
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT24, width, height);
-		} else {
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-		}
-
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-	}
-
-	private void createDepthTextureAttachment() {
-		depthTexture = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, depthTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-	}
-
-	private void attachMultisampleColourBuffer(int attachment) {
-		colourBuffer[attachment - GL_COLOR_ATTACHMENT0] = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, colourBuffer[attachment - GL_COLOR_ATTACHMENT0]);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, alphaChannel ? GL_RGBA8 : GL_RGB8, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, colourBuffer[attachment - GL_COLOR_ATTACHMENT0]);
-	}
-
-	/**
-	 * Binds the FBO so it can be rendered too.
-	 */
-	public void bindFrameBuffer() {
-		updateSize();
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
-		glViewport(0, 0, width, height);
-	}
-
-	/**
-	 * Unbinds the FBO so that other rendering objects can be used.
-	 */
-	public void unbindFrameBuffer() {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight());
-	}
-
-	/**
-	 * Renders the colour buffer to the display.
-	 */
-	public void blitToScreen() {
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		glDrawBuffer(GL_BACK);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
-	}
-
-	/**
-	 * Blits this FBO and all attachments to another FBO.
-	 *
-	 * @param outputFBO The other FBO to blit to.
-	 */
-	public void resolveFBO(FBO outputFBO) {
-		if (this.attachments != outputFBO.attachments && this.hasGivenResolveError != outputFBO.hasGivenResolveError) {
-			this.hasGivenResolveError = true;
-			outputFBO.hasGivenResolveError = true;
-			FlounderLogger.get().log("Warning, resolving two FBO's (" + this + ", " + outputFBO + ") with different attachment sizes, be warned this may not work properly instead use resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO).");
-		}
-
-		for (int a = 0; a < attachments; a++) {
-			resolveFBO(a, a, outputFBO);
-		}
-	}
-
-	/**
-	 * Blits this FBO attachment to another FBO attachment.
-	 *
-	 * @param readBuffer The colour attachment to be read from.
-	 * @param drawBuffer The colour draw buffer to be written to.
-	 * @param outputFBO The other FBO to blit to.
-	 */
-	public void resolveFBO(int readBuffer, int drawBuffer, FBO outputFBO) {
-		outputFBO.updateSize();
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, outputFBO.frameBuffer);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-
-		glReadBuffer(GL_COLOR_ATTACHMENT0 + readBuffer);
-		glDrawBuffer(GL_COLOR_ATTACHMENT0 + drawBuffer);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, outputFBO.width, outputFBO.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-		unbindFrameBuffer();
-	}
-
-	/**
 	 * Updates the FBO size if {@code fitToScreen}.
 	 */
-	private void updateSize() {
+	public void updateSize() {
 		if (fitToScreen) {
 			int displayWidth = FlounderDisplay.get().getWidth();
 			int displayHeight = FlounderDisplay.get().getHeight();
@@ -279,18 +109,13 @@ public class FBO {
 			if (width != reverseWidth || height != reverseHeight) {
 				width = (int) (displayWidth * sizeScalar);
 				height = (int) (displayHeight * sizeScalar);
-				limitFBOSize();
+				FlounderFBOs.get().limitFBOSize(this);
 
 				delete();
 				FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
-				initializeFBO();
+				FlounderFBOs.get().initializeFBO(this);
 			}
 		}
-	}
-
-	private void limitFBOSize() {
-		width = Math.min(getMaxFBOSize(), width);
-		height = Math.min(getMaxFBOSize(), height);
 	}
 
 	public void setSizeScalar(float sizeScalar) {
@@ -338,7 +163,7 @@ public class FBO {
 		if (this.samples != samples) {
 			delete();
 			FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
-			initializeFBO();
+			FlounderFBOs.get().initializeFBO(this);
 		}
 
 		this.samples = samples;
@@ -354,7 +179,19 @@ public class FBO {
 		fitToScreen = false;
 		delete();
 		FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
-		initializeFBO();
+		FlounderFBOs.get().initializeFBO(this);
+	}
+
+	public void bindFrameBuffer() {
+		FlounderFBOs.get().bindFrameBuffer(this);
+	}
+
+	public void unbindFrameBuffer() {
+		FlounderFBOs.get().unbindFrameBuffer();
+	}
+
+	public void blitToScreen() {
+		FlounderFBOs.get().blitToScreen(this);
 	}
 
 	public float getSizeScalar() {
@@ -372,6 +209,10 @@ public class FBO {
 		return colourTexture[readBuffer];
 	}
 
+	public DepthBufferType getDepthBufferType() {
+		return depthBufferType;
+	}
+
 	/**
 	 * Gets the depth texture.
 	 *
@@ -385,18 +226,90 @@ public class FBO {
 		this.depthTexture = depthTexture;
 	}
 
-	public static int getMaxFBOSize() {
-		return glGetInteger(GL_MAX_RENDERBUFFER_SIZE_EXT);
+	public int getFrameBuffer() {
+		return frameBuffer;
+	}
+
+	public int[] getColourTexture() {
+		return colourTexture;
+	}
+
+	public int getDepthBuffer() {
+		return depthBuffer;
+	}
+
+	public int[] getColourBuffer() {
+		return colourBuffer;
+	}
+
+	public boolean isUseColourBuffer() {
+		return useColourBuffer;
+	}
+
+	public boolean isLinearFiltering() {
+		return linearFiltering;
+	}
+
+	public boolean isWrapTextures() {
+		return wrapTextures;
+	}
+
+	public boolean isClampEdge() {
+		return clampEdge;
+	}
+
+	public boolean isAlphaChannel() {
+		return alphaChannel;
+	}
+
+	public boolean isAntialiased() {
+		return antialiased;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setAttachments(int attachments) {
+		this.attachments = attachments;
+	}
+
+	public void setFitToScreen(boolean fitToScreen) {
+		this.fitToScreen = fitToScreen;
+	}
+
+	public void setFrameBuffer(int frameBuffer) {
+		this.frameBuffer = frameBuffer;
+	}
+
+	public void setColourTexture(int[] colourTexture) {
+		this.colourTexture = colourTexture;
+	}
+
+	public void setDepthBuffer(int depthBuffer) {
+		this.depthBuffer = depthBuffer;
+	}
+
+	public void setColourBuffer(int[] colourBuffer) {
+		this.colourBuffer = colourBuffer;
+	}
+
+	public boolean isHasGivenResolveError() {
+		return hasGivenResolveError;
+	}
+
+	public void setHasGivenResolveError(boolean hasGivenResolveError) {
+		this.hasGivenResolveError = hasGivenResolveError;
 	}
 
 	/**
 	 * Deletes the FBO and its attachments.
 	 */
 	public void delete() {
-		glDeleteFramebuffers(frameBuffer);
-		glDeleteTextures(colourTexture);
-		glDeleteTextures(depthTexture);
-		glDeleteRenderbuffers(depthBuffer);
-		glDeleteRenderbuffers(colourBuffer);
+		FlounderFBOs.get().delete(this);
 	}
 }

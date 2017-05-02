@@ -32,6 +32,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @param disabled If the system cursor should be disabled or hidden when not shown.
 	 */
+	@Module.MethodReplace
 	public void setCursorHidden(boolean disabled) {
 	}
 
@@ -43,6 +44,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return If the mouse button is currently pressed.
 	 */
+	@Module.MethodReplace
 	public boolean getMouse(int button) {
 		return false;
 	}
@@ -52,6 +54,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses x position.
 	 */
+	@Module.MethodReplace
 	public float getPositionX() {
 		return 0.0f;
 	}
@@ -61,10 +64,12 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses y position.
 	 */
+	@Module.MethodReplace
 	public float getPositionY() {
 		return 0.0f;
 	}
 
+	@Module.MethodReplace
 	public void setPosition(float cursorX, float cursorY) {
 	}
 
@@ -73,6 +78,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses delta x.
 	 */
+	@Module.MethodReplace
 	public float getDeltaX() {
 		return 0.0f;
 	}
@@ -82,6 +88,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses delta y.
 	 */
+	@Module.MethodReplace
 	public float getDeltaY() {
 		return 0.0f;
 	}
@@ -91,6 +98,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return The mouses wheel delta.
 	 */
+	@Module.MethodReplace
 	public float getDeltaWheel() {
 		return 0.0f;
 	}
@@ -100,6 +108,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return If the display is selected.
 	 */
+	@Module.MethodReplace
 	public boolean isDisplaySelected() {
 		return true;
 	}
@@ -109,6 +118,7 @@ public class FlounderMouse extends Module {
 	 *
 	 * @return If the cursor is hidden.
 	 */
+	@Module.MethodReplace
 	public boolean isCursorDisabled() {
 		return false;
 	}

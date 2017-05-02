@@ -81,6 +81,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return A new buffered image containing the displays data.
 	 */
+	@Module.MethodReplace
 	public BufferedImage getImage(BufferedImage destination, ByteBuffer buffer) {
 		return null;
 	}
@@ -90,10 +91,12 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The width of the display.
 	 */
+	@Module.MethodReplace
 	public int getWidth() {
 		return 0;
 	}
 
+	@Module.MethodReplace
 	public int getWindowWidth() {
 		return 0;
 	}
@@ -103,14 +106,17 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The height of the display.
 	 */
+	@Module.MethodReplace
 	public int getHeight() {
 		return 0;
 	}
 
+	@Module.MethodReplace
 	public int getWindowHeight() {
 		return 0;
 	}
 
+	@Module.MethodReplace
 	public void setWindowSize(int width, int height) {
 	}
 
@@ -119,6 +125,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The aspect ratio.
 	 */
+	@Module.MethodReplace
 	public float getAspectRatio() {
 		return 1;
 	}
@@ -128,6 +135,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The window's title.
 	 */
+	@Module.MethodReplace
 	public String getTitle() {
 		return "NULL";
 	}
@@ -137,6 +145,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If VSync is enabled.
 	 */
+	@Module.MethodReplace
 	public boolean isVSync() {
 		return false;
 	}
@@ -146,6 +155,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param vsync Weather or not to use vSync.
 	 */
+	@Module.MethodReplace
 	public void setVSync(boolean vsync) {
 	}
 
@@ -154,6 +164,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If using antialiased images.
 	 */
+	@Module.MethodReplace
 	public boolean isAntialiasing() {
 		return false;
 	}
@@ -163,6 +174,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param antialiasing If the display should antialias.
 	 */
+	@Module.MethodReplace
 	public void setAntialiasing(boolean antialiasing) {
 	}
 
@@ -171,6 +183,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return Amount of MFAA samples.
 	 */
+	@Module.MethodReplace
 	public int getSamples() {
 		return 0;
 	}
@@ -180,6 +193,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param samples The amount of MFSS samples.
 	 */
+	@Module.MethodReplace
 	public void setSamples(int samples) {
 	}
 
@@ -188,6 +202,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return Fullscreen or windowed.
 	 */
+	@Module.MethodReplace
 	public boolean isFullscreen() {
 		return false;
 	}
@@ -197,6 +212,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @param fullscreen Weather or not to be fullscreen.
 	 */
+	@Module.MethodReplace
 	public void setFullscreen(boolean fullscreen) {
 	}
 
@@ -205,6 +221,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The current GLFW window.
 	 */
+	@Module.MethodReplace
 	public long getWindow() {
 		return 0;
 	}
@@ -214,6 +231,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If the GLFW display is closed.
 	 */
+	@Module.MethodReplace
 	public boolean isClosed() {
 		return false;
 	}
@@ -223,6 +241,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return If the GLFW display is selected.
 	 */
+	@Module.MethodReplace
 	public boolean isFocused() {
 		return true;
 	}
@@ -232,6 +251,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The windows x position.
 	 */
+	@Module.MethodReplace
 	public int getWindowXPos() {
 		return 0;
 	}
@@ -241,6 +261,7 @@ public class FlounderDisplay extends Module {
 	 *
 	 * @return The windows Y position.
 	 */
+	@Module.MethodReplace
 	public int getWindowYPos() {
 		return 0;
 	}

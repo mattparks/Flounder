@@ -7,6 +7,7 @@ import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+@Module.ModuleOverride
 public class LwjglKeyboard extends FlounderKeyboard {
 	private int keyboardKeys[];
 	private int keyboardChar;

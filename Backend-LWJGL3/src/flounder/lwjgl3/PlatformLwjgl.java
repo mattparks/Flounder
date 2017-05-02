@@ -2,23 +2,54 @@ package flounder.lwjgl3;
 
 import flounder.framework.*;
 import flounder.framework.updater.*;
+import flounder.lwjgl3.devices.*;
+import flounder.lwjgl3.fbos.*;
+import flounder.lwjgl3.helpers.*;
+import flounder.lwjgl3.loaders.*;
+import flounder.lwjgl3.shaders.*;
+import flounder.lwjgl3.textures.*;
 import flounder.platform.*;
+import flounder.resources.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import java.nio.*;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class PlatformLwjgl extends IPlatform {
-	public PlatformLwjgl() {
+@Module.ModuleOverride
+public class PlatformLwjgl extends FlounderPlatform {
+	public PlatformLwjgl(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay, boolean wireframe, float anisotropyLevel) {
 		super();
+		Framework.addOverrides(
+				new LwjglDisplay(width, height, title, icons, vsync, antialiasing, samples, fullscreen, hiddenDisplay),
+				new LwjglJoysicks(),
+				new LwjglKeyboard(),
+				new LwjglMouse(),
+				new LwjglSound(),
+				new LwjglOpenGL(wireframe),
+				new LwjglFBOs(),
+				new LwjglLoaders(),
+				new LwjglShaders(),
+				new LwjglTextures(anisotropyLevel)
+		);
 	}
 
-	@Override
+	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
+		super.init();
+	}
+
+	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
+	public void update() {
+		super.update();
+	}
+
+	@Handler.Function(Handler.FLAG_PROFILE)
+	public void profile() {
+		super.profile();
 	}
 
 	@Override
@@ -96,5 +127,10 @@ public class PlatformLwjgl extends IPlatform {
 	@Override
 	public float getMaxAnisotropy() {
 		return glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+	}
+
+	@Handler.Function(Handler.FLAG_DISPOSE)
+	public void dispose() {
+		super.dispose();
 	}
 }

@@ -74,7 +74,7 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 		shader.getUniformVec2("swayOffset").loadVec2(getSwayOffsetX(), getSwayOffsetZ());
 
 		if (textureSway != null && textureSway.isLoaded()) {
-			OpenGlUtils.bindTexture(textureSway, 2);
+			FlounderOpenGL.get().bindTexture(textureSway, 2);
 		}
 	}
 

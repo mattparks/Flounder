@@ -35,6 +35,7 @@ public class FlounderKeyboard extends Module {
 	 *
 	 * @return If the key is currently pressed.
 	 */
+	@Module.MethodReplace
 	public boolean getKey(int key) {
 		return false;
 	}
@@ -44,10 +45,10 @@ public class FlounderKeyboard extends Module {
 	 *
 	 * @return The current keyboard char.
 	 */
+	@Module.MethodReplace
 	public int getKeyboardChar() {
 		return 0;
 	}
-
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {

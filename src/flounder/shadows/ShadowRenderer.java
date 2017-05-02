@@ -60,10 +60,10 @@ public class ShadowRenderer extends Renderer {
 		shadowFBO.bindFrameBuffer();
 		shader.start();
 
-		OpenGlUtils.prepareNewRenderParse(0.0f, 0.0f, 0.0f);
-		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
-		OpenGlUtils.cullBackFaces(false);
-		OpenGlUtils.enableDepthTesting();
+		FlounderOpenGL.get().prepareNewRenderParse(0.0f, 0.0f, 0.0f);
+		FlounderOpenGL.get().antialias(FlounderDisplay.get().isAntialiasing());
+		FlounderOpenGL.get().cullBackFaces(false);
+		FlounderOpenGL.get().enableDepthTesting();
 	}
 
 	private void renderEntity(Entity entity) {
@@ -83,7 +83,7 @@ public class ShadowRenderer extends Renderer {
 		final int vaoLength;
 
 		if (componentModel != null && componentModel.getModel() != null && componentModel.getModel().isLoaded()) {
-			OpenGlUtils.bindVAO(componentModel.getModel().getVaoID(), 0);
+			FlounderOpenGL.get().bindVAO(componentModel.getModel().getVaoID(), 0);
 			shader.getUniformBool("animated").loadBoolean(false);
 
 			if (componentModel.getModelMatrix() != null) {
@@ -105,7 +105,7 @@ public class ShadowRenderer extends Renderer {
 
 			vaoLength = componentModel.getModel().getVaoLength();
 		} else if (componentAnimation != null && componentAnimation.getModel() != null && componentAnimation.getModel().isLoaded()) {
-			OpenGlUtils.bindVAO(componentAnimation.getModel().getVaoID(), 0, 4, 5);
+			FlounderOpenGL.get().bindVAO(componentAnimation.getModel().getVaoID(), 0, 4, 5);
 			shader.getUniformBool("animated").loadBoolean(true);
 
 			if (componentAnimation.getModelMatrix() != null) {
@@ -133,17 +133,17 @@ public class ShadowRenderer extends Renderer {
 			shader.getUniformVec2("swayOffset").loadVec2(componentSway.getSwayOffsetX(), componentSway.getSwayOffsetZ());
 
 			if (componentSway.getTextureSway() != null && componentSway.getTextureSway().isLoaded()) {
-				OpenGlUtils.bindTexture(componentSway.getTextureSway(), 1);
+				FlounderOpenGL.get().bindTexture(componentSway.getTextureSway(), 1);
 			}
 		} else {
 			shader.getUniformBool("swaying").loadBoolean(false);
 		}
 
 		if (vaoLength > 0) {
-			OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength);
+			FlounderOpenGL.get().renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, vaoLength);
 		}
 
-		OpenGlUtils.unbindVAO(0, 4, 5);
+		FlounderOpenGL.get().unbindVAO(0, 4, 5);
 	}
 
 	private void endRendering() {

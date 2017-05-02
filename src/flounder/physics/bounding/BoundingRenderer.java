@@ -39,7 +39,7 @@ public class BoundingRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || !OpenGlUtils.isInWireframe() || FlounderBounding.get().getRenderShapes() == null) {
+		if (!shader.isLoaded() || !FlounderOpenGL.get().isInWireframe() || FlounderBounding.get().getRenderShapes() == null) {
 			return;
 		}
 
@@ -66,14 +66,14 @@ public class BoundingRenderer extends Renderer {
 		shader.getUniformMat4("viewMatrix").loadMat4(camera.getViewMatrix());
 		shader.getUniformVec4("clipPlane").loadVec4(clipPlane);
 
-		OpenGlUtils.antialias(FlounderDisplay.get().isAntialiasing());
-		OpenGlUtils.cullBackFaces(false);
-		OpenGlUtils.goWireframe(true);
-		OpenGlUtils.enableDepthTesting();
+		FlounderOpenGL.get().antialias(FlounderDisplay.get().isAntialiasing());
+		FlounderOpenGL.get().cullBackFaces(false);
+		FlounderOpenGL.get().goWireframe(true);
+		FlounderOpenGL.get().enableDepthTesting();
 	}
 
 	private void prepareModel(ModelObject model) {
-		OpenGlUtils.bindVAO(model.getVaoID(), 0, 1, 2, 3);
+		FlounderOpenGL.get().bindVAO(model.getVaoID(), 0, 1, 2, 3);
 	}
 
 	private void renderShape(ModelObject model, Collider shape) {
@@ -92,11 +92,11 @@ public class BoundingRenderer extends Renderer {
 		shader.getUniformMat4("modelMatrix").loadMat4(MODEL_MATRIX_REUSABLE);
 		shader.getUniformVec3("colour").loadVec3(shape.getRenderColour(COLOUR_REUSABLE));
 
-		OpenGlUtils.renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, model.getVaoLength());
+		FlounderOpenGL.get().renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, model.getVaoLength());
 	}
 
 	private void unbindModel() {
-		OpenGlUtils.unbindVAO(0, 1, 2, 3);
+		FlounderOpenGL.get().unbindVAO(0, 1, 2, 3);
 	}
 
 	private void endRendering() {

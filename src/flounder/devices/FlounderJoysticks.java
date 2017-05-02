@@ -34,6 +34,7 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return If the joystick is connected.
 	 */
+	@Module.MethodReplace
 	public boolean isConnected(int joystick) {
 		return false;
 	}
@@ -45,6 +46,7 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return The joysticks name.
 	 */
+	@Module.MethodReplace
 	public String getName(int joystick) {
 		return "NULL";
 	}
@@ -57,6 +59,7 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return The value of the joystick's axis.
 	 */
+	@Module.MethodReplace
 	public float getAxis(int joystick, int axis) {
 		return 0.0f;
 	}
@@ -69,6 +72,7 @@ public class FlounderJoysticks extends Module {
 	 *
 	 * @return Whether a button on a joystick is pressed.
 	 */
+	@Module.MethodReplace
 	public boolean getButton(int joystick, int button) {
 		return false;
 	}

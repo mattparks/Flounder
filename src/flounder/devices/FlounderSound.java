@@ -144,8 +144,9 @@ public class FlounderSound extends Module {
 	 *
 	 * @return A new sound source.
 	 */
+	@Module.MethodReplace
 	public SoundSource createPlatformSource() {
-		return null; // OVERRIDE
+		return null;
 	}
 
 	/**
@@ -156,8 +157,9 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The OpenAL format ID of the sound data.
 	 */
+	@Module.MethodReplace
 	public int getOpenAlFormat(int channels, int bitsPerSample) {
-		return -1; // OVERRIDE
+		return -1;
 	}
 
 	/**
@@ -168,8 +170,9 @@ public class FlounderSound extends Module {
 	 * @param format The OpenAL format of the data (mono, stereo, etc.)
 	 * @param sampleRate The sample rate of the audio.
 	 */
+	@Module.MethodReplace
 	public void loadSoundDataIntoBuffer(int bufferID, ByteBuffer data, int format, int sampleRate) {
-		// OVERRIDE
+
 	}
 
 	/**
@@ -177,8 +180,9 @@ public class FlounderSound extends Module {
 	 *
 	 * @return The ID of the buffer.
 	 */
+	@Module.MethodReplace
 	public int generateBuffer() {
-		return -1; // OVERRIDE
+		return -1;
 	}
 
 	/**
@@ -186,8 +190,9 @@ public class FlounderSound extends Module {
 	 *
 	 * @param bufferID The ID of the buffer to be deleted.
 	 */
+	@Module.MethodReplace
 	public void deleteBuffer(Integer bufferID) {
-		// OVERRIDE
+
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
