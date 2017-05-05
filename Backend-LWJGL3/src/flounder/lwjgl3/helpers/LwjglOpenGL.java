@@ -171,6 +171,16 @@ public class LwjglOpenGL extends FlounderOpenGL {
 	}
 
 	@Override
+	public void enable(int gl) {
+		glEnable(gl);
+	}
+
+	@Override
+	public void disable(int gl) {
+		glDisable(gl);
+	}
+
+	@Override
 	public void bindTexture(TextureObject texture, int bankID) {
 		if (texture == null || texture.getTextureID() == -1) {
 			return;

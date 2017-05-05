@@ -140,6 +140,16 @@ public class FlounderOpenGL extends Module {
 	public void unbindVAO(int... attributes) {
 	}
 
+	@Module.MethodReplace
+	public void enable(int gl) {
+
+	}
+
+	@Module.MethodReplace
+	public void disable(int gl) {
+
+	}
+
 	/**
 	 * Binds a OpenGL texture to a blank ID.
 	 *

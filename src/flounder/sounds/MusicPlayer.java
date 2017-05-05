@@ -37,9 +37,11 @@ public class MusicPlayer {
 	 */
 	public MusicPlayer() {
 		source = FlounderSound.get().createPlatformSource();
-		source.pause();
-		source.loop(false);
-		source.setUndiminishing();
+		if (source != null) {
+			source.pause();
+			source.loop(false);
+			source.setUndiminishing();
+		}
 		musicQueue = new ArrayList<>();
 		currentPlaylist = null;
 		currentlyPlaying = null;
