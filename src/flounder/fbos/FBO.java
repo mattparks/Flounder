@@ -109,10 +109,10 @@ public class FBO {
 			if (width != reverseWidth || height != reverseHeight) {
 				int newWidth = (int) (displayWidth * sizeScalar);
 				int newHeight = (int) (displayHeight * sizeScalar);
-				if (newWidth < FlounderFBOs.get().getMaxFBOSize() && newHeight < FlounderFBOs.get().getMaxFBOSize()) { // TODO: Fix this ghetto way of fixing the creation of millions of FBOs on old PCs.
+			//	if (newWidth < FlounderFBOs.get().getMaxFBOSize() && newHeight < FlounderFBOs.get().getMaxFBOSize()) { // TODO: Fix this ghetto way of fixing the creation of millions of FBOs on old PCs.
 					width = newWidth;
 					height = newHeight;
-				}
+			//	}
 				FlounderFBOs.get().limitFBOSize(this);
 
 				delete();
