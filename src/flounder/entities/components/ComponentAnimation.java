@@ -201,7 +201,9 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	 * @param jointMatrices The matrices transformation to add with.
 	 */
 	private void addJointsToArray(Joint headJoint, Matrix4f[] jointMatrices) {
-		jointMatrices[headJoint.getIndex()] = headJoint.getAnimatedTransform();
+		if (headJoint.getIndex() < jointMatrices.length) {
+			jointMatrices[headJoint.getIndex()] = headJoint.getAnimatedTransform();
+		}
 
 		for (Joint childJoint : headJoint.getChildren()) {
 			addJointsToArray(childJoint, jointMatrices);
