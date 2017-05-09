@@ -7,6 +7,7 @@ import flounder.logger.*;
 import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.resources.*;
+import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
@@ -42,6 +43,7 @@ public class LwjglDisplay extends FlounderDisplay {
 	private int windowPosX;
 	private int windowPosY;
 
+	private GLFWErrorCallback errorCallback;
 	private GLFWWindowCloseCallback callbackWindowClose;
 	private GLFWWindowFocusCallback callbackWindowFocus;
 	private GLFWWindowPosCallback callbackWindowPos;
@@ -84,10 +86,14 @@ public class LwjglDisplay extends FlounderDisplay {
 
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
+        // Set the error callback.errorCallback
+		this.errorCallback = GLFWErrorCallback.createPrint(System.err);
+		glfwSetErrorCallback(errorCallback);
+
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
 			FlounderLogger.get().error("Could not init GLFW!");
-			System.exit(-1);
+			Framework.requestClose(true);
 		}
 
 		// Gets the video mode from the primary monitor.
@@ -126,7 +132,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		if (window == NULL) {
 			FlounderLogger.get().error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL 3.0!");
 			glfwTerminate();
-			System.exit(-1);
+			Framework.requestClose(true);
 		}
 
 		// Creates the OpenGL context.
@@ -137,6 +143,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		} catch (IOException e) {
 			FlounderLogger.get().error("Could not load custom display icon!");
 			FlounderLogger.get().exception(e);
+			Framework.requestClose(true);
 		}
 
 		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
@@ -149,7 +156,7 @@ public class LwjglDisplay extends FlounderDisplay {
 			FlounderLogger.get().error("OpenGL Capability Error: " + glError);
 			glfwDestroyWindow(window);
 			glfwTerminate();
-			System.exit(-1);
+			Framework.requestClose(true);
 		}
 
 		// Enables VSync if requested.
@@ -176,7 +183,7 @@ public class LwjglDisplay extends FlounderDisplay {
 			@Override
 			public void invoke(long window) {
 				closed = true;
-				Framework.requestClose();
+				Framework.requestClose(false);
 			}
 		});
 
@@ -220,9 +227,10 @@ public class LwjglDisplay extends FlounderDisplay {
 		FlounderLogger.get().log("===== This is not an error message, it is a system info log. =====");
 		FlounderLogger.get().log("Flounder Engine Version: " + Framework.getVersion().getVersion());
 		FlounderLogger.get().log("Flounder Operating System: " + System.getProperty("os.name"));
+		FlounderLogger.get().log("Flounder LWJGL Version: " + org.lwjgl.Version.getVersion());
 		FlounderLogger.get().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
-		FlounderLogger.get().log("Flounder Is OpenGL Modern: " + FlounderOpenGL.get().isModern());
 		FlounderLogger.get().log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
+		FlounderLogger.get().log("Flounder Is OpenGL Modern: " + FlounderOpenGL.get().isModern());
 		FlounderLogger.get().log("Flounder Available Processors (cores): " + Runtime.getRuntime().availableProcessors());
 		FlounderLogger.get().log("Flounder Free Memory (bytes): " + Runtime.getRuntime().freeMemory());
 		FlounderLogger.get().log("Flounder Maximum Memory (bytes): " + (Runtime.getRuntime().maxMemory() == Long.MAX_VALUE ? "Unlimited" : Runtime.getRuntime().maxMemory()));
@@ -460,6 +468,7 @@ public class LwjglDisplay extends FlounderDisplay {
 	public void dispose() {
 		super.dispose();
 
+		errorCallback.free();
 		callbackWindowClose.free();
 		callbackWindowFocus.free();
 		callbackWindowPos.free();
