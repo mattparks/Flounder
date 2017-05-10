@@ -113,13 +113,14 @@ public class LwjglDisplay extends FlounderDisplay {
 
 		// For new GLFW, and macOS.
 		if (glfwMajor >= 3 && glfwMinor >= 2) {
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		}
 
-		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
-		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // The window will be resizable depending on if its createDisplay.
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // The window will stay hidden until after creation.
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // The window will be resizable depending on if its createDisplay.
 		glfwWindowHint(GLFW_STENCIL_BITS, 8); // Fixes 16 bit stencil bits in macOS.
+		glfwWindowHint(GLFW_STEREO, GLFW_FALSE); // No stereo view!
 
 		// Use FBO antialiasing instead!
 		//if (samples > 0) {
