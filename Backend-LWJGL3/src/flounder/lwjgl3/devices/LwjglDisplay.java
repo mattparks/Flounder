@@ -24,6 +24,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 @Module.ModuleOverride
 public class LwjglDisplay extends FlounderDisplay {
+	private int glfwMajor;
+	private int glfwMinor;
+
 	private int windowWidth;
 	private int windowHeight;
 	private int fullscreenWidth;
@@ -51,11 +54,14 @@ public class LwjglDisplay extends FlounderDisplay {
 	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
 	public LwjglDisplay() {
-		this(1080, 720, "Flounder Engine", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, false, true, 0, false, false);
+		this(3, 0, 1080, 720, "Flounder Engine", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, false, true, 0, false, false);
 	}
 
-	public LwjglDisplay(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay) {
+	public LwjglDisplay(int glfwMajor, int glfwMinor, int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay) {
 		super();
+		this.glfwMajor = glfwMajor;
+		this.glfwMinor = glfwMinor;
+
 		this.windowWidth = width;
 		this.windowHeight = height;
 		this.title = title;
@@ -102,10 +108,18 @@ public class LwjglDisplay extends FlounderDisplay {
 
 		// Configures the window.
 		glfwDefaultWindowHints();
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glfwMajor);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glfwMinor);
+
+		// For new GLFW, and macOS.
+		if (glfwMajor >= 3 && glfwMinor >= 2) {
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		}
+
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // The window will stay hidden until after creation.
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // The window will be resizable depending on if its createDisplay.
+		glfwWindowHint(GLFW_STENCIL_BITS, 8); // Fixes 16 bit stencil bits in macOS.
 
 		// Use FBO antialiasing instead!
 		//if (samples > 0) {
@@ -130,7 +144,7 @@ public class LwjglDisplay extends FlounderDisplay {
 
 		// Gets any window errors.
 		if (window == NULL) {
-			FlounderLogger.get().error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL 3.0!");
+			FlounderLogger.get().error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL " + glfwMajor + "." + glfwMinor + "!");
 			glfwTerminate();
 			Framework.requestClose(true);
 		}
@@ -225,9 +239,10 @@ public class LwjglDisplay extends FlounderDisplay {
 		FlounderLogger.get().log("If you are getting errors, please write a description of how you get the error, and copy this log: https://github.com/Equilibrium-Games/Flounder-Engine/issues");
 		FlounderLogger.get().log("");
 		FlounderLogger.get().log("===== This is not an error message, it is a system info log. =====");
-		FlounderLogger.get().log("Flounder Engine Version: " + Framework.getVersion().getVersion());
+		FlounderLogger.get().log("Flounder Framework Version: " + Framework.getVersion().getVersion());
 		FlounderLogger.get().log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.get().log("Flounder LWJGL Version: " + org.lwjgl.Version.getVersion());
+		FlounderLogger.get().log("Flounder GLFW Version: " + glfwGetVersionString());
 		FlounderLogger.get().log("Flounder OpenGL Version: " + glGetString(GL_VERSION));
 		FlounderLogger.get().log("Flounder OpenGL Vendor: " + glGetString(GL_VENDOR));
 		FlounderLogger.get().log("Flounder Is OpenGL Modern: " + FlounderOpenGL.get().isModern());

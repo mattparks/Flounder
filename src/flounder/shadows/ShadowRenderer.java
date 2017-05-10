@@ -71,6 +71,8 @@ public class ShadowRenderer extends Renderer {
 			return;
 		}
 
+		// TODO: Update this cancer.
+
 		ComponentModel componentModel = (ComponentModel) entity.getComponent(ComponentModel.class);
 		ComponentAnimation componentAnimation = (ComponentAnimation) entity.getComponent(ComponentAnimation.class);
 		ComponentSway componentSway = (ComponentSway) entity.getComponent(ComponentSway.class);
@@ -120,8 +122,10 @@ public class ShadowRenderer extends Renderer {
 			// Loads joint transforms.
 			Matrix4f[] jointMatrices = componentAnimation.getJointTransforms();
 
-			for (int i = 0; i < jointMatrices.length; i++) {
-				shader.getUniformMat4("jointTransforms[" + i + "]").loadMat4(jointMatrices[i]);
+			if (jointMatrices != null) {
+				for (int i = 0; i < jointMatrices.length; i++) {
+					shader.getUniformMat4("jointTransforms[" + i + "]").loadMat4(jointMatrices[i]);
+				}
 			}
 		} else {
 			// No model, so no render!

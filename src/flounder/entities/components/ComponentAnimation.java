@@ -36,6 +36,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	private Colour colourOffset;
 
 	private Animator animator;
+	private Matrix4f[] jointMatrices;
 
 	private MyFile editorPathCollada;
 	private MyFile editorPathTexture;
@@ -76,6 +77,8 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 
 		this.texture = texture;
 		this.textureIndex = textureIndex;
+
+		this.jointMatrices = null;
 
 		this.colourOffset = new Colour();
 
@@ -141,6 +144,14 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 			}
 		}
 
+		// Update matrices.
+		if (jointMatrices == null || jointMatrices.length != model.getSkeletonData().getJointCount()) {
+			jointMatrices = new Matrix4f[model.getSkeletonData().getJointCount()];
+		}
+
+		addJointsToArray(model.getHeadJoint(), jointMatrices);
+
+		// Render collada shape.
 		FlounderBounding.get().addShapeRender(collider);
 	}
 
@@ -188,8 +199,6 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	 * @return The array of model-space transforms of the joints in the current animation pose.
 	 */
 	public Matrix4f[] getJointTransforms() {
-		Matrix4f[] jointMatrices = new Matrix4f[model.getSkeletonData().getJointCount()];
-		addJointsToArray(model.getHeadJoint(), jointMatrices);
 		return jointMatrices;
 	}
 
@@ -299,8 +308,10 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 			// Loads joint transforms.
 			Matrix4f[] jointMatrices = getJointTransforms();
 
-			for (int i = 0; i < jointMatrices.length; i++) {
-				shader.getUniformMat4("jointTransforms[" + i + "]").loadMat4(jointMatrices[i]);
+			if (jointMatrices != null) {
+				for (int i = 0; i < jointMatrices.length; i++) {
+					shader.getUniformMat4("jointTransforms[" + i + "]").loadMat4(jointMatrices[i]);
+				}
 			}
 		}
 
