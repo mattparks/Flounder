@@ -19,7 +19,7 @@ layout(location = 2) out vec4 out_extras;
 
 //---------MAIN------------
 void main(void) {
-    vec3 cubemapColour =  texture(cubeMap, pass_textureCoords).rgb;
+    vec3 cubemapColour = texture(cubeMap, pass_textureCoords).rgb;
 
 	if (polygonMode) {
 		cubemapColour = vec3(1.0, 0.0, 0.0);

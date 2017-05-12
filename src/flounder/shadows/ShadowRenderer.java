@@ -5,7 +5,9 @@ import flounder.devices.*;
 import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
+import flounder.framework.*;
 import flounder.helpers.*;
+import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
@@ -37,19 +39,21 @@ public class ShadowRenderer extends Renderer {
 
 	@Override
 	public void renderObjects(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || camera == null) {
+		if (!shader.isLoaded() || camera == null || FlounderShadows.get().getShadowDarkness() < 0.07f) {
 			return;
 		}
 
-		prepareRendering(clipPlane, camera);
+		if (FlounderShadows.get().renderNow()) {
+			prepareRendering(clipPlane, camera);
 
-		if (FlounderEntities.get().getEntities() != null) {
-			for (Entity entity : FlounderEntities.get().getEntities().getAll()) {
-				renderEntity(entity);
+			if (FlounderEntities.get().getEntities() != null) {
+				for (Entity entity : FlounderEntities.get().getEntities().getAll()) {
+					renderEntity(entity);
+				}
 			}
-		}
 
-		endRendering();
+			endRendering();
+		}
 	}
 
 	private void prepareRendering(Vector4f clipPlane, Camera camera) {

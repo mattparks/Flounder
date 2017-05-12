@@ -30,7 +30,7 @@ public abstract class ModelLoadManual {
 	 *
 	 * @return The manual model texture.
 	 */
-	public abstract float[] getTextureCoords();
+	public abstract float[] getTextures();
 
 	/**
 	 * Gets the manual model normals.

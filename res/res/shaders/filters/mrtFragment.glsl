@@ -104,14 +104,18 @@ void main(void) {
     out_colour = albedo;
 
     if (!ignoreLighting) {
-        // Shadow mapping.
-        vec4 shadowCoords = shadowSpaceMatrix * worldPosition;
-        float distanceAway = length(positionRelativeToCam.xyz);
-        distanceAway = distanceAway - ((shadowDistance * 2.0) - shadowTransition);
-        distanceAway = distanceAway / shadowTransition;
-        shadowCoords.w = clamp(1.0 - distanceAway, 0.0, 1.0);
+        out_colour = vec4(out_colour.rgb, 1.0);
 
-        out_colour = vec4(out_colour.rgb * shadow(shadowMap, shadowCoords, shadowMapSize), 1.0);
+        // Shadow mapping.
+        if (shadowDarkness >= 0.07) {
+            vec4 shadowCoords = shadowSpaceMatrix * worldPosition;
+            float distanceAway = length(positionRelativeToCam.xyz);
+            distanceAway = distanceAway - ((shadowDistance * 2.0) - shadowTransition);
+            distanceAway = distanceAway / shadowTransition;
+            shadowCoords.w = clamp(1.0 - distanceAway, 0.0, 1.0);
+
+            out_colour *= shadow(shadowMap, shadowCoords, shadowMapSize);
+        }
 
         // Surface lighting.
         vec3 totalDiffuse = vec3(0.0);

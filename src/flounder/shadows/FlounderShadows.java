@@ -3,6 +3,7 @@ package flounder.shadows;
 import flounder.camera.*;
 import flounder.entities.*;
 import flounder.framework.*;
+import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.profiling.*;
@@ -27,6 +28,10 @@ public class FlounderShadows extends Module {
 	private Matrix4f offset;
 
 	private ShadowBox shadowBox;
+
+	private boolean renderUnlimited;
+	private Timer timerRender;
+	private boolean renderNow;
 
 	public FlounderShadows() {
 		super(FlounderCamera.class, FlounderEntities.class);
@@ -53,6 +58,10 @@ public class FlounderShadows extends Module {
 		this.offset = createOffset();
 
 		this.shadowBox = new ShadowBox(lightViewMatrix);
+
+		this.renderUnlimited = true;
+		this.timerRender = new Timer(1.0 / 24.0);
+		this.renderNow = true;
 	}
 
 	/**
@@ -103,11 +112,19 @@ public class FlounderShadows extends Module {
 
 	@Handler.Function(Handler.FLAG_RENDER)
 	public void update() {
-		shadowBox.update(FlounderCamera.get().getCamera());
-		updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
-		updateLightViewMatrix(lightPosition, shadowBox.getCenter());
-		Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
-		Matrix4f.multiply(offset, projectionViewMatrix, shadowMapSpaceMatrix);
+		// Renders when needed.
+		if (timerRender.isPassedTime() || renderUnlimited) {
+			// Resets the timer.
+			timerRender.resetStartTime();
+
+			shadowBox.update(FlounderCamera.get().getCamera());
+			updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
+			updateLightViewMatrix(lightPosition, shadowBox.getCenter());
+			Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
+			Matrix4f.multiply(offset, projectionViewMatrix, shadowMapSpaceMatrix);
+
+			renderNow = true;
+		}
 	}
 
 	@Handler.Function(Handler.FLAG_PROFILE)
@@ -217,6 +234,23 @@ public class FlounderShadows extends Module {
 		return this.lightViewMatrix;
 	}
 
+	public boolean isRenderUnlimited() {
+		return renderUnlimited;
+	}
+
+	public void setRenderUnlimited(boolean renderUnlimited) {
+		this.renderUnlimited = renderUnlimited;
+	}
+
+	protected boolean renderNow() {
+		if (renderNow) {
+			renderNow = false;
+			return true;
+		} else {
+			renderNow = false;
+			return false;
+		}
+	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {

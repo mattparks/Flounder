@@ -42,7 +42,7 @@ public class ModelFactory extends Factory {
 
 		if (((ModelBuilder) builder).getManual() != null) {
 			ModelLoadManual m = b.getManual();
-			o.loadData(m.getVertices(), m.getTextureCoords(), m.getNormals(), m.getTangents(), m.getIndices(), m.isSmoothShading(), m.getAABB(), name, b.getFile());
+			o.loadData(m.getVertices(), m.getTextures(), m.getNormals(), m.getTangents(), m.getIndices(), m.isSmoothShading(), m.getAABB(), name, b.getFile());
 		} else if (((ModelBuilder) builder).getFile() != null) {
 			loadOBJ(o, b.getFile(), name);
 		}
