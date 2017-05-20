@@ -14,6 +14,7 @@ public class FlounderFonts extends Module {
 
 	public static final FontType ARIAL = new FontType(new MyFile(MyFile.RES_FOLDER, "fonts", "arial.png"), new MyFile(MyFile.RES_FOLDER, "fonts", "arial.fnt"));
 	public static final FontType BERLIN_SANS = new FontType(new MyFile(MyFile.RES_FOLDER, "fonts", "berlinSans.png"), new MyFile(MyFile.RES_FOLDER, "fonts", "berlinSans.fnt"));
+	public static final FontType CAFE_FRANCOISE = new FontType(new MyFile(MyFile.RES_FOLDER, "fonts", "cafefrancoise.png"), new MyFile(MyFile.RES_FOLDER, "fonts", "cafefrancoise.fnt"));
 	public static final FontType CANDARA = new FontType(new MyFile(MyFile.RES_FOLDER, "fonts", "candara.png"), new MyFile(MyFile.RES_FOLDER, "fonts", "candara.fnt"));
 	public static final FontType SEGOE = new FontType(new MyFile(MyFile.RES_FOLDER, "fonts", "segoe.png"), new MyFile(MyFile.RES_FOLDER, "fonts", "segoe.fnt"));
 
