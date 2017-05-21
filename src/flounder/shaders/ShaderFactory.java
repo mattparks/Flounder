@@ -72,7 +72,9 @@ public class ShaderFactory extends Factory {
 	}
 
 	private StringBuilder processShaderLine(String line, List<Pair<String, String>> constantValues, List<String> layoutLocations, List<String> layoutBindings, List<Pair<Uniform.Uniforms, String>> shaderUniforms, int shaderType) {
-		if (line.contains("#include")) {
+		if (line.contains("#version")) {
+			return new StringBuilder(FlounderShaders.get().getVersion());
+		} else if (line.contains("#include")) {
 			String included = line.replaceAll("\\s+", "").replaceAll("\"", "");
 			included = included.substring("#include".length(), included.length());
 			MyFile includeFile = new MyFile(FlounderShaders.SHADERS_LOC, included);

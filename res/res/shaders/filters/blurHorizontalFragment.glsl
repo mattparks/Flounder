@@ -1,4 +1,4 @@
-#version 130
+#version
 
 //---------IN------------
 in vec2 pass_textureCoords;

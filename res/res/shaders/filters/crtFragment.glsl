@@ -1,4 +1,4 @@
-#version 130
+#version
 
 //---------IN------------
 in vec2 pass_textureCoords;
@@ -37,7 +37,7 @@ void main(void) {
 	tc.y += 0.5;
 
 	// Get texel, and add in scanline if need be
-	vec4 colour = texture2D(originalTexture, vec2(tc.x, tc.y));
+	vec4 colour = texture(originalTexture, vec2(tc.x, tc.y));
 	colour.rgb += sin((tc.y + moveTime) * scanLineSize) * scanIntensity;
 
 	// Cutoff

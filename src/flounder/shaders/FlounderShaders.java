@@ -48,6 +48,11 @@ public class FlounderShaders extends Module {
 		return this.loaded;
 	}
 
+	@Module.MethodReplace
+	public String getVersion() {
+		return "#version 110";
+	}
+
 	/**
 	 * Loads a shader into memory.
 	 *

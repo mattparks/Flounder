@@ -1,4 +1,4 @@
-#version 130
+#version
 
 //---------CONSTANT------------
 const float exposure = 1.3;

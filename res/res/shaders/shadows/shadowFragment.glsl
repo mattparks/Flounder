@@ -1,4 +1,4 @@
-#version 130
+#version
 
 //---------OUT------------
 out vec4 out_colour;

@@ -1,4 +1,4 @@
-#version 130
+#version
 
 //---------IN------------
 in vec2 pass_textureCoords;
@@ -15,13 +15,13 @@ const float FXAA_REDUCE_MIN = (1.0 / 128.0);
 const float FXAA_REDUCE_MUL = (1.0 / 8.0);
 
 //---------APPLY FXAA------------
-vec4 applyFXAA(sampler2D texture, vec2 fragCoord, vec2 resolution) {
+vec4 applyFXAA(sampler2D original, vec2 fragCoord, vec2 resolution) {
 	vec2 inverseResolution = vec2(1.0 / resolution.x, 1.0 / resolution.y);
-	vec3 rgbNW = texture2D(texture, fragCoord + vec2(-1.0, -1.0) * inverseResolution).xyz;
-	vec3 rgbNE = texture2D(texture, fragCoord + vec2(1.0, -1.0) * inverseResolution).xyz;
-	vec3 rgbSW = texture2D(texture, fragCoord + vec2(-1.0, 1.0) * inverseResolution).xyz;
-	vec3 rgbSE = texture2D(texture, fragCoord + vec2(1.0, 1.0) * inverseResolution).xyz;
-	vec3 rgbM = texture2D(texture, fragCoord * inverseResolution).xyz;
+	vec3 rgbNW = texture(original, fragCoord + vec2(-1.0, -1.0) * inverseResolution).rgb;
+	vec3 rgbNE = texture(original, fragCoord + vec2(1.0, -1.0) * inverseResolution).rgb;
+	vec3 rgbSW = texture(original, fragCoord + vec2(-1.0, 1.0) * inverseResolution).rgb;
+	vec3 rgbSE = texture(original, fragCoord + vec2(1.0, 1.0) * inverseResolution).rgb;
+	vec3 rgbM = texture(original, fragCoord * inverseResolution).rgb;
 
 	vec3 luma = vec3(0.299, 0.587, 0.114);
 	float lumaNW = dot(rgbNW, luma);
@@ -43,8 +43,8 @@ vec4 applyFXAA(sampler2D texture, vec2 fragCoord, vec2 resolution) {
 
 	dir = min(vec2(spanMax,  spanMax), max(vec2(-spanMax, -spanMax), dir * rcpDirMin)) * inverseResolution;
 
-  	vec3 rgbA = (1.0/2.0) * (texture2D(texture, fragCoord.xy + dir * (1.0/3.0 - 0.5)).xyz + texture2D(texture, fragCoord.xy + dir * (2.0/3.0 - 0.5)).xyz);
-  	vec3 rgbB = rgbA * (1.0/2.0) + (1.0/4.0) * (texture2D(texture, fragCoord.xy + dir * (0.0/3.0 - 0.5)).xyz + texture2D(texture, fragCoord.xy + dir * (3.0/3.0 - 0.5)).xyz);
+  	vec3 rgbA = (1.0/2.0) * (texture(original, fragCoord.xy + dir * (1.0/3.0 - 0.5)).xyz + texture(original, fragCoord.xy + dir * (2.0/3.0 - 0.5)).xyz);
+  	vec3 rgbB = rgbA * (1.0/2.0) + (1.0/4.0) * (texture(original, fragCoord.xy + dir * (0.0/3.0 - 0.5)).xyz + texture(original, fragCoord.xy + dir * (3.0/3.0 - 0.5)).xyz);
   	float lumaB = dot(rgbB, luma);
 
 	if ((lumaB < lumaMin) || (lumaB > lumaMax)) {

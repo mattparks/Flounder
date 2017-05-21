@@ -1,4 +1,4 @@
-#version 130
+#version
 
 //---------IN------------
 layout(location = 0) in vec2 position;

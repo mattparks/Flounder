@@ -1,4 +1,4 @@
-#version 130
+#version
 
 //---------IN------------
 flat in vec3 pass_surfaceNormal;

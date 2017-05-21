@@ -1,4 +1,4 @@
-mat2 inverse(mat2 m) {
+/*mat2 inverse(mat2 m) {
 	mat2 adj;
 	adj[0][0] = m[1][1];
 	adj[0][1] = -m[0][1];
@@ -71,7 +71,7 @@ mat4 inverse(mat4 m) {
 	float det = (+m[0][0] * adj[0][0] + m[0][1] * adj[1][0] + m[0][2] * adj[2][0] + m[0][3] * adj[3][0]);
 
 	return adj / det;
-}
+}*/
 
 mat4 rotationMatrix(float angle, float xAxis, float yAxis, float zAxis) {
 	vec3 axis = normalize(vec3(xAxis, yAxis, zAxis));

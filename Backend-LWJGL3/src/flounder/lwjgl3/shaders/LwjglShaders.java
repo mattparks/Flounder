@@ -5,6 +5,7 @@ import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.platform.*;
 import flounder.shaders.*;
 
 import java.lang.reflect.*;
@@ -34,6 +35,11 @@ public class LwjglShaders extends FlounderShaders {
 	}
 
 	@Override
+	public String getVersion() {
+		return FlounderPlatform.get().getPlatform().equals(Platform.MACOS) ? "#version 150 core" : "#version 130";
+	}
+
+	@Override
 	public void loadShader(ShaderBuilder builder, ShaderObject object) {
 		int programID = glCreateProgram();
 
@@ -44,7 +50,7 @@ public class LwjglShaders extends FlounderShaders {
 
 			if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 				FlounderLogger.get().error(glGetShaderInfoLog(shaderID, 500));
-				throw new RuntimeException("Could not compile shader " + object.getName() + ", type=" + type);
+				throw new RuntimeException("Could not compile shader " + object.getName() + ", type=" + type.toString());
 			}
 
 			type.setShaderProgramID(shaderID);
