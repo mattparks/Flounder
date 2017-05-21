@@ -24,7 +24,7 @@ public class PlatformLwjgl extends FlounderPlatform {
 	public PlatformLwjgl(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay, boolean wireframe, float anisotropyLevel) {
 		super();
 		Framework.addOverrides(
-				new LwjglDisplay(3, getPlatform().equals(Platform.MACOS) ? 3 : 0, width, height, title, icons, vsync, antialiasing, samples, fullscreen, hiddenDisplay),
+				new LwjglDisplay(3, getPlatform().equals(Platform.MACOS) ? 3 : 2, width, height, title, icons, vsync, antialiasing, samples, fullscreen, hiddenDisplay),
 				new LwjglJoysicks(),
 				new LwjglKeyboard(),
 				new LwjglMouse(),

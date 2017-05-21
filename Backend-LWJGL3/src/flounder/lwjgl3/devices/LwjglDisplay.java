@@ -113,7 +113,7 @@ public class LwjglDisplay extends FlounderDisplay {
 
 		// For new GLFW, and macOS.
 		if (glfwMajor >= 3 && glfwMinor >= 2) {
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		}
 
