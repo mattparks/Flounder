@@ -2,7 +2,6 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.fonts.*;
-import flounder.guis.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
@@ -25,7 +24,7 @@ public class OverlayStartup extends ScreenObject {
 		this.logo = new GuiObject(this, new Vector2f(0.5f, 0.5f), new Vector2f(0.4f, 0.4f), TextureFactory.newBuilder().setFile(new MyFile(FlounderGuis.GUIS_LOC, "equilibrium_games.png")).create(), 1);
 		this.logo.setInScreenCoords(true);
 
-		this.text = new TextObject(this, new Vector2f(0.5f, 0.82f), "Copyright 2014-2017 Equilibrium Games. All rights reserved. This product uses LWJGL and Steamworks4J, along with technologies from The Khronos Group Inc.", 1.32f, FlounderFonts.CAFE_FRANCOISE, 0.6f, GuiAlign.CENTRE);
+		this.text = new TextObject(this, new Vector2f(0.5f, 0.82f), " Copyright (C) 2017, Equilibrium Games - All Rights Reserved. This product uses LWJGL and Steamworks4J, along with technologies from The Khronos Group Inc.", 1.32f, FlounderFonts.CAFE_FRANCOISE, 0.6f, GuiAlign.CENTRE);
 		this.text.setColour(new Colour(1.0f, 1.0f, 1.0f));
 
 		this.starting = true;

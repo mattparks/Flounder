@@ -79,7 +79,7 @@ public class TextLoader {
 			}
 
 			Character character = metaData.getCharacter(ascii);
-			currentWord.addCharacter(character);
+			currentWord.addCharacter(character, c);
 		}
 
 		completeStructure(lines, currentLine, currentWord, text);

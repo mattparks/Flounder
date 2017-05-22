@@ -23,10 +23,11 @@ public class Word {
 	 * Adds a character to the end of the current word and increases the screen-space width of the word.
 	 *
 	 * @param character The character to be added.
+	 * @param c The original character.
 	 */
-	protected void addCharacter(Character character) {
+	protected void addCharacter(Character character, char c) {
 		if (character == null) {
-			FlounderLogger.get().error("Invalid character detected!");
+			FlounderLogger.get().error("Invalid character detected: " + c);
 			return;
 		}
 

@@ -7,7 +7,6 @@ import flounder.logger.*;
 import flounder.platform.*;
 import flounder.profiling.*;
 import flounder.resources.*;
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 
 import javax.imageio.*;
@@ -92,7 +91,7 @@ public class LwjglDisplay extends FlounderDisplay {
 
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
-        // Set the error callback.errorCallback
+		// Set the error callback.errorCallback
 		this.errorCallback = GLFWErrorCallback.createPrint(System.err);
 		glfwSetErrorCallback(errorCallback);
 
@@ -235,6 +234,10 @@ public class LwjglDisplay extends FlounderDisplay {
 				glViewport(0, 0, width, height);
 			}
 		});
+
+		// Clears the display.
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// System logs.
 		FlounderLogger.get().log("If you are getting errors, please write a description of how you get the error, and copy this log: https://github.com/Equilibrium-Games/Flounder-Engine/issues");

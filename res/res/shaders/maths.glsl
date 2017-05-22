@@ -1,4 +1,4 @@
-/*mat2 inverse(mat2 m) {
+mat2 finverse(mat2 m) {
 	mat2 adj;
 	adj[0][0] = m[1][1];
 	adj[0][1] = -m[0][1];
@@ -8,7 +8,7 @@
 	return adj / det;
 }
 
-mat3 inverse(mat3 m) {
+mat3 finverse(mat3 m) {
 	mat3 adj;
 	adj[0][0] = +(m[1][1] * m[2][2] - m[2][1] * m[1][2]);
 	adj[1][0] = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]);
@@ -25,7 +25,7 @@ mat3 inverse(mat3 m) {
 	return adj / det;
 }
 
-mat4 inverse(mat4 m) {
+mat4 finverse(mat4 m) {
 	float SubFactor00 = m[2][2] * m[3][3] - m[3][2] * m[2][3];
 	float SubFactor01 = m[2][1] * m[3][3] - m[3][1] * m[2][3];
 	float SubFactor02 = m[2][1] * m[3][2] - m[3][1] * m[2][2];
@@ -71,7 +71,7 @@ mat4 inverse(mat4 m) {
 	float det = (+m[0][0] * adj[0][0] + m[0][1] * adj[1][0] + m[0][2] * adj[2][0] + m[0][3] * adj[3][0]);
 
 	return adj / det;
-}*/
+}
 
 mat4 rotationMatrix(float angle, float xAxis, float yAxis, float zAxis) {
 	vec3 axis = normalize(vec3(xAxis, yAxis, zAxis));

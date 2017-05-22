@@ -44,8 +44,8 @@ layout(location = 0) out vec4 out_colour;
 //---------CALCULATE LOCATION------------
 vec3 decodeLocation() {
     float depth = texture(originalDepth, pass_textureCoords).x;
-    vec4 p = inverse(projectionMatrix) * (vec4(pass_textureCoords, depth, 1.0) * 2.0 - 1.0);
-    return vec3(inverse(viewMatrix) * vec4(p.xyz / p.w, 1.0));
+    vec4 p = finverse(projectionMatrix) * (vec4(pass_textureCoords, depth, 1.0) * 2.0 - 1.0);
+    return vec3(finverse(viewMatrix) * vec4(p.xyz / p.w, 1.0));
 }
 
 //---------SHADOW------------
@@ -98,7 +98,7 @@ void main(void) {
 
 	vec4 worldPosition = vec4(decodeLocation(), 1.0);
 
-	vec3 toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
+	vec3 toCameraVector = (finverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
 
     out_colour = albedo;
