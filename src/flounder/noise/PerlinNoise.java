@@ -168,12 +168,12 @@ public class PerlinNoise {
 	 *
 	 * @return The value at the given coordinates.
 	 */
-	public double improvedTurbulence(double x, double y, double z, float loF, float hiF) {
-		double p_x = x + 123.456f;
-		double p_y = y;
-		double p_z = z;
-		double t = 0;
-		double f;
+	public float improvedTurbulence(float x, float y, float z, float loF, float hiF) {
+		float p_x = x + 123.456f;
+		float p_y = y;
+		float p_z = z;
+		float t = 0;
+		float f;
 
 		for (f = loF; f < hiF; f *= 2) {
 			t += Math.abs(improvedNoise(p_x, p_y, p_z)) / f;
@@ -183,7 +183,7 @@ public class PerlinNoise {
 			p_z *= 2;
 		}
 
-		return t - 0.3;
+		return t - 0.3f;
 	}
 
 	/**
@@ -203,21 +203,21 @@ public class PerlinNoise {
 	 *
 	 * @return the noise value at the point (x, y, z).
 	 */
-	public double improvedNoise(double x, double y, double z) {
+	public float improvedNoise(float x, float y, float z) {
 		// Constraint the point to a unit cube
 		int uc_x = (int) Math.floor(x) & 255;
 		int uc_y = (int) Math.floor(y) & 255;
 		int uc_z = (int) Math.floor(z) & 255;
 
 		// Relative location of the point in the unit cube
-		double xo = x - Math.floor(x);
-		double yo = y - Math.floor(y);
-		double zo = z - Math.floor(z);
+		float xo = x - (float) Math.floor(x);
+		float yo = y - (float) Math.floor(y);
+		float zo = z - (float) Math.floor(z);
 
 		// Fade curves for x, y and z
-		double u = fade(xo);
-		double v = fade(yo);
-		double w = fade(zo);
+		float u = fade(xo);
+		float v = fade(yo);
+		float w = fade(zo);
 
 		// Generate a hash for each coordinate to find out where in the cube it lies
 		int a = p_imp[uc_x] + uc_y;
@@ -229,14 +229,14 @@ public class PerlinNoise {
 		int bb = p_imp[b + 1] + uc_z;
 
 		// Blend results from the 8 corners based on the noise function
-		double c1 = grad(p_imp[aa], xo, yo, zo);
-		double c2 = grad(p_imp[ba], xo - 1, yo, zo);
-		double c3 = grad(p_imp[ab], xo, yo - 1, zo);
-		double c4 = grad(p_imp[bb], xo - 1, yo - 1, zo);
-		double c5 = grad(p_imp[aa + 1], xo, yo, zo - 1);
-		double c6 = grad(p_imp[ba + 1], xo - 1, yo, zo - 1);
-		double c7 = grad(p_imp[ab + 1], xo, yo - 1, zo - 1);
-		double c8 = grad(p_imp[bb + 1], xo - 1, yo - 1, zo - 1);
+		float c1 = grad(p_imp[aa], xo, yo, zo);
+		float c2 = grad(p_imp[ba], xo - 1, yo, zo);
+		float c3 = grad(p_imp[ab], xo, yo - 1, zo);
+		float c4 = grad(p_imp[bb], xo - 1, yo - 1, zo);
+		float c5 = grad(p_imp[aa + 1], xo, yo, zo - 1);
+		float c6 = grad(p_imp[ba + 1], xo - 1, yo, zo - 1);
+		float c7 = grad(p_imp[ab + 1], xo, yo - 1, zo - 1);
+		float c8 = grad(p_imp[bb + 1], xo - 1, yo - 1, zo - 1);
 
 		return lerp(w, lerp(v, lerp(u, c1, c2), lerp(u, c3, c4)), lerp(v, lerp(u, c5, c6), lerp(u, c7, c8)));
 	}
@@ -248,27 +248,20 @@ public class PerlinNoise {
 	 *
 	 * @return the drop-off amount.
 	 */
-	private double fade(double t) {
+	private float fade(float t) {
 		return t * t * t * (t * (t * 6 - 15) + 10);
 	}
 
 	/**
 	 * Calculate the gradient function based on the hash code.
 	 */
-	private double grad(int hash, double x, double y, double z) {
+	private float grad(int hash, float x, float y, float z) {
 		// Convert low 4 bits of hash code into 12 gradient directions
 		int h = hash & 15;
-		double u = h < 8 || h == 12 || h == 13 ? x : y;
-		double v = h < 4 || h == 12 || h == 13 ? y : z;
+		float u = h < 8 || h == 12 || h == 13 ? x : y;
+		float v = h < 4 || h == 12 || h == 13 ? y : z;
 
 		return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
-	}
-
-	/**
-	 * Simple lerp function using doubles.
-	 */
-	private double lerp(double t, double a, double b) {
-		return a + t * (b - a);
 	}
 
 	/**
@@ -571,7 +564,7 @@ public class PerlinNoise {
 			return 1.0f;
 		}
 
-		double p = Math.log(1.0f - b) / Maths.LOG_HALF;
+		float p = (float) Math.log(1.0f - b) / Maths.LOG_HALF;
 
 		if (a < 0.5f) {
 			return (float) (Math.pow(2 * a, p) / 2);
