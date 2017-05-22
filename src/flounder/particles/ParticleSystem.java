@@ -76,7 +76,7 @@ public class ParticleSystem {
 
 		// TODO: Make it so that the random method is not the only one creating particles.
 
-		float random = noise.noise1(Framework.getTimeMs()) * 10.0f * this.pps;
+		float random = noise.noise(Framework.getTimeMs()) * 10.0f * this.pps;
 
 		if (random < partialParticle) {
 			emitParticle();
