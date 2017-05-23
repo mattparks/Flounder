@@ -58,7 +58,7 @@ public class GuisRenderer extends Renderer {
 
 		GuiObject gui = (GuiObject) object;
 
-		if (vaoID == -1 || !gui.getTexture().isLoaded() || !gui.isVisible()) {
+		if (vaoID == -1 || gui.getTexture() == null || !gui.getTexture().isLoaded() || !gui.isVisible()) {
 			return;
 		}
 
