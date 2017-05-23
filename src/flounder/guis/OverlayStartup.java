@@ -2,6 +2,7 @@ package flounder.guis;
 
 import flounder.devices.*;
 import flounder.fonts.*;
+import flounder.framework.*;
 import flounder.maths.*;
 import flounder.maths.vectors.*;
 import flounder.resources.*;
@@ -36,7 +37,7 @@ public class OverlayStartup extends ScreenObject {
 						setAlphaDriver(new SlideDriver(1.0f, 0.0f, 1.0f));
 					}
 				},
-				5000
+				Framework.isRunningFromJar() ? 5000 : 1000
 		);
 	}
 
