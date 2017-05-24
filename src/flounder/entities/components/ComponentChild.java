@@ -53,6 +53,10 @@ public class ComponentChild extends IComponentEntity implements IComponentEditor
 		return null;
 	}
 
+	public Entity getParent() {
+		return parent;
+	}
+
 	@Override
 	public void dispose() {
 	}
