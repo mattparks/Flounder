@@ -198,7 +198,6 @@ public class PerlinNoise {
 		return lerp(sy, a, b);
 	}
 
-
 	/**
 	 * Create noise in a 3D space using the original noise noise algorithm.
 	 *
