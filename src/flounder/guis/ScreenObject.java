@@ -79,7 +79,11 @@ public abstract class ScreenObject {
 		rotation = rotationDriver.update(Framework.getDelta());
 		alpha = alphaDriver.update(Framework.getDelta());
 		scale = scaleDriver.update(Framework.getDelta());
-		updateObject();
+
+		if (isVisible() && getAlpha() != 0.0f) {
+			updateObject();
+		}
+
 		children.forEach(ScreenObject::update);
 	}
 
