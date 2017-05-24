@@ -66,8 +66,14 @@ public class FontRenderer extends Renderer {
 
 		FlounderOpenGL.get().bindVAO(text.getMesh(), 0, 1);
 		FlounderOpenGL.get().bindTexture(text.getFont().getTexture(), 0);
-		//	GL11.glEnable(GL11.GL_SCISSOR_TEST); // TODO: Scissor test for scroll panels.
-		//	GL11.glScissor(x, y, width, height);
+
+		Vector4f scissor = object.getScissor();
+
+		if (scissor.getZ() != -1.0f && scissor.getW() != -1.0f) {
+			FlounderOpenGL.get().enable(GL_SCISSOR_TEST);
+			FlounderOpenGL.get().scissor((int) scissor.x, (int) scissor.y, (int) scissor.z, (int) scissor.w);
+		}
+
 		shader.getUniformVec2("size").loadVec2(text.getMeshSize());
 		shader.getUniformVec4("transform").loadVec4(
 				text.getScreenPosition().x, text.getScreenPosition().y,
@@ -81,6 +87,7 @@ public class FontRenderer extends Renderer {
 		shader.getUniformVec2("borderSizes").loadVec2(text.getTotalBorderSize(), text.getGlowSize());
 		FlounderOpenGL.get().renderArrays(GL_TRIANGLES, text.getVertexCount());
 		FlounderOpenGL.get().unbindVAO(0, 1);
+		FlounderOpenGL.get().disable(GL_SCISSOR_TEST);
 	}
 
 	private void endRendering() {

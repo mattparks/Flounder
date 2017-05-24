@@ -181,6 +181,11 @@ public class LwjglOpenGL extends FlounderOpenGL {
 	}
 
 	@Override
+	public void scissor(int x, int y, int width, int height) {
+		glScissor(x, y, width, height);
+	}
+
+	@Override
 	public void bindTexture(TextureObject texture, int bankID) {
 		if (texture == null || texture.getTextureID() == -1) {
 			return;

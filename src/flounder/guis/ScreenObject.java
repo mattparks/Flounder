@@ -20,6 +20,7 @@ public abstract class ScreenObject {
 	private Vector2f position;
 	private Vector2f dimensions;
 	private Vector2f meshSize;
+	private Vector4f scissor;
 
 	private boolean inScreenCoords;
 
@@ -55,6 +56,7 @@ public abstract class ScreenObject {
 		this.position = position;
 		this.dimensions = dimensions;
 		this.meshSize = new Vector2f();
+		this.scissor = new Vector4f(-1.0f, -1.0f, -1.0f, -1.0f);
 
 		this.inScreenCoords = true;
 
@@ -173,6 +175,18 @@ public abstract class ScreenObject {
 
 	public void setMeshSize(Vector2f meshSize) {
 		this.meshSize = meshSize;
+	}
+
+	public Vector4f getScissor() {
+		return scissor;
+	}
+
+	public void setScissor(Vector4f scissor) {
+		this.scissor.set(scissor);
+	}
+
+	public void clearScissor() {
+		this.scissor.set(-1.0f, -1.0f, -1.0f, -1.0f);
 	}
 
 	public Vector2f getPositionOffsets() {

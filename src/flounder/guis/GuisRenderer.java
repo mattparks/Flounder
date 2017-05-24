@@ -64,8 +64,14 @@ public class GuisRenderer extends Renderer {
 
 		FlounderOpenGL.get().bindVAO(vaoID, 0);
 		FlounderOpenGL.get().bindTexture(gui.getTexture(), 0);
-		//	GL11.glEnable(GL11.GL_SCISSOR_TEST); // TODO: Scissor test for scroll panels.
-		//	GL11.glScissor(x, y, width, height);
+
+		Vector4f scissor = object.getScissor();
+
+		if (scissor.getZ() != -1.0f && scissor.getW() != -1.0f) {
+			FlounderOpenGL.get().enable(GL_SCISSOR_TEST);
+			FlounderOpenGL.get().scissor((int) scissor.x, (int) scissor.y, (int) scissor.z, (int) scissor.w);
+		}
+
 		shader.getUniformVec2("size").loadVec2(gui.getMeshSize());
 		shader.getUniformVec4("transform").loadVec4(
 				gui.getScreenPosition().x, gui.getScreenPosition().y,
@@ -80,6 +86,7 @@ public class GuisRenderer extends Renderer {
 		shader.getUniformVec3("colourOffset").loadVec3(gui.getColourOffset());
 		FlounderOpenGL.get().renderArrays(GL_TRIANGLE_STRIP, vaoLength);
 		FlounderOpenGL.get().unbindVAO(0);
+		FlounderOpenGL.get().disable(GL_SCISSOR_TEST);
 	}
 
 	private void endRendering() {

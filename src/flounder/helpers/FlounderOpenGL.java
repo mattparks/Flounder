@@ -150,6 +150,11 @@ public class FlounderOpenGL extends Module {
 
 	}
 
+	@Module.MethodReplace
+	public void scissor(int x, int y, int width, int height) {
+
+	}
+
 	/**
 	 * Binds a OpenGL texture to a blank ID.
 	 *
