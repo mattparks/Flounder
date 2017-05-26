@@ -14,6 +14,8 @@ import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
+import java.util.*;
+
 import static flounder.platform.Constants.*;
 
 public class ShadowRenderer extends Renderer {
@@ -45,7 +47,7 @@ public class ShadowRenderer extends Renderer {
 			prepareRendering(clipPlane, camera);
 
 			if (FlounderEntities.get().getEntities() != null) {
-				for (Entity entity : FlounderEntities.get().getEntities().getAll()) {
+				for (Entity entity : new ArrayList<>(FlounderEntities.get().getEntities().getAll())) {
 					renderEntity(entity);
 				}
 			}
