@@ -376,6 +376,7 @@ public class PerlinNoise {
 
 		return t;
 	}
+
 	/**
 	 * Create a turbulence function in 2D using the original noise noise function.
 	 *

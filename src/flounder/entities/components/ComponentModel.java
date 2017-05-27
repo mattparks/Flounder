@@ -28,6 +28,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 
 	private Collider collider;
 	private boolean createCollider;
+	private boolean renderCollider;
 
 	private TextureObject texture;
 	private int textureIndex;
@@ -71,6 +72,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 
 		this.collider = null;
 		this.createCollider = createCollider;
+		this.renderCollider = true;
 
 		this.texture = texture;
 		this.textureIndex = textureIndex;
@@ -103,7 +105,9 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 			collider = null;
 		}
 
-		FlounderBounding.get().addShapeRender(collider);
+		if (renderCollider) {
+			FlounderBounding.get().addShapeRender(collider);
+		}
 	}
 
 	public ModelObject getModel() {
@@ -181,6 +185,14 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 
 	public void setCreateCollider(boolean createCollider) {
 		this.createCollider = createCollider;
+	}
+
+	public boolean isRenderCollider() {
+		return renderCollider;
+	}
+
+	public void setRenderCollider(boolean renderCollider) {
+		this.renderCollider = renderCollider;
 	}
 
 	@Override
