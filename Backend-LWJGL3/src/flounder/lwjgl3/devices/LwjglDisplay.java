@@ -5,20 +5,25 @@ import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.platform.*;
+import flounder.platform.Platform;
 import flounder.profiling.*;
 import flounder.resources.*;
 import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.*;
+import org.lwjgl.system.*;
 
 import javax.imageio.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.*;
 
+import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.*;
 
 @Module.ModuleOverride
@@ -44,13 +49,6 @@ public class LwjglDisplay extends FlounderDisplay {
 	private boolean focused;
 	private int windowPosX;
 	private int windowPosY;
-
-	private GLFWErrorCallback errorCallback;
-	private GLFWWindowCloseCallback callbackWindowClose;
-	private GLFWWindowFocusCallback callbackWindowFocus;
-	private GLFWWindowPosCallback callbackWindowPos;
-	private GLFWWindowSizeCallback callbackWindowSize;
-	private GLFWFramebufferSizeCallback callbackFramebufferSize;
 
 	public LwjglDisplay() {
 		this(3, 0, 1080, 720, "Flounder Engine", new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")}, false, true, 0, false, false);
@@ -81,7 +79,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		}
 
 		if (this.title == null || this.title.isEmpty()) {
-			this.title = "Testing 1";
+			this.title = "Testing GLFW";
 		}
 
 		if (this.icons == null) {
@@ -92,8 +90,7 @@ public class LwjglDisplay extends FlounderDisplay {
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		// Set the error callback.errorCallback
-		this.errorCallback = GLFWErrorCallback.createPrint(System.err);
-		glfwSetErrorCallback(errorCallback);
+		GLFWErrorCallback.createPrint(System.err).set();
 
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
@@ -101,12 +98,10 @@ public class LwjglDisplay extends FlounderDisplay {
 			Framework.requestClose(true);
 		}
 
-		// Gets the video mode from the primary monitor.
-		long monitor = glfwGetPrimaryMonitor();
-		GLFWVidMode mode = glfwGetVideoMode(monitor);
-
 		// Configures the window.
 		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // The window will stay hidden until after creation.
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // The window will be resizable depending on if it's fullscreen.
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glfwMajor);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glfwMinor);
 
@@ -116,8 +111,6 @@ public class LwjglDisplay extends FlounderDisplay {
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		}
 
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // The window will stay hidden until after creation.
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // The window will be resizable depending on if its createDisplay.
 		glfwWindowHint(GLFW_STENCIL_BITS, 8); // Fixes 16 bit stencil bits in macOS.
 		glfwWindowHint(GLFW_STEREO, GLFW_FALSE); // No stereo view!
 
@@ -126,20 +119,18 @@ public class LwjglDisplay extends FlounderDisplay {
 		//	glfwWindowHint(GLFW_SAMPLES, samples); // The number of MSAA samples to use.
 		//}
 
-		if (fullscreen && mode != null) {
-			fullscreenWidth = mode.width();
-			fullscreenHeight = mode.height();
+		// Get the resolution of the primary monitor.
+		long monitor = glfwGetPrimaryMonitor();
+		GLFWVidMode videoMode = glfwGetVideoMode(monitor);
 
-			glfwWindowHint(GLFW_RED_BITS, mode.redBits());
-			glfwWindowHint(GLFW_GREEN_BITS, mode.greenBits());
-			glfwWindowHint(GLFW_BLUE_BITS, mode.blueBits());
-			glfwWindowHint(GLFW_REFRESH_RATE, mode.refreshRate());
+		if (fullscreen) {
+			fullscreenWidth = videoMode.width();
+			fullscreenHeight = videoMode.height();
 		}
 
 		// Create a windowed mode window and its OpenGL context.
 		window = glfwCreateWindow(fullscreen ? fullscreenWidth : windowWidth, fullscreen ? fullscreenHeight : windowHeight, title, fullscreen ? monitor : NULL, NULL);
-
-		// Sets the display to fullscreen or windowed.
+		closed = false;
 		focused = true;
 
 		// Gets any window errors.
@@ -149,28 +140,32 @@ public class LwjglDisplay extends FlounderDisplay {
 			Framework.requestClose(true);
 		}
 
+		// Get the thread stack and push a new frame.
+		try ( MemoryStack stack = stackPush() ) {
+			IntBuffer pWidth = stack.mallocInt(1); // int*
+			IntBuffer pHeight = stack.mallocInt(1); // int*
+
+			// Get the window size passed to glfwCreateWindow.
+			glfwGetWindowSize(window, pWidth, pHeight);
+
+			// Centre the window position.
+			windowPosX = (videoMode.width() - pWidth.get(0)) / 2;
+			windowPosY = (videoMode.height() - pHeight.get(0)) / 2;
+			glfwSetWindowPos(window, windowPosX, windowPosY);
+		}
+
 		// Creates the OpenGL context.
 		glfwMakeContextCurrent(window);
 
-		try {
-			setWindowIcon();
-		} catch (IOException e) {
-			FlounderLogger.get().error("Could not load custom display icon!");
-			FlounderLogger.get().exception(e);
-			Framework.requestClose(true);
-		}
-
-		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
-		createCapabilities(true);
-
-		// Gets any OpenGL errors.
-		long glError = glGetError();
-
-		if (glError != GL_NO_ERROR) {
-			FlounderLogger.get().error("OpenGL Capability Error: " + glError);
-			glfwDestroyWindow(window);
-			glfwTerminate();
-			Framework.requestClose(true);
+		// Creates a window icon for this GLFW display.
+		if (!FlounderPlatform.get().getPlatform().equals(Platform.MACOS)) {
+			try {
+				setWindowIcon();
+			} catch (IOException e) {
+				FlounderLogger.get().error("Could not load custom display icon!");
+				FlounderLogger.get().exception(e);
+				Framework.requestClose(true);
+			}
 		}
 
 		// Enables VSync if requested.
@@ -180,11 +175,6 @@ public class LwjglDisplay extends FlounderDisplay {
 			Framework.setFpsLimit(60);
 		}
 
-		// Centres the window position.
-		if (!fullscreen && mode != null) {
-			glfwSetWindowPos(window, (windowPosX = (mode.width() - windowWidth) / 2), (windowPosY = (mode.height() - windowHeight) / 2));
-		}
-
 		// Shows the OpenGl window.
 		if (hiddenDisplay) {
 			glfwHideWindow(window);
@@ -192,52 +182,44 @@ public class LwjglDisplay extends FlounderDisplay {
 			glfwShowWindow(window);
 		}
 
+		// LWJGL will detect the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
+		createCapabilities();
+
+		// Gets any OpenGL errors.
+		long glError = glGetError();
+
+		if (glError != GL_NO_ERROR) {
+			FlounderLogger.get().error("OpenGL Capability Error: " + glError);
+			Framework.requestClose(true);
+		}
+
 		// Sets the displays callbacks.
-		glfwSetWindowCloseCallback(window, callbackWindowClose = new GLFWWindowCloseCallback() {
-			@Override
-			public void invoke(long window) {
-				closed = true;
-				Framework.requestClose(false);
+		glfwSetWindowCloseCallback(window, (window -> {
+			closed = true;
+			Framework.requestClose(false);
+		}));
+
+		glfwSetWindowFocusCallback(window, (window, focus) -> {
+			focused = focus;
+		});
+
+		glfwSetWindowPosCallback(window, (window, xpos, ypos) -> {
+			if (!fullscreen) {
+				windowPosX = xpos;
+				windowPosY = ypos;
 			}
 		});
 
-		glfwSetWindowFocusCallback(window, callbackWindowFocus = new GLFWWindowFocusCallback() {
-			@Override
-			public void invoke(long window, boolean focus) {
-				focused = focus;
+		glfwSetWindowSizeCallback(window, (window, width, height) -> {
+			if (!fullscreen) {
+				windowWidth = width;
+				windowHeight = height;
 			}
 		});
 
-		glfwSetWindowPosCallback(window, callbackWindowPos = new GLFWWindowPosCallback() {
-			@Override
-			public void invoke(long window, int xpos, int ypos) {
-				if (!fullscreen) {
-					windowPosX = xpos;
-					windowPosY = ypos;
-				}
-			}
+		glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
+			glViewport(0, 0, width, height);
 		});
-
-		glfwSetWindowSizeCallback(window, callbackWindowSize = new GLFWWindowSizeCallback() {
-			@Override
-			public void invoke(long window, int width, int height) {
-				if (!fullscreen) {
-					windowWidth = width;
-					windowHeight = height;
-				}
-			}
-		});
-
-		glfwSetFramebufferSizeCallback(window, callbackFramebufferSize = new GLFWFramebufferSizeCallback() {
-			@Override
-			public void invoke(long window, int width, int height) {
-				glViewport(0, 0, width, height);
-			}
-		});
-
-		// Clears the display.
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// System logs.
 		FlounderLogger.get().log("If you are getting errors, please write a description of how you get the error, and copy this log: https://github.com/Equilibrium-Games/Flounder-Engine/issues");
@@ -304,9 +286,11 @@ public class LwjglDisplay extends FlounderDisplay {
 
 	@Override
 	public void swapBuffers() {
-		if (this.window != 0) {
-			glfwSwapBuffers(this.window);
-		}
+		// Swap the colour buffers to the display.
+		glfwSwapBuffers(window);
+
+		// Polls for window events. The key callback will only be invoked during this call.
+		glfwPollEvents();
 	}
 
 	@Override
@@ -460,9 +444,6 @@ public class LwjglDisplay extends FlounderDisplay {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		super.update();
-
-		// Polls for window events. The key callback will only be invoked during this call.
-		glfwPollEvents();
 	}
 
 	@Handler.Function(Handler.FLAG_PROFILE)
@@ -487,16 +468,13 @@ public class LwjglDisplay extends FlounderDisplay {
 	public void dispose() {
 		super.dispose();
 
-		errorCallback.free();
-		callbackWindowClose.free();
-		callbackWindowFocus.free();
-		callbackWindowPos.free();
-		callbackWindowSize.free();
-		callbackFramebufferSize.free();
-
-		destroy();
+		// Free the window callbacks and destroy the window.
+		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
+
+		// Terminate GLFW and free the error callback.
 		glfwTerminate();
+		glfwSetErrorCallback(null).free();
 
 		this.closed = false;
 	}

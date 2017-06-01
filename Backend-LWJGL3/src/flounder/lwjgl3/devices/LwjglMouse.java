@@ -33,11 +33,6 @@ public class LwjglMouse extends FlounderMouse {
 	private boolean cursorDisabled;
 	private boolean lastCursorDisabled;
 
-	private GLFWScrollCallback callbackScroll;
-	private GLFWMouseButtonCallback callbackMouseButton;
-	private GLFWCursorPosCallback callbackCursorPos;
-	private GLFWCursorEnterCallback callbackCursorEnter;
-
 	public LwjglMouse() {
 		this(new MyFile(MyFile.RES_FOLDER, "guis", "cursor.png"));
 	}
@@ -58,40 +53,30 @@ public class LwjglMouse extends FlounderMouse {
 		this.lastCursorDisabled = false;
 
 		// Sets the mouse callbacks.
-		glfwSetScrollCallback(FlounderDisplay.get().getWindow(), callbackScroll = new GLFWScrollCallback() {
-			@Override
-			public void invoke(long window, double xoffset, double yoffset) {
-				mouseDeltaWheel = (float) yoffset;
-			}
+		glfwSetScrollCallback(FlounderDisplay.get().getWindow(), (window, xoffset, yoffset) -> {
+			mouseDeltaWheel = (float) yoffset;
 		});
 
-		glfwSetMouseButtonCallback(FlounderDisplay.get().getWindow(), callbackMouseButton = new GLFWMouseButtonCallback() {
-			@Override
-			public void invoke(long window, int button, int action, int mods) {
-				mouseButtons[button] = action;
-			}
+		glfwSetMouseButtonCallback(FlounderDisplay.get().getWindow(), (window, button, action, mods) -> {
+			mouseButtons[button] = action;
 		});
 
-		glfwSetCursorPosCallback(FlounderDisplay.get().getWindow(), callbackCursorPos = new GLFWCursorPosCallback() {
-			@Override
-			public void invoke(long window, double xpos, double ypos) {
-				mousePositionX = (float) (xpos / FlounderDisplay.get().getWidth());
-				mousePositionY = (float) (ypos / FlounderDisplay.get().getHeight());
-			}
+		glfwSetCursorPosCallback(FlounderDisplay.get().getWindow(), (window, xpos, ypos) -> {
+			mousePositionX = (float) (xpos / FlounderDisplay.get().getWidth());
+			mousePositionY = (float) (ypos / FlounderDisplay.get().getHeight());
 		});
 
-		glfwSetCursorEnterCallback(FlounderDisplay.get().getWindow(), callbackCursorEnter = new GLFWCursorEnterCallback() {
-			@Override
-			public void invoke(long window, boolean entered) {
-				displaySelected = entered;
-			}
+		glfwSetCursorEnterCallback(FlounderDisplay.get().getWindow(), (window, entered) -> {
+			displaySelected = entered;
 		});
 
-		try {
-			createCustomMouse();
-		} catch (IOException e) {
-			FlounderLogger.get().error("Could not load custom mouse!");
-			FlounderLogger.get().exception(e);
+		if (!FlounderPlatform.get().getPlatform().equals(Platform.MACOS)) {
+			try {
+				createCustomMouse();
+			} catch (IOException e) {
+				FlounderLogger.get().error("Could not load custom mouse!");
+				FlounderLogger.get().exception(e);
+			}
 		}
 
 		super.init();
@@ -233,9 +218,5 @@ public class LwjglMouse extends FlounderMouse {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		super.dispose();
-		callbackScroll.free();
-		callbackMouseButton.free();
-		callbackCursorPos.free();
-		callbackCursorEnter.free();
 	}
 }

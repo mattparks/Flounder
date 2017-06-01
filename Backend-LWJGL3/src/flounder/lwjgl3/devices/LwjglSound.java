@@ -112,11 +112,11 @@ public class LwjglSound extends FlounderSound {
 	public void dispose() {
 		super.dispose();
 
-		buffers.forEach(buffer -> {
-			if (buffer != null) {
-				alDeleteBuffers(buffer);
-			}
-		});
+	//	buffers.forEach(buffer -> {
+	//		if (buffer != null) {
+	//			alDeleteBuffers(buffer);
+	//		}
+	//	});
 
 		if (alGetError() != AL_NO_ERROR) {
 			FlounderLogger.get().warning("Problem deleting sound buffers.");

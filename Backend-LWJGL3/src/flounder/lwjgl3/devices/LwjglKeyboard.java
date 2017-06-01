@@ -12,9 +12,6 @@ public class LwjglKeyboard extends FlounderKeyboard {
 	private int keyboardKeys[];
 	private int keyboardChar;
 
-	private GLFWKeyCallback callbackKey;
-	private GLFWCharCallback callbackChar;
-
 	public LwjglKeyboard() {
 		super();
 	}
@@ -25,24 +22,18 @@ public class LwjglKeyboard extends FlounderKeyboard {
 		this.keyboardChar = 0;
 
 		// Sets the keyboards callbacks.
-		glfwSetKeyCallback(FlounderDisplay.get().getWindow(), callbackKey = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				// TODO: Play with mods.
+		glfwSetKeyCallback(FlounderDisplay.get().getWindow(), (window, key, scancode, action, mods) -> {
+			// TODO: Play with mods.
 
-				if (key < 0 || key > GLFW_KEY_LAST) {
-					FlounderLogger.get().error("Invalid action attempted with key " + key);
-				} else {
-					keyboardKeys[key] = action;
-				}
+			if (key < 0 || key > GLFW_KEY_LAST) {
+				FlounderLogger.get().error("Invalid action attempted with key " + key);
+			} else {
+				keyboardKeys[key] = action;
 			}
 		});
 
-		glfwSetCharCallback(FlounderDisplay.get().getWindow(), callbackChar = new GLFWCharCallback() {
-			@Override
-			public void invoke(long window, int codepoint) {
-				keyboardChar = codepoint;
-			}
+		glfwSetCharCallback(FlounderDisplay.get().getWindow(), (window, codepoint) -> {
+			keyboardChar = codepoint;
 		});
 
 		super.init();
@@ -71,7 +62,5 @@ public class LwjglKeyboard extends FlounderKeyboard {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		super.dispose();
-		callbackKey.free();
-		callbackChar.free();
 	}
 }
