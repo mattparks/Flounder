@@ -3,6 +3,7 @@ package flounder.devices;
 import flounder.events.*;
 import flounder.framework.*;
 import flounder.platform.*;
+import flounder.tasks.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,7 @@ public class FlounderDisplayJPanel extends Module {
 	 * Creates a new JPanel renderer.
 	 */
 	public FlounderDisplayJPanel() {
-		super(FlounderPlatform.class, FlounderDisplay.class, FlounderEvents.class);
+		super(FlounderPlatform.class, FlounderDisplay.class, FlounderEvents.class, FlounderTasks.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -72,11 +73,6 @@ public class FlounderDisplayJPanel extends Module {
 		// Forces a JFrame redraw event.
 		SwingUtilities.getWindowAncestor(panel).repaint();
 	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {

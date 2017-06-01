@@ -7,9 +7,9 @@ import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.models.*;
 import flounder.physics.bounding.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.space.*;
+import flounder.tasks.*;
 import flounder.textures.*;
 
 import java.io.*;
@@ -27,7 +27,7 @@ public class FlounderEntities extends Module {
 	 * Creates a new game manager for entities.
 	 */
 	public FlounderEntities() {
-		super(FlounderEvents.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
+		super(FlounderEvents.class, FlounderTasks.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -51,11 +51,6 @@ public class FlounderEntities extends Module {
 				}
 			}
 		}
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Count", entityStructure.getSize());
 	}
 
 	/**

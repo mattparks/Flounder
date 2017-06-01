@@ -4,8 +4,8 @@ import flounder.devices.*;
 import flounder.events.*;
 import flounder.framework.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
 import flounder.resources.*;
+import flounder.tasks.*;
 import flounder.textures.*;
 
 /**
@@ -26,7 +26,7 @@ public class FlounderGuis extends Module {
 	 * Creates a new GUI manager.
 	 */
 	public FlounderGuis() {
-		super(FlounderEvents.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderTextures.class);
+		super(FlounderEvents.class, FlounderTasks.class, FlounderDisplay.class, FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderSound.class, FlounderTextures.class);
 		guiMaster = null;
 	}
 
@@ -63,11 +63,6 @@ public class FlounderGuis extends Module {
 		if (guiMaster != null) {
 			guiMaster.update();
 		}
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Selected", guiMaster == null ? "NULL" : guiMaster.getClass());
 	}
 
 	/**

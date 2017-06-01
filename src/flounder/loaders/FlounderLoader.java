@@ -23,10 +23,6 @@ public class FlounderLoader extends Module {
 	public void update() {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	/**
 	 * Creates an empty VAO.
 	 *

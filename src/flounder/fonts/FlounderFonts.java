@@ -33,11 +33,6 @@ public class FlounderFonts extends Module {
 	public void update() {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}

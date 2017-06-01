@@ -8,7 +8,6 @@ import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.physics.*;
-import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -38,7 +37,7 @@ public class BoundingRenderer extends Renderer {
 	}
 
 	@Override
-	public void renderObjects(Vector4f clipPlane, Camera camera) {
+	public void render(Vector4f clipPlane, Camera camera) {
 		if (!shader.isLoaded() || !FlounderOpenGL.get().isInWireframe() || FlounderBounding.get().getRenderShapes() == null) {
 			return;
 		}
@@ -101,11 +100,6 @@ public class BoundingRenderer extends Renderer {
 
 	private void endRendering() {
 		shader.stop();
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add(FlounderBounding.getTab(), "Render Time", super.getRenderTime());
 	}
 
 	@Override

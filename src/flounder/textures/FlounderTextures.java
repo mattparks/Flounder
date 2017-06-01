@@ -5,7 +5,6 @@ import flounder.framework.*;
 import flounder.loaders.*;
 import flounder.platform.*;
 import flounder.processing.*;
-import flounder.profiling.*;
 
 import java.lang.ref.*;
 import java.util.*;
@@ -38,12 +37,6 @@ public class FlounderTextures extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Loaded", loaded.size());
-		FlounderProfiler.get().add(getTab(), "Max Anisotropy", FlounderPlatform.get().getMaxAnisotropy());
 	}
 
 	/**

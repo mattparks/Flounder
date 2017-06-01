@@ -47,11 +47,6 @@ public class PlatformLwjgl extends FlounderPlatform {
 		super.update();
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-	}
-
 	@Override
 	public Platform getPlatform() {
 		final String OS = System.getProperty("os.name").toLowerCase();

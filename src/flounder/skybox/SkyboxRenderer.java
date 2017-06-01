@@ -4,7 +4,6 @@ import flounder.camera.*;
 import flounder.devices.*;
 import flounder.helpers.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -22,7 +21,7 @@ public class SkyboxRenderer extends Renderer {
 	}
 
 	@Override
-	public void renderObjects(Vector4f clipPlane, Camera camera) {
+	public void render(Vector4f clipPlane, Camera camera) {
 		if (!shader.isLoaded() || !FlounderSkybox.get().getModel().isLoaded()) {
 			return;
 		}
@@ -48,11 +47,6 @@ public class SkyboxRenderer extends Renderer {
 
 		FlounderOpenGL.get().unbindVAO(0);
 		shader.stop();
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add(FlounderSkybox.getTab(), "Render Time", super.getRenderTime());
 	}
 
 	@Override

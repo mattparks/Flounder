@@ -35,10 +35,6 @@ public class FlounderDisplay extends Module {
 	public void swapBuffers() {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	/**
 	 * Takes a screenshot of the current image of the display and saves it into the screenshots folder a png image.
 	 */

@@ -3,7 +3,6 @@ package flounder.lwjgl3.devices;
 import flounder.devices.*;
 import flounder.framework.*;
 import flounder.logger.*;
-import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -52,11 +51,6 @@ public class LwjglKeyboard extends FlounderKeyboard {
 	@Override
 	public int getKeyboardChar() {
 		return this.keyboardChar;
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

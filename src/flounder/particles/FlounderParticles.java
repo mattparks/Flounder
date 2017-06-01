@@ -6,7 +6,6 @@ import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.space.*;
 import flounder.textures.*;
@@ -80,13 +79,6 @@ public class FlounderParticles extends Module {
 
 			ArraySorting.heapSort(deadParticles); // Sorts the list old to new.
 		}
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Systems", particleSystems.size());
-		FlounderProfiler.get().add(getTab(), "Types", particles.size());
-		FlounderProfiler.get().add(getTab(), "Dead Particles", deadParticles.size());
 	}
 
 	/**

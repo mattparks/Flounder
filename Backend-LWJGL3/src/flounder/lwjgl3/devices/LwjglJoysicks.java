@@ -91,11 +91,6 @@ public class LwjglJoysicks extends FlounderJoysticks {
 		return this.joystickButtons[joystick].capacity();
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-	}
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		super.dispose();

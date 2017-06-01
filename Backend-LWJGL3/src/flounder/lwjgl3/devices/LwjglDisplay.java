@@ -5,11 +5,8 @@ import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
 import flounder.platform.*;
-import flounder.platform.Platform;
-import flounder.profiling.*;
 import flounder.resources.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import javax.imageio.*;
@@ -23,7 +20,7 @@ import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.*;
 import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 @Module.ModuleOverride
@@ -141,7 +138,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		}
 
 		// Get the thread stack and push a new frame.
-		try ( MemoryStack stack = stackPush() ) {
+		try (MemoryStack stack = stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
 			IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -442,24 +439,6 @@ public class LwjglDisplay extends FlounderDisplay {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		super.update();
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-
-		FlounderProfiler.get().add(getTab(), "Width", windowWidth);
-		FlounderProfiler.get().add(getTab(), "Height", windowHeight);
-		FlounderProfiler.get().add(getTab(), "Title", title);
-		FlounderProfiler.get().add(getTab(), "VSync", vsync);
-		FlounderProfiler.get().add(getTab(), "Antialiasing", antialiasing);
-		FlounderProfiler.get().add(getTab(), "Samples", samples);
-		FlounderProfiler.get().add(getTab(), "Fullscreen", fullscreen);
-
-		FlounderProfiler.get().add(getTab(), "Closed", closed);
-		FlounderProfiler.get().add(getTab(), "Focused", focused);
-		FlounderProfiler.get().add(getTab(), "Window Pos.X", windowPosX);
-		FlounderProfiler.get().add(getTab(), "Window Pos.Y", windowPosY);
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

@@ -7,7 +7,6 @@ import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
-import flounder.profiling.*;
 
 public class EditorCamera extends Camera {
 	// Defines basic view frustum sizes.
@@ -106,16 +105,6 @@ public class EditorCamera extends Camera {
 		updatePitchAngle();
 		calculateDistances();
 		calculatePosition();
-
-		if (FlounderProfiler.get().isOpen()) {
-			FlounderProfiler.get().add(FlounderCamera.getTab(), "Camera Angle Of Elevation", angleOfElevation);
-			FlounderProfiler.get().add(FlounderCamera.getTab(), "Camera Rotation", rotation);
-			FlounderProfiler.get().add(FlounderCamera.getTab(), "Camera Angle Around MainPlayer", angleAroundPlayer);
-			FlounderProfiler.get().add(FlounderCamera.getTab(), "Camera Actual Distance From Point", actualDistanceFromPoint);
-			FlounderProfiler.get().add(FlounderCamera.getTab(), "Camera Target Zoom", targetZoom);
-			FlounderProfiler.get().add(FlounderCamera.getTab(), "Camera Target Elevation", targetElevation);
-			FlounderProfiler.get().add(FlounderCamera.getTab(), "Camera Target Rotation Angle", targetRotationAngle);
-		}
 	}
 
 	private void calculateHorizontalAngle() {

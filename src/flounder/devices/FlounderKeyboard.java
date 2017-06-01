@@ -23,10 +23,6 @@ public class FlounderKeyboard extends Module {
 	public void update() {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	/**
 	 * Gets whether or not a particular key is currently pressed.
 	 * <p>GLFW Actions: GLFW_PRESS, GLFW_RELEASE, GLFW_REPEAT</p>

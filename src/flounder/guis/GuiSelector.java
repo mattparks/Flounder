@@ -4,7 +4,6 @@ import flounder.devices.*;
 import flounder.framework.*;
 import flounder.inputs.*;
 import flounder.maths.*;
-import flounder.profiling.*;
 
 import static flounder.platform.Constants.*;
 
@@ -77,13 +76,6 @@ public class GuiSelector {
 			rightClick = rightClick || joystickRight.isDown();
 			leftWasClick = leftWasClick || joystickLeft.wasDown();
 			rightWasClick = rightWasClick || joystickRight.wasDown();
-		}
-
-		if (FlounderProfiler.get().isOpen()) {
-			FlounderProfiler.get().add(FlounderGuis.getTab(), "Selector X", cursorX);
-			FlounderProfiler.get().add(FlounderGuis.getTab(), "Selector Y", cursorY);
-			FlounderProfiler.get().add(FlounderGuis.getTab(), "Click Left", leftClick);
-			FlounderProfiler.get().add(FlounderGuis.getTab(), "Click Right", rightClick);
 		}
 	}
 

@@ -219,10 +219,6 @@ public class FlounderOpenGL extends Module {
 	public void renderInstanced(int glMode, int glLength, int glPrimCount) {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}

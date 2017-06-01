@@ -10,7 +10,6 @@ import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.parsing.xml.*;
 import flounder.processing.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
@@ -39,11 +38,6 @@ public class FlounderCollada extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Loaded", loaded.size());
 	}
 
 	/**

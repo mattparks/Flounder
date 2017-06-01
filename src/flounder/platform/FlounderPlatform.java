@@ -4,7 +4,6 @@ import flounder.devices.*;
 import flounder.events.*;
 import flounder.framework.*;
 import flounder.framework.updater.*;
-import flounder.profiling.*;
 
 import java.nio.*;
 
@@ -25,11 +24,6 @@ public class FlounderPlatform extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_ALWAYS)
 	public void update() {
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Platform", getPlatform());
 	}
 
 	@Module.MethodReplace

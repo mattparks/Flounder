@@ -6,7 +6,6 @@ import flounder.framework.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
 
 public class FlounderShadows extends Module {
 	private Vector3f lightPosition;
@@ -127,14 +126,6 @@ public class FlounderShadows extends Module {
 		}
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Map Size", shadowSize);
-		FlounderProfiler.get().add(getTab(), "PCF Count", shadowPCF);
-		FlounderProfiler.get().add(getTab(), "Surface Bias", shadowBias);
-		FlounderProfiler.get().add(getTab(), "Surface Darkness", shadowDarkness);
-	}
-
 	public Vector3f getLightPosition() {
 		return this.lightPosition;
 	}
@@ -219,7 +210,7 @@ public class FlounderShadows extends Module {
 	}
 
 	/**
-	 * This biased projection-view matrix is used to convert fragments into "shadow map space" when rendering the main renderObjects pass.
+	 * This biased projection-view matrix is used to convert fragments into "shadow map space" when rendering the main render pass.
 	 *
 	 * @return The to-shadow-map-space matrix.
 	 */

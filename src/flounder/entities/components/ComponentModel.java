@@ -61,7 +61,7 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 	 * @param createCollider If there should be a collider created.
 	 * @param model The model that will be attached to this entity.
 	 * @param texture The diffuse texture for the entity.
-	 * @param textureIndex What texture index this entity should renderObjects from (0 default).
+	 * @param textureIndex What texture index this entity should render from (0 default).
 	 */
 	public ComponentModel(Entity entity, float scale, boolean createCollider, ModelObject model, TextureObject texture, int textureIndex) {
 		super(entity);

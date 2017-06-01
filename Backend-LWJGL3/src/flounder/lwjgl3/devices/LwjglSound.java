@@ -62,11 +62,6 @@ public class LwjglSound extends FlounderSound {
 		}
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-	}
-
 	@Override
 	public SoundSource createPlatformSource() {
 		return new LwjglSoundSource();
@@ -112,11 +107,11 @@ public class LwjglSound extends FlounderSound {
 	public void dispose() {
 		super.dispose();
 
-	//	buffers.forEach(buffer -> {
-	//		if (buffer != null) {
-	//			alDeleteBuffers(buffer);
-	//		}
-	//	});
+		//	buffers.forEach(buffer -> {
+		//		if (buffer != null) {
+		//			alDeleteBuffers(buffer);
+		//		}
+		//	});
 
 		if (alGetError() != AL_NO_ERROR) {
 			FlounderLogger.get().warning("Problem deleting sound buffers.");

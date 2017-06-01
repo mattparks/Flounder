@@ -53,10 +53,6 @@ public class FlounderSkybox extends Module {
 		}
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	public ModelObject getModel() {
 		return this.model;
 	}
@@ -96,7 +92,6 @@ public class FlounderSkybox extends Module {
 	public void setBlendFactor(float blendFactor) {
 		this.blendFactor = blendFactor;
 	}
-
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {

@@ -236,11 +236,6 @@ public class LwjglOpenGL extends FlounderOpenGL {
 		//}
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-	}
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		super.dispose();

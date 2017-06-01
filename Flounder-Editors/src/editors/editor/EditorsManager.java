@@ -2,13 +2,12 @@ package editors.editor;
 
 import flounder.framework.*;
 import flounder.logger.*;
-import flounder.profiling.*;
 
 public class EditorsManager extends Module {
 	private IEditorType editorType;
 
 	public EditorsManager() {
-		super(FlounderLogger.class, FlounderProfiler.class);
+		super(FlounderLogger.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -49,15 +48,6 @@ public class EditorsManager extends Module {
 	 */
 	public IEditorType getEditorType() {
 		return this.editorType;
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		if (editorType != null) {
-			editorType.profile();
-		}
-
-		FlounderProfiler.get().add(getTab(), "Selected", editorType == null ? "NULL" : editorType.getClass());
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

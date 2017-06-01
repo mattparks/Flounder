@@ -52,10 +52,6 @@ public class FlounderSound extends Module {
 		}
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	/**
 	 * Gets the cameras position.
 	 *

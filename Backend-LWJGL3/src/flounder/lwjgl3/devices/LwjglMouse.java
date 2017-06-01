@@ -5,7 +5,6 @@ import flounder.framework.*;
 import flounder.logger.*;
 import flounder.maths.*;
 import flounder.platform.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 import org.lwjgl.glfw.*;
 
@@ -200,17 +199,6 @@ public class LwjglMouse extends FlounderMouse {
 	@Override
 	public boolean isCursorDisabled() {
 		return this.cursorDisabled;
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-		FlounderProfiler.get().add(getTab(), "Position X", mousePositionX);
-		FlounderProfiler.get().add(getTab(), "Position Y", mousePositionY);
-		FlounderProfiler.get().add(getTab(), "Delta X", mouseDeltaX);
-		FlounderProfiler.get().add(getTab(), "Delta Y", mouseDeltaY);
-		FlounderProfiler.get().add(getTab(), "Delta Wheel", mouseDeltaWheel);
-		FlounderProfiler.get().add(getTab(), "Selected Display", displaySelected);
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

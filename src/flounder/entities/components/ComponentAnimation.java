@@ -59,7 +59,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	 * @param scale The scale of the entity.
 	 * @param file The animated model file to load from.
 	 * @param texture The diffuse texture for the entity.
-	 * @param textureIndex What texture index this entity should renderObjects from (0 default).
+	 * @param textureIndex What texture index this entity should render from (0 default).
 	 */
 	public ComponentAnimation(Entity entity, float scale, MyFile file, TextureObject texture, int textureIndex) {
 		super(entity);
@@ -99,7 +99,7 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	 * @param scale The scale of the entity.
 	 * @param model The animated model to use when animating and rendering.
 	 * @param texture The diffuse texture for the entity.
-	 * @param textureIndex What texture index this entity should renderObjects from (0 default).
+	 * @param textureIndex What texture index this entity should render from (0 default).
 	 */
 	public ComponentAnimation(Entity entity, float scale, ModelAnimated model, TextureObject texture, int textureIndex) {
 		super(entity);

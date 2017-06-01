@@ -3,7 +3,6 @@ package flounder.shaders;
 import flounder.factory.*;
 import flounder.framework.*;
 import flounder.processing.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 
 import java.lang.ref.*;
@@ -32,11 +31,6 @@ public class FlounderShaders extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Loaded", loaded.size());
 	}
 
 	/**

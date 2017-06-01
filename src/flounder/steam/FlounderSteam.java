@@ -27,11 +27,6 @@ public class FlounderSteam extends Module {
 		}*/
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		//	SteamAPI.shutdown();

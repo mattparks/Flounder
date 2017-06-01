@@ -69,14 +69,14 @@ public abstract class Camera extends Extension implements IAudioListener {
 	public abstract Matrix4f getViewMatrix();
 
 	/**
-	 * Gets the projection matrix used in the current scene renderObjects.
+	 * Gets the projection matrix used in the current scene render.
 	 *
-	 * @return The projection matrix used in the current scene renderObjects.
+	 * @return The projection matrix used in the current scene render.
 	 */
 	public abstract Matrix4f getProjectionMatrix();
 
 	/**
-	 * Prepares the camera for the reflection renderObjects pass.
+	 * Prepares the camera for the reflection render pass.
 	 *
 	 * @param waterHeight The height of the water to be reflected on.
 	 */

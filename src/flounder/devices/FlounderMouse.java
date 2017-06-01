@@ -23,10 +23,6 @@ public class FlounderMouse extends Module {
 	public void update() {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	/**
 	 * Sets if the operating systems cursor is hidden whilst in the display.
 	 *

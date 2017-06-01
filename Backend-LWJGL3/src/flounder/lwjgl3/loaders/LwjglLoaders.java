@@ -4,7 +4,6 @@ import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.platform.*;
-import flounder.profiling.*;
 
 import java.nio.*;
 import java.util.*;
@@ -305,12 +304,6 @@ public class LwjglLoaders extends FlounderLoader {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-		FlounderProfiler.get().add(getTab(), "Loaded", vaoCache.size());
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

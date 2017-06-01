@@ -3,7 +3,6 @@ package flounder.renderer;
 import flounder.camera.*;
 import flounder.devices.*;
 import flounder.framework.*;
-import flounder.profiling.*;
 import flounder.shaders.*;
 
 /**
@@ -48,11 +47,6 @@ public class FlounderRenderer extends Module {
 		if (renderer != null) {
 			renderer.render();
 		}
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Selected", renderer == null ? "NULL" : renderer.getClass());
 	}
 
 	/**

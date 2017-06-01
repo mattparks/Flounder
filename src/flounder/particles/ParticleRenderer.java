@@ -8,7 +8,6 @@ import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.platform.*;
-import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -50,7 +49,7 @@ public class ParticleRenderer extends Renderer {
 	}
 
 	@Override
-	public void renderObjects(Vector4f clipPlane, Camera camera) {
+	public void render(Vector4f clipPlane, Camera camera) {
 		if (!shader.isLoaded() || FlounderParticles.get().getParticles() == null) {
 			return;
 		}
@@ -172,11 +171,6 @@ public class ParticleRenderer extends Renderer {
 	private void endRendering() {
 		unbindTexturedModel();
 		shader.stop();
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add(FlounderParticles.getTab(), "Render Time", super.getRenderTime());
 	}
 
 	@Override

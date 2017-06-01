@@ -183,11 +183,6 @@ public class LwjglShaders extends FlounderShaders {
 		glDeleteProgram(shaderID);
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-	}
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		super.dispose();

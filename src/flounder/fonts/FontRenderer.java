@@ -5,7 +5,6 @@ import flounder.devices.*;
 import flounder.guis.*;
 import flounder.helpers.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -31,7 +30,7 @@ public class FontRenderer extends Renderer {
 	}
 
 	@Override
-	public void renderObjects(Vector4f clipPlane, Camera camera) {
+	public void render(Vector4f clipPlane, Camera camera) {
 		if (!shader.isLoaded() || FlounderGuis.get().getContainer() == null) {
 			return;
 		}
@@ -92,11 +91,6 @@ public class FontRenderer extends Renderer {
 
 	private void endRendering() {
 		shader.stop();
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add(FlounderFonts.getTab(), "Render Time", super.getRenderTime());
 	}
 
 	@Override

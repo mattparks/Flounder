@@ -201,11 +201,6 @@ public class LwjglFBOs extends FlounderFBOs {
 		return glGetInteger(GL_MAX_RENDERBUFFER_SIZE_EXT);
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		super.profile();
-	}
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		super.dispose();

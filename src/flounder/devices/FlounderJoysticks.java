@@ -23,10 +23,6 @@ public class FlounderJoysticks extends Module {
 	public void update() {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	/**
 	 * Determines if the GLFW joystick is connected
 	 *

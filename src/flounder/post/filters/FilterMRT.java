@@ -5,7 +5,6 @@ import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
 import flounder.post.*;
-import flounder.profiling.*;
 import flounder.resources.*;
 import flounder.shadows.*;
 import flounder.skybox.*;
@@ -50,9 +49,6 @@ public class FilterMRT extends PostFilter {
 				}
 			}
 		}
-
-		FlounderProfiler.get().add("Filter MRT", "Maximum Lights", LIGHTS);
-		FlounderProfiler.get().add("Filter MRT", "Loaded Lights", lightsLoaded);
 
 		if (lightsLoaded < LIGHTS) {
 			for (int i = lightsLoaded; i < LIGHTS; i++) {

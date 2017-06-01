@@ -106,10 +106,6 @@ public class FlounderFBOs extends Module {
 	public void delete(FBO fbo) {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}

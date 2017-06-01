@@ -9,7 +9,6 @@ import flounder.helpers.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
-import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -38,7 +37,7 @@ public class ShadowRenderer extends Renderer {
 	}
 
 	@Override
-	public void renderObjects(Vector4f clipPlane, Camera camera) {
+	public void render(Vector4f clipPlane, Camera camera) {
 		if (!shader.isLoaded() || camera == null || FlounderShadows.get().getShadowDarkness() < 0.07f) {
 			return;
 		}
@@ -157,11 +156,6 @@ public class ShadowRenderer extends Renderer {
 	private void endRendering() {
 		shader.stop();
 		shadowFBO.unbindFrameBuffer();
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add("Shadows", "Render Time", super.getRenderTime());
 	}
 
 	/**

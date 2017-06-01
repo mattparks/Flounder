@@ -29,10 +29,6 @@ public class FlounderAnimation extends Module {
 	public void update() {
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
 	/**
 	 * Loads up a collada animation file, and returns and animation created from the extracted animation data from the file.
 	 *

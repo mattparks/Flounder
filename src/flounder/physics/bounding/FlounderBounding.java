@@ -6,7 +6,6 @@ import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.models.*;
 import flounder.physics.*;
-import flounder.profiling.*;
 
 import java.util.*;
 
@@ -34,12 +33,6 @@ public class FlounderBounding extends Module {
 	public void update() {
 		boundingCount = renderShapes.size();
 		clear(); // Clears before the next batch of rendering.
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Enabled", FlounderOpenGL.get().isInWireframe());
-		FlounderProfiler.get().add(getTab(), "Count", boundingCount);
 	}
 
 	/**

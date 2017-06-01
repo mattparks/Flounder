@@ -3,7 +3,6 @@ package flounder.camera;
 import flounder.devices.*;
 import flounder.entities.*;
 import flounder.framework.*;
-import flounder.profiling.*;
 
 /**
  * A module used for managing cameras in 2D and 3D worlds.
@@ -68,12 +67,6 @@ public class FlounderCamera extends Module {
 		if (camera != null) {
 			camera.update(player);
 		}
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Camera Selected", camera == null ? "NULL" : camera.getClass());
-		FlounderProfiler.get().add(getTab(), "Player Selected", player == null ? "NULL" : player.getClass());
 	}
 
 	/**

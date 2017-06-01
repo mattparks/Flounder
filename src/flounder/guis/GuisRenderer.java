@@ -5,7 +5,6 @@ import flounder.devices.*;
 import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.maths.vectors.*;
-import flounder.profiling.*;
 import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
@@ -29,7 +28,7 @@ public class GuisRenderer extends Renderer {
 	}
 
 	@Override
-	public void renderObjects(Vector4f clipPlane, Camera camera) {
+	public void render(Vector4f clipPlane, Camera camera) {
 		if (!shader.isLoaded() || FlounderGuis.get().getContainer() == null) {
 			return;
 		}
@@ -91,11 +90,6 @@ public class GuisRenderer extends Renderer {
 
 	private void endRendering() {
 		shader.stop();
-	}
-
-	@Override
-	public void profile() {
-		FlounderProfiler.get().add(FlounderGuis.getTab(), "Render Time", super.getRenderTime());
 	}
 
 	@Override

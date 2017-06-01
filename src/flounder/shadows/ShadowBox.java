@@ -7,9 +7,9 @@ import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 
 /**
- * Represents the 3D area of the world in which engine.shadows will be cast (basically represents the orthographic projection area for the shadow renderObjects pass).
+ * Represents the 3D area of the world in which engine.shadows will be cast (basically represents the orthographic projection area for the shadow render pass).
  * It can be updated each frame to optimise the area, making it as small as possible (to allow for optimal shadow map resolution) while not being too small to avoid objects not having shadows when they should.
- * This class also provides functionality to test whether an object is inside this shadow box. Everything inside the box will be rendered to the shadow map in the shadow renderObjects pass.
+ * This class also provides functionality to test whether an object is inside this shadow box. Everything inside the box will be rendered to the shadow map in the shadow render pass.
  */
 public class ShadowBox {
 	private static final Vector4f UP = new Vector4f(0.0f, 1.0f, 0.0f, 0.0f);
@@ -166,7 +166,7 @@ public class ShadowBox {
 	}
 
 	/**
-	 * Test if a bounding sphere intersects the shadow box. Can be used to decide which engine.entities should be rendered in the shadow renderObjects pass.
+	 * Test if a bounding sphere intersects the shadow box. Can be used to decide which engine.entities should be rendered in the shadow render pass.
 	 *
 	 * @param position The centre of the bounding sphere in world space.
 	 * @param radius The radius of the bounding sphere.

@@ -23,11 +23,6 @@ public class FlounderDisplaySync extends Module {
 		FlounderDisplay.get().swapBuffers();
 	}
 
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-	}
-
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}

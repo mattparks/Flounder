@@ -2,7 +2,6 @@ package flounder.networking;
 
 import flounder.framework.*;
 import flounder.logger.*;
-import flounder.profiling.*;
 
 /**
  * A module used for handling networking, servers, clients, and packets.
@@ -27,12 +26,6 @@ public class FlounderNetwork extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_POST)
 	public void update() {
-	}
-
-	@Handler.Function(Handler.FLAG_PROFILE)
-	public void profile() {
-		FlounderProfiler.get().add(getTab(), "Username", username);
-		FlounderProfiler.get().add(getTab(), "Port", getPort());
 	}
 
 	/**
