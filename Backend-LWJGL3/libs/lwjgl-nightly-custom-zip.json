@@ -9,7 +9,7 @@
     "macos",
     "linux"
   ],
-  "descriptions": false,
+  "descriptions": true,
   "compact": false,
   "hardcoded": false,
   "javadoc": true,
@@ -19,6 +19,7 @@
     "lwjgl",
     "lwjgl-glfw",
     "lwjgl-openal",
-    "lwjgl-opengl"
+    "lwjgl-opengl",
+    "lwjgl-stb"
   ]
 }

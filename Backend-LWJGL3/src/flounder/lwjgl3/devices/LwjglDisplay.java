@@ -158,14 +158,12 @@ public class LwjglDisplay extends FlounderDisplay {
 		glfwMakeContextCurrent(window);
 
 		// Creates a window icon for this GLFW display.
-		if (!FlounderPlatform.get().getPlatform().equals(Platform.MACOS)) {
-			try {
-				setWindowIcon();
-			} catch (IOException e) {
-				FlounderLogger.get().error("Could not load custom display icon!");
-				FlounderLogger.get().exception(e);
-				Framework.requestClose(true);
-			}
+		try {
+			setWindowIcon();
+		} catch (IOException e) {
+			FlounderLogger.get().error("Could not load custom display icon!");
+			FlounderLogger.get().exception(e);
+			Framework.requestClose(true);
 		}
 
 		// Enables VSync if requested.

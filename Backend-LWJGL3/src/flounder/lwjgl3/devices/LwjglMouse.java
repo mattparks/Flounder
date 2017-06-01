@@ -70,13 +70,11 @@ public class LwjglMouse extends FlounderMouse {
 			displaySelected = entered;
 		});
 
-		if (!FlounderPlatform.get().getPlatform().equals(Platform.MACOS)) {
-			try {
-				createCustomMouse();
-			} catch (IOException e) {
-				FlounderLogger.get().error("Could not load custom mouse!");
-				FlounderLogger.get().exception(e);
-			}
+		try {
+			createCustomMouse();
+		} catch (IOException e) {
+			FlounderLogger.get().error("Could not load custom mouse!");
+			FlounderLogger.get().exception(e);
 		}
 
 		super.init();
