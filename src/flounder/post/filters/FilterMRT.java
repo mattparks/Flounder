@@ -37,7 +37,7 @@ public class FilterMRT extends PostFilter {
 		int lightsLoaded = 0;
 
 		if (FlounderEntities.get().getEntities() != null) {
-			for (Entity entity : new ArrayList<>(FlounderEntities.get().getEntities().getAll())) {
+			for (Entity entity : FlounderEntities.get().getEntities().getAll(null)) {
 				ComponentLight componentLight = (ComponentLight) entity.getComponent(ComponentLight.class);
 
 				if (lightsLoaded < LIGHTS && componentLight != null) {

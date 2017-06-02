@@ -3,6 +3,7 @@ package flounder.space;
 import flounder.physics.*;
 
 import java.util.*;
+import java.util.function.*;
 
 /**
  * A data structure that stores objects with a notion of flounder.space.
@@ -39,27 +40,45 @@ public interface ISpatialStructure<T extends ISpatialObject> {
 	/**
 	 * Returns a set of all objects in the spatial structure.
 	 *
+	 * @param result The list to store the data into.
+	 *
 	 * @return The list specified by of all objects.
 	 */
-	List<T> getAll();
+	List<T> getAll(List<T> result);
+
+	/**
+	 * Runs this foreach action on list directly.
+	 *
+	 * @param action The action to preform.
+	 */
+	void foreach(Consumer<? super T> action);
+
+	/**
+	 * Gets the iterator for this structure directly.
+	 *
+	 * @return The iterator.
+	 */
+	Iterator<T> iterator();
 
 	/**
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
 	 * @param range The frustum range of space being queried.
+	 * @param result The list to store the data into.
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInFrustum(Frustum range);
+	List<T> queryInFrustum(Frustum range, List<T> result);
 
 	/**
 	 * Returns a set of all objects in a specific range of the spatial structure.
 	 *
 	 * @param range The shape range of space being queried.
+	 * @param result The list to store the data into.
 	 *
 	 * @return The list of all object in range.
 	 */
-	List<T> queryInBounding(Collider range);
+	List<T> queryInBounding(Collider range, List<T> result);
 
 	/**
 	 * If the structure contains the object.

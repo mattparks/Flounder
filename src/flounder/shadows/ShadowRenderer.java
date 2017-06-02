@@ -6,6 +6,7 @@ import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
 import flounder.helpers.*;
+import flounder.logger.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
@@ -25,6 +26,7 @@ public class ShadowRenderer extends Renderer {
 	private ShaderObject shader;
 
 	private Matrix4f mvpReusableMatrix;
+	private List<Entity> objects;
 
 	/**
 	 * Creates a new entity renderer.
@@ -34,6 +36,7 @@ public class ShadowRenderer extends Renderer {
 		this.shader = ShaderFactory.newBuilder().setName("shadows").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 
 		this.mvpReusableMatrix = new Matrix4f();
+		this.objects = new ArrayList<>();
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class ShadowRenderer extends Renderer {
 			prepareRendering(clipPlane, camera);
 
 			if (FlounderEntities.get().getEntities() != null) {
-				for (Entity entity : new ArrayList<>(FlounderEntities.get().getEntities().getAll())) {
+				for (Entity entity : FlounderEntities.get().getEntities().queryInBounding(FlounderShadows.get().getShadowAABB(), objects)) {
 					renderEntity(entity);
 				}
 			}
@@ -156,6 +159,7 @@ public class ShadowRenderer extends Renderer {
 	private void endRendering() {
 		shader.stop();
 		shadowFBO.unbindFrameBuffer();
+		objects.clear();
 	}
 
 	/**

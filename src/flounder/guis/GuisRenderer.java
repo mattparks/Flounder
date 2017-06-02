@@ -20,11 +20,13 @@ public class GuisRenderer extends Renderer {
 	private ShaderObject shader;
 	private int vaoID;
 	private int vaoLength;
+	private List<ScreenObject> objects;
 
 	public GuisRenderer() {
 		this.shader = ShaderFactory.newBuilder().setName("guis").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		this.vaoID = FlounderLoader.get().createInterleavedVAO(FlounderGuis.POSITIONS, 2);
 		this.vaoLength = FlounderGuis.POSITIONS.length / 2;
+		this.objects = new ArrayList<>();
 	}
 
 	@Override
@@ -34,7 +36,7 @@ public class GuisRenderer extends Renderer {
 		}
 
 		prepareRendering();
-		FlounderGuis.get().getContainer().getAll(new ArrayList<>()).forEach(this::renderGui);
+		FlounderGuis.get().getContainer().getAll(objects).forEach(this::renderGui);
 		endRendering();
 	}
 
@@ -90,6 +92,7 @@ public class GuisRenderer extends Renderer {
 
 	private void endRendering() {
 		shader.stop();
+		objects.clear();
 	}
 
 	@Override

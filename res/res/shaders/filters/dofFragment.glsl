@@ -43,8 +43,8 @@ void main(void) {
 	vec3 blurColour = texture(blurredTexture, pass_textureCoords).rgb;
 
 	float depth = calculateDepth();
-	float nearVisibility = smoothlyStep(NEAR_FIELD * aimDistance, NEAR_END * aimDistance , depth);
-	float farVisibility = 1.0 - smoothlyStep(FAR_START * aimDistance, FAR_FIELD * aimDistance, depth);
+	float nearVisibility = fsmoothlyStep(NEAR_FIELD * aimDistance, NEAR_END * aimDistance , depth);
+	float farVisibility = 1.0 - fsmoothlyStep(FAR_START * aimDistance, FAR_FIELD * aimDistance, depth);
 	vec3 totalColour = mix(blurColour, originalColour, nearVisibility);
 	totalColour = mix(blurColour, totalColour, farVisibility);
 	out_colour = vec4(totalColour, 1.0);

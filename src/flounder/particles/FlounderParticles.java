@@ -48,23 +48,27 @@ public class FlounderParticles extends Module {
 			return;
 		}
 
+		// Generate particles.
 		particleSystems.forEach(ParticleSystem::generateParticles);
 
+		// Update particles.
 		if (!particles.isEmpty()) {
 			for (StructureBasic<Particle> list : particles) {
-				List<Particle> particles = new ArrayList<>(list.getAll());
+				Iterator<Particle> particleIterator = list.iterator();
 
-				for (Particle particle : particles) {
+				while (particleIterator.hasNext()) {
+					Particle particle = particleIterator.next();
 					particle.update();
 
 					if (!particle.isAlive()) {
-						list.remove(particle);
+						particleIterator.remove();
 						deadParticles.add(particle);
 					}
 				}
 			}
 		}
 
+		// Update dead particle objects.
 		if (!deadParticles.isEmpty()) {
 			Iterator<Particle> deadIterator = deadParticles.iterator();
 

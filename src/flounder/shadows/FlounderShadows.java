@@ -6,6 +6,7 @@ import flounder.framework.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.physics.*;
 
 public class FlounderShadows extends Module {
 	private Vector3f lightPosition;
@@ -27,6 +28,7 @@ public class FlounderShadows extends Module {
 	private Matrix4f offset;
 
 	private ShadowBox shadowBox;
+	private AABB worldAABB;
 
 	private boolean renderUnlimited;
 	private Timer timerRender;
@@ -57,6 +59,7 @@ public class FlounderShadows extends Module {
 		this.offset = createOffset();
 
 		this.shadowBox = new ShadowBox(lightViewMatrix);
+		this.worldAABB = new AABB();
 
 		this.renderUnlimited = true;
 		this.timerRender = new Timer(1.0 / 24.0);
@@ -123,6 +126,9 @@ public class FlounderShadows extends Module {
 			Matrix4f.multiply(offset, projectionViewMatrix, shadowMapSpaceMatrix);
 
 			renderNow = true;
+			worldAABB.setMinExtents(shadowBox.getAABB().getMinExtents());
+			worldAABB.setMaxExtents(shadowBox.getAABB().getMaxExtents());
+			worldAABB.update(FlounderCamera.get().getCamera().getPosition(), new Vector3f(), 1.5f, worldAABB);
 		}
 	}
 
@@ -203,6 +209,10 @@ public class FlounderShadows extends Module {
 	 */
 	public ShadowBox getShadowBox() {
 		return this.shadowBox;
+	}
+
+	public AABB getShadowAABB() {
+		return worldAABB;
 	}
 
 	public Matrix4f getProjectionViewMatrix() {

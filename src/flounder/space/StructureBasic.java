@@ -3,18 +3,21 @@ package flounder.space;
 import flounder.physics.*;
 
 import java.util.*;
+import java.util.function.*;
 
 /**
  * Represents a 3D space.
  */
 public class StructureBasic<T extends ISpatialObject> implements ISpatialStructure<T> {
 	private List<T> objects;
+	private List<T> clones;
 
 	/**
 	 * Initializes a new Basic 3D Structure.
 	 */
 	public StructureBasic() {
 		this.objects = new ArrayList<>();
+		this.clones = new ArrayList<>();
 	}
 
 	@Override
@@ -38,19 +41,43 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public List<T> getAll() {
-		return objects;
+	public List<T> getAll(List<T> result) {
+		if (result == null) {
+			result = new ArrayList<>();
+		}
+
+		result.addAll(objects);
+		return result;
 	}
 
 	@Override
-	public List<T> queryInFrustum(Frustum range) {
-		List<T> result = new ArrayList<>();
+	public void foreach(Consumer<? super T> action) {
+		clones.clear();
+		clones.addAll(objects);
+		clones.forEach(action);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		clones.clear();
+		clones.addAll(objects);
+		return clones.iterator();
+	}
+
+	@Override
+	public List<T> queryInFrustum(Frustum range, List<T> result) {
+		if (result == null) {
+			result = new ArrayList<>();
+		}
 
 		if (objects == null) {
 			return result;
 		}
 
-		for (T current : new ArrayList<>(objects)) {
+		clones.clear();
+		clones.addAll(objects);
+
+		for (T current : clones) {
 			if (current != null && (current.getCollider() == null || current.getCollider().inFrustum(range))) {
 				result.add(current);
 			}
@@ -60,14 +87,19 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 	}
 
 	@Override
-	public List<T> queryInBounding(Collider range) {
-		List<T> result = new ArrayList<>();
+	public List<T> queryInBounding(Collider range, List<T> result) {
+		if (result == null) {
+			result = new ArrayList<>();
+		}
 
 		if (objects == null) {
 			return result;
 		}
 
-		for (T current : new ArrayList<>(objects)) {
+		clones.clear();
+		clones.addAll(objects);
+
+		for (T current : clones) {
 			if (current != null && current.getCollider() != null && (current.getCollider().intersects(range).isIntersection() || range.contains(current.getCollider()))) {
 				result.add(current);
 			}

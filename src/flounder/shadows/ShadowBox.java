@@ -5,6 +5,7 @@ import flounder.devices.*;
 import flounder.maths.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
+import flounder.physics.*;
 
 /**
  * Represents the 3D area of the world in which engine.shadows will be cast (basically represents the orthographic projection area for the shadow render pass).
@@ -16,10 +17,7 @@ public class ShadowBox {
 	private static final Vector4f FORWARD = new Vector4f(0.0f, 0.0f, -1.0f, 0.0f);
 
 	private Matrix4f lightViewMatrix;
-
-	private float minX, maxX;
-	private float minY, maxY;
-	private float minZ, maxZ;
+	private AABB aabb;
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
 	/**
@@ -29,6 +27,7 @@ public class ShadowBox {
 	 */
 	protected ShadowBox(Matrix4f lightViewMatrix) {
 		this.lightViewMatrix = lightViewMatrix;
+		this.aabb = new AABB();
 	}
 
 	/**
@@ -61,36 +60,36 @@ public class ShadowBox {
 
 		for (Vector4f point : points) {
 			if (first) {
-				minX = point.x;
-				maxX = point.x;
-				minY = point.y;
-				maxY = point.y;
-				minZ = point.z;
-				maxZ = point.z;
+				aabb.getMinExtents().x = point.x;
+				aabb.getMaxExtents().x = point.x;
+				aabb.getMinExtents().y = point.y;
+				aabb.getMaxExtents().y = point.y;
+				aabb.getMinExtents().z = point.z;
+				aabb.getMaxExtents().z = point.z;
 				first = false;
 				continue;
 			}
 
-			if (point.x > maxX) {
-				maxX = point.x;
-			} else if (point.x < minX) {
-				minX = point.x;
+			if (point.x > aabb.getMaxExtents().x) {
+				aabb.getMaxExtents().x = point.x;
+			} else if (point.x < aabb.getMinExtents().x) {
+				aabb.getMinExtents().x = point.x;
 			}
 
-			if (point.y > maxY) {
-				maxY = point.y;
-			} else if (point.y < minY) {
-				minY = point.y;
+			if (point.y > aabb.getMaxExtents().y) {
+				aabb.getMaxExtents().y = point.y;
+			} else if (point.y < aabb.getMinExtents().y) {
+				aabb.getMinExtents().y = point.y;
 			}
 
-			if (point.z > maxZ) {
-				maxZ = point.z;
-			} else if (point.z < minZ) {
-				minZ = point.z;
+			if (point.z > aabb.getMaxExtents().z) {
+				aabb.getMaxExtents().z = point.z;
+			} else if (point.z < aabb.getMinExtents().z) {
+				aabb.getMinExtents().z = point.z;
 			}
 		}
 
-		maxZ += FlounderShadows.get().getShadowBoxOffset();
+		aabb.getMaxExtents().z += FlounderShadows.get().getShadowBoxOffset();
 	}
 
 	/**
@@ -175,9 +174,9 @@ public class ShadowBox {
 	 */
 	public boolean isInBox(Vector3f position, float radius) {
 		Vector4f entityPos = Matrix4f.transform(lightViewMatrix, new Vector4f(position.getX(), position.getY(), position.getZ(), 1.0f), null);
-		float closestX = Maths.clamp(entityPos.x, minX, maxX);
-		float closestY = Maths.clamp(entityPos.y, minY, maxY);
-		float closestZ = Maths.clamp(entityPos.z, minZ, maxZ);
+		float closestX = Maths.clamp(entityPos.x, aabb.getMinExtents().x, aabb.getMaxExtents().x);
+		float closestY = Maths.clamp(entityPos.y, aabb.getMinExtents().y, aabb.getMaxExtents().y);
+		float closestZ = Maths.clamp(entityPos.z, aabb.getMinExtents().z, aabb.getMaxExtents().z);
 		Vector3f closestPoint = new Vector3f(closestX, closestY, closestZ);
 		Vector3f centre = new Vector3f(entityPos.x, entityPos.y, entityPos.z);
 		float disSquared = Vector3f.subtract(centre, closestPoint, null).lengthSquared();
@@ -190,9 +189,9 @@ public class ShadowBox {
 	 * @return The centre of the shadow box.
 	 */
 	protected Vector3f getCenter() {
-		float x = (minX + maxX) / 2.0f;
-		float y = (minY + maxY) / 2.0f;
-		float z = (minZ + maxZ) / 2.0f;
+		float x = (aabb.getMinExtents().x + aabb.getMaxExtents().x) / 2.0f;
+		float y = (aabb.getMinExtents().y + aabb.getMaxExtents().y) / 2.0f;
+		float z = (aabb.getMinExtents().z + aabb.getMaxExtents().z) / 2.0f;
 		Vector4f centre = new Vector4f(x, y, z, 1.0f);
 		Matrix4f invertedLight = new Matrix4f();
 		Matrix4f.invert(lightViewMatrix, invertedLight);
@@ -205,7 +204,7 @@ public class ShadowBox {
 	 * @return The width of the shadow box.
 	 */
 	protected float getWidth() {
-		return maxX - minX;
+		return aabb.getMaxExtents().x - aabb.getMinExtents().x;
 	}
 
 	/**
@@ -214,7 +213,7 @@ public class ShadowBox {
 	 * @return The height of the shadow box.
 	 */
 	protected float getHeight() {
-		return maxY - minY;
+		return aabb.getMaxExtents().y - aabb.getMinExtents().y;
 	}
 
 	/**
@@ -223,6 +222,10 @@ public class ShadowBox {
 	 * @return The length of the shadow box.
 	 */
 	protected float getLength() {
-		return maxZ - minZ;
+		return aabb.getMaxExtents().z - aabb.getMinExtents().z;
+	}
+
+	protected AABB getAABB() {
+		return aabb;
 	}
 }

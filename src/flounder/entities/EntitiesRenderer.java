@@ -9,6 +9,8 @@ import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;
 
+import java.util.*;
+
 import static flounder.platform.Constants.*;
 
 /**
@@ -20,7 +22,7 @@ public class EntitiesRenderer extends Renderer {
 
 	private ShaderObject shader;
 	private TextureObject textureUndefined;
-	private int renderedCount;
+	private List<Entity> objects;
 
 	/**
 	 * Creates a new entity renderer.
@@ -28,7 +30,7 @@ public class EntitiesRenderer extends Renderer {
 	public EntitiesRenderer() {
 		this.shader = ShaderFactory.newBuilder().setName("entities").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
 		this.textureUndefined = TextureFactory.newBuilder().setFile(new MyFile(MyFile.RES_FOLDER, "undefined.png")).create();
-		this.renderedCount = 0;
+		this.objects = new ArrayList<>();
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class EntitiesRenderer extends Renderer {
 		prepareRendering(clipPlane, camera);
 
 		if (FlounderEntities.get().getEntities() != null) {
-			for (Entity entity : FlounderEntities.get().getEntities().queryInFrustum(camera.getViewFrustum())) {
+			for (Entity entity : FlounderEntities.get().getEntities().queryInFrustum(camera.getViewFrustum(), objects)) {
 				renderEntity(entity);
 			}
 		}
@@ -57,8 +59,6 @@ public class EntitiesRenderer extends Renderer {
 		FlounderOpenGL.get().antialias(FlounderDisplay.get().isAntialiasing());
 		FlounderOpenGL.get().enableAlphaBlending();
 		FlounderOpenGL.get().enableDepthTesting();
-
-		renderedCount = 0;
 	}
 
 	private void renderEntity(Entity entity) {
@@ -86,11 +86,11 @@ public class EntitiesRenderer extends Renderer {
 		}
 
 		FlounderOpenGL.get().unbindVAO(0, 1, 2, 3, 4, 5);
-		renderedCount++;
 	}
 
 	private void endRendering() {
 		shader.stop();
+		objects.clear();
 	}
 
 	@Override

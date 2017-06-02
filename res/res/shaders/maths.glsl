@@ -73,7 +73,7 @@ mat4 finverse(mat4 m) {
 	return adj / det;
 }
 
-mat4 rotationMatrix(float angle, float xAxis, float yAxis, float zAxis) {
+mat4 frotationMatrix(float angle, float xAxis, float yAxis, float zAxis) {
 	vec3 axis = normalize(vec3(xAxis, yAxis, zAxis));
 	float s = sin(angle);
 	float c = cos(angle);
@@ -81,7 +81,7 @@ mat4 rotationMatrix(float angle, float xAxis, float yAxis, float zAxis) {
 	return mat4(oc * axis.x * axis.x + c, oc * axis.x * axis.y - axis.z * s, oc * axis.z * axis.x + axis.y * s, 0, oc * axis.x * axis.y + axis.z * s, oc * axis.y * axis.y + c, oc * axis.y * axis.z - axis.x * s, 0, oc * axis.z * axis.x - axis.y * s, oc * axis.y * axis.z + axis.x * s, oc * axis.z * axis.z + c, 0, 0, 0, 0, 1);
 }
 
-float smoothlyStep(float edge0, float edge1, float x) {
+float fsmoothlyStep(float edge0, float edge1, float x) {
 	float t = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
 	return t * t * (3.0 - 2.0 * t);
 }

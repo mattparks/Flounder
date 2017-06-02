@@ -38,7 +38,7 @@ public class FlounderEntities extends Module {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		if (entityStructure != null) {
-			Iterator<Entity> iterator = new ArrayList<>(entityStructure.getAll()).iterator(); // TODO: Optimize
+			Iterator<Entity> iterator = entityStructure.getAll(null).iterator();
 
 			while (iterator.hasNext()) {
 				Entity entity = iterator.next();
@@ -169,7 +169,7 @@ public class FlounderEntities extends Module {
 	 * Clears the world of all entities.
 	 */
 	public void clear() {
-		this.entityStructure.getAll().forEach(Entity::forceRemove);
+		this.entityStructure.foreach(Entity::forceRemove);
 		this.entityStructure.clear();
 	}
 

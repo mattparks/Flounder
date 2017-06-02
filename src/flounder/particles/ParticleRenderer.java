@@ -57,7 +57,7 @@ public class ParticleRenderer extends Renderer {
 		prepareRendering(clipPlane, camera);
 
 		for (StructureBasic<Particle> list : FlounderParticles.get().getParticles()) {
-			List<Particle> particles = list.queryInFrustum(camera.getViewFrustum());
+			List<Particle> particles = list.queryInFrustum(camera.getViewFrustum(), null);
 
 			if (particles.size() > 0) {
 				// Added to particles first -> last, so no initial reverse needed.

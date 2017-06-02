@@ -20,8 +20,8 @@ layout(location = 0) out vec4 out_colour;
 //---------MAIN------------
 void main(void) {
 	float distance = texture(fontTexture, pass_textureCoords).a;
-	float alpha = smoothlyStep((1.0 - edgeData.x) - edgeData.y, 1.0 - edgeData.x, distance);
-	float outlineAlpha = smoothlyStep((1.0 - borderSizes.x) - borderSizes.y, 1.0 - borderSizes.x, distance);
+	float alpha = fsmoothlyStep((1.0 - edgeData.x) - edgeData.y, 1.0 - edgeData.x, distance);
+	float outlineAlpha = fsmoothlyStep((1.0 - borderSizes.x) - borderSizes.y, 1.0 - borderSizes.x, distance);
 	float overallAlpha = alpha + (1.0 - alpha) * outlineAlpha;
 	vec3 overallColour = mix(borderColour, colour.rgb, alpha / overallAlpha);
 
