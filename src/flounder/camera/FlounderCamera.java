@@ -27,8 +27,8 @@ public class FlounderCamera extends Module {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		// Gets a new player and camera, if available.
-		Player newPlayer = (Player) getExtension(player, Player.class, true);
-		Camera newCamera = (Camera) getExtension(camera, Camera.class, true);
+		Player newPlayer = (Player) getExtensionMatch(player, Player.class, true);
+		Camera newCamera = (Camera) getExtensionMatch(camera, Camera.class, true);
 
 		// If there is a new player, disable the old one and start to use the new one.
 		if (newPlayer != null) {
@@ -102,7 +102,7 @@ public class FlounderCamera extends Module {
 
 	@Module.Instance
 	public static FlounderCamera get() {
-		return (FlounderCamera) Framework.getInstance(FlounderCamera.class);
+		return (FlounderCamera) Framework.get().getInstance(FlounderCamera.class);
 	}
 
 	@Module.TabName

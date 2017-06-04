@@ -39,6 +39,6 @@ public class FilterCRT extends PostFilter {
 		shader.getUniformFloat("scanLineSize").loadFloat(scanLineSize);
 		shader.getUniformFloat("scanIntensity").loadFloat(scanIntensity);
 
-		shader.getUniformFloat("moveTime").loadFloat(Framework.getTimeSec() / 100.0f);
+		shader.getUniformFloat("moveTime").loadFloat(Framework.get().getTimeSec() / 100.0f);
 	}
 }

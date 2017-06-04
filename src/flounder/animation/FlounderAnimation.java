@@ -72,7 +72,7 @@ public class FlounderAnimation extends Module {
 
 	@Module.Instance
 	public static FlounderAnimation get() {
-		return (FlounderAnimation) Framework.getInstance(FlounderAnimation.class);
+		return (FlounderAnimation) Framework.get().getInstance(FlounderAnimation.class);
 	}
 
 	@Module.TabName

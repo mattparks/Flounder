@@ -183,7 +183,7 @@ public class FlounderEntities extends Module {
 
 	@Module.Instance
 	public static FlounderEntities get() {
-		return (FlounderEntities) Framework.getInstance(FlounderEntities.class);
+		return (FlounderEntities) Framework.get().getInstance(FlounderEntities.class);
 	}
 
 	@Module.TabName

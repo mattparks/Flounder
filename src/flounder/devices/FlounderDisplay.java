@@ -41,7 +41,7 @@ public class FlounderDisplay extends Module {
 	public void screenshot() {
 		// Tries to create an image, otherwise throws an exception.
 		String name = Calendar.getInstance().get(Calendar.MONTH) + 1 + "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "." + Calendar.getInstance().get(Calendar.HOUR) + "." + Calendar.getInstance().get(Calendar.MINUTE) + "." + (Calendar.getInstance().get(Calendar.SECOND) + 1);
-		File saveDirectory = new File(Framework.getRoamingFolder().getPath(), "screenshots");
+		File saveDirectory = new File(Framework.get().getRoamingFolder().getPath(), "screenshots");
 
 		if (!saveDirectory.exists()) {
 			try {
@@ -268,7 +268,7 @@ public class FlounderDisplay extends Module {
 
 	@Module.Instance
 	public static FlounderDisplay get() {
-		return (FlounderDisplay) Framework.getInstance(FlounderDisplay.class);
+		return (FlounderDisplay) Framework.get().getInstance(FlounderDisplay.class);
 	}
 
 	@Module.TabName

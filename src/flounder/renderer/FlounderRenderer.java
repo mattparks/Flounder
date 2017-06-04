@@ -26,7 +26,7 @@ public class FlounderRenderer extends Module {
 	@Handler.Function(Handler.FLAG_RENDER)
 	public void update() {
 		// Gets a new renderer, if available.
-		RendererMaster newRenderer = (RendererMaster) getExtension(renderer, RendererMaster.class, true);
+		RendererMaster newRenderer = (RendererMaster) getExtensionMatch(renderer, RendererMaster.class, true);
 
 		// If there is a new renderer, disable the old one and start to use the new one.
 		if (newRenderer != null) {
@@ -70,7 +70,7 @@ public class FlounderRenderer extends Module {
 
 	@Module.Instance
 	public static FlounderRenderer get() {
-		return (FlounderRenderer) Framework.getInstance(FlounderRenderer.class);
+		return (FlounderRenderer) Framework.get().getInstance(FlounderRenderer.class);
 	}
 
 	@Module.TabName

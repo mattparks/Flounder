@@ -56,7 +56,7 @@ public class Animator {
 	 * Increases the current animation time which allows the animation to progress. If the current animation has reached the end then the timer is reset, causing the animation to loop.
 	 */
 	private void increaseAnimationTime() {
-		animationTime += Framework.getDelta();
+		animationTime += Framework.get().getDelta();
 
 		if (animationTime > currentAnimation.getLength()) {
 			this.animationTime %= currentAnimation.getLength();

@@ -121,8 +121,8 @@ public class LwjglMouse extends FlounderMouse {
 		super.update();
 
 		// Updates the mouses delta.
-		mouseDeltaX = Framework.getDelta() * (lastMousePositionX - mousePositionX);
-		mouseDeltaY = Framework.getDelta() * (lastMousePositionY - mousePositionY);
+		mouseDeltaX = Framework.get().getDelta() * (lastMousePositionX - mousePositionX);
+		mouseDeltaY = Framework.get().getDelta() * (lastMousePositionY - mousePositionY);
 
 		// Sets the last position of the current.
 		lastMousePositionX = mousePositionX;
@@ -138,7 +138,7 @@ public class LwjglMouse extends FlounderMouse {
 
 		// Updates the mouse wheel using a smooth scroll technique.
 		if (mouseDeltaWheel != 0.0f) {
-			mouseDeltaWheel -= Framework.getDelta() * ((mouseDeltaWheel < 0.0f) ? -1.0f : 1.0f);
+			mouseDeltaWheel -= Framework.get().getDelta() * ((mouseDeltaWheel < 0.0f) ? -1.0f : 1.0f);
 			mouseDeltaWheel = Maths.deadband(0.1f, mouseDeltaWheel);
 		}
 	}

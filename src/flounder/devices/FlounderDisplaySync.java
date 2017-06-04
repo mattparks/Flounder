@@ -29,7 +29,7 @@ public class FlounderDisplaySync extends Module {
 
 	@Module.Instance
 	public static FlounderDisplaySync get() {
-		return (FlounderDisplaySync) Framework.getInstance(FlounderDisplaySync.class);
+		return (FlounderDisplaySync) Framework.get().getInstance(FlounderDisplaySync.class);
 	}
 
 	@Module.TabName

@@ -37,7 +37,7 @@ public class OverlayStartup extends ScreenObject {
 						setAlphaDriver(new SlideDriver(1.0f, 0.0f, 1.0f));
 					}
 				},
-				Framework.isRunningFromJar() ? 5000 : 1000
+				Framework.get().isRunningFromJar() ? 5000 : 750
 		);
 	}
 

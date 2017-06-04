@@ -28,8 +28,8 @@ public class BounceDriver extends ValueDriver {
 
 	@Override
 	protected float calculateValue(float time) {
-		float value = 0.5f + (float) Math.sin(time * Math.PI * 2.0) * 0.5f;
-		actime += Framework.getDelta();
+		float value = 0.5f + (float) Math.sin(time * Math.PI * 2.0f) * 0.5f;
+		actime += Framework.get().getDelta();
 
 		if (actime > length / 2.0f) {
 			value = 0.0f;

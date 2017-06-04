@@ -145,7 +145,7 @@ public class EditorCamera extends Camera {
 			}
 		}
 
-		angleAroundPlayer += offset * Framework.getDelta();
+		angleAroundPlayer += offset * Framework.get().getDelta();
 
 		if (angleAroundPlayer >= Maths.DEGREES_IN_HALF_CIRCLE) {
 			angleAroundPlayer -= Maths.DEGREES_IN_CIRCLE;
@@ -165,7 +165,7 @@ public class EditorCamera extends Camera {
 			}
 		}
 
-		angleOfElevation += offset * Framework.getDelta();
+		angleOfElevation += offset * Framework.get().getDelta();
 
 		if (angleOfElevation >= Maths.DEGREES_IN_HALF_CIRCLE) {
 			angleOfElevation -= Maths.DEGREES_IN_CIRCLE;

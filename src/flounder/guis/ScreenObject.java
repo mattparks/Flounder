@@ -78,9 +78,9 @@ public abstract class ScreenObject {
 	 * Updates this screen object and the extended object.
 	 */
 	public void update() {
-		rotation = rotationDriver.update(Framework.getDelta());
-		alpha = alphaDriver.update(Framework.getDelta());
-		scale = scaleDriver.update(Framework.getDelta());
+		rotation = rotationDriver.update(Framework.get().getDelta());
+		alpha = alphaDriver.update(Framework.get().getDelta());
+		scale = scaleDriver.update(Framework.get().getDelta());
 
 		if (isVisible() && getAlpha() != 0.0f) {
 			updateObject();

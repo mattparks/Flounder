@@ -39,7 +39,7 @@ public class FlounderGuis extends Module {
 
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
-		GuiMaster newManager = (GuiMaster) getExtension(guiMaster, GuiMaster.class, true);
+		GuiMaster newManager = (GuiMaster) getExtensionMatch(guiMaster, GuiMaster.class, true);
 
 		if (newManager != null) {
 			if (guiMaster != null) {
@@ -105,7 +105,7 @@ public class FlounderGuis extends Module {
 
 	@Module.Instance
 	public static FlounderGuis get() {
-		return (FlounderGuis) Framework.getInstance(FlounderGuis.class);
+		return (FlounderGuis) Framework.get().getInstance(FlounderGuis.class);
 	}
 
 	@Module.TabName

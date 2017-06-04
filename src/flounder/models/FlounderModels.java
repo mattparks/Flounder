@@ -54,7 +54,7 @@ public class FlounderModels extends Module {
 
 	@Module.Instance
 	public static FlounderModels get() {
-		return (FlounderModels) Framework.getInstance(FlounderModels.class);
+		return (FlounderModels) Framework.get().getInstance(FlounderModels.class);
 	}
 
 	@Module.TabName

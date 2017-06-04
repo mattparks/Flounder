@@ -259,7 +259,7 @@ public class FlounderShadows extends Module {
 
 	@Module.Instance
 	public static FlounderShadows get() {
-		return (FlounderShadows) Framework.getInstance(FlounderShadows.class);
+		return (FlounderShadows) Framework.get().getInstance(FlounderShadows.class);
 	}
 
 	@Module.TabName

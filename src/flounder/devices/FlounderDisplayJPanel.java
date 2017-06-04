@@ -48,7 +48,7 @@ public class FlounderDisplayJPanel extends Module {
 				g.drawImage(image, 0, 0, null);
 
 				// Draws the current engine FPS.
-				g.drawString("FPS: " + (1.0f / Framework.getDeltaRender()), 10, 15);
+				g.drawString("FPS: " + (1.0f / Framework.get().getDeltaRender()), 10, 15);
 			}
 		};
 		this.panel.setSize(FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight());
@@ -80,7 +80,7 @@ public class FlounderDisplayJPanel extends Module {
 
 	@Module.Instance
 	public static FlounderDisplayJPanel get() {
-		return (FlounderDisplayJPanel) Framework.getInstance(FlounderDisplayJPanel.class);
+		return (FlounderDisplayJPanel) Framework.get().getInstance(FlounderDisplayJPanel.class);
 	}
 
 	@Module.TabName

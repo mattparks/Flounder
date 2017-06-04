@@ -34,7 +34,7 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		while (Framework.isRunning()) {
+		while (Framework.get().isRunning()) {
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 

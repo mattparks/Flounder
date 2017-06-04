@@ -91,7 +91,7 @@ public class ExtensionEntities extends IEditorType {
 
 			if (componentModel != null && componentModel.getModel() != null && componentModel.getModel().getCollider() != null) {
 				if (entityRotate) {
-					focusEntity.getRotation().y += 20.0f * Framework.getDelta();
+					focusEntity.getRotation().y += 20.0f * Framework.get().getDelta();
 					focusEntity.setMoved();
 				}
 

@@ -99,7 +99,7 @@ public class FlounderCollada extends Module {
 
 	@Module.Instance
 	public static FlounderCollada get() {
-		return (FlounderCollada) Framework.getInstance(FlounderCollada.class);
+		return (FlounderCollada) Framework.get().getInstance(FlounderCollada.class);
 	}
 
 	@Module.TabName

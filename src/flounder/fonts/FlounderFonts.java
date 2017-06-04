@@ -39,7 +39,7 @@ public class FlounderFonts extends Module {
 
 	@Module.Instance
 	public static FlounderFonts get() {
-		return (FlounderFonts) Framework.getInstance(FlounderFonts.class);
+		return (FlounderFonts) Framework.get().getInstance(FlounderFonts.class);
 	}
 
 	@Module.TabName

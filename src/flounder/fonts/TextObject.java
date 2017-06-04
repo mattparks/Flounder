@@ -99,8 +99,8 @@ public class TextObject extends ScreenObject {
 				break;
 		}
 
-		glowSize = glowDriver.update(Framework.getDelta());
-		borderSize = borderDriver.update(Framework.getDelta());
+		glowSize = glowDriver.update(Framework.get().getDelta());
+		borderSize = borderDriver.update(Framework.get().getDelta());
 	}
 
 	/**

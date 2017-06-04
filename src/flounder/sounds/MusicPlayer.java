@@ -97,14 +97,14 @@ public class MusicPlayer {
 			source.setInactive();
 
 			if (timeoutStart == 0.0f) {
-				timeoutStart = Framework.getTimeSec();
+				timeoutStart = Framework.get().getTimeSec();
 
 				if (selectedTimeout >= 0.0f) {
 					selectedTimeout = Maths.randomInRange(minPlayTimeout, maxPlayTimeout);
 				}
 			}
 
-			if (Framework.getTimeSec() - timeoutStart > selectedTimeout) {
+			if (Framework.get().getTimeSec() - timeoutStart > selectedTimeout) {
 				timeoutStart = 0.0f;
 				selectedTimeout = 0.0f;
 				playNextTrack();

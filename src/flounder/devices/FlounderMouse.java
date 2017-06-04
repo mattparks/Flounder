@@ -125,7 +125,7 @@ public class FlounderMouse extends Module {
 
 	@Module.Instance
 	public static FlounderMouse get() {
-		return (FlounderMouse) Framework.getInstance(FlounderMouse.class);
+		return (FlounderMouse) Framework.get().getInstance(FlounderMouse.class);
 	}
 
 	@Module.TabName

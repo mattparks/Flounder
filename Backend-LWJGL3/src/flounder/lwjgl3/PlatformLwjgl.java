@@ -23,7 +23,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class PlatformLwjgl extends FlounderPlatform {
 	public PlatformLwjgl(int width, int height, String title, MyFile[] icons, boolean vsync, boolean antialiasing, int samples, boolean fullscreen, boolean hiddenDisplay, boolean wireframe, float anisotropyLevel) {
 		super();
-		Framework.addOverrides(
+		Framework.get().addOverrides(
 				new LwjglDisplay(3, getPlatform().equals(Platform.MACOS) ? 3 : 2, width, height, title, icons, vsync, antialiasing, samples, fullscreen, hiddenDisplay),
 				new LwjglJoysicks(),
 				new LwjglKeyboard(),
@@ -35,6 +35,7 @@ public class PlatformLwjgl extends FlounderPlatform {
 				new LwjglShaders(),
 				new LwjglTextures(anisotropyLevel)
 		);
+		Framework.get().getUpdater().setTiming(GLFW::glfwGetTime);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)

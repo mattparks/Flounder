@@ -119,7 +119,7 @@ public class FlounderNetwork extends Module {
 
 	@Module.Instance
 	public static FlounderNetwork get() {
-		return (FlounderNetwork) Framework.getInstance(FlounderNetwork.class);
+		return (FlounderNetwork) Framework.get().getInstance(FlounderNetwork.class);
 	}
 
 	@Module.TabName

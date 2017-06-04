@@ -9,8 +9,6 @@ import flounder.resources.*;
 import flounder.shadows.*;
 import flounder.skybox.*;
 
-import java.util.*;
-
 public class FilterMRT extends PostFilter {
 	private static final int LIGHTS = 64;
 	private float shadowFactor;

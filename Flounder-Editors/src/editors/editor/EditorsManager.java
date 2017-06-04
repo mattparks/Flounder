@@ -18,7 +18,7 @@ public class EditorsManager extends Module {
 	@Handler.Function(Handler.FLAG_UPDATE_POST)
 	public void update() {
 		// Gets a new editor, if available.
-		IEditorType newManager = (IEditorType) getExtension(editorType, IEditorType.class, true);
+		IEditorType newManager = (IEditorType) getExtensionMatch(editorType, IEditorType.class, true);
 
 		// If there is a editor, disable the old one and start to use the new one.
 		if (newManager != null) {
@@ -61,7 +61,7 @@ public class EditorsManager extends Module {
 
 	@Module.Instance
 	public static EditorsManager get() {
-		return (EditorsManager) Framework.getInstance(EditorsManager.class);
+		return (EditorsManager) Framework.get().getInstance(EditorsManager.class);
 	}
 
 	@Module.TabName

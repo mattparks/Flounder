@@ -102,7 +102,7 @@ public class FlounderSkybox extends Module {
 
 	@Module.Instance
 	public static FlounderSkybox get() {
-		return (FlounderSkybox) Framework.getInstance(FlounderSkybox.class);
+		return (FlounderSkybox) Framework.get().getInstance(FlounderSkybox.class);
 	}
 
 	@Module.TabName

@@ -47,7 +47,7 @@ public class FlounderSound extends Module {
 
 		if (camera != null && camera.getPosition() != null) {
 			cameraPosition.set(camera.getPosition());
-			musicPlayer.update(Framework.getDelta());
+			musicPlayer.update(Framework.get().getDelta());
 			sourcePool.update();
 		}
 	}
@@ -200,7 +200,7 @@ public class FlounderSound extends Module {
 
 	@Module.Instance
 	public static FlounderSound get() {
-		return (FlounderSound) Framework.getInstance(FlounderSound.class);
+		return (FlounderSound) Framework.get().getInstance(FlounderSound.class);
 	}
 
 	@Module.TabName

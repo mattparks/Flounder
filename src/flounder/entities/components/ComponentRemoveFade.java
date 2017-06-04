@@ -25,7 +25,7 @@ public class ComponentRemoveFade extends IComponentEntity implements IComponentA
 
 	@Override
 	public void update() {
-		alpha = driver.update(Framework.getDelta());
+		alpha = driver.update(Framework.get().getDelta());
 
 		if (alpha == 0.0f) {
 			getEntity().forceRemove();

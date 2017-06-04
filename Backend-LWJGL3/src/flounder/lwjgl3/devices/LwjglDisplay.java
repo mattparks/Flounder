@@ -92,7 +92,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		// Initialize the GLFW library.
 		if (!glfwInit()) {
 			FlounderLogger.get().error("Could not init GLFW!");
-			Framework.requestClose(true);
+			Framework.get().requestClose(true);
 		}
 
 		// Configures the window.
@@ -134,7 +134,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		if (window == NULL) {
 			FlounderLogger.get().error("Could not create the window! Update your graphics drivers and ensure your PC supports OpenGL " + glfwMajor + "." + glfwMinor + "!");
 			glfwTerminate();
-			Framework.requestClose(true);
+			Framework.get().requestClose(true);
 		}
 
 		// Get the thread stack and push a new frame.
@@ -160,14 +160,14 @@ public class LwjglDisplay extends FlounderDisplay {
 		} catch (IOException e) {
 			FlounderLogger.get().error("Could not load custom display icon!");
 			FlounderLogger.get().exception(e);
-			Framework.requestClose(true);
+			Framework.get().requestClose(true);
 		}
 
 		// Enables VSync if requested.
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		if (vsync) {
-			Framework.setFpsLimit(60);
+			Framework.get().setFpsLimit(60);
 		}
 
 		// Shows the OpenGl window.
@@ -185,13 +185,13 @@ public class LwjglDisplay extends FlounderDisplay {
 
 		if (glError != GL_NO_ERROR) {
 			FlounderLogger.get().error("OpenGL Capability Error: " + glError);
-			Framework.requestClose(true);
+			Framework.get().requestClose(true);
 		}
 
 		// Sets the displays callbacks.
 		glfwSetWindowCloseCallback(window, (window -> {
 			closed = true;
-			Framework.requestClose(false);
+			Framework.get().requestClose(false);
 		}));
 
 		glfwSetWindowFocusCallback(window, (window, focus) -> {
@@ -220,7 +220,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		FlounderLogger.get().log("If you are getting errors, please write a description of how you get the error, and copy this log: https://github.com/Equilibrium-Games/Flounder-Engine/issues");
 		FlounderLogger.get().log("");
 		FlounderLogger.get().log("===== This is not an error message, it is a system info log. =====");
-		FlounderLogger.get().log("Flounder Framework Version: " + Framework.getVersion().getVersion());
+		FlounderLogger.get().log("Flounder Framework Version: " + Framework.get().getVersion().getVersion());
 		FlounderLogger.get().log("Flounder Operating System: " + System.getProperty("os.name"));
 		FlounderLogger.get().log("Flounder LWJGL Version: " + org.lwjgl.Version.getVersion());
 		FlounderLogger.get().log("Flounder GLFW Version: " + glfwGetVersionString());
@@ -358,7 +358,7 @@ public class LwjglDisplay extends FlounderDisplay {
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		if (vsync) {
-			Framework.setFpsLimit(60);
+			Framework.get().setFpsLimit(60);
 		}
 	}
 

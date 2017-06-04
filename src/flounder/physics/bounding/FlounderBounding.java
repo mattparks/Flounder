@@ -81,7 +81,7 @@ public class FlounderBounding extends Module {
 
 	@Module.Instance
 	public static FlounderBounding get() {
-		return (FlounderBounding) Framework.getInstance(FlounderBounding.class);
+		return (FlounderBounding) Framework.get().getInstance(FlounderBounding.class);
 	}
 
 	@Module.TabName

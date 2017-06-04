@@ -65,7 +65,7 @@ public class ParticleSystem {
 			return;
 		}
 
-		float delta = Framework.getDelta();
+		float delta = Framework.get().getDelta();
 		float particlesToCreate = this.pps * delta;
 		int count = (int) Math.floor(particlesToCreate);
 		float partialParticle = particlesToCreate % 1.0f;
@@ -76,7 +76,7 @@ public class ParticleSystem {
 
 		// TODO: Make it so that the random method is not the only one creating particles.
 
-		float random = noise.noise(Framework.getTimeMs()) * 10.0f * this.pps;
+		float random = noise.noise(Framework.get().getTimeMs()) * 10.0f * this.pps;
 
 		if (random < partialParticle) {
 			emitParticle();

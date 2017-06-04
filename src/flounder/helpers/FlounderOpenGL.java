@@ -225,7 +225,7 @@ public class FlounderOpenGL extends Module {
 
 	@Instance
 	public static FlounderOpenGL get() {
-		return (FlounderOpenGL) Framework.getInstance(FlounderOpenGL.class);
+		return (FlounderOpenGL) Framework.get().getInstance(FlounderOpenGL.class);
 	}
 
 	@TabName
