@@ -7,6 +7,7 @@ in vec2 pass_textureCoords;
 layout(binding = 0) uniform sampler2D originalAlbedo;
 layout(binding = 2) uniform sampler2D originalExtras;
 uniform vec3 sunPosition;
+uniform float worldHeight;
 uniform vec2 displaySize;
 
 //---------OUT------------
@@ -42,6 +43,9 @@ vec3 lensflare(bool process, vec2 uv, vec3 pos) {
         colour.g += f22 + f42 + f52 + f62;
         colour.b += f23 + f43 + f53 + f63;
 	}
+
+    // Hides flare when below a world height.
+    colour *= clamp(worldHeight + 10.0, 0.0, 1.0);
 
     // Adds a bit of darkining around the edge of the screen.
 	return colour * 1.3 - vec3(length(uvd) * 0.05);
