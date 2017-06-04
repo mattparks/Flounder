@@ -65,6 +65,8 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 		if (attenuation != null) {
 			light.attenuation.set(attenuation);
 		}
+
+		light.update();
 		//	}
 	}
 

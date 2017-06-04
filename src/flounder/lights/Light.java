@@ -2,6 +2,8 @@ package flounder.lights;
 
 import flounder.maths.*;
 import flounder.maths.vectors.*;
+import flounder.physics.*;
+import flounder.physics.bounding.*;
 
 /**
  * Represents a point light, contains a colour, position and attenuation.
@@ -10,6 +12,7 @@ public class Light {
 	public Colour colour;
 	public Vector3f position;
 	public Attenuation attenuation;
+	public Sphere sphere;
 
 	/**
 	 * Creates a new point light with unlimited range.
@@ -32,6 +35,13 @@ public class Light {
 		this.colour = colour;
 		this.position = position;
 		this.attenuation = attenuation;
+		this.sphere = new Sphere(1.0f);
+	}
+
+	public void update() {
+		sphere.setRadius((-attenuation.linear + (float) Math.sqrt((attenuation.linear * attenuation.linear) + (4.0f * attenuation.constant * attenuation.exponent))) / (2.0f * attenuation.constant));
+		sphere.update(position, Vector3f.ZERO, 1.0f, sphere);
+		FlounderBounding.get().addShapeRender(sphere);
 	}
 
 	/**
