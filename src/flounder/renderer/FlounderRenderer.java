@@ -27,6 +27,7 @@ public class FlounderRenderer extends Module {
 	public void update() {
 		// Gets a new renderer, if available.
 		RendererMaster newRenderer = (RendererMaster) getExtensionMatch(renderer, RendererMaster.class, true);
+		cancelChange();
 
 		// If there is a new renderer, disable the old one and start to use the new one.
 		if (newRenderer != null) {

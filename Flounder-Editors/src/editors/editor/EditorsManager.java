@@ -19,6 +19,7 @@ public class EditorsManager extends Module {
 	public void update() {
 		// Gets a new editor, if available.
 		IEditorType newManager = (IEditorType) getExtensionMatch(editorType, IEditorType.class, true);
+		cancelChange();
 
 		// If there is a editor, disable the old one and start to use the new one.
 		if (newManager != null) {

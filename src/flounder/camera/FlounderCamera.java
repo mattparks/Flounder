@@ -29,6 +29,7 @@ public class FlounderCamera extends Module {
 		// Gets a new player and camera, if available.
 		Player newPlayer = (Player) getExtensionMatch(player, Player.class, true);
 		Camera newCamera = (Camera) getExtensionMatch(camera, Camera.class, true);
+		cancelChange();
 
 		// If there is a new player, disable the old one and start to use the new one.
 		if (newPlayer != null) {

@@ -44,6 +44,7 @@ public class FlounderGuis extends Module {
 	@Handler.Function(Handler.FLAG_UPDATE_PRE)
 	public void update() {
 		GuiMaster newManager = (GuiMaster) getExtensionMatch(guiMaster, GuiMaster.class, true);
+		cancelChange();
 
 		if (newManager != null) {
 			if (guiMaster != null) {

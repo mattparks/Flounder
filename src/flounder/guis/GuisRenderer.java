@@ -9,8 +9,6 @@ import flounder.renderer.*;
 import flounder.resources.*;
 import flounder.shaders.*;
 
-import java.util.*;
-
 import static flounder.platform.Constants.*;
 
 public class GuisRenderer extends Renderer {
