@@ -103,9 +103,4 @@ public class FlounderJoysticks extends Module {
 	public static FlounderJoysticks get() {
 		return (FlounderJoysticks) Framework.get().getInstance(FlounderJoysticks.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Joysicks";
-	}
 }

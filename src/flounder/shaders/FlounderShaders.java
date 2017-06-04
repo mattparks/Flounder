@@ -106,9 +106,4 @@ public class FlounderShaders extends Module {
 	public static FlounderShaders get() {
 		return (FlounderShaders) Framework.get().getInstance(FlounderShaders.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Shaders";
-	}
 }

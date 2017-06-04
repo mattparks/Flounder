@@ -21,24 +21,22 @@ public class FontRenderer extends Renderer {
 	private static final MyFile FRAGMENT_SHADER = new MyFile(FlounderShaders.SHADERS_LOC, "fonts", "fontFragment.glsl");
 
 	private ShaderObject shader;
-	private List<ScreenObject> objects;
 
 	/**
 	 * Creates a new font renderer.
 	 */
 	public FontRenderer() {
 		this.shader = ShaderFactory.newBuilder().setName("fonts").addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_SHADER)).addType(new ShaderType(GL_FRAGMENT_SHADER, FRAGMENT_SHADER)).create();
-		this.objects = new ArrayList<>();
 	}
 
 	@Override
 	public void render(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || FlounderGuis.get().getContainer() == null) {
+		if (!shader.isLoaded() || FlounderGuis.get().getContainer() == null || FlounderGuis.get().getObjects().isEmpty()) {
 			return;
 		}
 
 		prepareRendering();
-		FlounderGuis.get().getContainer().getAll(objects).forEach(this::renderText);
+		FlounderGuis.get().getObjects().forEach(this::renderText);
 		endRendering();
 	}
 
@@ -93,7 +91,6 @@ public class FontRenderer extends Renderer {
 
 	private void endRendering() {
 		shader.stop();
-		objects.clear();
 	}
 
 	@Override

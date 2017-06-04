@@ -104,9 +104,4 @@ public class FlounderCamera extends Module {
 	public static FlounderCamera get() {
 		return (FlounderCamera) Framework.get().getInstance(FlounderCamera.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Camera";
-	}
 }

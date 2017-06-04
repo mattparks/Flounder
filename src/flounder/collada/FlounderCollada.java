@@ -101,9 +101,4 @@ public class FlounderCollada extends Module {
 	public static FlounderCollada get() {
 		return (FlounderCollada) Framework.get().getInstance(FlounderCollada.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Collada";
-	}
 }

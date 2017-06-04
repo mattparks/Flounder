@@ -166,9 +166,4 @@ public class FlounderParticles extends Module {
 	public static FlounderParticles get() {
 		return (FlounderParticles) Framework.get().getInstance(FlounderParticles.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Particles";
-	}
 }

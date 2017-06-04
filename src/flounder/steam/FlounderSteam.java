@@ -36,9 +36,4 @@ public class FlounderSteam extends Module {
 	public static FlounderSteam get() {
 		return (FlounderSteam) Framework.get().getInstance(FlounderSteam.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Steam";
-	}
 }

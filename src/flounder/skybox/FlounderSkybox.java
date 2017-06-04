@@ -104,9 +104,4 @@ public class FlounderSkybox extends Module {
 	public static FlounderSkybox get() {
 		return (FlounderSkybox) Framework.get().getInstance(FlounderSkybox.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Skybox";
-	}
 }

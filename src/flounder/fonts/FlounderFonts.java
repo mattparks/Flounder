@@ -41,9 +41,4 @@ public class FlounderFonts extends Module {
 	public static FlounderFonts get() {
 		return (FlounderFonts) Framework.get().getInstance(FlounderFonts.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Fonts";
-	}
 }

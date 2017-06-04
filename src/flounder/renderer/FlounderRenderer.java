@@ -72,9 +72,4 @@ public class FlounderRenderer extends Module {
 	public static FlounderRenderer get() {
 		return (FlounderRenderer) Framework.get().getInstance(FlounderRenderer.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Renderer";
-	}
 }

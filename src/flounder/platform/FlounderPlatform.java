@@ -151,9 +151,4 @@ public class FlounderPlatform extends Module {
 	public static FlounderPlatform get() {
 		return (FlounderPlatform) Framework.get().getInstance(FlounderPlatform.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Platform";
-	}
 }

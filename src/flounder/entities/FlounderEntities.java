@@ -185,9 +185,4 @@ public class FlounderEntities extends Module {
 	public static FlounderEntities get() {
 		return (FlounderEntities) Framework.get().getInstance(FlounderEntities.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Entities";
-	}
 }

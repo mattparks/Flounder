@@ -202,9 +202,4 @@ public class FlounderSound extends Module {
 	public static FlounderSound get() {
 		return (FlounderSound) Framework.get().getInstance(FlounderSound.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Sound";
-	}
 }

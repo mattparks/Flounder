@@ -8,6 +8,8 @@ import flounder.resources.*;
 import flounder.tasks.*;
 import flounder.textures.*;
 
+import java.util.*;
+
 /**
  * A module used for that manages GUI textures in a container.
  */
@@ -21,6 +23,7 @@ public class FlounderGuis extends Module {
 	private GuiMaster guiMaster;
 	private GuiSelector selector;
 	private ScreenObject container;
+	private List<ScreenObject> objects;
 
 	/**
 	 * Creates a new GUI manager.
@@ -34,6 +37,7 @@ public class FlounderGuis extends Module {
 	public void init() {
 		this.selector = new GuiSelector();
 		this.container = new ScreenObjectEmpty(null, new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), false);
+		this.objects = new ArrayList<>();
 		update();
 	}
 
@@ -63,6 +67,9 @@ public class FlounderGuis extends Module {
 		if (guiMaster != null) {
 			guiMaster.update();
 		}
+
+		objects.clear();
+		container.getAll(objects);
 	}
 
 	/**
@@ -84,6 +91,15 @@ public class FlounderGuis extends Module {
 	}
 
 	/**
+	 * The rendering objects from the container. Updated each update.
+	 *
+	 * @return The objects.
+	 */
+	public List<ScreenObject> getObjects() {
+		return objects;
+	}
+
+	/**
 	 * Gets the main GUI selector.
 	 *
 	 * @return The GUI selector.
@@ -91,7 +107,6 @@ public class FlounderGuis extends Module {
 	public GuiSelector getSelector() {
 		return this.selector;
 	}
-
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
@@ -106,10 +121,5 @@ public class FlounderGuis extends Module {
 	@Module.Instance
 	public static FlounderGuis get() {
 		return (FlounderGuis) Framework.get().getInstance(FlounderGuis.class);
-	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Guis";
 	}
 }

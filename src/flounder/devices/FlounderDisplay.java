@@ -270,9 +270,4 @@ public class FlounderDisplay extends Module {
 	public static FlounderDisplay get() {
 		return (FlounderDisplay) Framework.get().getInstance(FlounderDisplay.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Display";
-	}
 }

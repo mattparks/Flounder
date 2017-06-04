@@ -131,8 +131,11 @@ public abstract class ScreenObject {
 	 * @return The list that has been added to.
 	 */
 	public List<ScreenObject> getAll(List<ScreenObject> list) {
-		list.add(this);
-		children.forEach((child) -> child.getAll(list));
+		if (isVisible()) {
+			list.add(this);
+			children.forEach((child) -> child.getAll(list));
+		}
+
 		return list;
 	}
 

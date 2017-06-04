@@ -114,9 +114,4 @@ public class FlounderFBOs extends Module {
 	public static FlounderFBOs get() {
 		return (FlounderFBOs) Framework.get().getInstance(FlounderFBOs.class);
 	}
-
-	@TabName
-	public static String getTab() {
-		return "FBOs";
-	}
 }

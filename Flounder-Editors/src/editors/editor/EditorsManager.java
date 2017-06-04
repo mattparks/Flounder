@@ -63,9 +63,4 @@ public class EditorsManager extends Module {
 	public static EditorsManager get() {
 		return (EditorsManager) Framework.get().getInstance(EditorsManager.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Kosmos Editor";
-	}
 }

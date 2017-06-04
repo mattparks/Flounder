@@ -287,9 +287,4 @@ public class FlounderLoader extends Module {
 	public static FlounderLoader get() {
 		return (FlounderLoader) Framework.get().getInstance(FlounderLoader.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Loader";
-	}
 }

@@ -54,9 +54,4 @@ public class FlounderKeyboard extends Module {
 	public static FlounderKeyboard get() {
 		return (FlounderKeyboard) Framework.get().getInstance(FlounderKeyboard.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Keyboard";
-	}
 }

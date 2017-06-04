@@ -82,9 +82,4 @@ public class FlounderDisplayJPanel extends Module {
 	public static FlounderDisplayJPanel get() {
 		return (FlounderDisplayJPanel) Framework.get().getInstance(FlounderDisplayJPanel.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Display-JPanel";
-	}
 }

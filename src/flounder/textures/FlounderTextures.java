@@ -91,9 +91,4 @@ public class FlounderTextures extends Module {
 	public static FlounderTextures get() {
 		return (FlounderTextures) Framework.get().getInstance(FlounderTextures.class);
 	}
-
-	@Module.TabName
-	public static String getTab() {
-		return "Textures";
-	}
 }
