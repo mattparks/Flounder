@@ -56,7 +56,10 @@ public class Sound {
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.get().log(file.getPath() + " is being loaded into the sound builder right now!");
+			if (FlounderLogger.DETAILED) {
+				FlounderLogger.get().log(file.getPath() + " is being loaded into the sound builder right now!");
+			}
+
 			loadedSounds.remove(file.getPath());
 			data = new Sound(file, volume, pitch);
 			FlounderSound.get().doInitialSoundLoad(data);
@@ -80,7 +83,10 @@ public class Sound {
 		Sound data = ref == null ? null : ref.get();
 
 		if (data == null) {
-			FlounderLogger.get().log(file.getPath() + " is being loaded into the sound builder in the background!");
+			if (FlounderLogger.DETAILED) {
+				FlounderLogger.get().log(file.getPath() + " is being loaded into the sound builder in the background!");
+			}
+
 			loadedSounds.remove(file.getPath());
 			Sound data2 = new Sound(file, volume, pitch);
 			FlounderProcessors.get().sendRequest((RequestResource) () -> FlounderSound.get().doInitialSoundLoad(data2));

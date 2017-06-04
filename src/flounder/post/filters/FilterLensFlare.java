@@ -18,8 +18,9 @@ public class FilterLensFlare extends PostFilter {
 	}
 
 	public void setSunPosition(Vector3f sunPosition) {
-		Maths.worldToScreenSpace(sunPosition, FlounderCamera.get().getCamera().getViewMatrix(), FlounderCamera.get().getCamera().getProjectionMatrix(), this.sunPosition);
-		// this.worldHeight = sunPosition.getY();
+		if (FlounderCamera.get().getCamera() != null) {
+			Maths.worldToScreenSpace(sunPosition, FlounderCamera.get().getCamera().getViewMatrix(), FlounderCamera.get().getCamera().getProjectionMatrix(), this.sunPosition);
+		}
 	}
 
 	public void setWorldHeight(float worldHeight) {

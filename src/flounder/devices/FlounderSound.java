@@ -69,7 +69,10 @@ public class FlounderSound extends Module {
 	 */
 	public void doInitialSoundLoad(Sound sound) {
 		try {
-			FlounderLogger.get().log("Loading sound " + sound.getSoundFile().getPath());
+			if (FlounderLogger.DETAILED) {
+				FlounderLogger.get().log("Loading sound " + sound.getSoundFile().getPath());
+			}
+
 			WavDataStream stream = WavDataStream.openWavStream(sound.getSoundFile(), StreamManager.SOUND_CHUNK_MAX_SIZE);
 			sound.setTotalBytes(stream.getTotalBytes());
 			ByteBuffer byteBuffer = stream.loadNextData();
