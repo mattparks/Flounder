@@ -16,7 +16,7 @@ import flounder.textures.*;
 public class FlounderSkybox extends Module {
 	public static final MyFile SKYBOX_FOLDER = new MyFile(MyFile.RES_FOLDER, "skybox");
 
-	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "aabb.obj");
+	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "skybox_cube.obj"); // skybox_sphere
 
 	private static final float SIZE = 250.0f;
 
