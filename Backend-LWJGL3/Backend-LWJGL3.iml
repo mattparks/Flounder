@@ -7,7 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/libs" type="java-resource" />
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
-    <orderEntry type="module" module-name="Flounder-Engine" exported="" />
+    <orderEntry type="module" module-name="Flounder-Engine" />
     <orderEntry type="library" exported="" name="lwjgl3" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
