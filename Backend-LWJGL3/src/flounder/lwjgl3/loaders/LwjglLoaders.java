@@ -4,6 +4,7 @@ import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.platform.*;
+import org.lwjgl.opengl.*;
 
 import java.nio.*;
 import java.util.*;
@@ -101,7 +102,7 @@ public class LwjglLoaders extends FlounderLoader {
 	@Override
 	public void deleteVAOFromCache(int vao) {
 		if (this.vaoCache.containsKey(vao)) {
-			this.vaoCache.get(vao).forEach(key -> glDeleteBuffers(key));
+			this.vaoCache.get(vao).forEach(GL15::glDeleteBuffers);
 			this.vaoCache.get(vao).clear();
 			this.vaoCache.remove(vao);
 			glDeleteVertexArrays(vao);
@@ -115,8 +116,8 @@ public class LwjglLoaders extends FlounderLoader {
 
 		int total = 0;
 
-		for (int i = 0; i < lengths.length; i++) {
-			total += lengths[i];
+		for (int length : lengths) {
+			total += length;
 		}
 
 		int vertexByteCount = ByteWork.FLOAT_LENGTH * total;
@@ -314,7 +315,7 @@ public class LwjglLoaders extends FlounderLoader {
 		glBindVertexArray(0);
 
 		for (int vaoID : vaoCache.keySet()) {
-			vaoCache.get(vaoID).forEach(cache -> glDeleteBuffers(cache));
+			vaoCache.get(vaoID).forEach(GL15::glDeleteBuffers);
 			glDeleteVertexArrays(vaoID);
 		}
 

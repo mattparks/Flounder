@@ -31,9 +31,7 @@ public class SkinLoader {
 		String[] names = jointsNode.getData().split(" ");
 		List<String> jointsList = new ArrayList<>();
 
-		for (String name : names) {
-			jointsList.add(name);
-		}
+		Collections.addAll(jointsList, names);
 
 		return jointsList;
 	}

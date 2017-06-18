@@ -4,7 +4,6 @@ import flounder.maths.vectors.*;
 import flounder.particles.spawns.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 
 public class EditorParticleLine extends IEditorParticleSpawn {
 	private SpawnLine spawn;
@@ -28,15 +27,12 @@ public class EditorParticleLine extends IEditorParticleSpawn {
 		// Length Slider.
 		JSlider lengthSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, (int) spawn.getLength());
 		lengthSlider.setToolTipText("Spawn Length");
-		lengthSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider source = (JSlider) e.getSource();
-				int reading = source.getValue();
+		lengthSlider.addChangeListener(e -> {
+			JSlider source = (JSlider) e.getSource();
+			int reading = source.getValue();
 
-				if (reading >= 1) {
-					spawn.setLength(reading);
-				}
+			if (reading >= 1) {
+				spawn.setLength(reading);
 			}
 		});
 		// Turn on labels at major tick marks.

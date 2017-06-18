@@ -1,5 +1,8 @@
 package editors.editor;
 
+import flounder.framework.*;
+import flounder.logger.*;
+
 public class EditorsManager extends Module {
 	private IEditorType editorType;
 

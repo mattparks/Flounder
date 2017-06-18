@@ -9,8 +9,6 @@ import flounder.particles.*;
 import flounder.particles.spawns.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.event.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -41,11 +39,11 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 	 * Creates a new ComponentParticles.
 	 *
 	 * @param entity The entity this component is attached to.
-	 * @param types
-	 * @param spawn
-	 * @param pps
-	 * @param speed
-	 * @param gravityEffect
+	 * @param types The types of particles to spawn.
+	 * @param spawn The particle spawn types.
+	 * @param pps Particles per second.
+	 * @param speed The particle speed.
+	 * @param gravityEffect How much gravity will effect the particle.
 	 */
 	public ComponentParticles(Entity entity, List<ParticleType> types, IParticleSpawn spawn, Vector3f offset, float pps, float speed, float gravityEffect) {
 		super(entity);
@@ -95,13 +93,10 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 		// PPS Slider.
 		JSlider ppsSlider = new JSlider(JSlider.HORIZONTAL, 0, 2500, (int) particleSystem.getPPS());
 		ppsSlider.setToolTipText("Particles Per Second");
-		ppsSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider source = (JSlider) e.getSource();
-				int reading = source.getValue();
-				particleSystem.setPps(reading);
-			}
+		ppsSlider.addChangeListener(e -> {
+			JSlider source = (JSlider) e.getSource();
+			int reading = source.getValue();
+			particleSystem.setPps(reading);
 		});
 		ppsSlider.setMajorTickSpacing(500);
 		ppsSlider.setMinorTickSpacing(100);
@@ -112,13 +107,10 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 		// Gravity Effect Slider.
 		JSlider gravityEffectSlider = new JSlider(JSlider.HORIZONTAL, -150, 150, (int) (particleSystem.getGravityEffect() * 100.0f));
 		gravityEffectSlider.setToolTipText("Gravity Effect");
-		gravityEffectSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider source = (JSlider) e.getSource();
-				int reading = source.getValue();
-				particleSystem.setGravityEffect(reading / 100.0f);
-			}
+		gravityEffectSlider.addChangeListener(e -> {
+			JSlider source = (JSlider) e.getSource();
+			int reading = source.getValue();
+			particleSystem.setGravityEffect(reading / 100.0f);
 		});
 		gravityEffectSlider.setMajorTickSpacing(50);
 		gravityEffectSlider.setMinorTickSpacing(10);
@@ -129,13 +121,10 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 		// Speed Slider.
 		JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 150, (int) (particleSystem.getAverageSpeed() * 10.0f));
 		speedSlider.setToolTipText("Speed Slider");
-		speedSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider source = (JSlider) e.getSource();
-				int reading = source.getValue();
-				particleSystem.setAverageSpeed(reading / 10.0f);
-			}
+		speedSlider.addChangeListener(e -> {
+			JSlider source = (JSlider) e.getSource();
+			int reading = source.getValue();
+			particleSystem.setAverageSpeed(reading / 10.0f);
 		});
 		speedSlider.setMajorTickSpacing(30);
 		speedSlider.setMinorTickSpacing(5);
@@ -146,79 +135,62 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 		// X Offset Field.
 		JSpinner xOffsetField = new JSpinner(new SpinnerNumberModel((double) centreOffset.x, Double.NEGATIVE_INFINITY + 1.0, Double.POSITIVE_INFINITY - 1.0, 0.1));
 		xOffsetField.setToolTipText("Particle System X Offset");
-		xOffsetField.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				centreOffset.x = (float) (double) ((JSpinner) e.getSource()).getValue();
-			}
-		});
+		xOffsetField.addChangeListener(e -> centreOffset.x = (float) (double) ((JSpinner) e.getSource()).getValue());
 		panel.add(xOffsetField);
 
 		// Y Offset Field.
 		JSpinner yOffsetField = new JSpinner(new SpinnerNumberModel((double) centreOffset.x, Double.NEGATIVE_INFINITY + 1.0, Double.POSITIVE_INFINITY - 1.0, 0.1));
 		yOffsetField.setToolTipText("Particle System Y Offset");
-		yOffsetField.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				centreOffset.y = (float) (double) ((JSpinner) e.getSource()).getValue();
-			}
-		});
+		yOffsetField.addChangeListener(e -> centreOffset.y = (float) (double) ((JSpinner) e.getSource()).getValue());
 		panel.add(yOffsetField);
 
 		// Z Offset Field.
 		JSpinner zOffsetField = new JSpinner(new SpinnerNumberModel((double) centreOffset.x, Double.NEGATIVE_INFINITY + 1.0, Double.POSITIVE_INFINITY - 1.0, 0.1));
 		yOffsetField.setToolTipText("Particle System Z Offset");
-		zOffsetField.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				centreOffset.z = (float) (double) ((JSpinner) e.getSource()).getValue();
-			}
-		});
+		zOffsetField.addChangeListener(e -> centreOffset.z = (float) (double) ((JSpinner) e.getSource()).getValue());
 		panel.add(zOffsetField);
 
 		// Component Dropdown.
 		JComboBox componentDropdown = new JComboBox();
-		for (int i = 0; i < spawns.length; i++) {
-			componentDropdown.addItem(spawns[i].getTabName());
+		for (IEditorParticleSpawn spawn : spawns) {
+			componentDropdown.addItem(spawn.getTabName());
 		}
 		panel.add(componentDropdown);
 
 		// Component Add Button.
 		JButton componentAdd = new JButton("Set Spawn");
-		componentAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String spawn = (String) componentDropdown.getSelectedItem();
-				IEditorParticleSpawn particleSpawn = null;
+		componentAdd.addActionListener(e -> {
+			String spawn = (String) componentDropdown.getSelectedItem();
+			IEditorParticleSpawn particleSpawn = null;
 
-				for (int i = 0; i < spawns.length; i++) {
-					if (spawns[i].getTabName().equals(spawn)) {
-						try {
-							FlounderLogger.get().log("Adding component: " + spawn);
-							Class componentClass = Class.forName(spawns[i].getClass().getName());
-							Class[] componentTypes = new Class[]{};
-							@SuppressWarnings("unchecked") Constructor componentConstructor = componentClass.getConstructor(componentTypes);
-							Object[] componentParameters = new Object[]{};
-							particleSpawn = (IEditorParticleSpawn) componentConstructor.newInstance(componentParameters);
-						} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
-							FlounderLogger.get().error("While loading particle spawn" + spawns[i] + "'s constructor could not be found!");
-							FlounderLogger.get().exception(ex);
-						}
+			for (IEditorParticleSpawn spawn1 : spawns) {
+				if (spawn1.getTabName().equals(spawn)) {
+					try {
+						FlounderLogger.get().log("Adding component: " + spawn);
+						Class componentClass = Class.forName(spawn1.getClass().getName());
+						Class[] componentTypes = new Class[]{};
+						@SuppressWarnings("unchecked") Constructor componentConstructor = componentClass.getConstructor(componentTypes);
+						Object[] componentParameters = new Object[]{};
+						particleSpawn = (IEditorParticleSpawn) componentConstructor.newInstance(componentParameters);
+					} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
+						FlounderLogger.get().error("While loading particle spawn" + spawn1 + "'s constructor could not be found!");
+						FlounderLogger.get().exception(ex);
 					}
 				}
+			}
 
-				if (particleSystem.getSpawn() != null) {
-					String classname = particleSystem.getSpawn().getClass().getName();
-					IComponentEditor.REMOVE_SIDE_TAB.add("Particles (" + classname.split("\\.")[ByteWork.getCharCount(classname, '.')].replace("Spawn", "") + ")"); // TODO
-				}
+			if (particleSystem.getSpawn() != null) {
+				String classname = particleSystem.getSpawn().getClass().getName();
+				IComponentEditor.REMOVE_SIDE_TAB.add("Particles (" + classname.split("\\.")[ByteWork.getCharCount(classname, '.')].replace("Spawn", "") + ")"); // TODO
+			}
 
-				if (particleSpawn != null) {
-					particleSystem.setSpawn(particleSpawn.getComponent());
-					editorSystemSpawn = particleSpawn;
+			if (particleSpawn != null) {
+				particleSystem.setSpawn(particleSpawn.getComponent());
+				editorSystemSpawn = particleSpawn;
 
-					JPanel panel = IComponentEditor.makeTextPanel();
-					particleSpawn.addToPanel(panel);
-					IComponentEditor.ADD_SIDE_TAB.add(new Pair<>("Particles (" + particleSpawn.getTabName() + ")", panel)); // TODO
-				}
+				JPanel panel1 = IComponentEditor.makeTextPanel();
+				particleSpawn.addToPanel(panel1);
+				IComponentEditor.ADD_SIDE_TAB.add(new Pair<>("Particles (" + particleSpawn.getTabName() + ")", panel1)); // TODO
 			}
 		});
 		panel.add(componentAdd);
@@ -232,22 +204,30 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 
 	@Override
 	public Pair<String[], String[]> getSaveValues(String entityName) {
-		String parameterData = "";
+		StringBuilder parameterData = new StringBuilder();
 
 		for (String s : editorSystemSpawn.getSavableValues()) {
-			parameterData += s + ", ";
+			parameterData.append(s);
+			parameterData.append(", ");
 		}
 
-		parameterData = parameterData.replaceAll(", $", "");
+		parameterData = new StringBuilder(parameterData.toString().replaceAll(", $", ""));
 
-		String particlesData = "";
+		StringBuilder particlesData = new StringBuilder();
 
 		for (ParticleType t : particleSystem.getTypes()) {
 			String saveTexture = (t.getTexture() != null) ? ("TextureFactory.newBuilder().setFile(new MyFile(FlounderParticles.PARTICLES_FOLDER, \"" + t.getName() + "Particle.png\")).setNumberOfRows(" + t.getTexture().getNumberOfRows() + ").create()") : null;
-			particlesData += "new ParticleType(\"" + t.getName() + "\", " + saveTexture + ", " + t.getLifeLength() + "f, " + t.getScale() + "f), ";
+			particlesData.append("new ParticleType(\"").append(t.getName());
+			particlesData.append("\", ");
+			particlesData.append(saveTexture);
+			particlesData.append(", ");
+			particlesData.append(t.getLifeLength());
+			particlesData.append("f, ");
+			particlesData.append(t.getScale());
+			particlesData.append("f), ");
 		}
 
-		particlesData = particlesData.replaceAll(", $", "");
+		particlesData = new StringBuilder(particlesData.toString().replaceAll(", $", ""));
 
 		String saveParticles = "new ParticleType[]{" + particlesData + "}";
 		String saveSpawn = "new " + particleSystem.getSpawn().getClass().getName() + "(" + parameterData + ")";

@@ -1,6 +1,17 @@
 package editors.entities;
 
 import editors.editor.*;
+import flounder.devices.*;
+import flounder.entities.*;
+import flounder.entities.components.*;
+import flounder.framework.*;
+import flounder.helpers.*;
+import flounder.maths.vectors.*;
+import flounder.particles.*;
+import flounder.physics.*;
+import flounder.physics.bounding.*;
+import flounder.shadows.*;
+import flounder.skybox.*;
 
 import javax.swing.*;
 
@@ -27,8 +38,8 @@ public class ExtensionEntities extends IEditorType {
 		FlounderOpenGL.get().goWireframe(false);
 
 		// Sets the world to constant fog and a sun.
-		//	EbonWorld.addFog(new Fog(new Colour(1.0f, 1.0f, 1.0f), 0.003f, 2.0f, 0.0f, 50.0f));
-		//	EbonWorld.addSun(new Light(new Colour(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 2000.0f, 2000.0f)));
+		//	World.addFog(new Fog(new Colour(1.0f, 1.0f, 1.0f), 0.003f, 2.0f, 0.0f, 50.0f));
+		//	World.addSun(new Light(new Colour(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 2000.0f, 2000.0f)));
 
 		// Default editor values.
 		entityRotate = false;

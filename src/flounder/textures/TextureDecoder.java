@@ -53,7 +53,7 @@ public class TextureDecoder {
 		final int numComponents;
 		final boolean hasAlpha;
 
-		private Format(int numComponents, boolean hasAlpha) {
+		Format(int numComponents, boolean hasAlpha) {
 			this.numComponents = numComponents;
 			this.hasAlpha = hasAlpha;
 		}
@@ -508,7 +508,7 @@ public class TextureDecoder {
 		if (paletteA != null) {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
-				byte r = palette[idx * 3 + 0];
+				byte r = palette[idx * 3];
 				byte g = palette[idx * 3 + 1];
 				byte b = palette[idx * 3 + 2];
 				byte a = paletteA[idx];
@@ -517,7 +517,7 @@ public class TextureDecoder {
 		} else {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
-				byte r = palette[idx * 3 + 0];
+				byte r = palette[idx * 3];
 				byte g = palette[idx * 3 + 1];
 				byte b = palette[idx * 3 + 2];
 				byte a = (byte) 0xFF;
@@ -530,7 +530,7 @@ public class TextureDecoder {
 		if (paletteA != null) {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
-				byte r = palette[idx * 3 + 0];
+				byte r = palette[idx * 3];
 				byte g = palette[idx * 3 + 1];
 				byte b = palette[idx * 3 + 2];
 				byte a = paletteA[idx];
@@ -539,7 +539,7 @@ public class TextureDecoder {
 		} else {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
-				byte r = palette[idx * 3 + 0];
+				byte r = palette[idx * 3];
 				byte g = palette[idx * 3 + 1];
 				byte b = palette[idx * 3 + 2];
 				byte a = (byte) 0xFF;
@@ -552,7 +552,7 @@ public class TextureDecoder {
 		if (paletteA != null) {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
-				byte r = palette[idx * 3 + 0];
+				byte r = palette[idx * 3];
 				byte g = palette[idx * 3 + 1];
 				byte b = palette[idx * 3 + 2];
 				byte a = paletteA[idx];
@@ -561,7 +561,7 @@ public class TextureDecoder {
 		} else {
 			for (int i = 1, n = curLine.length; i < n; i += 1) {
 				int idx = curLine[i] & 255;
-				byte r = palette[idx * 3 + 0];
+				byte r = palette[idx * 3];
 				byte g = palette[idx * 3 + 1];
 				byte b = palette[idx * 3 + 2];
 				byte a = (byte) 0xFF;
@@ -899,7 +899,7 @@ public class TextureDecoder {
 				}
 			} while (length > 0);
 		} catch (DataFormatException ex) {
-			throw (IOException) (new IOException("Inflate error").initCause(ex));
+			throw new IOException("Inflate error", ex);
 		}
 	}
 

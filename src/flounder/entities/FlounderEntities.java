@@ -104,8 +104,8 @@ public class FlounderEntities extends Module {
 			fileWriterHelper.beginNewSegment("public class " + className + " extends Entity");
 			{
 				// Writes static data to the save.
-				for (int i = 0; i < editorComponents.size(); i++) {
-					Pair<String[], String[]> saveValues = editorComponents.get(i).getSaveValues(name);
+				for (IComponentEditor editorComponent : editorComponents) {
+					Pair<String[], String[]> saveValues = editorComponent.getSaveValues(name);
 
 					if (saveValues != null) {
 						for (String s : saveValues.getFirst()) {
@@ -124,22 +124,23 @@ public class FlounderEntities extends Module {
 				{
 					fileWriterHelper.writeSegmentData("super(structure, position, rotation);", true);
 					// Writes the component constructors.
-					for (int i = 0; i < editorComponents.size(); i++) {
-						Pair<String[], String[]> saveValues = editorComponents.get(i).getSaveValues(name);
+					for (IComponentEditor editorComponent : editorComponents) {
+						Pair<String[], String[]> saveValues = editorComponent.getSaveValues(name);
 
 						if (saveValues != null) {
-							String parameterData = "";
+							StringBuilder parameterData = new StringBuilder();
 
 							for (String s : saveValues.getSecond()) {
-								parameterData += s + ", ";
+								parameterData.append(s);
+								parameterData.append(", ");
 							}
 
-							parameterData = parameterData.replaceAll(", $", "");
+							parameterData = new StringBuilder(parameterData.toString().replaceAll(", $", ""));
 
-							if (parameterData.isEmpty()) {
-								fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this);", true);
+							if (parameterData.length() == 0) {
+								fileWriterHelper.writeSegmentData("new " + editorComponent.getClass().getName() + "(this);", true);
 							} else {
-								fileWriterHelper.writeSegmentData("new " + editorComponents.get(i).getClass().getName() + "(this, " + parameterData + ");", true);
+								fileWriterHelper.writeSegmentData("new " + editorComponent.getClass().getName() + "(this, " + parameterData + ");", true);
 							}
 						}
 					}

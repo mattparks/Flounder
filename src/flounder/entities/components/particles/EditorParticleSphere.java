@@ -3,7 +3,6 @@ package flounder.entities.components.particles;
 import flounder.particles.spawns.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 
 public class EditorParticleSphere extends IEditorParticleSpawn {
 	private SpawnSphere spawn;
@@ -27,15 +26,12 @@ public class EditorParticleSphere extends IEditorParticleSpawn {
 		// Radius Slider.
 		JSlider radiusSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, (int) spawn.getRadius());
 		radiusSlider.setToolTipText("Spawn Radius");
-		radiusSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider source = (JSlider) e.getSource();
-				int reading = source.getValue();
+		radiusSlider.addChangeListener(e -> {
+			JSlider source = (JSlider) e.getSource();
+			int reading = source.getValue();
 
-				if (reading > 1) {
-					spawn.setRadius(reading);
-				}
+			if (reading > 1) {
+				spawn.setRadius(reading);
 			}
 		});
 		// Turn on labels at major tick marks.

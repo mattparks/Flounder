@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.util.*;
 
 public interface IComponentEditor {
-	public static final List<Pair<String, JPanel>> ADD_SIDE_TAB = new ArrayList<>();
-	public static final List<String> REMOVE_SIDE_TAB = new ArrayList<>();
+	List<Pair<String, JPanel>> ADD_SIDE_TAB = new ArrayList<>();
+	List<String> REMOVE_SIDE_TAB = new ArrayList<>();
 
 	void addToPanel(JPanel panel);
 
@@ -27,7 +27,7 @@ public interface IComponentEditor {
 	 *
 	 * @return The new text panel.
 	 */
-	public static JPanel makeTextPanel() {
+	static JPanel makeTextPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new WrapLayout());
 		return panel;
@@ -40,7 +40,7 @@ public interface IComponentEditor {
 	 *
 	 * @return The tabs name.
 	 */
-	public static String getTabName(IComponentEditor editor) {
+	static String getTabName(IComponentEditor editor) {
 		String[] path = editor.getClass().getName().split("\\.");
 		return path[path.length - 1].replace("Component", "").trim();
 	}

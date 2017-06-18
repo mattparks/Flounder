@@ -21,7 +21,7 @@ public class ComponentChild extends IComponentEntity implements IComponentEditor
 	 * Creates a new ComponentChild.
 	 *
 	 * @param entity The entity this component is attached to.
-	 * @param parent
+	 * @param parent The parent to this child.
 	 */
 	public ComponentChild(Entity entity, Entity parent) {
 		super(entity);

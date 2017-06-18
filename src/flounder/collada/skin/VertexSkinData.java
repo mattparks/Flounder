@@ -56,8 +56,8 @@ public class VertexSkinData {
 	private void refillWeightList(float[] topWeights, float total) {
 		weights.clear();
 
-		for (int i = 0; i < topWeights.length; i++) {
-			weights.add(topWeights[i] / total);
+		for (float topWeight : topWeights) {
+			weights.add(topWeight / total);
 		}
 	}
 

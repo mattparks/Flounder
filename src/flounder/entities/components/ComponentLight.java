@@ -31,9 +31,9 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 	 * Creates a new ComponentLight.
 	 *
 	 * @param entity The entity this component is attached to.
-	 * @param offset
-	 * @param colour
-	 * @param attenuation
+	 * @param offset The offset from the centre of the entity.
+	 * @param colour The colour of the light.
+	 * @param attenuation The attenuation of the light/
 	 */
 	public ComponentLight(Entity entity, Vector3f offset, Colour colour, Attenuation attenuation) {
 		super(entity);
@@ -141,34 +141,19 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 		// X Offset Field.
 		JSpinner xOffsetField = new JSpinner(new SpinnerNumberModel((double) offset.x, Double.NEGATIVE_INFINITY + 1.0, Double.POSITIVE_INFINITY - 1.0, 0.1));
 		xOffsetField.setToolTipText("Light X Offset");
-		xOffsetField.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				offset.x = (float) (double) ((JSpinner) e.getSource()).getValue();
-			}
-		});
+		xOffsetField.addChangeListener(e -> offset.x = (float) (double) ((JSpinner) e.getSource()).getValue());
 		panel.add(xOffsetField);
 
 		// Y Offset Field.
 		JSpinner yOffsetField = new JSpinner(new SpinnerNumberModel((double) offset.x, Double.NEGATIVE_INFINITY + 1.0, Double.POSITIVE_INFINITY - 1.0, 0.1));
 		yOffsetField.setToolTipText("Light Y Offset");
-		yOffsetField.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				offset.y = (float) (double) ((JSpinner) e.getSource()).getValue();
-			}
-		});
+		yOffsetField.addChangeListener(e -> offset.y = (float) (double) ((JSpinner) e.getSource()).getValue());
 		panel.add(yOffsetField);
 
 		// Z Offset Field.
 		JSpinner zOffsetField = new JSpinner(new SpinnerNumberModel((double) offset.x, Double.NEGATIVE_INFINITY + 1.0, Double.POSITIVE_INFINITY - 1.0, 0.1));
 		yOffsetField.setToolTipText("Light Z Offset");
-		zOffsetField.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				offset.z = (float) (double) ((JSpinner) e.getSource()).getValue();
-			}
-		});
+		zOffsetField.addChangeListener(e -> offset.z = (float) (double) ((JSpinner) e.getSource()).getValue());
 		panel.add(zOffsetField);
 	}
 

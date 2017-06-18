@@ -62,8 +62,8 @@ public class TextLoader {
 		Line currentLine = new Line(metaData.getSpaceWidth(), text.getMaxLineSize());
 		Word currentWord = new Word();
 
-		for (int i = 0; i < chars.length; i++) {
-			int ascii = (int) chars[i];
+		for (char aChar : chars) {
+			int ascii = (int) aChar;
 
 			if (ascii == SPACE_ASCII) {
 				boolean added = currentLine.attemptToAddWord(currentWord);
@@ -81,7 +81,7 @@ public class TextLoader {
 			}
 
 			Character character = metaData.getCharacter(ascii);
-			currentWord.addCharacter(character, chars[i]);
+			currentWord.addCharacter(character, aChar);
 		}
 
 		completeStructure(lines, currentLine, currentWord, text);

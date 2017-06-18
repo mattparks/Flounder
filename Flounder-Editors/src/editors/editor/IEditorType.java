@@ -1,5 +1,7 @@
 package editors.editor;
 
+import flounder.framework.*;
+
 /**
  * A extension used with {@link EditorsManager} to define a editor type.
  */

@@ -30,7 +30,7 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 	 * Creates a new ComponentSway.
 	 *
 	 * @param entity The entity this component is attached to.
-	 * @param textureSway
+	 * @param textureSway The texture to be used as the swap map.
 	 */
 	public ComponentSway(Entity entity, TextureObject textureSway) {
 		super(entity);

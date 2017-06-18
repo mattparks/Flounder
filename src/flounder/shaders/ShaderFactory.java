@@ -44,26 +44,28 @@ public class ShaderFactory extends Factory {
 		List<Pair<Uniform.Uniforms, String>> shaderUniforms = new ArrayList<>();
 
 		for (ShaderType type : b.getTypes()) {
-			if (type.getShaderFile().isPresent()) {
-				MyFile file = type.getShaderFile().get();
+			if (type.getShaderFile() != null) {
+				MyFile file = type.getShaderFile();
 
 				try {
 					BufferedReader reader = file.getReader();
 					String line;
 
 					while ((line = reader.readLine()) != null) {
-						type.getShaderBuilder().append(INSTANCE.processShaderLine(line.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, type.getShaderType()) + "\n");
+						type.getShaderBuilder().append(INSTANCE.processShaderLine(line.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, type.getShaderType()));
+						type.getShaderBuilder().append("\n");
 					}
 				} catch (Exception e) {
 					FlounderLogger.get().error("Could not read file " + file.getName());
 					FlounderLogger.get().exception(e);
 					System.exit(-1);
 				}
-			} else if (type.getShaderString().isPresent()) {
-				String string = type.getShaderString().get();
+			} else if (type.getShaderString() != null) {
+				String string = type.getShaderString();
 
 				for (String line : string.split("\n")) {
-					type.getShaderBuilder().append(INSTANCE.processShaderLine(line.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, type.getShaderType()) + "\n");
+					type.getShaderBuilder().append(INSTANCE.processShaderLine(line.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, type.getShaderType()));
+					type.getShaderBuilder().append("\n");
 				}
 			}
 		}
@@ -85,7 +87,8 @@ public class ShaderFactory extends Factory {
 				String includeLine;
 
 				while ((includeLine = reader.readLine()) != null) {
-					includeSource.append(processShaderLine(includeLine.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, shaderType) + "\n");
+					includeSource.append(processShaderLine(includeLine.trim(), constantValues, layoutLocations, layoutBindings, shaderUniforms, shaderType));
+					includeSource.append("\n");
 				}
 			} catch (Exception e) {
 				FlounderLogger.get().error("Could not read file " + includeFile.getName());

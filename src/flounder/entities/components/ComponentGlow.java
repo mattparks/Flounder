@@ -29,7 +29,7 @@ public class ComponentGlow extends IComponentEntity implements IComponentRender,
 	 * Creates a new ComponentGlow.
 	 *
 	 * @param entity The entity this component is attached to.
-	 * @param textureGlow
+	 * @param textureGlow The texture to be used as the glow map.
 	 */
 	public ComponentGlow(Entity entity, TextureObject textureGlow) {
 		super(entity);

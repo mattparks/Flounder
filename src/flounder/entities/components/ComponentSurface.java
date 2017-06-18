@@ -142,25 +142,19 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 		// Ignore Fog Checkbox.
 		JCheckBox boxIgnoreFog = new JCheckBox("Ignore Fog");
 		boxIgnoreFog.setSelected(this.ignoreFog);
-		boxIgnoreFog.addItemListener((ItemEvent e) -> {
-			this.ignoreFog = boxIgnoreFog.isSelected();
-		});
+		boxIgnoreFog.addItemListener((ItemEvent e) -> this.ignoreFog = boxIgnoreFog.isSelected());
 		panel.add(boxIgnoreFog);
 
 		// Ignore Shadows Checkbox.
 		JCheckBox boxIgnoreShadows = new JCheckBox("Ignore Shadows");
 		boxIgnoreShadows.setSelected(this.ignoreLighting);
-		boxIgnoreShadows.addItemListener((ItemEvent e) -> {
-			this.ignoreLighting = boxIgnoreShadows.isSelected();
-		});
+		boxIgnoreShadows.addItemListener((ItemEvent e) -> this.ignoreLighting = boxIgnoreShadows.isSelected());
 		panel.add(boxIgnoreShadows);
 
 		// Project Shadows Checkbox.
 		JCheckBox boxProjectShadows = new JCheckBox("Project Shadows");
 		boxProjectShadows.setSelected(this.ignoreLighting);
-		boxProjectShadows.addItemListener((ItemEvent e) -> {
-			this.projectsShadow = boxProjectShadows.isSelected();
-		});
+		boxProjectShadows.addItemListener((ItemEvent e) -> this.projectsShadow = boxProjectShadows.isSelected());
 		panel.add(boxProjectShadows);
 	}
 

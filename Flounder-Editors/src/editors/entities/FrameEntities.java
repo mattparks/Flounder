@@ -1,6 +1,12 @@
 package editors.entities;
 
 import editors.editor.*;
+import flounder.devices.*;
+import flounder.entities.*;
+import flounder.framework.*;
+import flounder.helpers.*;
+import flounder.logger.*;
+import flounder.standards.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -132,45 +138,43 @@ public class FrameEntities extends Standard {
 
 	private void addComponentsButton() {
 		componentAdd = new JButton("Add Component");
-		componentAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String componentName = (String) componentDropdown.getSelectedItem();
-				IComponentEditor editorComponent = null;
+		componentAdd.addActionListener(e -> {
+			String componentName = (String) componentDropdown.getSelectedItem();
+			IComponentEditor editorComponent = null;
 
-				for (IComponentEntity component : COMPONENT_LIST) {
-					if (component instanceof IComponentEditor) {
-						String tabName = IComponentEditor.getTabName((IComponentEditor) component);
+			for (IComponentEntity component : COMPONENT_LIST) {
+				if (component instanceof IComponentEditor) {
+					String tabName = IComponentEditor.getTabName((IComponentEditor) component);
 
-						if (tabName.equals(componentName)) {
-							if (((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity != null && ((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity.getComponent(component.getClass()) == null) {
-								try {
-									FlounderLogger.get().log("Adding component: " + componentName);
-									Class componentClass = Class.forName(((IComponentEditor) component).getClass().getName());
-									Class[] componentTypes = new Class[]{Entity.class};
-									@SuppressWarnings("unchecked") Constructor componentConstructor = componentClass.getConstructor(componentTypes);
-									Object[] componentParameters = new Object[]{((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity};
-									editorComponent = (IComponentEditor) componentConstructor.newInstance(componentParameters);
-								} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
-									FlounderLogger.get().error("While loading component" + component + "'s constructor could not be found!");
-									FlounderLogger.get().exception(ex);
-								}
-							} else {
-								FlounderLogger.get().error("Entity already has instance of " + component);
+					if (tabName.equals(componentName)) {
+						if (((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity != null && ((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity.getComponent(component.getClass()) == null) {
+							try {
+								FlounderLogger.get().log("Adding component: " + componentName);
+								Class componentClass = Class.forName(((IComponentEditor) component).getClass().getName());
+								Class[] componentTypes = new Class[]{Entity.class};
+								@SuppressWarnings("unchecked") Constructor componentConstructor = componentClass.getConstructor(componentTypes);
+								Object[] componentParameters = new Object[]{((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity};
+								editorComponent = (IComponentEditor) componentConstructor.newInstance(componentParameters);
+							} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
+								FlounderLogger.get().error("While loading component" + component + "'s constructor could not be found!");
+								FlounderLogger.get().exception(ex);
 							}
+						} else {
+							FlounderLogger.get().error("Entity already has instance of " + component);
 						}
 					}
 				}
+			}
 
-				FlounderLogger.get().log(editorComponent);
+			FlounderLogger.get().log(editorComponent);
 
-				if (editorComponent != null) {
-					editorComponents.add(editorComponent);
+			if (editorComponent != null) {
+				editorComponents.add(editorComponent);
 
-					JPanel panel = IComponentEditor.makeTextPanel();
-					editorComponent.addToPanel(panel);
-					componentAddRemove(panel, editorComponent);
-					addSideTab(componentName, panel);
-				}
+				JPanel panel = IComponentEditor.makeTextPanel();
+				editorComponent.addToPanel(panel);
+				componentAddRemove(panel, editorComponent);
+				addSideTab(componentName, panel);
 			}
 		});
 		mainPanel.add(componentAdd);
@@ -203,28 +207,26 @@ public class FrameEntities extends Standard {
 
 	private void addEntityLoad() {
 		loadButton = new JButton("Select .java");
-		loadButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				JFileChooser fileChooser = new JFileChooser();
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				fileChooser.setCurrentDirectory(workingDirectory);
-				int returnValue = fileChooser.showOpenDialog(null);
+		loadButton.addActionListener(ae -> {
+			JFileChooser fileChooser = new JFileChooser();
+			File workingDirectory = new File(System.getProperty("user.dir"));
+			fileChooser.setCurrentDirectory(workingDirectory);
+			int returnValue = fileChooser.showOpenDialog(null);
 
-				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					String selectedFile = fileChooser.getSelectedFile().getPath().replace("\\", "/");
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				String selectedFile = fileChooser.getSelectedFile().getPath().replace("\\", "/");
 
-					String[] filepath = selectedFile.split("/");
-					String fileName = filepath[filepath.length - 1];
+				String[] filepath = selectedFile.split("/");
+				String fileName = filepath[filepath.length - 1];
 
-					FlounderLogger.get().error(fileName);
+				FlounderLogger.get().error(fileName);
 
-					//	try {
-					//		((ExtensionEntities) EditorsManager.getEditorType()).setEntity((Entity) ClassLoader.getSystemClassLoader().loadClass(selectedFile).newInstance());
-					//	} catch (Exception e) {
-					//		FlounderLogger.exception(e);
-					//	}
+				//	try {
+				//		((ExtensionEntities) EditorsManager.getEditorType()).setEntity((Entity) ClassLoader.getSystemClassLoader().loadClass(selectedFile).newInstance());
+				//	} catch (Exception e) {
+				//		FlounderLogger.exception(e);
+				//	}
 
-				}
 			}
 		});
 
@@ -234,24 +236,14 @@ public class FrameEntities extends Standard {
 	private void polygonMode() {
 		polygonMode = new JCheckBox("Polygon Mode");
 		polygonMode.setSelected(false);
-		polygonMode.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((ExtensionEntities) EditorsManager.get().getEditorType()).polygonMode = !((ExtensionEntities) EditorsManager.get().getEditorType()).polygonMode;
-			}
-		});
+		polygonMode.addActionListener(e -> ((ExtensionEntities) EditorsManager.get().getEditorType()).polygonMode = !((ExtensionEntities) EditorsManager.get().getEditorType()).polygonMode);
 		mainPanel.add(polygonMode);
 	}
 
 	private void rotate() {
 		rotateEntity = new JCheckBox("Rotate Entity");
 		rotateEntity.setSelected(false);
-		rotateEntity.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				((ExtensionEntities) EditorsManager.get().getEditorType()).entityRotate = rotateEntity.isSelected();
-			}
-		});
+		rotateEntity.addItemListener(e -> ((ExtensionEntities) EditorsManager.get().getEditorType()).entityRotate = rotateEntity.isSelected());
 		mainPanel.add(rotateEntity);
 	}
 
@@ -289,17 +281,14 @@ public class FrameEntities extends Standard {
 
 	private void reset() {
 		resetButton = new JButton("Reset");
-		resetButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(frame,
-						"Are you sure you want to reset entity settings?", "Any unsaved work will be lost!",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-					nameField.setText("unnamed");
-					((ExtensionEntities) EditorsManager.get().getEditorType()).loadDefaultEntity();
-					clearSideTab();
-				}
+		resetButton.addActionListener(e -> {
+			if (JOptionPane.showConfirmDialog(frame,
+					"Are you sure you want to reset entity settings?", "Any unsaved work will be lost!",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				nameField.setText("unnamed");
+				((ExtensionEntities) EditorsManager.get().getEditorType()).loadDefaultEntity();
+				clearSideTab();
 			}
 		});
 		mainPanel.add(resetButton);
@@ -307,17 +296,14 @@ public class FrameEntities extends Standard {
 
 	public static void componentAddRemove(JPanel panel, IComponentEditor editorComponent) {
 		JButton removeButton = new JButton("Remove");
-		removeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(frame,
-						"Are you sure you want to remove this component.", "Any unsaved component data will be lost!",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-					editorComponents.remove(editorComponent);
-					removeSideTab(IComponentEditor.getTabName(editorComponent), true);
-					((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity.removeComponent((IComponentEntity) editorComponent);
-				}
+		removeButton.addActionListener(e -> {
+			if (JOptionPane.showConfirmDialog(frame,
+					"Are you sure you want to remove this component.", "Any unsaved component data will be lost!",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				editorComponents.remove(editorComponent);
+				removeSideTab(IComponentEditor.getTabName(editorComponent), true);
+				((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity.removeComponent((IComponentEntity) editorComponent);
 			}
 		});
 		panel.add(removeButton);
@@ -345,12 +331,9 @@ public class FrameEntities extends Standard {
 
 	private void save() {
 		saveButton = new JButton("Save Entity");
-		saveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity != null) {
-					FlounderEntities.get().save("kosmos.entities.instances", editorComponents, ((ExtensionEntities) EditorsManager.get().getEditorType()).entityName);
-				}
+		saveButton.addActionListener(e -> {
+			if (((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity != null) {
+				FlounderEntities.get().save("kosmos.entities.instances", editorComponents, ((ExtensionEntities) EditorsManager.get().getEditorType()).entityName);
 			}
 		});
 		mainPanel.add(saveButton);

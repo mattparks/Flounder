@@ -102,7 +102,7 @@ public class LwjglShaders extends FlounderShaders {
 			try {
 				Class<?> clazz = Class.forName(uniformClass);
 				Constructor<?> ctor = clazz.getConstructor(String.class, ShaderObject.class);
-				Object uobject = ctor.newInstance(new Object[]{pair.getSecond(), object});
+				Object uobject = ctor.newInstance(pair.getSecond(), object);
 				uniformObject = (Uniform) uobject;
 			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
 				FlounderLogger.get().error("Shader could not create the uniform type of " + uniformClass);

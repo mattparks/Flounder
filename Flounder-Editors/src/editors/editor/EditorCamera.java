@@ -1,5 +1,13 @@
 package editors.editor;
 
+import flounder.camera.*;
+import flounder.devices.*;
+import flounder.framework.*;
+import flounder.maths.*;
+import flounder.maths.matrices.*;
+import flounder.maths.vectors.*;
+import flounder.physics.*;
+
 public class EditorCamera extends Camera {
 	// Defines basic view frustum sizes.
 	private static final float NEAR_PLANE = 0.1f;

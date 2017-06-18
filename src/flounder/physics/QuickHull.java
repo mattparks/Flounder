@@ -160,15 +160,15 @@ public class QuickHull extends Collider {
 		Vector3f v = new Vector3f();
 		int w = 0;
 
-		for (int i = 0; i < vertices.length; i++) {
+		for (float vertice : vertices) {
 			if (w == 0) {
-				v.x = vertices[i];
+				v.x = vertice;
 				w++;
 			} else if (w == 1) {
-				v.y = vertices[i];
+				v.y = vertice;
 				w++;
 			} else if (w == 2) {
-				v.z = vertices[i];
+				v.z = vertice;
 				points.add(new Vector3f(v));
 				v = new Vector3f();
 				w = 0;

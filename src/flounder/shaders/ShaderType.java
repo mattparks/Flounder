@@ -2,15 +2,13 @@ package flounder.shaders;
 
 import flounder.resources.*;
 
-import java.util.*;
-
 /**
  * A class that represents a shader type.
  */
 public class ShaderType {
 	private int shaderType;
-	private Optional<MyFile> shaderFile;
-	private Optional<String> shaderString;
+	private MyFile shaderFile;
+	private String shaderString;
 	private StringBuilder shaderBuilder;
 	private int shaderProgramID;
 
@@ -22,7 +20,7 @@ public class ShaderType {
 	 */
 	public ShaderType(int shaderType, MyFile shaderFile) {
 		this.shaderType = shaderType;
-		this.shaderFile = Optional.of(shaderFile);
+		this.shaderFile = shaderFile;
 		this.shaderString = null;
 		this.shaderBuilder = new StringBuilder();
 		this.shaderProgramID = -1;
@@ -37,7 +35,7 @@ public class ShaderType {
 	public ShaderType(int shaderType, String shaderString) {
 		this.shaderType = shaderType;
 		this.shaderFile = null;
-		this.shaderString = Optional.of(shaderString);
+		this.shaderString = shaderString;
 		this.shaderBuilder = new StringBuilder();
 		this.shaderProgramID = -1;
 	}
@@ -46,11 +44,11 @@ public class ShaderType {
 		return shaderType;
 	}
 
-	protected Optional<MyFile> getShaderFile() {
+	protected MyFile getShaderFile() {
 		return shaderFile;
 	}
 
-	protected Optional<String> getShaderString() {
+	protected String getShaderString() {
 		return shaderString;
 	}
 
