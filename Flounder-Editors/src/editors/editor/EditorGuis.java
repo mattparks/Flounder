@@ -1,8 +1,5 @@
 package editors.editor;
 
-import flounder.guis.*;
-import flounder.maths.*;
-
 public class EditorGuis extends GuiMaster {
 	private static final Colour COLOUR_PRIMARY = new Colour(1.0f, 0.0f, 0.0f);
 

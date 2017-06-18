@@ -56,10 +56,10 @@ public class TextureFactory extends Factory {
 			} catch (Exception e) {
 				FlounderLogger.get().error("Tried to load texture '" + b.getFile() + "', didn't work");
 				FlounderLogger.get().exception(e);
-				System.exit(-1);
+				//	System.exit(-1);
+			} finally {
+				o.loadData(b.getFile(), buffer, width, height, hasAlpha, b.getNumberOfRows(), name);
 			}
-
-			o.loadData(b.getFile(), buffer, width, height, hasAlpha, b.getNumberOfRows(), name);
 		} else if (b.getCubemap() != null) {
 			o.loadData(null, null, 0, 0, false, 1, name);
 		}

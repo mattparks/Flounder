@@ -1,8 +1,5 @@
 package editors.editor;
 
-import flounder.camera.*;
-import flounder.maths.vectors.*;
-
 public class EditorPlayer extends Player {
 	private Vector3f position;
 	private Vector3f rotation;

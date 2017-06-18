@@ -1,20 +1,5 @@
 package editors.editor;
 
-import flounder.camera.*;
-import flounder.devices.*;
-import flounder.entities.*;
-import flounder.fbos.*;
-import flounder.fonts.*;
-import flounder.guis.*;
-import flounder.helpers.*;
-import flounder.maths.vectors.*;
-import flounder.particles.*;
-import flounder.physics.bounding.*;
-import flounder.post.piplines.*;
-import flounder.renderer.*;
-import flounder.shadows.*;
-import flounder.skybox.*;
-
 public class EditorRenderer extends RendererMaster {
 	private static final Vector4f POSITIVE_INFINITY = new Vector4f(0.0f, 1.0f, 0.0f, Float.POSITIVE_INFINITY);
 

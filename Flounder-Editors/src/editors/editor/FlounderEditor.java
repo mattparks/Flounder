@@ -1,10 +1,7 @@
 package editors.editor;
 
 import editors.entities.*;
-import flounder.framework.*;
-import flounder.framework.updater.*;
 import flounder.lwjgl3.*;
-import flounder.resources.*;
 
 import javax.swing.*;
 import java.awt.*;

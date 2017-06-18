@@ -1,12 +1,6 @@
 package editors.entities;
 
 import editors.editor.*;
-import flounder.devices.*;
-import flounder.entities.*;
-import flounder.framework.*;
-import flounder.helpers.*;
-import flounder.logger.*;
-import flounder.standards.*;
 
 import javax.swing.*;
 import javax.swing.event.*;

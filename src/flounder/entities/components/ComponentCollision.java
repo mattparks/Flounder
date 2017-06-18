@@ -94,7 +94,7 @@ public class ComponentCollision extends IComponentEntity implements IComponentMo
 				//if (hullLeft && hullRight) { // TODO: Make Quick Hull collisions work!
 				//	componentCollider1.getQuickHull().resolveCollision(componentCollider2.getQuickHull(), result, result);
 				//} else {
-					collider1.resolveCollision(collider2, result, result);
+				collider1.resolveCollision(collider2, result, result);
 				//}
 			}
 		});

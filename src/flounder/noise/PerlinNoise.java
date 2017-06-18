@@ -47,7 +47,7 @@ public class PerlinNoise {
 	 *
 	 * @return The generators seed.
 	 */
-	public int getSeed() {
+	private int getSeed() {
 		return seed;
 	}
 
@@ -56,7 +56,7 @@ public class PerlinNoise {
 	 *
 	 * @param seed The generators seed.
 	 */
-	public void setSeed(int seed) {
+	private void setSeed(int seed) {
 		this.p_imp = new int[DEFAULT_SAMPLE_SIZE << 1];
 
 		this.seed = seed;
