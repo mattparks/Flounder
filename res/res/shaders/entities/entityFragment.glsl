@@ -1,8 +1,8 @@
 #version
 
 //---------IN------------
-flat in vec3 pass_surfaceNormal;
 in vec2 pass_textureCoords;
+flat in vec3 pass_surfaceNormal;
 
 //---------UNIFORM------------
 layout(binding = 0) uniform sampler2D diffuseMap;
