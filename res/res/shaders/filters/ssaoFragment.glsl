@@ -5,14 +5,11 @@
 #include "noise.glsl"
 
 //---------CONSTANT------------
-const vec3 SPHERE[16] = vec3[](vec3(0.53812504, 0.18565957, -0.43192),vec3(0.13790712, 0.24864247, 0.44301823),vec3(0.33715037, 0.56794053, -0.005789503),vec3(-0.6999805, -0.04511441, -0.0019965635),vec3(0.06896307, -0.15983082, -0.85477847),vec3(0.056099437, 0.006954967, -0.1843352),vec3(-0.014653638, 0.14027752, 0.0762037),vec3(0.010019933, -0.1924225, -0.034443386),vec3(-0.35775623, -0.5301969, -0.43581226),vec3(-0.3169221, 0.106360726, 0.015860917),vec3(0.010350345, -0.58698344, 0.0046293875),vec3(-0.08972908, -0.49408212, 0.3287904),vec3(0.7119986, -0.0154690035, -0.09183723),vec3(-0.053382345, 0.059675813, -0.5411899),vec3(0.035267662, -0.063188605, 0.54602677),vec3(-0.47761092, 0.2847911, -0.0271716));
-const float totStrength = 1.38;
-const float strength = 0.05;
-const float offset = 18.0;
-const float falloff = 0.000002;
-const float rad = 0.006;
-const int SAMPLES = 16;
-const float invSamples = 1.0/16.0;
+const float u_occluderBias = 0.5;
+const float u_samplingRadius = 30;
+const vec2 u_attenuation = vec2(0.3, 0.36); // .x constant, .y linear, .z quadratic (unused)
+const float Sin45 = 0.707107;   // 45 degrees = sin(PI / 4)
+
 
 //---------IN------------
 in vec2 pass_textureCoords;
@@ -25,6 +22,8 @@ layout(binding = 3) uniform sampler2D originalDepth;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform float aspectRatio;
+uniform vec2 texelSize;
+uniform bool enabled;
 
 //---------OUT------------
 layout(location = 0) out vec4 out_colour;
@@ -36,6 +35,27 @@ vec3 decodeLocation() {
     return vec3(finverse(viewMatrix) * vec4(p.xyz / p.w, 1.0));
 }
 
+/// Sample the ambient occlusion at the following UV coordinate.
+float SamplePixels(vec3 srcPosition, vec3 srcNormal, vec2 tex_coord)
+{
+  float dstDepth = texture(originalDepth, tex_coord).r;
+  vec4 p = finverse(projectionMatrix) * (vec4(tex_coord, dstDepth, 1.0) * 2.0 - 1.0);
+  vec3 dstPosition = vec3(finverse(viewMatrix) * vec4(p.xyz / p.w, 1.0));
+
+  // Calculate ambient occlusion amount between these two points
+  // It is simular to diffuse lighting. Objects directly above the fragment cast
+  // the hardest shadow and objects closer to the horizon have minimal effect.
+  vec3 positionVec = dstPosition - srcPosition;
+  float intensity = max(dot(normalize(positionVec), srcNormal) - u_occluderBias, 0.0);
+
+  // Attenuate the occlusion, similar to how you attenuate a light source.
+  // The further the distance between points, the less effect AO has on the fragment.
+  float dist = length(positionVec);
+  float attenuation = 1.0 / (u_attenuation.x + (u_attenuation.y * dist));
+
+  return intensity * attenuation;
+}
+
 //---------MAIN------------
 void main(void) {
     // Reads all of the data passed to this fragment.
@@ -43,48 +63,47 @@ void main(void) {
 	vec4 normals = vec4(texture(originalNormals, pass_textureCoords).xyz * 2.0 - 1.0, 0.0);
 
     // Calculates some fragment data.
+	float depth = texture(originalDepth, pass_textureCoords).r;
 	vec4 worldPosition = vec4(decodeLocation(), 1.0);
-   float currentPixelDepth = texture(originalDepth, pass_textureCoords).r;
 
     vec2 rasr = pass_textureCoords * vec2(aspectRatio, 1.0);
-  //  vec3 randomVec = vec3(snoise2(rasr * 1000.0), snoise2(rasr * -1000.0), 0.0);
-  //  randomVec = normalize(randomVec);
-   vec3 fres = normalize((normalize(vec3(snoise2(rasr * 5000.0), snoise2(rasr * -5000.0), 0.0))*2.0) - vec3(1.0));
+    vec2 randVec = vec2(snoise2(rasr * 1000.0), snoise2(rasr * -1000.0));
+    randVec = normalize(randVec);
 
-   // adjust for the depth ( not shure if this is good..)
-    float radD = rad / currentPixelDepth;
+    // The following variable specifies how many pixels we skip over after each iteration in the ambient occlusion loop.
+    // Pixels far off in the distance will not sample as many pixels as those close up.
+    float kernelRadius = u_samplingRadius * (1.0 - depth);
 
-    vec3 ray, se, occNorm;
-    float occluderDepth, depthDifference, normDiff;
+    // Sample neighbouring pixels
+    vec2 kernel[4];
+    kernel[0] = vec2(0.0, 1.0); // Top.
+    kernel[1] = vec2(1.0, 0.0); // Right.
+    kernel[2] = vec2(0.0, -1.0); // Bottom.
+    kernel[3] = vec2(-1.0, 0.0); // Left.
 
-   float bl = 0.0;
+   // Sample from 16 pixels, which should be enough to appromixate a result.
+   float occlusion = 0.0;
 
-    for(int i = 0; i < SAMPLES; ++i) {
-      // get a vector (randomized inside of a sphere with radius 1.0) from a texture and reflect it
-       ray = radD*reflect(SPHERE[i],fres);
+   for (int i = 0; i < 4; ++i) {
+       vec2 k1 = reflect(kernel[i], randVec);
 
-      // if the ray is outside the hemisphere then change direction
-      se = vec3(pass_textureCoords.xy, currentPixelDepth) + sign(dot(ray,normals.xyz) )*ray;
+       vec2 k2 = vec2(k1.x * Sin45 - k1.y * Sin45, k1.x * Sin45 + k1.y * Sin45);
 
-      // get the normal of the occluder fragment
-      occNorm = texture(originalNormals, se.xy).rgb * 2.0 - 1.0;
-      occluderDepth = texture(originalDepth, se.xy).r;
+       k1 *= texelSize;
+       k2 *= texelSize;
 
-      // if depthDifference is negative = occluder is behind current fragment
-      depthDifference = currentPixelDepth-occluderDepth;
+       occlusion += SamplePixels(worldPosition.xyz, normals.xyz, pass_textureCoords + k1 * kernelRadius);
+       occlusion += SamplePixels(worldPosition.xyz, normals.xyz, pass_textureCoords + k2 * kernelRadius * 0.75);
+       occlusion += SamplePixels(worldPosition.xyz, normals.xyz, pass_textureCoords + k1 * kernelRadius * 0.5);
+       occlusion += SamplePixels(worldPosition.xyz, normals.xyz, pass_textureCoords + k2 * kernelRadius * 0.25);
+   }
 
+   // Average and clamp ambient occlusion.
+   occlusion /= 16;
+   occlusion = 1.0 - clamp(occlusion, 0.0, 1.0);
 
-      // calculate the difference between the normals as a weight
-
-      normDiff = (1.0-dot(occNorm,normals.xyz));
-      // the falloff equation, starts at falloff and is kind of 1/x^2 falling
-      bl += step(falloff,depthDifference)*normDiff*(1.0-smoothstep(falloff,strength,depthDifference));
-    }
-
-   // output the result
-   float ao = 1.0-totStrength*bl*invSamples;
-   out_colour = vec4(ao, ao, ao, 1.0);
-   out_colour = vec4(out_colour.rgb*ao, 1.0);
-
-    //out_colour = vec4(bl, bl, bl, 1.0); // occlusion, occlusion, occlusion
+   out_colour = vec4(occlusion, occlusion, occlusion, 1.0);
+   if (!enabled) {
+        out_colour = vec4(1);
+   }
 }

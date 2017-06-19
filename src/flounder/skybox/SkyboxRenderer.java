@@ -37,6 +37,7 @@ public class SkyboxRenderer extends Renderer {
 
 		FlounderOpenGL.get().antialias(FlounderDisplay.get().isAntialiasing());
 		FlounderOpenGL.get().enableDepthTesting();
+		FlounderOpenGL.get().depthMask(false);
 		FlounderOpenGL.get().cullBackFaces(false);
 		FlounderOpenGL.get().disableBlending();
 
@@ -46,6 +47,7 @@ public class SkyboxRenderer extends Renderer {
 		FlounderOpenGL.get().renderElements(GL_TRIANGLES, GL_UNSIGNED_INT, FlounderSkybox.get().getModel().getVaoLength());
 
 		FlounderOpenGL.get().unbindVAO(0);
+		FlounderOpenGL.get().depthMask(true);
 		shader.stop();
 	}
 

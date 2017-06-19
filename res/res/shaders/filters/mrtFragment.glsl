@@ -142,11 +142,11 @@ void main(void) {
         }
 
         out_colour = (vec4(max(totalDiffuse, boost), 1.0) * out_colour) + vec4(totalSpecular, 0.0);
+
+        out_colour *= ssao;
     }
 
     if (!ignoreFog) {
         out_colour = mix(vec4(fogColour, 1.0), out_colour, visibility(positionRelativeToCam, fogDensity, fogGradient));
     }
-
-    out_colour = ssao;
 }
