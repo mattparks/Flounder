@@ -80,7 +80,10 @@ float visibility(vec4 positionRelativeToCam, float fogDensity, float fogGradient
 
 //---------MAIN------------
 void main(void) {
+    // Reads all of the data passed to this fragment.
 	vec4 albedo = texture(originalAlbedo, pass_textureCoords);
+	vec4 normals = vec4(texture(originalNormals, pass_textureCoords).xyz * 2.0 - 1.0, 0.0);
+	vec4 extras = texture(originalExtras, pass_textureCoords);
 
 	// Ignores anything this is not a rendered object, so mostly the cleared colour.
 	if (albedo.a == 0.0) {
@@ -88,24 +91,21 @@ void main(void) {
 	    return;
 	}
 
-	vec4 normals = vec4(texture(originalNormals, pass_textureCoords).xyz * 2.0 - 1.0, 1.0);
+    // Sets a starting colour for this fragment.
+    out_colour = vec4(albedo.rgb, 1.0);
 
-	vec4 extras = texture(originalExtras, pass_textureCoords);
+	// Gets the data from the extras texture.
 	float shineDamper = extras.r;
 	float glow = extras.g;
 	bool ignoreFog = extras.b == (1.0 / 3.0) || extras.b == (3.0 / 3.0);
 	bool ignoreLighting = extras.b == (2.0 / 3.0) || extras.b == (3.0 / 3.0);
 
+    // Calculates some fragment data.
 	vec4 worldPosition = vec4(decodeLocation(), 1.0);
-
 	vec3 toCameraVector = (finverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
 
-    out_colour = albedo;
-
     if (!ignoreLighting) {
-        out_colour = vec4(out_colour.rgb, 1.0);
-
         // Shadow mapping.
         if (shadowDarkness >= 0.07) {
             vec4 shadowCoords = shadowSpaceMatrix * worldPosition;
@@ -118,6 +118,7 @@ void main(void) {
         }
 
         // Surface lighting.
+        vec3 boost = vec3(brightnessBoost, brightnessBoost, brightnessBoost);
         vec3 totalDiffuse = vec3(0.0);
         vec3 totalSpecular = vec3(0.0);
 
@@ -125,11 +126,11 @@ void main(void) {
             if (lightActive[i]) {
                 vec3 toLightVector = lightPosition[i] - worldPosition.xyz;
                 float distance = length(toLightVector);
-                float attinuationFactor = lightAttenuation[i].x + (lightAttenuation[i].y * distance) + (lightAttenuation[i].z * distance * distance);
-                vec3 unitLightVector = normalize(toLightVector);
 
-                float brightness = max(dot(normals.xyz, unitLightVector), 0.0);
-                vec3 reflectedLightDirection = reflect(-unitLightVector, normals.xyz);
+                float attinuationFactor = lightAttenuation[i].x + (lightAttenuation[i].y * distance) + (lightAttenuation[i].z * distance * distance);
+
+                float brightness = max(dot(normals.xyz, normalize(toLightVector)), 0.0);
+                vec3 reflectedLightDirection = reflect(-normalize(toLightVector), normals.xyz);
                 float specularFactor = max(dot(reflectedLightDirection, normalize(toCameraVector)), 0.0);
                 float dampedFactor = pow(specularFactor, shineDamper);
 
@@ -138,7 +139,6 @@ void main(void) {
             }
         }
 
-        vec3 boost = vec3(brightnessBoost, brightnessBoost, brightnessBoost);
         out_colour = (vec4(max(totalDiffuse, boost), 1.0) * out_colour) + vec4(totalSpecular, 0.0);
     }
 
