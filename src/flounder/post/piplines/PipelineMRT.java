@@ -2,22 +2,25 @@ package flounder.post.piplines;
 
 import flounder.devices.*;
 import flounder.fbos.*;
+import flounder.helpers.*;
 import flounder.post.*;
 import flounder.post.filters.*;
 
 public class PipelineMRT extends PostPipeline {
+	private FilterSSAO filterSSAO;
 	private FilterMRT filterMRT;
 	private FilterFXAA filterFXAA;
-	private boolean runFXAA;
+	private FBO result;
 
 	public PipelineMRT() {
+		this.filterSSAO = new FilterSSAO();
 		this.filterMRT = new FilterMRT();
 		this.filterFXAA = new FilterFXAA();
 	}
 
 	@Override
 	public void renderPipeline(int... textures) {
-		runFXAA = FlounderDisplay.get().isAntialiasing();
+		filterSSAO.applyFilter(textures);
 
 		// Texture data used in filter:
 		// textures[0], // Colours
@@ -25,20 +28,19 @@ public class PipelineMRT extends PostPipeline {
 		// textures[2], // Extras
 		// textures[3], // Depth
 		// textures[4], // Shadow Map
-		filterMRT.applyFilter(textures);
+		// textures[5], // SSAO Buffer
+		filterMRT.applyFilter(ArrayUtils.addElement(textures, filterSSAO.fbo.getColourTexture(0)));
+		result = filterMRT.fbo;
 
-		if (runFXAA) {
+		if (FlounderDisplay.get().isAntialiasing()) {
 			filterFXAA.applyFilter(filterMRT.fbo.getColourTexture(0));
+			result = filterFXAA.fbo;
 		}
 	}
 
 	@Override
 	public FBO getOutput() {
-		if (runFXAA) {
-			return filterFXAA.fbo;
-		} else {
-			return filterMRT.fbo;
-		}
+		return result;
 	}
 
 	public void setShadowFactor(float shadowFactor) {
@@ -47,6 +49,7 @@ public class PipelineMRT extends PostPipeline {
 
 	@Override
 	public void dispose() {
+		filterSSAO.dispose();
 		filterMRT.dispose();
 		filterFXAA.dispose();
 	}

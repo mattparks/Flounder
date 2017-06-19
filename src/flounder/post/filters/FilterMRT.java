@@ -14,12 +14,12 @@ public class FilterMRT extends PostFilter {
 	private float shadowFactor;
 
 	public FilterMRT() {
-		super("filterMrt", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"));
+		super("filterMRT", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"));
 		this.shadowFactor = 1.0f;
 	}
 
 	public FilterMRT(FBO fbo) {
-		super("filterMrt", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"), fbo);
+		super("filterMRT", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"), fbo);
 		this.shadowFactor = 1.0f;
 	}
 

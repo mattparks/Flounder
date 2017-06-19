@@ -15,6 +15,7 @@ layout(binding = 1) uniform sampler2D originalNormals;
 layout(binding = 2) uniform sampler2D originalExtras;
 layout(binding = 3) uniform sampler2D originalDepth;
 layout(binding = 4) uniform sampler2D shadowMap;
+layout(binding = 5) uniform sampler2D ssaoBuffer;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -84,6 +85,7 @@ void main(void) {
 	vec4 albedo = texture(originalAlbedo, pass_textureCoords);
 	vec4 normals = vec4(texture(originalNormals, pass_textureCoords).xyz * 2.0 - 1.0, 0.0);
 	vec4 extras = texture(originalExtras, pass_textureCoords);
+	vec4 ssao = texture(ssaoBuffer, pass_textureCoords);
 
 	// Ignores anything this is not a rendered object, so mostly the cleared colour.
 	if (albedo.a == 0.0) {
@@ -145,4 +147,6 @@ void main(void) {
     if (!ignoreFog) {
         out_colour = mix(vec4(fogColour, 1.0), out_colour, visibility(positionRelativeToCam, fogDensity, fogGradient));
     }
+
+    out_colour = ssao;
 }
