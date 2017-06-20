@@ -15,7 +15,6 @@ layout(binding = 1) uniform sampler2D originalNormals;
 layout(binding = 2) uniform sampler2D originalExtras;
 layout(binding = 3) uniform sampler2D originalDepth;
 layout(binding = 4) uniform sampler2D shadowMap;
-layout(binding = 5) uniform sampler2D ssaoBuffer;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -85,7 +84,6 @@ void main(void) {
 	vec4 albedo = texture(originalAlbedo, pass_textureCoords);
 	vec3 normal = texture(originalNormals, pass_textureCoords).rgb * 2.0 - 1.0;
 	vec4 extras = texture(originalExtras, pass_textureCoords);
-	vec4 ssao = texture(ssaoBuffer, pass_textureCoords);
 
 	// Ignores anything this is not a rendered object, so mostly the cleared colour.
 	if (albedo.a == 0.0) {
@@ -126,28 +124,27 @@ void main(void) {
 
         for (int i = 0; i < LIGHTS; i++) {
             if (lightActive[i]) {
-                vec3 toLightVector = normalize(lightPosition[i] - worldPosition.xyz);
+                vec3 toLightVector = lightPosition[i] - worldPosition.xyz;
+                vec3 unitLightVector = normalize(toLightVector);
                 float distance = length(toLightVector);
 
                 float attinuationFactor = lightAttenuation[i].x + (lightAttenuation[i].y * distance) + (lightAttenuation[i].z * distance * distance);
 
-                float brightness = max(dot(normal, toLightVector), 0.0);
-                vec3 reflectedLightDirection = reflect(-toLightVector, normal);
-                float specularFactor = max(dot(reflectedLightDirection, normalize(toCameraVector)), 0.0);
-                float dampedFactor = pow(specularFactor, shineDamper);
-
+                float brightness = max(dot(normal, unitLightVector), 0.0);
                 totalDiffuse = totalDiffuse + (brightness * lightColour[i]) / attinuationFactor;
+
+             //   vec3 reflectedLightDirection = reflect(-unitLightVector, normal);
+             //   float specularFactor = max(dot(reflectedLightDirection, normalize(toCameraVector)), 0.0);
+             //   float dampedFactor = pow(specularFactor, shineDamper);
              //   totalSpecular = totalSpecular + (dampedFactor * glow * lightColour[i]) / attinuationFactor;
             }
         }
 
-        out_colour = (vec4(max(totalDiffuse, boost), 1.0) * ssao.r * out_colour) + vec4(totalSpecular, 0.0);
+        out_colour = (vec4(max(totalDiffuse, boost), 1.0) * out_colour) + vec4(totalSpecular, 0.0);
 
     }
 
     if (!ignoreFog) {
         out_colour = mix(vec4(fogColour, 1.0), out_colour, visibility(positionRelativeToCam, fogDensity, fogGradient));
     }
-
-    // out_colour = ssao;
 }

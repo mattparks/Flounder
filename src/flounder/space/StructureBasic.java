@@ -1,5 +1,6 @@
 package flounder.space;
 
+import flounder.logger.*;
 import flounder.physics.*;
 
 import java.util.*;
@@ -100,7 +101,7 @@ public class StructureBasic<T extends ISpatialObject> implements ISpatialStructu
 		clones.addAll(objects);
 
 		for (T current : clones) {
-			if (current != null && current.getCollider() != null && (current.getCollider().intersects(range).isIntersection() || range.contains(current.getCollider()))) {
+			if (current.getCollider() == null || (range.intersects(current.getCollider()).isIntersection() || range.contains(current.getCollider()))) {
 				result.add(current);
 			}
 		}
