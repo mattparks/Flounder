@@ -83,7 +83,7 @@ float visibility(vec4 positionRelativeToCam, float fogDensity, float fogGradient
 void main(void) {
     // Reads all of the data passed to this fragment.
 	vec4 albedo = texture(originalAlbedo, pass_textureCoords);
-	vec4 normals = vec4(texture(originalNormals, pass_textureCoords).xyz * 2.0 - 1.0, 0.0);
+	vec3 normal = texture(originalNormals, pass_textureCoords).rgb * 2.0 - 1.0;
 	vec4 extras = texture(originalExtras, pass_textureCoords);
 	vec4 ssao = texture(ssaoBuffer, pass_textureCoords);
 
@@ -126,13 +126,13 @@ void main(void) {
 
         for (int i = 0; i < LIGHTS; i++) {
             if (lightActive[i]) {
-                vec3 toLightVector = lightPosition[i] - worldPosition.xyz;
+                vec3 toLightVector = normalize(lightPosition[i] - worldPosition.xyz);
                 float distance = length(toLightVector);
 
                 float attinuationFactor = lightAttenuation[i].x + (lightAttenuation[i].y * distance) + (lightAttenuation[i].z * distance * distance);
 
-                float brightness = max(dot(normals.xyz, normalize(toLightVector)), 0.0);
-                vec3 reflectedLightDirection = reflect(-normalize(toLightVector), normals.xyz);
+                float brightness = max(dot(normal, toLightVector), 0.0);
+                vec3 reflectedLightDirection = reflect(-toLightVector, normal);
                 float specularFactor = max(dot(reflectedLightDirection, normalize(toCameraVector)), 0.0);
                 float dampedFactor = pow(specularFactor, shineDamper);
 
@@ -141,12 +141,13 @@ void main(void) {
             }
         }
 
-        out_colour = (vec4(max(totalDiffuse, boost), 1.0) * out_colour) + vec4(totalSpecular, 0.0);
+        out_colour = (vec4(max(totalDiffuse, boost), 1.0) * ssao.r * out_colour) + vec4(totalSpecular, 0.0);
 
-        out_colour *= ssao;
     }
 
     if (!ignoreFog) {
         out_colour = mix(vec4(fogColour, 1.0), out_colour, visibility(positionRelativeToCam, fogDensity, fogGradient));
     }
+
+    // out_colour = ssao;
 }

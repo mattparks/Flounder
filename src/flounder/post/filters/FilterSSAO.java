@@ -22,8 +22,32 @@ import flounder.resources.*;
 import flounder.textures.*;
 
 public class FilterSSAO extends PostFilter {
+	private static final int KERNEL_SIZE = 64;
+
+	private Vector3f[] kernel;
+
 	public FilterSSAO() {
 		super("filterSSAO", new MyFile(PostFilter.POST_LOC, "ssaoFragment.glsl"));
+
+		this.kernel = new Vector3f[KERNEL_SIZE];
+
+		for (int i = 0; i < KERNEL_SIZE; i++) {
+			Vector3f sample = new Vector3f(
+					Maths.randomInRange(0.0f, 1.0f) * 2.0f - 1.0f,
+					Maths.randomInRange(0.0f, 1.0f) * 2.0f - 1.0f,
+					Maths.randomInRange(0.0f, 1.0f)
+			);
+			sample.normalize();
+			sample.scale(Maths.randomInRange(0.0f, 1.0f));
+			float scale = (float)i / KERNEL_SIZE;
+			scale = lerp(0.1f, 1.0f, scale * scale);
+			sample.scale(scale);
+			kernel[i] = sample;
+		}
+	}
+
+	private float lerp(float a, float b, float f) {
+		return a + f * (b - a);
 	}
 
 	@Override
@@ -31,7 +55,11 @@ public class FilterSSAO extends PostFilter {
 		shader.getUniformMat4("projectionMatrix").loadMat4(FlounderCamera.get().getCamera().getProjectionMatrix());
 		shader.getUniformMat4("viewMatrix").loadMat4(FlounderCamera.get().getCamera().getViewMatrix());
 		shader.getUniformFloat("aspectRatio").loadFloat(FlounderDisplay.get().getAspectRatio());
-		shader.getUniformVec2("texelSize").loadVec2(1.0f / FlounderDisplay.get().getWidth(), 1.0f / FlounderDisplay.get().getHeight());
+
+		for (int i = 0; i < KERNEL_SIZE; i++) {
+			shader.getUniformVec3("kernel[" + i + "]").loadVec3(kernel[i]);
+		}
+
 		shader.getUniformBool("enabled").loadBoolean(!FlounderKeyboard.get().getKey(Constants.GLFW_KEY_O));
 	}
 }

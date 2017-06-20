@@ -27,6 +27,6 @@ void main(void) {
 		out_albedo = vec4(1.0, 0.0, 0.0, 1.0);
 	}
 
-	out_normals = vec4(vec3(0.0, 1.0, 0.0) + 1.0 / 2.0, 1.0);
+	out_normals = vec4(vec3(0.0, 1.0, 0.0) + 1.0 / 2.0, 0.0);
 	out_extras = vec4(1.0, 0.0, 1.0, 1.0); // Ignores lighting.
 }
