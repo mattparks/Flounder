@@ -81,7 +81,7 @@ public class FlounderEditor extends TimerTask {
 
 			if (optionEntities.isSelected()) {
 				Framework entrance = new Framework(
-						"Flounder Editors", new UpdaterDefault(null), -1, // GLFW::glfwGetTime
+						"Flounder Editors", new UpdaterDefault(), -1, // GLFW::glfwGetTime
 						new Extension[]{new ExtensionEntities(), new FrameEntities(), new EditorRenderer(), new EditorCamera(), new EditorPlayer(), new EditorGuis()}
 				);
 				Framework.get().addOverrides(new PlatformLwjgl(
