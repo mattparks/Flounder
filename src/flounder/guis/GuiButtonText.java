@@ -53,6 +53,14 @@ public class GuiButtonText extends ScreenObject {
 		this.listenerRight = listenerRight;
 	}
 
+	public ScreenListener getListenerLeft() {
+		return listenerLeft;
+	}
+
+	public ScreenListener getListenerRight() {
+		return listenerRight;
+	}
+
 	@Override
 	public void updateObject() {
 		if (!isVisible() || getAlpha() == 0.0f) {

@@ -128,7 +128,7 @@ public class FlounderShadows extends Module {
 			renderNow = true;
 			worldAABB.setMinExtents(shadowBox.getAABB().getMinExtents());
 			worldAABB.setMaxExtents(shadowBox.getAABB().getMaxExtents());
-			worldAABB.update(FlounderCamera.get().getCamera().getPosition(), Vector3f.ZERO, 1.5f, worldAABB);
+			worldAABB.update(FlounderCamera.get().getCamera().getPosition(), Vector3f.ZERO, 2.5f, worldAABB);
 		}
 	}
 
