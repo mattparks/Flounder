@@ -24,6 +24,7 @@ public class FlounderGuis extends Module {
 	private GuiSelector selector;
 	private ScreenObject container;
 	private List<ScreenObject> objects;
+	private float guiScale;
 
 	/**
 	 * Creates a new GUI manager.
@@ -38,6 +39,7 @@ public class FlounderGuis extends Module {
 		this.selector = new GuiSelector();
 		this.container = new ScreenObjectEmpty(null, new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 1.0f), false);
 		this.objects = new ArrayList<>();
+		this.guiScale = 1.0f;
 		update();
 	}
 
@@ -107,6 +109,14 @@ public class FlounderGuis extends Module {
 	 */
 	public GuiSelector getSelector() {
 		return this.selector;
+	}
+
+	public float getGuiScale() {
+		return guiScale;
+	}
+
+	public void setGuiScale(float guiScale) {
+		this.guiScale = guiScale;
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

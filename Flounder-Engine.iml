@@ -12,5 +12,7 @@
     <orderEntry type="module" module-name="Flounder-Framework" exported="" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="steamworks" level="project" />
+    <orderEntry type="library" name="Rust &lt;Flounder-Engine&gt;" level="project" />
+    <orderEntry type="library" name="Cargo &lt;Flounder-Engine&gt;" level="project" />
   </component>
 </module>

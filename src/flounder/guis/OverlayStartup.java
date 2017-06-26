@@ -1,6 +1,7 @@
 package flounder.guis;
 
 import flounder.devices.*;
+import flounder.events.*;
 import flounder.fonts.*;
 import flounder.framework.*;
 import flounder.maths.*;
@@ -30,15 +31,12 @@ public class OverlayStartup extends ScreenObject {
 
 		this.starting = true;
 
-		new java.util.Timer().schedule(
-				new java.util.TimerTask() {
-					@Override
-					public void run() {
-						setAlphaDriver(new SlideDriver(1.0f, 0.0f, 1.0f));
-					}
-				},
-				Framework.get().isRunningFromJar() ? 5000 : 750
-		);
+		FlounderEvents.get().addEvent(new EventTime(Framework.get().isRunningFromJar() ? 5.0f : 0.75f, false) {
+			@Override
+			public void onEvent() {
+				setAlphaDriver(new SlideDriver(1.0f, 0.0f, 1.0f));
+			}
+		});
 	}
 
 	@Override
