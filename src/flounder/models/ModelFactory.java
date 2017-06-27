@@ -180,6 +180,20 @@ public class ModelFactory extends Factory {
 			tangentsArray[i * 3 + 2] = tangent.z;
 		}
 
+		/*FlounderLogger.get().log(name + ": indices={" + a_tsai(indicesArray) + "}, vertices={" + a_tsaf(verticesArray) + "}, textures={" + a_tsaf(texturesArray) + "}, normals={" + a_tsaf(normalsArray) + "}, tangents={" + a_tsaf(tangentsArray) + "};");
+		private String a_tsaf(float[] array) {
+			StringBuilder builder = new StringBuilder();
+			for (float a : array)
+				builder.append(a).append("f, ");
+			return builder.toString();
+		}
+		private String a_tsai(int[] array) {
+			StringBuilder builder = new StringBuilder();
+			for (float a : array)
+				builder.append(a).append(", ");
+			return builder.toString();
+		}*/
+
 		// Takes OpenGL comparable data and loads it into a data object.
 		/*AABB aabb = createAABB(vertices);
 		aabb.getMinExtents().x = Math.abs(aabb.getMinExtents().x);
