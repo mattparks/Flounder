@@ -24,15 +24,6 @@ public class UniformVec4 extends Uniform {
 	}
 
 	/**
-	 * Loads a Colour to the uniform if the value already on the GPU is not the same as the new value.
-	 *
-	 * @param colour The new colour.
-	 */
-	public void loadVec4(Colour colour) {
-		loadVec4(colour.r, colour.g, colour.b, colour.a);
-	}
-
-	/**
 	 * Loads a x, y, z and w value to the uniform if the value already on the GPU is not the same as the new value.
 	 *
 	 * @param x The new x value.
@@ -45,5 +36,14 @@ public class UniformVec4 extends Uniform {
 			current.set(x, y, z, w);
 			FlounderShaders.get().storeVectorData(super.getLocation(), current);
 		}
+	}
+
+	/**
+	 * Loads a Colour to the uniform if the value already on the GPU is not the same as the new value.
+	 *
+	 * @param colour The new colour.
+	 */
+	public void loadVec4(Colour colour) {
+		loadVec4(colour.r, colour.g, colour.b, colour.a);
 	}
 }

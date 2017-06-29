@@ -73,6 +73,18 @@ public class ShaderFactory extends Factory {
 		o.loadData(constantValues, layoutLocations, layoutBindings, shaderUniforms, name);
 	}
 
+	@Override
+	protected void create(FactoryObject object, FactoryBuilder builder) {
+		ShaderBuilder b = (ShaderBuilder) builder;
+		ShaderObject o = (ShaderObject) object;
+		FlounderShaders.get().loadShader(b, o);
+	}
+
+	@Override
+	public Map<String, SoftReference<FactoryObject>> getLoaded() {
+		return FlounderShaders.get().getLoaded();
+	}
+
 	private StringBuilder processShaderLine(String line, List<Pair<String, String>> constantValues, List<String> layoutLocations, List<String> layoutBindings, List<Pair<Uniform.Uniforms, String>> shaderUniforms, int shaderType) {
 		if (line.contains("#version")) {
 			return new StringBuilder(FlounderShaders.get().getVersion());
@@ -145,17 +157,5 @@ public class ShaderFactory extends Factory {
 		}
 
 		return new StringBuilder().append(line);
-	}
-
-	@Override
-	protected void create(FactoryObject object, FactoryBuilder builder) {
-		ShaderBuilder b = (ShaderBuilder) builder;
-		ShaderObject o = (ShaderObject) object;
-		FlounderShaders.get().loadShader(b, o);
-	}
-
-	@Override
-	public Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return FlounderShaders.get().getLoaded();
 	}
 }

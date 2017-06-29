@@ -147,6 +147,15 @@ public class SimplexNoise {
 		return (float) (70.0 * (n0 + n1 + n2));
 	}
 
+	// This method is a *lot* faster than using (int)Math.floor(x)
+	private static int fastfloor(float x) {
+		return x > 0 ? (int) x : (int) x - 1;
+	}
+
+	private static float dot(int g[], float x, float y) {
+		return g[0] * x + g[1] * y;
+	}
+
 	// 3D SIMPLEX noise
 	public float noise(float xin, float yin, float zin) {
 		float n0, n1, n2, n3; // Noise contributions from the four corners.
@@ -281,6 +290,10 @@ public class SimplexNoise {
 		// Add contributions from each corner to get the final noise value.
 		// The result is scaled to stay just inside [-1,1].
 		return (float) (32.0 * (n0 + n1 + n2 + n3));
+	}
+
+	private static float dot(int g[], float x, float y, float z) {
+		return g[0] * x + g[1] * y + g[2] * z;
 	}
 
 	// 4D SIMPLEX noise
@@ -422,19 +435,6 @@ public class SimplexNoise {
 
 		// Sum up and scale the result to cover the range [-1,1].
 		return (float) (27.0 * (n0 + n1 + n2 + n3 + n4));
-	}
-
-	// This method is a *lot* faster than using (int)Math.floor(x)
-	private static int fastfloor(float x) {
-		return x > 0 ? (int) x : (int) x - 1;
-	}
-
-	private static float dot(int g[], float x, float y) {
-		return g[0] * x + g[1] * y;
-	}
-
-	private static float dot(int g[], float x, float y, float z) {
-		return g[0] * x + g[1] * y + g[2] * z;
 	}
 
 	private static float dot(int g[], float x, float y, float z, float w) {

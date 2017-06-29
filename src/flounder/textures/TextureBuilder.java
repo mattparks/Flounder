@@ -34,30 +34,6 @@ public class TextureBuilder extends FactoryBuilder {
 	}
 
 	/**
-	 * Sets the textures source file.
-	 *
-	 * @param file The source file.
-	 *
-	 * @return this.
-	 */
-	public TextureBuilder setFile(MyFile file) {
-		this.file = file;
-		return this;
-	}
-
-	/**
-	 * Sets the cubemap source files.
-	 *
-	 * @param cubemap The source cubemap files.
-	 *
-	 * @return this.
-	 */
-	public TextureBuilder setCubemap(MyFile[] cubemap) {
-		this.cubemap = cubemap;
-		return this;
-	}
-
-	/**
 	 * Clamps the texture to a coloured border.
 	 *
 	 * @param colour The coloured border.
@@ -114,18 +90,6 @@ public class TextureBuilder extends FactoryBuilder {
 	}
 
 	/**
-	 * Sets the starting number of texture rows (default = 1).
-	 *
-	 * @param numberOfRows The new number of rows.
-	 *
-	 * @return this.
-	 */
-	public TextureBuilder setNumberOfRows(int numberOfRows) {
-		this.numberOfRows = numberOfRows;
-		return this;
-	}
-
-	/**
 	 * Gets the source file.
 	 *
 	 * @return The source file.
@@ -135,12 +99,36 @@ public class TextureBuilder extends FactoryBuilder {
 	}
 
 	/**
+	 * Sets the textures source file.
+	 *
+	 * @param file The source file.
+	 *
+	 * @return this.
+	 */
+	public TextureBuilder setFile(MyFile file) {
+		this.file = file;
+		return this;
+	}
+
+	/**
 	 * Gets the cubemap source files.
 	 *
 	 * @return The cubemap source files.
 	 */
 	public MyFile[] getCubemap() {
 		return cubemap;
+	}
+
+	/**
+	 * Sets the cubemap source files.
+	 *
+	 * @param cubemap The source cubemap files.
+	 *
+	 * @return this.
+	 */
+	public TextureBuilder setCubemap(MyFile[] cubemap) {
+		this.cubemap = cubemap;
+		return this;
 	}
 
 	/**
@@ -204,6 +192,18 @@ public class TextureBuilder extends FactoryBuilder {
 	 */
 	public int getNumberOfRows() {
 		return numberOfRows;
+	}
+
+	/**
+	 * Sets the starting number of texture rows (default = 1).
+	 *
+	 * @param numberOfRows The new number of rows.
+	 *
+	 * @return this.
+	 */
+	public TextureBuilder setNumberOfRows(int numberOfRows) {
+		this.numberOfRows = numberOfRows;
+		return this;
 	}
 
 	@Override

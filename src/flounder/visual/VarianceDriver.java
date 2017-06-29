@@ -16,18 +16,18 @@ public class VarianceDriver extends ValueDriver {
 		value = variable;
 	}
 
-	@Override
-	protected float calculateValue(float time) {
-		return value;
+	public static void set(ValueDriver driver, float value) {
+		if (driver instanceof VarianceDriver) {
+			((VarianceDriver) driver).setValue(value);
+		}
 	}
 
 	public void setValue(float value) {
 		this.value = value;
 	}
 
-	public static void set(ValueDriver driver, float value) {
-		if (driver instanceof VarianceDriver) {
-			((VarianceDriver) driver).setValue(value);
-		}
+	@Override
+	protected float calculateValue(float time) {
+		return value;
 	}
 }

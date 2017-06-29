@@ -45,6 +45,179 @@ public class AABB extends Collider {
 		this.maxExtents = new Vector3f(source.getMaxExtents());
 	}
 
+	public Vector3f getMinExtents() {
+		return minExtents;
+	}
+
+	public void setMinExtents(Vector3f minExtents) {
+		this.minExtents.set(minExtents);
+	}
+
+	public Vector3f getMaxExtents() {
+		return maxExtents;
+	}
+
+	public void setMaxExtents(Vector3f maxExtents) {
+		this.maxExtents.set(maxExtents);
+	}
+
+	/**
+	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
+	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
+	 * @param scale Amount to scale up the AABB.
+	 *
+	 * @return A new AABB, scaled by the specified amounts.
+	 */
+	public static AABB scale(AABB source, AABB destination, Vector3f scale) {
+		return scale(source, destination, scale.x, scale.y, scale.z);
+	}
+
+	/**
+	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
+	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
+	 * @param scaleX Amount to scale up the AABB on X.
+	 * @param scaleY Amount to scale up the AABB on Y.
+	 * @param scaleZ Amount to scale up the AABB on Z.
+	 *
+	 * @return A new AABB, scaled by the specified amounts.
+	 */
+	public static AABB scale(AABB source, AABB destination, float scaleX, float scaleY, float scaleZ) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		destination.setMinExtents(source.minExtents.x * scaleX, source.minExtents.y * scaleY, source.minExtents.z * scaleZ);
+		destination.setMaxExtents(source.maxExtents.x * scaleX, source.maxExtents.y * scaleY, source.maxExtents.z * scaleZ);
+		return destination;
+	}
+
+	/**
+	 * Creates a new AABB equivalent to this, but scaled away from the origin by a certain amount.
+	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
+	 * @param expand Amount to scale up the AABB.
+	 *
+	 * @return A new AABB, scaled by the specified amounts.
+	 */
+	public static AABB expand(AABB source, AABB destination, Vector3f expand) {
+		return expand(source, destination, expand.x, expand.y, expand.z);
+	}
+
+	/**
+	 * Creates a new AABB equivalent to this, but scaled away from the origin by a certain amount.
+	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
+	 * @param expandX Amount to scale up the AABB on X.
+	 * @param expandY Amount to scale up the AABB on Y.
+	 * @param expandZ Amount to scale up the AABB on Z.
+	 *
+	 * @return A new AABB, scaled by the specified amounts.
+	 */
+	public static AABB expand(AABB source, AABB destination, float expandX, float expandY, float expandZ) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		destination.minExtents.set(source.minExtents.x - expandX, source.minExtents.y - expandY, source.minExtents.z - expandZ);
+		destination.maxExtents.set(source.maxExtents.x + expandX, source.maxExtents.y + expandY, source.maxExtents.z + expandZ);
+
+		return destination;
+	}
+
+	/**
+	 * Creates an AABB that bounds both this AABB and another AABB.
+	 *
+	 * @param left The left source AABB.
+	 * @param right The right source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
+	 *
+	 * @return An AABB that bounds both this AABB and {@code other}.
+	 */
+	public static AABB combine(AABB left, AABB right, AABB destination) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		float newMinX = Math.min(left.minExtents.x, right.getMinExtents().x);
+		float newMinY = Math.min(left.minExtents.y, right.getMinExtents().y);
+		float newMinZ = Math.min(left.minExtents.z, right.getMinExtents().z);
+		float newMaxX = Math.max(left.maxExtents.x, right.getMaxExtents().x);
+		float newMaxY = Math.max(left.maxExtents.y, right.getMaxExtents().y);
+		float newMaxZ = Math.max(left.maxExtents.z, right.getMaxExtents().z);
+
+		destination.minExtents.set(newMinX, newMinY, newMinZ);
+		destination.maxExtents.set(newMaxX, newMaxY, newMaxZ);
+
+		return destination;
+	}
+
+	/**
+	 * Creates a new AABB equivalent to this, but stretched by a certain amount.
+	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
+	 * @param stretch The amount to stretch.
+	 *
+	 * @return A new AABB, stretched by the specified amounts.
+	 */
+	public static AABB stretch(AABB source, AABB destination, Vector3f stretch) {
+		return stretch(source, destination, stretch.x, stretch.y, stretch.z);
+	}
+
+	/**
+	 * Creates a new AABB equivalent to this, but stretched by a certain amount.
+	 *
+	 * @param source The source AABB.
+	 * @param destination The destination AABB or null if a new AABB is to be created.
+	 * @param stretchX The amount to stretch on the X.
+	 * @param stretchY The amount to stretch on the Y.
+	 * @param stretchZ The amount to stretch on the Z.
+	 *
+	 * @return A new AABB, stretched by the specified amounts.
+	 */
+	public static AABB stretch(AABB source, AABB destination, float stretchX, float stretchY, float stretchZ) {
+		if (destination == null) {
+			destination = new AABB();
+		}
+
+		float newMinX, newMaxX, newMinY, newMaxY, newMinZ, newMaxZ;
+
+		if (stretchX < 0) {
+			newMinX = source.minExtents.x + stretchX;
+			newMaxX = source.maxExtents.x;
+		} else {
+			newMinX = source.minExtents.x;
+			newMaxX = source.maxExtents.x + stretchX;
+		}
+
+		if (stretchY < 0) {
+			newMinY = source.minExtents.y + stretchY;
+			newMaxY = source.maxExtents.y;
+		} else {
+			newMinY = source.minExtents.y;
+			newMaxY = source.maxExtents.y + stretchY;
+		}
+
+		if (stretchZ < 0) {
+			newMinZ = source.minExtents.z + stretchZ;
+			newMaxZ = source.maxExtents.z;
+		} else {
+			newMinZ = source.minExtents.z;
+			newMaxZ = source.maxExtents.z + stretchZ;
+		}
+
+		destination.minExtents.set(newMinX, newMinY, newMinZ);
+		destination.maxExtents.set(newMaxX, newMaxY, newMaxZ);
+
+		return destination;
+	}
+
 	@Override
 	public Collider update(Vector3f position, Vector3f rotation, float scale, Collider destination) {
 		if (destination == null || !(destination instanceof AABB)) {
@@ -305,161 +478,55 @@ public class AABB extends Collider {
 		return true;
 	}
 
-	/**
-	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
-	 *
-	 * @param source The source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 * @param scale Amount to scale up the AABB.
-	 *
-	 * @return A new AABB, scaled by the specified amounts.
-	 */
-	public static AABB scale(AABB source, AABB destination, Vector3f scale) {
-		return scale(source, destination, scale.x, scale.y, scale.z);
+	@Override
+	public ModelObject getRenderModel() {
+		return MODEL_OBJECT;
 	}
 
-	/**
-	 * Creates a new AABB equivalent to this, scaled away from the centre origin.
-	 *
-	 * @param source The source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 * @param scaleX Amount to scale up the AABB on X.
-	 * @param scaleY Amount to scale up the AABB on Y.
-	 * @param scaleZ Amount to scale up the AABB on Z.
-	 *
-	 * @return A new AABB, scaled by the specified amounts.
-	 */
-	public static AABB scale(AABB source, AABB destination, float scaleX, float scaleY, float scaleZ) {
+	@Override
+	public Vector3f getRenderCentre(Vector3f destination) {
 		if (destination == null) {
-			destination = new AABB();
+			destination = new Vector3f();
 		}
 
-		destination.setMinExtents(source.minExtents.x * scaleX, source.minExtents.y * scaleY, source.minExtents.z * scaleZ);
-		destination.setMaxExtents(source.maxExtents.x * scaleX, source.maxExtents.y * scaleY, source.maxExtents.z * scaleZ);
-		return destination;
+		Vector3f.add(getMaxExtents(), getMinExtents(), destination);
+		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
 	}
 
-	/**
-	 * Creates a new AABB equivalent to this, but scaled away from the origin by a certain amount.
-	 *
-	 * @param source The source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 * @param expand Amount to scale up the AABB.
-	 *
-	 * @return A new AABB, scaled by the specified amounts.
-	 */
-	public static AABB expand(AABB source, AABB destination, Vector3f expand) {
-		return expand(source, destination, expand.x, expand.y, expand.z);
-	}
-
-	/**
-	 * Creates a new AABB equivalent to this, but scaled away from the origin by a certain amount.
-	 *
-	 * @param source The source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 * @param expandX Amount to scale up the AABB on X.
-	 * @param expandY Amount to scale up the AABB on Y.
-	 * @param expandZ Amount to scale up the AABB on Z.
-	 *
-	 * @return A new AABB, scaled by the specified amounts.
-	 */
-	public static AABB expand(AABB source, AABB destination, float expandX, float expandY, float expandZ) {
+	@Override
+	public Vector3f getRenderRotation(Vector3f destination) {
 		if (destination == null) {
-			destination = new AABB();
+			destination = new Vector3f();
 		}
 
-		destination.minExtents.set(source.minExtents.x - expandX, source.minExtents.y - expandY, source.minExtents.z - expandZ);
-		destination.maxExtents.set(source.maxExtents.x + expandX, source.maxExtents.y + expandY, source.maxExtents.z + expandZ);
-
-		return destination;
+		return destination.set(0.0f, 0.0f, 0.0f);
 	}
 
-	/**
-	 * Creates an AABB that bounds both this AABB and another AABB.
-	 *
-	 * @param left The left source AABB.
-	 * @param right The right source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 *
-	 * @return An AABB that bounds both this AABB and {@code other}.
-	 */
-	public static AABB combine(AABB left, AABB right, AABB destination) {
+	@Override
+	public Vector3f getRenderScale(Vector3f destination) {
 		if (destination == null) {
-			destination = new AABB();
+			destination = new Vector3f();
 		}
 
-		float newMinX = Math.min(left.minExtents.x, right.getMinExtents().x);
-		float newMinY = Math.min(left.minExtents.y, right.getMinExtents().y);
-		float newMinZ = Math.min(left.minExtents.z, right.getMinExtents().z);
-		float newMaxX = Math.max(left.maxExtents.x, right.getMaxExtents().x);
-		float newMaxY = Math.max(left.maxExtents.y, right.getMaxExtents().y);
-		float newMaxZ = Math.max(left.maxExtents.z, right.getMaxExtents().z);
-
-		destination.minExtents.set(newMinX, newMinY, newMinZ);
-		destination.maxExtents.set(newMaxX, newMaxY, newMaxZ);
-
-		return destination;
+		Vector3f.subtract(getMaxExtents(), getMinExtents(), destination);
+		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
 	}
 
-	/**
-	 * Creates a new AABB equivalent to this, but stretched by a certain amount.
-	 *
-	 * @param source The source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 * @param stretch The amount to stretch.
-	 *
-	 * @return A new AABB, stretched by the specified amounts.
-	 */
-	public static AABB stretch(AABB source, AABB destination, Vector3f stretch) {
-		return stretch(source, destination, stretch.x, stretch.y, stretch.z);
-	}
-
-	/**
-	 * Creates a new AABB equivalent to this, but stretched by a certain amount.
-	 *
-	 * @param source The source AABB.
-	 * @param destination The destination AABB or null if a new AABB is to be created.
-	 * @param stretchX The amount to stretch on the X.
-	 * @param stretchY The amount to stretch on the Y.
-	 * @param stretchZ The amount to stretch on the Z.
-	 *
-	 * @return A new AABB, stretched by the specified amounts.
-	 */
-	public static AABB stretch(AABB source, AABB destination, float stretchX, float stretchY, float stretchZ) {
+	@Override
+	public Colour getRenderColour(Colour destination) {
 		if (destination == null) {
-			destination = new AABB();
+			destination = new Colour();
 		}
 
-		float newMinX, newMaxX, newMinY, newMaxY, newMinZ, newMaxZ;
+		return destination.set(1.0f, 0.0f, 0.0f);
+	}
 
-		if (stretchX < 0) {
-			newMinX = source.minExtents.x + stretchX;
-			newMaxX = source.maxExtents.x;
-		} else {
-			newMinX = source.minExtents.x;
-			newMaxX = source.maxExtents.x + stretchX;
-		}
+	public void setMinExtents(float minX, float minY, float minZ) {
+		this.minExtents.set(minX, minY, minZ);
+	}
 
-		if (stretchY < 0) {
-			newMinY = source.minExtents.y + stretchY;
-			newMaxY = source.maxExtents.y;
-		} else {
-			newMinY = source.minExtents.y;
-			newMaxY = source.maxExtents.y + stretchY;
-		}
-
-		if (stretchZ < 0) {
-			newMinZ = source.minExtents.z + stretchZ;
-			newMaxZ = source.maxExtents.z;
-		} else {
-			newMinZ = source.minExtents.z;
-			newMaxZ = source.maxExtents.z + stretchZ;
-		}
-
-		destination.minExtents.set(newMinX, newMinY, newMinZ);
-		destination.maxExtents.set(newMaxX, newMaxY, newMaxZ);
-
-		return destination;
+	public void setMaxExtents(float maxX, float maxY, float maxZ) {
+		this.maxExtents.set(maxX, maxY, maxZ);
 	}
 
 	/**
@@ -514,73 +581,6 @@ public class AABB extends Collider {
 	 */
 	public float getDepth() {
 		return maxExtents.getZ() - minExtents.getZ();
-	}
-
-	public Vector3f getMinExtents() {
-		return minExtents;
-	}
-
-	public Vector3f getMaxExtents() {
-		return maxExtents;
-	}
-
-	public void setMinExtents(Vector3f minExtents) {
-		this.minExtents.set(minExtents);
-	}
-
-	public void setMinExtents(float minX, float minY, float minZ) {
-		this.minExtents.set(minX, minY, minZ);
-	}
-
-	public void setMaxExtents(Vector3f maxExtents) {
-		this.maxExtents.set(maxExtents);
-	}
-
-	public void setMaxExtents(float maxX, float maxY, float maxZ) {
-		this.maxExtents.set(maxX, maxY, maxZ);
-	}
-
-	@Override
-	public ModelObject getRenderModel() {
-		return MODEL_OBJECT;
-	}
-
-	@Override
-	public Vector3f getRenderCentre(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		Vector3f.add(getMaxExtents(), getMinExtents(), destination);
-		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
-	}
-
-	@Override
-	public Vector3f getRenderRotation(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		return destination.set(0.0f, 0.0f, 0.0f);
-	}
-
-	@Override
-	public Vector3f getRenderScale(Vector3f destination) {
-		if (destination == null) {
-			destination = new Vector3f();
-		}
-
-		Vector3f.subtract(getMaxExtents(), getMinExtents(), destination);
-		return destination.set(destination.x / 2.0f, destination.y / 2.0f, destination.z / 2.0f);
-	}
-
-	@Override
-	public Colour getRenderColour(Colour destination) {
-		if (destination == null) {
-			destination = new Colour();
-		}
-
-		return destination.set(1.0f, 0.0f, 0.0f);
 	}
 
 	@Override

@@ -25,6 +25,11 @@ public class FlounderFonts extends Module {
 		super(FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
+	@Module.Instance
+	public static FlounderFonts get() {
+		return (FlounderFonts) Framework.get().getInstance(FlounderFonts.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -35,10 +40,5 @@ public class FlounderFonts extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-	}
-
-	@Module.Instance
-	public static FlounderFonts get() {
-		return (FlounderFonts) Framework.get().getInstance(FlounderFonts.class);
 	}
 }

@@ -18,6 +18,11 @@ public class FlounderRenderer extends Module {
 		super(FlounderDisplay.class, FlounderCamera.class, FlounderShaders.class);
 	}
 
+	@Module.Instance
+	public static FlounderRenderer get() {
+		return (FlounderRenderer) Framework.get().getInstance(FlounderRenderer.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.renderer = null;
@@ -59,7 +64,6 @@ public class FlounderRenderer extends Module {
 		return this.renderer;
 	}
 
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		// Disposes the renderer with the module.
@@ -67,10 +71,5 @@ public class FlounderRenderer extends Module {
 			renderer.dispose();
 			renderer.setInitialized(false);
 		}
-	}
-
-	@Module.Instance
-	public static FlounderRenderer get() {
-		return (FlounderRenderer) Framework.get().getInstance(FlounderRenderer.class);
 	}
 }

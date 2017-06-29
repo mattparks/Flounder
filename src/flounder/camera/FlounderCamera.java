@@ -18,6 +18,11 @@ public class FlounderCamera extends Module {
 		super(FlounderJoysticks.class, FlounderKeyboard.class, FlounderMouse.class, FlounderEntities.class);
 	}
 
+	@Module.Instance
+	public static FlounderCamera get() {
+		return (FlounderCamera) Framework.get().getInstance(FlounderCamera.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.player = null;
@@ -99,10 +104,5 @@ public class FlounderCamera extends Module {
 		if (camera != null) {
 			camera.setInitialized(false);
 		}
-	}
-
-	@Module.Instance
-	public static FlounderCamera get() {
-		return (FlounderCamera) Framework.get().getInstance(FlounderCamera.class);
 	}
 }

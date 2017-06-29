@@ -37,13 +37,13 @@ public class PipelineMRT extends PostPipeline {
 		return result;
 	}
 
-	public void setShadowFactor(float shadowFactor) {
-		filterMRT.setShadowFactor(shadowFactor);
-	}
-
 	@Override
 	public void dispose() {
 		filterMRT.dispose();
 		filterFXAA.dispose();
+	}
+
+	public void setShadowFactor(float shadowFactor) {
+		filterMRT.setShadowFactor(shadowFactor);
 	}
 }

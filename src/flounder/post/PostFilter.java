@@ -25,17 +25,17 @@ public abstract class PostFilter {
 		this(ShaderFactory.newBuilder().setName(filterName).addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)).create(), FBO.newFBO(1.0f).create());
 	}
 
+	public PostFilter(ShaderObject shader, FBO fbo) {
+		this.shader = shader;
+		this.fbo = fbo;
+	}
+
 	public PostFilter(String filterName, MyFile fragmentShader, FBO fbo) {
 		this(ShaderFactory.newBuilder().setName(filterName).addType(new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(new ShaderType(GL_FRAGMENT_SHADER, fragmentShader)).create(), fbo);
 	}
 
 	public PostFilter(ShaderObject shader) {
 		this(shader, FBO.newFBO(1.0f).create());
-	}
-
-	public PostFilter(ShaderObject shader, FBO fbo) {
-		this.shader = shader;
-		this.fbo = fbo;
 	}
 
 	/**

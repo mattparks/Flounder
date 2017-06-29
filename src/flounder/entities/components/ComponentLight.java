@@ -70,6 +70,10 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 		//	}
 	}
 
+	@Override
+	public void dispose() {
+	}
+
 	public Vector3f getOffset() {
 		return offset;
 	}
@@ -171,9 +175,5 @@ public class ComponentLight extends IComponentEntity implements IComponentEditor
 				new String[]{}, // Static variables
 				new String[]{saveOffset, saveColour, saveAttenuation} // Class constructor
 		);
-	}
-
-	@Override
-	public void dispose() {
 	}
 }

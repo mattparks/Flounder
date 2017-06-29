@@ -136,11 +136,11 @@ public class GuiSliderText extends ScreenObject {
 		slider.getPositionOffsets().x += (slider.getDimensions().x / 2.0f);
 	}
 
-	public void setText(String string) {
-		this.text.setText(string);
-	}
-
 	@Override
 	public void deleteObject() {
+	}
+
+	public void setText(String string) {
+		this.text.setText(string);
 	}
 }

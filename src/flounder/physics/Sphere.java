@@ -222,33 +222,6 @@ public class Sphere extends Collider {
 		return Vector3f.getDistanceSquared(position, point) <= radius * radius;
 	}
 
-	/**
-	 * Gets the radius of the sphere.
-	 *
-	 * @return The radius of the sphere.
-	 */
-	public float getRadius() {
-		return radius;
-	}
-
-	/**
-	 * Sets the radius of the sphere.
-	 *
-	 * @param radius The new sphere radius.
-	 */
-	public void setRadius(float radius) {
-		this.radius = radius;
-	}
-
-	/**
-	 * Gets the radius of the position.
-	 *
-	 * @return The radius of the position.
-	 */
-	public Vector3f getPosition() {
-		return position;
-	}
-
 	@Override
 	public ModelObject getRenderModel() {
 		return MODEL_OBJECT;
@@ -288,6 +261,33 @@ public class Sphere extends Collider {
 		}
 
 		return destination.set(0.0f, 0.0f, 1.0f);
+	}
+
+	/**
+	 * Gets the radius of the sphere.
+	 *
+	 * @return The radius of the sphere.
+	 */
+	public float getRadius() {
+		return radius;
+	}
+
+	/**
+	 * Sets the radius of the sphere.
+	 *
+	 * @param radius The new sphere radius.
+	 */
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+
+	/**
+	 * Gets the radius of the position.
+	 *
+	 * @return The radius of the position.
+	 */
+	public Vector3f getPosition() {
+		return position;
 	}
 
 	@Override

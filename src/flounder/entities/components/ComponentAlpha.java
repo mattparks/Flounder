@@ -34,6 +34,10 @@ public class ComponentAlpha extends IComponentEntity implements IComponentAlpha,
 	}
 
 	@Override
+	public void dispose() {
+	}
+
+	@Override
 	public float getAlpha() {
 		return alpha;
 	}
@@ -71,9 +75,5 @@ public class ComponentAlpha extends IComponentEntity implements IComponentAlpha,
 		//		new String[]{} // Class constructor
 		//);
 		return null;
-	}
-
-	@Override
-	public void dispose() {
 	}
 }

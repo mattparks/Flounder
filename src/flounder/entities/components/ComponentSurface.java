@@ -53,6 +53,10 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 	public void update() {
 	}
 
+	@Override
+	public void dispose() {
+	}
+
 	public float getShineDamper() {
 		return shineDamper;
 	}
@@ -175,9 +179,5 @@ public class ComponentSurface extends IComponentEntity implements IComponentRend
 				new String[]{}, // Static variables
 				new String[]{saveShineDamper, saveReflectivity, saveIgnoreFog, saveIgnoreShadows, saveProjectShadows} // Class constructor
 		);
-	}
-
-	@Override
-	public void dispose() {
 	}
 }

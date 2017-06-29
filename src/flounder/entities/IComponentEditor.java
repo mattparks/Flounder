@@ -9,19 +9,6 @@ public interface IComponentEditor {
 	List<Pair<String, JPanel>> ADD_SIDE_TAB = new ArrayList<>();
 	List<String> REMOVE_SIDE_TAB = new ArrayList<>();
 
-	void addToPanel(JPanel panel);
-
-	void editorUpdate();
-
-	/**
-	 * Gets the list of parameter datas to be saved into the Java source constructor for the component.
-	 *
-	 * @param entityName The name of the save type, can be used to save extra files under /entities/name/*.
-	 *
-	 * @return Returns static variables and parameter values saved with the component.
-	 */
-	Pair<String[], String[]> getSaveValues(String entityName);
-
 	/**
 	 * Creates a new text panel for the component.
 	 *
@@ -44,4 +31,17 @@ public interface IComponentEditor {
 		String[] path = editor.getClass().getName().split("\\.");
 		return path[path.length - 1].replace("Component", "").trim();
 	}
+
+	void addToPanel(JPanel panel);
+
+	void editorUpdate();
+
+	/**
+	 * Gets the list of parameter datas to be saved into the Java source constructor for the component.
+	 *
+	 * @param entityName The name of the save type, can be used to save extra files under /entities/name/*.
+	 *
+	 * @return Returns static variables and parameter values saved with the component.
+	 */
+	Pair<String[], String[]> getSaveValues(String entityName);
 }

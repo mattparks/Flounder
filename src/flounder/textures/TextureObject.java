@@ -155,11 +155,6 @@ public class TextureObject extends FactoryObject {
 		return glType;
 	}
 
-	@Override
-	public boolean isLoaded() {
-		return super.isLoaded() && textureID != -1;
-	}
-
 	/**
 	 * Deletes the texture from OpenGL memory.
 	 */
@@ -168,5 +163,10 @@ public class TextureObject extends FactoryObject {
 			setFullyLoaded(false);
 			FlounderProcessors.get().sendRequest(new TextureDeleteRequest(this));
 		}
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return super.isLoaded() && textureID != -1;
 	}
 }

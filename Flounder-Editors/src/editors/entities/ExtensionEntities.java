@@ -67,6 +67,20 @@ public class ExtensionEntities extends IEditorType {
 		forceAddComponents();
 	}
 
+	private void forceAddComponents() {
+		for (IComponentEntity component : focusEntity.getComponents()) {
+			IComponentEditor editorComponent = (IComponentEditor) component;
+			FrameEntities.editorComponents.add(editorComponent);
+
+			if (editorComponent != null) {
+				JPanel panel = IComponentEditor.makeTextPanel();
+				editorComponent.addToPanel(panel);
+				FrameEntities.componentAddRemove(panel, editorComponent);
+				FrameEntities.addSideTab(IComponentEditor.getTabName(editorComponent), panel);
+			}
+		}
+	}
+
 	@Override
 	public void update() {
 		// Updates wireframe modes.
@@ -111,30 +125,6 @@ public class ExtensionEntities extends IEditorType {
 		}
 	}
 
-	protected void setEntity(Entity entity) {
-		if (this.focusEntity != null) {
-			this.focusEntity.forceRemove();
-			FrameEntities.clearSideTab();
-		}
-
-		this.focusEntity = entity;
-		forceAddComponents();
-	}
-
-	private void forceAddComponents() {
-		for (IComponentEntity component : focusEntity.getComponents()) {
-			IComponentEditor editorComponent = (IComponentEditor) component;
-			FrameEntities.editorComponents.add(editorComponent);
-
-			if (editorComponent != null) {
-				JPanel panel = IComponentEditor.makeTextPanel();
-				editorComponent.addToPanel(panel);
-				FrameEntities.componentAddRemove(panel, editorComponent);
-				FrameEntities.addSideTab(IComponentEditor.getTabName(editorComponent), panel);
-			}
-		}
-	}
-
 	@Override
 	public void profile() {
 	}
@@ -147,5 +137,15 @@ public class ExtensionEntities extends IEditorType {
 	@Override
 	public boolean isActive() {
 		return ACTIVE;
+	}
+
+	protected void setEntity(Entity entity) {
+		if (this.focusEntity != null) {
+			this.focusEntity.forceRemove();
+			FrameEntities.clearSideTab();
+		}
+
+		this.focusEntity = entity;
+		forceAddComponents();
 	}
 }

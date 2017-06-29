@@ -161,16 +161,16 @@ public class ShadowRenderer extends Renderer {
 		objects.clear();
 	}
 
+	@Override
+	public void dispose() {
+		shader.delete();
+		shadowFBO.delete();
+	}
+
 	/**
 	 * @return The ID of the shadow map texture.
 	 */
 	public int getShadowMap() {
 		return shadowFBO.getDepthTexture();
-	}
-
-	@Override
-	public void dispose() {
-		shader.delete();
-		shadowFBO.delete();
 	}
 }

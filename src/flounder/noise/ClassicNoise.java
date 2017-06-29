@@ -57,10 +57,6 @@ public class ClassicNoise {
 		return noise(x, 0.0f, 0.0f);
 	}
 
-	public float noise(float x, float y) {
-		return noise(x, y, 0.0f);
-	}
-
 	// Classic Perlin noise, 3D version.
 	public float noise(float x, float y, float z) {
 		// Find unit grid cell containing point.
@@ -127,14 +123,6 @@ public class ClassicNoise {
 		return (float) mix(nxy0, nxy1, w);
 	}
 
-	public int getSeed() {
-		return seed;
-	}
-
-	public void setSeed(int seed) {
-		this.seed = seed;
-	}
-
 	// This method is a *lot* faster than using (int)Math.floor(x)
 	private static int fastfloor(float x) {
 		return x > 0 ? (int) x : (int) x - 1;
@@ -150,5 +138,17 @@ public class ClassicNoise {
 
 	private static float fade(float t) {
 		return t * t * t * (t * (t * 6 - 15) + 10);
+	}
+
+	public float noise(float x, float y) {
+		return noise(x, y, 0.0f);
+	}
+
+	public int getSeed() {
+		return seed;
+	}
+
+	public void setSeed(int seed) {
+		this.seed = seed;
 	}
 }

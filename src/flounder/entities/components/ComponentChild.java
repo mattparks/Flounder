@@ -53,6 +53,13 @@ public class ComponentChild extends IComponentEntity implements IComponentEditor
 	}
 
 	@Override
+	public void dispose() {
+		if (childRemoved != null) {
+			childRemoved.remove();
+		}
+	}
+
+	@Override
 	public void addToPanel(JPanel panel) {
 	}
 
@@ -71,13 +78,6 @@ public class ComponentChild extends IComponentEntity implements IComponentEditor
 
 	public Entity getParent() {
 		return parent;
-	}
-
-	@Override
-	public void dispose() {
-		if (childRemoved != null) {
-			childRemoved.remove();
-		}
 	}
 
 	@FunctionalInterface

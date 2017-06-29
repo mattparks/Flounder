@@ -24,6 +24,11 @@ public class FilterBlurVertical extends PostFilter {
 		init((int) (FlounderDisplay.get().getWidth() * sizeScalar));
 	}
 
+	private void init(int heightValue) {
+		this.heightValue = heightValue;
+		this.scaleValue = 2.0f;
+	}
+
 	public FilterBlurVertical(int widthValue, int heightValue) {
 		super(ShaderFactory.newBuilder().setName("filterBlurVertical").addType(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(
@@ -32,11 +37,6 @@ public class FilterBlurVertical extends PostFilter {
 		this.fitToDisplay = false;
 		this.sizeScalar = 1.0f;
 		init(heightValue);
-	}
-
-	private void init(int heightValue) {
-		this.heightValue = heightValue;
-		this.scaleValue = 2.0f;
 	}
 
 	public void setScale(float scale) {

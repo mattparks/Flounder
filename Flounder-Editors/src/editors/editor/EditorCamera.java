@@ -174,11 +174,6 @@ public class EditorCamera extends Camera {
 		}
 	}
 
-	private void calculateDistances() {
-		horizontalDistanceFromFocus = (float) (actualDistanceFromPoint * Math.cos(Math.toRadians(angleOfElevation)));
-		verticalDistanceFromFocus = (float) (actualDistanceFromPoint * Math.sin(Math.toRadians(angleOfElevation)));
-	}
-
 	private void calculatePosition() {
 		double theta = Math.toRadians(targetRotation.y + angleAroundPlayer);
 		position.x = targetPosition.x - (float) (horizontalDistanceFromFocus * Math.sin(theta));
@@ -188,26 +183,6 @@ public class EditorCamera extends Camera {
 		rotation.x = angleOfElevation;
 		rotation.y = angleAroundPlayer + targetRotation.y + Maths.DEGREES_IN_HALF_CIRCLE;
 		rotation.z = 0.0f;
-	}
-
-	private void updateViewMatrix() {
-		viewMatrix.setIdentity();
-		position.negate();
-		Matrix4f.rotate(viewMatrix, Matrix4f.REUSABLE_VECTOR.set(1.0f, 0.0f, 0.0f), (float) Math.toRadians(rotation.x), viewMatrix);
-		Matrix4f.rotate(viewMatrix, Matrix4f.REUSABLE_VECTOR.set(0.0f, 1.0f, 0.0f), (float) Math.toRadians(-rotation.y), viewMatrix);
-		Matrix4f.rotate(viewMatrix, Matrix4f.REUSABLE_VECTOR.set(0.0f, 0.0f, 1.0f), (float) Math.toRadians(rotation.z), viewMatrix);
-		Matrix4f.translate(viewMatrix, position, viewMatrix);
-		position.negate();
-	}
-
-	private void updateProjectionMatrix() {
-		Matrix4f.perspectiveMatrix(getFOV(), FlounderDisplay.get().getAspectRatio(), getNearPlane(), getFarPlane(), projectionMatrix);
-	}
-
-	@Override
-	public Matrix4f getViewMatrix() {
-		updateViewMatrix();
-		return viewMatrix;
 	}
 
 	@Override
@@ -223,9 +198,29 @@ public class EditorCamera extends Camera {
 	}
 
 	@Override
+	public Matrix4f getViewMatrix() {
+		updateViewMatrix();
+		return viewMatrix;
+	}
+
+	private void updateViewMatrix() {
+		viewMatrix.setIdentity();
+		position.negate();
+		Matrix4f.rotate(viewMatrix, Matrix4f.REUSABLE_VECTOR.set(1.0f, 0.0f, 0.0f), (float) Math.toRadians(rotation.x), viewMatrix);
+		Matrix4f.rotate(viewMatrix, Matrix4f.REUSABLE_VECTOR.set(0.0f, 1.0f, 0.0f), (float) Math.toRadians(-rotation.y), viewMatrix);
+		Matrix4f.rotate(viewMatrix, Matrix4f.REUSABLE_VECTOR.set(0.0f, 0.0f, 1.0f), (float) Math.toRadians(rotation.z), viewMatrix);
+		Matrix4f.translate(viewMatrix, position, viewMatrix);
+		position.negate();
+	}
+
+	@Override
 	public Matrix4f getProjectionMatrix() {
 		updateProjectionMatrix();
 		return projectionMatrix;
+	}
+
+	private void updateProjectionMatrix() {
+		Matrix4f.perspectiveMatrix(getFOV(), FlounderDisplay.get().getAspectRatio(), getNearPlane(), getFarPlane(), projectionMatrix);
 	}
 
 	@Override
@@ -253,5 +248,10 @@ public class EditorCamera extends Camera {
 	@Override
 	public boolean isActive() {
 		return true;
+	}
+
+	private void calculateDistances() {
+		horizontalDistanceFromFocus = (float) (actualDistanceFromPoint * Math.cos(Math.toRadians(angleOfElevation)));
+		verticalDistanceFromFocus = (float) (actualDistanceFromPoint * Math.sin(Math.toRadians(angleOfElevation)));
 	}
 }

@@ -15,6 +15,11 @@ public class FlounderLoader extends Module {
 		super();
 	}
 
+	@Module.Instance
+	public static FlounderLoader get() {
+		return (FlounderLoader) Framework.get().getInstance(FlounderLoader.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -281,10 +286,5 @@ public class FlounderLoader extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-	}
-
-	@Module.Instance
-	public static FlounderLoader get() {
-		return (FlounderLoader) Framework.get().getInstance(FlounderLoader.class);
 	}
 }

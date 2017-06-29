@@ -14,6 +14,11 @@ public class FlounderDisplaySync extends Module {
 		super(FlounderPlatform.class, FlounderDisplay.class);
 	}
 
+	@Module.Instance
+	public static FlounderDisplaySync get() {
+		return (FlounderDisplaySync) Framework.get().getInstance(FlounderDisplaySync.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -25,10 +30,5 @@ public class FlounderDisplaySync extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-	}
-
-	@Module.Instance
-	public static FlounderDisplaySync get() {
-		return (FlounderDisplaySync) Framework.get().getInstance(FlounderDisplaySync.class);
 	}
 }

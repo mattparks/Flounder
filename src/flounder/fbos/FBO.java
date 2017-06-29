@@ -92,52 +92,20 @@ public class FBO {
 		return new FBOBuilder(FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight()).fitToScreen(sizeScalar);
 	}
 
-	/**
-	 * Updates the FBO size if {@code fitToScreen}.
-	 */
-	public void updateSize() {
-		if (fitToScreen) {
-			int displayWidth = FlounderDisplay.get().getWidth();
-			int displayHeight = FlounderDisplay.get().getHeight();
-			int reverseWidth = (int) (displayWidth * sizeScalar);
-			int reverseHeight = (int) (displayHeight * sizeScalar);
-
-			if (displayWidth == 0 || displayHeight == 0) {
-				return;
-			}
-
-			if (width != reverseWidth || height != reverseHeight) {
-				int newWidth = (int) (displayWidth * sizeScalar);
-				int newHeight = (int) (displayHeight * sizeScalar);
-				//	if (newWidth < FlounderFBOs.get().getMaxFBOSize() && newHeight < FlounderFBOs.get().getMaxFBOSize()) { // TODO: Fix this ghetto way of fixing the creation of millions of FBOs on old PCs.
-				width = newWidth;
-				height = newHeight;
-				//	}
-				FlounderFBOs.get().limitFBOSize(this);
-
-				delete();
-				FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
-				FlounderFBOs.get().initializeFBO(this);
-			}
-		}
-	}
-
-	public void setSizeScalar(float sizeScalar) {
-		if (this.fitToScreen && this.sizeScalar == sizeScalar) {
-			return;
-		}
-
-		this.sizeScalar = sizeScalar;
-		this.fitToScreen = true;
-		updateSize();
-	}
-
 	public int getWidth() {
 		return width;
 	}
 
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
 	public int getHeight() {
 		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	/**
@@ -147,6 +115,10 @@ public class FBO {
 	 */
 	public int getAttachments() {
 		return attachments;
+	}
+
+	public void setAttachments(int attachments) {
+		this.attachments = attachments;
 	}
 
 	/**
@@ -177,6 +149,10 @@ public class FBO {
 		return fitToScreen;
 	}
 
+	public void setFitToScreen(boolean fitToScreen) {
+		this.fitToScreen = fitToScreen;
+	}
+
 	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -200,6 +176,53 @@ public class FBO {
 
 	public float getSizeScalar() {
 		return sizeScalar;
+	}
+
+	public void setSizeScalar(float sizeScalar) {
+		if (this.fitToScreen && this.sizeScalar == sizeScalar) {
+			return;
+		}
+
+		this.sizeScalar = sizeScalar;
+		this.fitToScreen = true;
+		updateSize();
+	}
+
+	/**
+	 * Updates the FBO size if {@code fitToScreen}.
+	 */
+	public void updateSize() {
+		if (fitToScreen) {
+			int displayWidth = FlounderDisplay.get().getWidth();
+			int displayHeight = FlounderDisplay.get().getHeight();
+			int reverseWidth = (int) (displayWidth * sizeScalar);
+			int reverseHeight = (int) (displayHeight * sizeScalar);
+
+			if (displayWidth == 0 || displayHeight == 0) {
+				return;
+			}
+
+			if (width != reverseWidth || height != reverseHeight) {
+				int newWidth = (int) (displayWidth * sizeScalar);
+				int newHeight = (int) (displayHeight * sizeScalar);
+				//	if (newWidth < FlounderFBOs.get().getMaxFBOSize() && newHeight < FlounderFBOs.get().getMaxFBOSize()) { // TODO: Fix this ghetto way of fixing the creation of millions of FBOs on old PCs.
+				width = newWidth;
+				height = newHeight;
+				//	}
+				FlounderFBOs.get().limitFBOSize(this);
+
+				delete();
+				FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+				FlounderFBOs.get().initializeFBO(this);
+			}
+		}
+	}
+
+	/**
+	 * Deletes the FBO and its attachments.
+	 */
+	public void delete() {
+		FlounderFBOs.get().delete(this);
 	}
 
 	/**
@@ -234,16 +257,32 @@ public class FBO {
 		return frameBuffer;
 	}
 
+	public void setFrameBuffer(int frameBuffer) {
+		this.frameBuffer = frameBuffer;
+	}
+
 	public int[] getColourTexture() {
 		return colourTexture;
+	}
+
+	public void setColourTexture(int[] colourTexture) {
+		this.colourTexture = colourTexture;
 	}
 
 	public int getDepthBuffer() {
 		return depthBuffer;
 	}
 
+	public void setDepthBuffer(int depthBuffer) {
+		this.depthBuffer = depthBuffer;
+	}
+
 	public int[] getColourBuffer() {
 		return colourBuffer;
+	}
+
+	public void setColourBuffer(int[] colourBuffer) {
+		this.colourBuffer = colourBuffer;
 	}
 
 	public boolean isUseColourBuffer() {
@@ -270,50 +309,11 @@ public class FBO {
 		return antialiased;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public void setAttachments(int attachments) {
-		this.attachments = attachments;
-	}
-
-	public void setFitToScreen(boolean fitToScreen) {
-		this.fitToScreen = fitToScreen;
-	}
-
-	public void setFrameBuffer(int frameBuffer) {
-		this.frameBuffer = frameBuffer;
-	}
-
-	public void setColourTexture(int[] colourTexture) {
-		this.colourTexture = colourTexture;
-	}
-
-	public void setDepthBuffer(int depthBuffer) {
-		this.depthBuffer = depthBuffer;
-	}
-
-	public void setColourBuffer(int[] colourBuffer) {
-		this.colourBuffer = colourBuffer;
-	}
-
 	public boolean isHasGivenResolveError() {
 		return hasGivenResolveError;
 	}
 
 	public void setHasGivenResolveError(boolean hasGivenResolveError) {
 		this.hasGivenResolveError = hasGivenResolveError;
-	}
-
-	/**
-	 * Deletes the FBO and its attachments.
-	 */
-	public void delete() {
-		FlounderFBOs.get().delete(this);
 	}
 }

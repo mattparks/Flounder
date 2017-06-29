@@ -21,6 +21,11 @@ public class FlounderModels extends Module {
 		super(FlounderLoader.class, FlounderProcessors.class);
 	}
 
+	@Module.Instance
+	public static FlounderModels get() {
+		return (FlounderModels) Framework.get().getInstance(FlounderModels.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
@@ -39,7 +44,6 @@ public class FlounderModels extends Module {
 		return this.loaded;
 	}
 
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> {
@@ -50,10 +54,5 @@ public class FlounderModels extends Module {
 			}
 		});
 		loaded.clear();
-	}
-
-	@Module.Instance
-	public static FlounderModels get() {
-		return (FlounderModels) Framework.get().getInstance(FlounderModels.class);
 	}
 }

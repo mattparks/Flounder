@@ -41,6 +41,10 @@ public class ComponentGlow extends IComponentEntity implements IComponentRender,
 	public void update() {
 	}
 
+	@Override
+	public void dispose() {
+	}
+
 	public TextureObject getTextureGlow() {
 		return textureGlow;
 	}
@@ -128,9 +132,5 @@ public class ComponentGlow extends IComponentEntity implements IComponentRender,
 				new String[]{"private static final TextureObject TEXTURE_GLOW = " + saveTexture}, // Static variables
 				new String[]{"TEXTURE_GLOW"} // Class constructor
 		);
-	}
-
-	@Override
-	public void dispose() {
 	}
 }

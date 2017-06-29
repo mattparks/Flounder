@@ -23,6 +23,11 @@ public class FlounderBounding extends Module {
 		super(FlounderDisplay.class, FlounderMouse.class, FlounderModels.class, FlounderLoader.class);
 	}
 
+	@Module.Instance
+	public static FlounderBounding get() {
+		return (FlounderBounding) Framework.get().getInstance(FlounderBounding.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.renderShapes = new HashMap<>();
@@ -33,6 +38,13 @@ public class FlounderBounding extends Module {
 	public void update() {
 		boundingCount = renderShapes.size();
 		clear(); // Clears before the next batch of rendering.
+	}
+
+	/**
+	 * Clears the renderable Boundings.
+	 */
+	protected void clear() {
+		this.renderShapes.clear();
 	}
 
 	/**
@@ -66,21 +78,8 @@ public class FlounderBounding extends Module {
 		return this.renderShapes;
 	}
 
-	/**
-	 * Clears the renderable Boundings.
-	 */
-	protected void clear() {
-		this.renderShapes.clear();
-	}
-
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		clear();
-	}
-
-	@Module.Instance
-	public static FlounderBounding get() {
-		return (FlounderBounding) Framework.get().getInstance(FlounderBounding.class);
 	}
 }

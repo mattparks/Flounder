@@ -33,6 +33,11 @@ public class FlounderParticles extends Module {
 		super(FlounderDisplay.class, FlounderLoader.class, FlounderTextures.class);
 	}
 
+	@Module.Instance
+	public static FlounderParticles get() {
+		return (FlounderParticles) Framework.get().getInstance(FlounderParticles.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
@@ -152,7 +157,6 @@ public class FlounderParticles extends Module {
 		particles.add(list);
 	}
 
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.clear();
@@ -160,10 +164,5 @@ public class FlounderParticles extends Module {
 		particleSystems.clear();
 		particles.clear();
 		deadParticles.clear();
-	}
-
-	@Module.Instance
-	public static FlounderParticles get() {
-		return (FlounderParticles) Framework.get().getInstance(FlounderParticles.class);
 	}
 }

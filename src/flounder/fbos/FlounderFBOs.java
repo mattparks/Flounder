@@ -13,6 +13,11 @@ public class FlounderFBOs extends Module {
 		super();
 	}
 
+	@Instance
+	public static FlounderFBOs get() {
+		return (FlounderFBOs) Framework.get().getInstance(FlounderFBOs.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -108,10 +113,5 @@ public class FlounderFBOs extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-	}
-
-	@Instance
-	public static FlounderFBOs get() {
-		return (FlounderFBOs) Framework.get().getInstance(FlounderFBOs.class);
 	}
 }

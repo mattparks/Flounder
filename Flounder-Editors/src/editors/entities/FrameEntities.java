@@ -19,15 +19,7 @@ import java.util.List;
 
 public class FrameEntities extends Standard {
 	private static final IComponentEntity[] COMPONENT_LIST = new IComponentEntity[]{}; // ComponentsList.LIST; // TODO.
-
-	private static JFrame frame;
-	private static JMenuBar menuBar;
-	private static JPanel componentPanel;
-	private static JPanel mainPanel;
-	private static JPanel renderPanel;
-
 	public static JTabbedPane componentsPane;
-
 	public static JComboBox componentDropdown;
 	public static JButton componentAdd;
 	public static JTextField nameField;
@@ -37,9 +29,12 @@ public class FrameEntities extends Standard {
 	public static JCheckBox rotateEntity;
 	public static JButton resetButton;
 	public static JButton saveButton;
-
 	public static List<IComponentEditor> editorComponents;
-
+	private static JFrame frame;
+	private static JMenuBar menuBar;
+	private static JPanel componentPanel;
+	private static JPanel mainPanel;
+	private static JPanel renderPanel;
 	private static List<String> addedTabs = new ArrayList<>();
 
 	public FrameEntities() {
@@ -180,6 +175,46 @@ public class FrameEntities extends Standard {
 		mainPanel.add(componentAdd);
 	}
 
+	public static void addSideTab(String tabName, JPanel panel) {
+		FlounderLogger.get().log("Adding side panel: " + tabName);
+		addedTabs.add(tabName);
+		componentsPane.addTab(tabName, null, panel, "");
+	}
+
+	public static void componentAddRemove(JPanel panel, IComponentEditor editorComponent) {
+		JButton removeButton = new JButton("Remove");
+		removeButton.addActionListener(e -> {
+			if (JOptionPane.showConfirmDialog(frame,
+					"Are you sure you want to remove this component.", "Any unsaved component data will be lost!",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				editorComponents.remove(editorComponent);
+				removeSideTab(IComponentEditor.getTabName(editorComponent), true);
+				((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity.removeComponent((IComponentEntity) editorComponent);
+			}
+		});
+		panel.add(removeButton);
+	}
+
+	public static void removeSideTab(String tabName, boolean force) {
+		FlounderLogger.get().log("Removing side panel: " + tabName);
+
+		if (force) {
+			addedTabs.remove(tabName);
+		}
+
+		List<Integer> ids = new ArrayList<>();
+
+		for (int i = 0; i < componentsPane.getTabCount(); i++) {
+			if (componentsPane.getTitleAt(i).contains(tabName)) {
+				ids.add(i);
+			}
+		}
+
+		Collections.reverse(ids);
+		ids.forEach(componentsPane::remove);
+	}
+
 	private void entityName() {
 		nameField = new JTextField("unnamed");
 		nameField.getDocument().addDocumentListener(new DocumentListener() {
@@ -247,38 +282,6 @@ public class FrameEntities extends Standard {
 		mainPanel.add(rotateEntity);
 	}
 
-	public static void addSideTab(String tabName, JPanel panel) {
-		FlounderLogger.get().log("Adding side panel: " + tabName);
-		addedTabs.add(tabName);
-		componentsPane.addTab(tabName, null, panel, "");
-	}
-
-	public static void removeSideTab(String tabName, boolean force) {
-		FlounderLogger.get().log("Removing side panel: " + tabName);
-
-		if (force) {
-			addedTabs.remove(tabName);
-		}
-
-		List<Integer> ids = new ArrayList<>();
-
-		for (int i = 0; i < componentsPane.getTabCount(); i++) {
-			if (componentsPane.getTitleAt(i).contains(tabName)) {
-				ids.add(i);
-			}
-		}
-
-		Collections.reverse(ids);
-		ids.forEach(componentsPane::remove);
-	}
-
-	public static void clearSideTab() {
-		addedTabs.forEach((tabName) -> FrameEntities.removeSideTab(tabName, false));
-		addedTabs.clear();
-		componentsPane.removeAll();
-		// TODO: Fix clearing not working.
-	}
-
 	private void reset() {
 		resetButton = new JButton("Reset");
 		resetButton.addActionListener(e -> {
@@ -294,19 +297,11 @@ public class FrameEntities extends Standard {
 		mainPanel.add(resetButton);
 	}
 
-	public static void componentAddRemove(JPanel panel, IComponentEditor editorComponent) {
-		JButton removeButton = new JButton("Remove");
-		removeButton.addActionListener(e -> {
-			if (JOptionPane.showConfirmDialog(frame,
-					"Are you sure you want to remove this component.", "Any unsaved component data will be lost!",
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-				editorComponents.remove(editorComponent);
-				removeSideTab(IComponentEditor.getTabName(editorComponent), true);
-				((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity.removeComponent((IComponentEntity) editorComponent);
-			}
-		});
-		panel.add(removeButton);
+	public static void clearSideTab() {
+		addedTabs.forEach((tabName) -> FrameEntities.removeSideTab(tabName, false));
+		addedTabs.clear();
+		componentsPane.removeAll();
+		// TODO: Fix clearing not working.
 	}
 
 	@Override
@@ -329,16 +324,6 @@ public class FrameEntities extends Standard {
 	public void profile() {
 	}
 
-	private void save() {
-		saveButton = new JButton("Save Entity");
-		saveButton.addActionListener(e -> {
-			if (((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity != null) {
-				FlounderEntities.get().save("kosmos.entities.instances", editorComponents, ((ExtensionEntities) EditorsManager.get().getEditorType()).entityName);
-			}
-		});
-		mainPanel.add(saveButton);
-	}
-
 	@Override
 	public void dispose() {
 		frame.setVisible(false);
@@ -348,5 +333,15 @@ public class FrameEntities extends Standard {
 	@Override
 	public boolean isActive() {
 		return true;
+	}
+
+	private void save() {
+		saveButton = new JButton("Save Entity");
+		saveButton.addActionListener(e -> {
+			if (((ExtensionEntities) EditorsManager.get().getEditorType()).focusEntity != null) {
+				FlounderEntities.get().save("kosmos.entities.instances", editorComponents, ((ExtensionEntities) EditorsManager.get().getEditorType()).entityName);
+			}
+		});
+		mainPanel.add(saveButton);
 	}
 }

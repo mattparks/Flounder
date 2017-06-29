@@ -114,6 +114,10 @@ public class GuiGrabKeyboard extends ScreenObject {
 		background.getPosition().set(text.getPosition());
 	}
 
+	@Override
+	public void deleteObject() {
+	}
+
 	public String getPrefix() {
 		return prefix;
 	}
@@ -130,9 +134,5 @@ public class GuiGrabKeyboard extends ScreenObject {
 	public void setValue(int value) {
 		this.value = value;
 		this.text.setText(prefix + ((char) value));
-	}
-
-	@Override
-	public void deleteObject() {
 	}
 }

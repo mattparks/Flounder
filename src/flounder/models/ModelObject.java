@@ -132,11 +132,6 @@ public class ModelObject extends FactoryObject {
 		return vaoLength;
 	}
 
-	@Override
-	public boolean isLoaded() {
-		return super.isLoaded() && vaoID != -1 && vaoLength != -1;
-	}
-
 	/**
 	 * Deletes the model from OpenGL memory.
 	 */
@@ -151,5 +146,10 @@ public class ModelObject extends FactoryObject {
 			this.tangents = null;
 			this.indices = null;
 		}
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return super.isLoaded() && vaoID != -1 && vaoLength != -1;
 	}
 }

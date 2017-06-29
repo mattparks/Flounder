@@ -30,6 +30,11 @@ public class FlounderEntities extends Module {
 		super(FlounderEvents.class, FlounderTasks.class, FlounderBounding.class, FlounderAnimation.class, FlounderModels.class, FlounderTextures.class);
 	}
 
+	@Module.Instance
+	public static FlounderEntities get() {
+		return (FlounderEntities) Framework.get().getInstance(FlounderEntities.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.entityStructure = new StructureBasic<>();
@@ -180,10 +185,5 @@ public class FlounderEntities extends Module {
 			entityStructure.clear();
 			entityStructure = null;
 		}
-	}
-
-	@Module.Instance
-	public static FlounderEntities get() {
-		return (FlounderEntities) Framework.get().getInstance(FlounderEntities.class);
 	}
 }

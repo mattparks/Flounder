@@ -9,6 +9,11 @@ public class FlounderOpenGL extends Module {
 		super();
 	}
 
+	@Instance
+	public static FlounderOpenGL get() {
+		return (FlounderOpenGL) Framework.get().getInstance(FlounderOpenGL.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -221,10 +226,5 @@ public class FlounderOpenGL extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-	}
-
-	@Instance
-	public static FlounderOpenGL get() {
-		return (FlounderOpenGL) Framework.get().getInstance(FlounderOpenGL.class);
 	}
 }

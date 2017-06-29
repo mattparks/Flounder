@@ -18,6 +18,11 @@ public class FlounderPlatform extends Module {
 		super(FlounderSound.class, FlounderEvents.class);
 	}
 
+	@Module.Instance
+	public static FlounderPlatform get() {
+		return (FlounderPlatform) Framework.get().getInstance(FlounderPlatform.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -145,10 +150,5 @@ public class FlounderPlatform extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-	}
-
-	@Module.Instance
-	public static FlounderPlatform get() {
-		return (FlounderPlatform) Framework.get().getInstance(FlounderPlatform.class);
 	}
 }

@@ -13,18 +13,16 @@ import java.lang.reflect.*;
 import java.util.*;
 
 public class ComponentParticles extends IComponentEntity implements IComponentEditor {
+	public IEditorParticleSpawn editorSystemSpawn;
 	private IEditorParticleSpawn[] spawns = new IEditorParticleSpawn[]{
 			new EditorParticleCircle(),
 			new EditorParticleLine(),
 			new EditorParticlePoint(),
 			new EditorParticleSphere(),
 	};
-
 	private ParticleSystem particleSystem;
 	private Vector3f centreOffset;
 	private Vector3f lastPosition;
-
-	public IEditorParticleSpawn editorSystemSpawn;
 
 	/**
 	 * Creates a new ComponentParticles.
@@ -78,6 +76,12 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 				particleSystem.setVelocityCentre(difference);
 			}
 		}
+	}
+
+	@Override
+	public void dispose() {
+		FlounderParticles.get().removeSystem(particleSystem);
+		particleSystem = null;
 	}
 
 	public ParticleSystem getParticleSystem() {
@@ -240,11 +244,5 @@ public class ComponentParticles extends IComponentEntity implements IComponentEd
 				new String[]{"private static final ParticleType[] TEMPLATES = " + saveParticles}, // Static variables
 				new String[]{"Arrays.asList(TEMPLATES)", saveSpawn, saveParticleOffset, saveParticlePPS, saveParticleSpeed, saveParticleGravity} // Class constructor
 		);
-	}
-
-	@Override
-	public void dispose() {
-		FlounderParticles.get().removeSystem(particleSystem);
-		particleSystem = null;
 	}
 }

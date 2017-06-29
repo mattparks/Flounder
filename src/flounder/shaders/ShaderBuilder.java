@@ -18,18 +18,6 @@ public class ShaderBuilder extends FactoryBuilder {
 	}
 
 	/**
-	 * Sets the shaders name.
-	 *
-	 * @param name The name.
-	 *
-	 * @return this.
-	 */
-	public ShaderBuilder setName(String name) {
-		this.name = name;
-		return this;
-	}
-
-	/**
 	 * Adds a new shader type to the load pool.
 	 *
 	 * @param type The shader type to add.
@@ -48,6 +36,18 @@ public class ShaderBuilder extends FactoryBuilder {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * Sets the shaders name.
+	 *
+	 * @param name The name.
+	 *
+	 * @return this.
+	 */
+	public ShaderBuilder setName(String name) {
+		this.name = name;
+		return this;
 	}
 
 	/**

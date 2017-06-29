@@ -25,6 +25,11 @@ public class FlounderDisplayJPanel extends Module {
 		super(FlounderPlatform.class, FlounderDisplay.class, FlounderEvents.class, FlounderTasks.class);
 	}
 
+	@Module.Instance
+	public static FlounderDisplayJPanel get() {
+		return (FlounderDisplayJPanel) Framework.get().getInstance(FlounderDisplayJPanel.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		panel = null;
@@ -77,10 +82,5 @@ public class FlounderDisplayJPanel extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
-	}
-
-	@Module.Instance
-	public static FlounderDisplayJPanel get() {
-		return (FlounderDisplayJPanel) Framework.get().getInstance(FlounderDisplayJPanel.class);
 	}
 }

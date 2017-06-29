@@ -42,12 +42,26 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 	public void update() {
 	}
 
+	@Override
+	public void dispose() {
+	}
+
 	public TextureObject getTextureSway() {
 		return textureSway;
 	}
 
 	public void setTextureSway(TextureObject textureSway) {
 		this.textureSway = textureSway;
+	}
+
+	@Override
+	public void render(ShaderObject shader, Single<Integer> vaoLength) {
+		shader.getUniformBool("swaying").loadBoolean(true);
+		shader.getUniformVec2("swayOffset").loadVec2(getSwayOffsetX(), getSwayOffsetZ());
+
+		if (textureSway != null && textureSway.isLoaded()) {
+			FlounderOpenGL.get().bindTexture(textureSway, 2);
+		}
 	}
 
 	public float getSwayOffsetX() {
@@ -66,16 +80,6 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 		float windPower = 0.24f;
 		float systemTime = Framework.get().getTimeSec() * sz;
 		return windPower * (float) (Math.cos(0.25 * systemTime) - Math.cos(1.2 * systemTime) + Math.sin(0.5 * systemTime));
-	}
-
-	@Override
-	public void render(ShaderObject shader, Single<Integer> vaoLength) {
-		shader.getUniformBool("swaying").loadBoolean(true);
-		shader.getUniformVec2("swayOffset").loadVec2(getSwayOffsetX(), getSwayOffsetZ());
-
-		if (textureSway != null && textureSway.isLoaded()) {
-			FlounderOpenGL.get().bindTexture(textureSway, 2);
-		}
 	}
 
 	@Override
@@ -148,9 +152,5 @@ public class ComponentSway extends IComponentEntity implements IComponentRender,
 				new String[]{"private static final TextureObject TEXTURE_SWAY = " + saveTexture}, // Static variables
 				new String[]{"TEXTURE_SWAY"} // Class constructor
 		);
-	}
-
-	@Override
-	public void dispose() {
 	}
 }

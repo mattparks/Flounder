@@ -24,6 +24,11 @@ public class FlounderShaders extends Module {
 		super(FlounderProcessors.class);
 	}
 
+	@Module.Instance
+	public static FlounderShaders get() {
+		return (FlounderShaders) Framework.get().getInstance(FlounderShaders.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
@@ -100,10 +105,5 @@ public class FlounderShaders extends Module {
 	public void dispose() {
 		loaded.keySet().forEach(key -> ((ShaderObject) loaded.get(key).get()).delete());
 		loaded.clear();
-	}
-
-	@Module.Instance
-	public static FlounderShaders get() {
-		return (FlounderShaders) Framework.get().getInstance(FlounderShaders.class);
 	}
 }

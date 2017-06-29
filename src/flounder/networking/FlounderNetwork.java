@@ -20,6 +20,11 @@ public class FlounderNetwork extends Module {
 		super();
 	}
 
+	@Module.Instance
+	public static FlounderNetwork get() {
+		return (FlounderNetwork) Framework.get().getInstance(FlounderNetwork.class);
+	}
+
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -57,28 +62,6 @@ public class FlounderNetwork extends Module {
 	}
 
 	/**
-	 * Closes the server.
-	 */
-	public void closeServer() {
-		if (this.socketServer != null) {
-			FlounderLogger.get().log("Closing server!");
-			this.socketServer.dispose();
-			this.socketServer = null;
-		}
-	}
-
-	/**
-	 * Closes the client.
-	 */
-	public void closeClient() {
-		if (this.socketClient != null) {
-			FlounderLogger.get().log("Closing client!");
-			this.socketClient.dispose();
-			this.socketClient = null;
-		}
-	}
-
-	/**
 	 * Gets the server currently running from this engine.
 	 *
 	 * @return The server running from this server.
@@ -110,15 +93,31 @@ public class FlounderNetwork extends Module {
 		return DEFAULT_PORT;
 	}
 
-
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		closeServer();
 		closeClient();
 	}
 
-	@Module.Instance
-	public static FlounderNetwork get() {
-		return (FlounderNetwork) Framework.get().getInstance(FlounderNetwork.class);
+	/**
+	 * Closes the server.
+	 */
+	public void closeServer() {
+		if (this.socketServer != null) {
+			FlounderLogger.get().log("Closing server!");
+			this.socketServer.dispose();
+			this.socketServer = null;
+		}
+	}
+
+	/**
+	 * Closes the client.
+	 */
+	public void closeClient() {
+		if (this.socketClient != null) {
+			FlounderLogger.get().log("Closing client!");
+			this.socketClient.dispose();
+			this.socketClient = null;
+		}
 	}
 }
