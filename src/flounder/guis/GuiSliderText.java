@@ -18,7 +18,7 @@ public class GuiSliderText extends ScreenObject {
 	private boolean updating;
 	private float minProgress;
 	private float maxProgress;
-	private float progress;
+	private float value;
 
 	private boolean mouseOver;
 
@@ -26,7 +26,7 @@ public class GuiSliderText extends ScreenObject {
 	private Timer changeTimeout;
 	private ScreenListener listenerChange;
 
-	public GuiSliderText(ScreenObject parent, Vector2f position, String string, float minProgress, float maxProgress, float progress, GuiAlign align) {
+	public GuiSliderText(ScreenObject parent, Vector2f position, String string, float minProgress, float maxProgress, float value, GuiAlign align) {
 		super(parent, position, new Vector2f());
 
 		this.text = new TextObject(this, this.getPosition(), string, GuiButtonText.SCALE_NORMAL, FlounderFonts.CANDARA, 0.36f, align);
@@ -44,7 +44,7 @@ public class GuiSliderText extends ScreenObject {
 		this.updating = false;
 		this.minProgress = minProgress;
 		this.maxProgress = maxProgress;
-		setProgress(progress);
+		setValue(value);
 
 		this.mouseOver = false;
 
@@ -57,19 +57,19 @@ public class GuiSliderText extends ScreenObject {
 		this.listenerChange = listenerChange;
 	}
 
-	public float getProgress() {
-		return (progress * (maxProgress - minProgress)) + minProgress;
+	public float getValue() {
+		return (value * (maxProgress - minProgress)) + minProgress;
 	}
 
-	public void setProgress(float progress) {
-		this.progress = (progress - minProgress) / (maxProgress - minProgress);
+	public void setValue(float value) {
+		this.value = (value - minProgress) / (maxProgress - minProgress);
 	}
 
 	@Override
 	public void updateObject() {
-		//	if (!isVisible() || getAlpha() == 0.0f) {
-		//		return;
-		//	}
+		if (!isVisible() || getAlpha() == 0.0f) {
+			return;
+		}
 
 		// Click updates.
 		if (FlounderGuis.get().getSelector().isSelected(text) && getAlpha() == 1.0f && ((updating && FlounderGuis.get().getSelector().isLeftClick()) || FlounderGuis.get().getSelector().wasLeftClick())) {
@@ -83,8 +83,8 @@ public class GuiSliderText extends ScreenObject {
 			float width = 2.0f * background.getMeshSize().x * background.getScreenDimensions().x / FlounderDisplay.get().getAspectRatio();
 			float positionX = background.getPosition().x;
 			float cursorX = FlounderGuis.get().getSelector().getCursorX() - positionX;
-			progress = 2.0f * cursorX / width;
-			progress = (progress + 1.0f) * 0.5f;
+			value = 2.0f * cursorX / width;
+			value = (value + 1.0f) * 0.5f;
 
 			FlounderGuis.get().getSelector().cancelWasEvent();
 		} else {
@@ -132,7 +132,7 @@ public class GuiSliderText extends ScreenObject {
 		slider.getPositionOffsets().set(text.getPositionOffsets());
 		slider.getPosition().set(text.getPosition());
 		slider.getPositionOffsets().x -= (slider.getDimensions().x / 2.0f);
-		slider.getDimensions().x *= progress;
+		slider.getDimensions().x *= value;
 		slider.getPositionOffsets().x += (slider.getDimensions().x / 2.0f);
 	}
 
