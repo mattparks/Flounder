@@ -51,15 +51,15 @@ public class ComponentNormals extends IComponentEntity implements IComponentRend
 
 	@Override
 	public void render(ShaderObject shader, Single<Integer> vaoLength) {
-	//	shader.getUniformBool("useNormalMap").loadBoolean(true);
-	//	if (textureNormals != null && textureNormals.isLoaded()) {
-	//		FlounderOpenGL.get().bindTexture(textureNormals, 1);
-	//	}
+		//	shader.getUniformBool("useNormalMap").loadBoolean(true);
+		//	if (textureNormals != null && textureNormals.isLoaded()) {
+		//		FlounderOpenGL.get().bindTexture(textureNormals, 1);
+		//	}
 	}
 
 	@Override
 	public void renderClear(ShaderObject shader) {
-	//	shader.getUniformBool("useNormalMap").loadBoolean(false);
+		//	shader.getUniformBool("useNormalMap").loadBoolean(false);
 	}
 
 	@Override

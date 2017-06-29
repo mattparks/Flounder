@@ -2,7 +2,6 @@ package flounder.post.piplines;
 
 import flounder.devices.*;
 import flounder.fbos.*;
-import flounder.helpers.*;
 import flounder.post.*;
 import flounder.post.filters.*;
 

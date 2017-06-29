@@ -67,9 +67,9 @@ public class GuiSliderText extends ScreenObject {
 
 	@Override
 	public void updateObject() {
-	//	if (!isVisible() || getAlpha() == 0.0f) {
-	//		return;
-	//	}
+		//	if (!isVisible() || getAlpha() == 0.0f) {
+		//		return;
+		//	}
 
 		// Click updates.
 		if (FlounderGuis.get().getSelector().isSelected(text) && getAlpha() == 1.0f && ((updating && FlounderGuis.get().getSelector().isLeftClick()) || FlounderGuis.get().getSelector().wasLeftClick())) {
