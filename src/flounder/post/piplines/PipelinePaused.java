@@ -43,15 +43,15 @@ public class PipelinePaused extends PostPipeline {
 		return filterCombineSlide.fbo;
 	}
 
+	public void setBlurFactor(float blurFactor) {
+		this.blurFactor = blurFactor;
+	}
+
 	@Override
 	public void dispose() {
 		filterDarken.dispose();
 		pipelineGaussian1.dispose();
 		pipelineGaussian2.dispose();
 		filterCombineSlide.dispose();
-	}
-
-	public void setBlurFactor(float blurFactor) {
-		this.blurFactor = blurFactor;
 	}
 }

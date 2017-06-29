@@ -40,10 +40,6 @@ public class GuiObject extends ScreenObject {
 	public void updateObject() {
 	}
 
-	@Override
-	public void deleteObject() {
-	}
-
 	/**
 	 * Gets the texture used in this GUI object.
 	 *
@@ -126,5 +122,9 @@ public class GuiObject extends ScreenObject {
 	 */
 	public void setColourOffset(Colour colourOffset) {
 		this.colourOffset.set(colourOffset);
+	}
+
+	@Override
+	public void deleteObject() {
 	}
 }

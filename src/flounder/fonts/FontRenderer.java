@@ -50,15 +50,6 @@ public class FontRenderer extends Renderer {
 		shader.getUniformBool("polygonMode").loadBoolean(FlounderOpenGL.get().isInWireframe());
 	}
 
-	private void endRendering() {
-		shader.stop();
-	}
-
-	@Override
-	public void dispose() {
-		shader.delete();
-	}
-
 	private void renderText(ScreenObject object) {
 		if (!(object instanceof TextObject)) {
 			return;
@@ -94,5 +85,14 @@ public class FontRenderer extends Renderer {
 		FlounderOpenGL.get().renderArrays(GL_TRIANGLES, text.getVertexCount());
 		FlounderOpenGL.get().unbindVAO(0, 1);
 		FlounderOpenGL.get().disable(GL_SCISSOR_TEST);
+	}
+
+	private void endRendering() {
+		shader.stop();
+	}
+
+	@Override
+	public void dispose() {
+		shader.delete();
 	}
 }

@@ -57,35 +57,6 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	 *
 	 * @param entity The entity this component is attached to.
 	 * @param scale The scale of the entity.
-	 * @param model The animated model to use when animating and rendering.
-	 * @param texture The diffuse texture for the entity.
-	 * @param textureIndex What texture index this entity should render from (0 default).
-	 */
-	public ComponentAnimation(Entity entity, float scale, ModelAnimated model, TextureObject texture, int textureIndex) {
-		super(entity);
-
-		this.scale = scale;
-		this.model = model;
-		this.modelMatrix = new Matrix4f();
-
-		this.collider = null;
-
-		this.texture = texture;
-		this.textureIndex = textureIndex;
-
-		this.colourOffset = new Colour();
-
-		if (model != null) {
-			model.getHeadJoint().calculateInverseBindTransform(new Matrix4f());
-			this.animator = new Animator(model.getHeadJoint());
-		}
-	}
-
-	/**
-	 * Creates a new ComponentAnimation.
-	 *
-	 * @param entity The entity this component is attached to.
-	 * @param scale The scale of the entity.
 	 * @param file The animated model file to load from.
 	 * @param texture The diffuse texture for the entity.
 	 * @param textureIndex What texture index this entity should render from (0 default).
@@ -122,12 +93,32 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 	}
 
 	/**
-	 * Instructs this entity to carry out a given animation.
+	 * Creates a new ComponentAnimation.
 	 *
-	 * @param animation The animation to be carried out.
+	 * @param entity The entity this component is attached to.
+	 * @param scale The scale of the entity.
+	 * @param model The animated model to use when animating and rendering.
+	 * @param texture The diffuse texture for the entity.
+	 * @param textureIndex What texture index this entity should render from (0 default).
 	 */
-	public void doAnimation(Animation animation) {
-		animator.doAnimation(animation);
+	public ComponentAnimation(Entity entity, float scale, ModelAnimated model, TextureObject texture, int textureIndex) {
+		super(entity);
+
+		this.scale = scale;
+		this.model = model;
+		this.modelMatrix = new Matrix4f();
+
+		this.collider = null;
+
+		this.texture = texture;
+		this.textureIndex = textureIndex;
+
+		this.colourOffset = new Colour();
+
+		if (model != null) {
+			model.getHeadJoint().calculateInverseBindTransform(new Matrix4f());
+			this.animator = new Animator(model.getHeadJoint());
+		}
 	}
 
 	@Override
@@ -164,8 +155,13 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 		FlounderBounding.get().addShapeRender(collider);
 	}
 
-	@Override
-	public void dispose() {
+	/**
+	 * Instructs this entity to carry out a given animation.
+	 *
+	 * @param animation The animation to be carried out.
+	 */
+	public void doAnimation(Animation animation) {
+		animator.doAnimation(animation);
 	}
 
 	/**
@@ -193,6 +189,17 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 			this.animator = new Animator(this.model.getHeadJoint());
 			getEntity().setMoved();
 		}
+	}
+
+	/**
+	 * Gets an array of the model-space transforms of all the joints (with the current animation pose applied) in the entity.
+	 * The joints are ordered in the array based on their joint index.
+	 * The position of each joint's transform in the array is equal to the joint's index.
+	 *
+	 * @return The array of model-space transforms of the joints in the current animation pose.
+	 */
+	public Matrix4f[] getJointTransforms() {
+		return jointMatrices;
 	}
 
 	/**
@@ -231,6 +238,17 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 
 	public void setTextureIndex(int textureIndex) {
 		this.textureIndex = textureIndex;
+	}
+
+	/**
+	 * Gets the textures coordinate offset that is used in rendering the model.
+	 *
+	 * @return The coordinate offset used in rendering.
+	 */
+	public Vector2f getTextureOffset() {
+		int column = textureIndex % texture.getNumberOfRows();
+		int row = textureIndex / texture.getNumberOfRows();
+		return new Vector2f((float) row / (float) texture.getNumberOfRows(), (float) column / (float) texture.getNumberOfRows());
 	}
 
 	public Colour getColourOffset() {
@@ -304,28 +322,6 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 			FlounderOpenGL.get().cullBackFaces(!texture.hasAlpha());
 			FlounderOpenGL.get().bindTexture(texture, 0);
 		}
-	}
-
-	/**
-	 * Gets an array of the model-space transforms of all the joints (with the current animation pose applied) in the entity.
-	 * The joints are ordered in the array based on their joint index.
-	 * The position of each joint's transform in the array is equal to the joint's index.
-	 *
-	 * @return The array of model-space transforms of the joints in the current animation pose.
-	 */
-	public Matrix4f[] getJointTransforms() {
-		return jointMatrices;
-	}
-
-	/**
-	 * Gets the textures coordinate offset that is used in rendering the model.
-	 *
-	 * @return The coordinate offset used in rendering.
-	 */
-	public Vector2f getTextureOffset() {
-		int column = textureIndex % texture.getNumberOfRows();
-		int row = textureIndex / texture.getNumberOfRows();
-		return new Vector2f((float) row / (float) texture.getNumberOfRows(), (float) column / (float) texture.getNumberOfRows());
 	}
 
 	@Override
@@ -474,5 +470,9 @@ public class ComponentAnimation extends IComponentEntity implements IComponentCo
 				new String[]{"private static final MyFile COLLADA = " + saveModel, "private static final TextureObject TEXTURE = " + saveTexture}, // Static variables
 				new String[]{saveScale, "COLLADA", "TEXTURE", saveTextureIndex} // Class constructor
 		);
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

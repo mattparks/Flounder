@@ -147,10 +147,6 @@ public class GuiInputText extends ScreenObject {
 		background.getPosition().set(text.getPosition());
 	}
 
-	@Override
-	public void deleteObject() {
-	}
-
 	public String getPrefix() {
 		return prefix;
 	}
@@ -167,5 +163,9 @@ public class GuiInputText extends ScreenObject {
 	public void setValue(String value) {
 		this.value = value;
 		this.text.setText(prefix + value);
+	}
+
+	@Override
+	public void deleteObject() {
 	}
 }

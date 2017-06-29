@@ -64,16 +64,6 @@ public class MetaFile {
 	}
 
 	/**
-	 * Loads the data about how much padding is used around each character in the texture atlas.
-	 */
-	private void loadPaddingData() {
-		processNextLine();
-		this.padding = getValuesOfVariable("padding");
-		this.paddingWidth = padding[PAD_LEFT] + padding[PAD_RIGHT];
-		this.paddingHeight = padding[PAD_TOP] + padding[PAD_BOTTOM];
-	}
-
-	/**
 	 * Read in the next line and store the variable values.
 	 *
 	 * @return {@code true} if the end of the file hasn't been reached.
@@ -105,21 +95,13 @@ public class MetaFile {
 	}
 
 	/**
-	 * Gets the array of ints associated with a variable on the current line.
-	 *
-	 * @param variable The name of the variable.
-	 *
-	 * @return The int array of values associated with the variable.
+	 * Loads the data about how much padding is used around each character in the texture atlas.
 	 */
-	private int[] getValuesOfVariable(String variable) {
-		String[] numbers = values.get(variable).split(NUMBER_SEPARATOR);
-		int[] actualValues = new int[numbers.length];
-
-		for (int i = 0; i < actualValues.length; i++) {
-			actualValues[i] = Integer.parseInt(numbers[i]);
-		}
-
-		return actualValues;
+	private void loadPaddingData() {
+		processNextLine();
+		this.padding = getValuesOfVariable("padding");
+		this.paddingWidth = padding[PAD_LEFT] + padding[PAD_RIGHT];
+		this.paddingHeight = padding[PAD_TOP] + padding[PAD_BOTTOM];
 	}
 
 	/**
@@ -131,17 +113,6 @@ public class MetaFile {
 		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
 		verticalPerPixelSize = TextLoader.LINE_HEIGHT / (double) lineHeightPixels;
 		horizontalPerPixelSize = verticalPerPixelSize;
-	}
-
-	/**
-	 * Gets the {@code int} value of the variable with a certain name on the current line.
-	 *
-	 * @param variable The name of the variable.
-	 *
-	 * @return The value of the variable.
-	 */
-	private int getValueOfVariable(String variable) {
-		return Integer.parseInt(values.get(variable));
 	}
 
 	/**
@@ -194,6 +165,35 @@ public class MetaFile {
 			maxSizeY = quadHeight;
 		}
 		return new Character(id, xTextureCoord, yTextureCoord, xTexSize, yTexSize, xOffset, yOffset, quadWidth, quadHeight, xAdvance);
+	}
+
+	/**
+	 * Gets the {@code int} value of the variable with a certain name on the current line.
+	 *
+	 * @param variable The name of the variable.
+	 *
+	 * @return The value of the variable.
+	 */
+	private int getValueOfVariable(String variable) {
+		return Integer.parseInt(values.get(variable));
+	}
+
+	/**
+	 * Gets the array of ints associated with a variable on the current line.
+	 *
+	 * @param variable The name of the variable.
+	 *
+	 * @return The int array of values associated with the variable.
+	 */
+	private int[] getValuesOfVariable(String variable) {
+		String[] numbers = values.get(variable).split(NUMBER_SEPARATOR);
+		int[] actualValues = new int[numbers.length];
+
+		for (int i = 0; i < actualValues.length; i++) {
+			actualValues[i] = Integer.parseInt(numbers[i]);
+		}
+
+		return actualValues;
 	}
 
 	/**

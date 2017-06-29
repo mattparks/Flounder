@@ -38,11 +38,6 @@ public class FlounderShadows extends Module {
 		super(FlounderCamera.class, FlounderEntities.class);
 	}
 
-	@Module.Instance
-	public static FlounderShadows get() {
-		return (FlounderShadows) Framework.get().getInstance(FlounderShadows.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.lightPosition = new Vector3f(0.5f, 0.0f, 0.5f);
@@ -69,38 +64,6 @@ public class FlounderShadows extends Module {
 		this.renderUnlimited = true;
 		this.timerRender = new Timer(1.0 / 24.0);
 		this.renderNow = true;
-	}
-
-	/**
-	 * Create the offset for part of the conversion to shadow map space.
-	 *
-	 * @return The offset as a matrix.
-	 */
-	private static Matrix4f createOffset() {
-		Matrix4f offset = new Matrix4f();
-		Matrix4f.translate(offset, new Vector3f(0.5f, 0.5f, 0.5f), offset);
-		Matrix4f.scale(offset, new Vector3f(0.5f, 0.5f, 0.5f), offset);
-		return offset;
-	}
-
-	@Handler.Function(Handler.FLAG_RENDER)
-	public void update() {
-		// Renders when needed.
-		if (timerRender.isPassedTime() || renderUnlimited) {
-			// Resets the timer.
-			timerRender.resetStartTime();
-
-			shadowBox.update(FlounderCamera.get().getCamera());
-			updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
-			updateLightViewMatrix(lightPosition, shadowBox.getCenter());
-			Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
-			Matrix4f.multiply(offset, projectionViewMatrix, shadowMapSpaceMatrix);
-
-			renderNow = true;
-			worldAABB.setMinExtents(shadowBox.getAABB().getMinExtents());
-			worldAABB.setMaxExtents(shadowBox.getAABB().getMaxExtents());
-			worldAABB.update(FlounderCamera.get().getCamera().getPosition(), Vector3f.ZERO, 2.5f, worldAABB);
-		}
 	}
 
 	/**
@@ -135,6 +98,38 @@ public class FlounderShadows extends Module {
 		yaw = direction.z > 0.0f ? yaw - 180.0f : yaw;
 		Matrix4f.rotate(lightViewMatrix, new Vector3f(0.0f, 1.0f, 0.0f), (float) -Math.toRadians(yaw), lightViewMatrix);
 		Matrix4f.translate(lightViewMatrix, position, lightViewMatrix);
+	}
+
+	/**
+	 * Create the offset for part of the conversion to shadow map space.
+	 *
+	 * @return The offset as a matrix.
+	 */
+	private static Matrix4f createOffset() {
+		Matrix4f offset = new Matrix4f();
+		Matrix4f.translate(offset, new Vector3f(0.5f, 0.5f, 0.5f), offset);
+		Matrix4f.scale(offset, new Vector3f(0.5f, 0.5f, 0.5f), offset);
+		return offset;
+	}
+
+	@Handler.Function(Handler.FLAG_RENDER)
+	public void update() {
+		// Renders when needed.
+		if (timerRender.isPassedTime() || renderUnlimited) {
+			// Resets the timer.
+			timerRender.resetStartTime();
+
+			shadowBox.update(FlounderCamera.get().getCamera());
+			updateOrthographicProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
+			updateLightViewMatrix(lightPosition, shadowBox.getCenter());
+			Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
+			Matrix4f.multiply(offset, projectionViewMatrix, shadowMapSpaceMatrix);
+
+			renderNow = true;
+			worldAABB.setMinExtents(shadowBox.getAABB().getMinExtents());
+			worldAABB.setMaxExtents(shadowBox.getAABB().getMaxExtents());
+			worldAABB.update(FlounderCamera.get().getCamera().getPosition(), Vector3f.ZERO, 2.5f, worldAABB);
+		}
 	}
 
 	public Vector3f getLightPosition() {
@@ -260,5 +255,10 @@ public class FlounderShadows extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+	}
+
+	@Module.Instance
+	public static FlounderShadows get() {
+		return (FlounderShadows) Framework.get().getInstance(FlounderShadows.class);
 	}
 }

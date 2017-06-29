@@ -280,11 +280,6 @@ public class LwjglDisplay extends FlounderDisplay {
 		return glfwImage;
 	}
 
-	@Handler.Function(Handler.FLAG_UPDATE_PRE)
-	public void update() {
-		super.update();
-	}
-
 	@Override
 	public void swapBuffers() {
 		// Swap the colour buffers to the display.
@@ -440,6 +435,11 @@ public class LwjglDisplay extends FlounderDisplay {
 	@Override
 	public int getWindowYPos() {
 		return this.windowPosY;
+	}
+
+	@Handler.Function(Handler.FLAG_UPDATE_PRE)
+	public void update() {
+		super.update();
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

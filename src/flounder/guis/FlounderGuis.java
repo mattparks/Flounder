@@ -34,11 +34,6 @@ public class FlounderGuis extends Module {
 		guiMaster = null;
 	}
 
-	@Module.Instance
-	public static FlounderGuis get() {
-		return (FlounderGuis) Framework.get().getInstance(FlounderGuis.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.selector = new GuiSelector();
@@ -132,5 +127,10 @@ public class FlounderGuis extends Module {
 		}
 
 		container.delete();
+	}
+
+	@Module.Instance
+	public static FlounderGuis get() {
+		return (FlounderGuis) Framework.get().getInstance(FlounderGuis.class);
 	}
 }

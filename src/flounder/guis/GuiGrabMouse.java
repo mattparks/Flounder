@@ -126,10 +126,6 @@ public class GuiGrabMouse extends ScreenObject {
 		background.getPosition().set(text.getPosition());
 	}
 
-	@Override
-	public void deleteObject() {
-	}
-
 	public String getPrefix() {
 		return prefix;
 	}
@@ -146,5 +142,9 @@ public class GuiGrabMouse extends ScreenObject {
 	public void setValue(int value) {
 		this.value = value;
 		this.text.setText(prefix + value);
+	}
+
+	@Override
+	public void deleteObject() {
 	}
 }

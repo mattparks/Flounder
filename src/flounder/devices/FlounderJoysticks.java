@@ -15,11 +15,6 @@ public class FlounderJoysticks extends Module {
 		super(FlounderPlatform.class, FlounderLogger.class, FlounderDisplay.class);
 	}
 
-	@Module.Instance
-	public static FlounderJoysticks get() {
-		return (FlounderJoysticks) Framework.get().getInstance(FlounderJoysticks.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -102,5 +97,10 @@ public class FlounderJoysticks extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+	}
+
+	@Module.Instance
+	public static FlounderJoysticks get() {
+		return (FlounderJoysticks) Framework.get().getInstance(FlounderJoysticks.class);
 	}
 }

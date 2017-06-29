@@ -24,11 +24,6 @@ public class FlounderTextures extends Module {
 		super(FlounderLoader.class, FlounderProcessors.class);
 	}
 
-	@Module.Instance
-	public static FlounderTextures get() {
-		return (FlounderTextures) Framework.get().getInstance(FlounderTextures.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.loaded = new HashMap<>();
@@ -90,5 +85,10 @@ public class FlounderTextures extends Module {
 	public void dispose() {
 		loaded.keySet().forEach(key -> ((TextureObject) loaded.get(key).get()).delete());
 		loaded.clear();
+	}
+
+	@Module.Instance
+	public static FlounderTextures get() {
+		return (FlounderTextures) Framework.get().getInstance(FlounderTextures.class);
 	}
 }

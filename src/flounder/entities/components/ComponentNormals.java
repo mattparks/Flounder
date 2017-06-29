@@ -41,10 +41,6 @@ public class ComponentNormals extends IComponentEntity implements IComponentRend
 	public void update() {
 	}
 
-	@Override
-	public void dispose() {
-	}
-
 	public TextureObject getTextureNormals() {
 		return textureNormals;
 	}
@@ -131,5 +127,9 @@ public class ComponentNormals extends IComponentEntity implements IComponentRend
 				new String[]{"private static final TextureObject TEXTURE_NORMALS = " + saveTexture}, // Static variables
 				new String[]{"TEXTURE_NORMALS"} // Class constructor
 		);
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

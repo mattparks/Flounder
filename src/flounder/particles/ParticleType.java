@@ -26,35 +26,35 @@ public class ParticleType {
 		this.scale = scale;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public TextureObject getTexture() {
-		return texture;
 	}
 
 	public void setTexture(TextureObject texture) {
 		this.texture = texture;
 	}
 
-	public float getLifeLength() {
-		return lifeLength;
-	}
-
 	public void setLifeLength(float lifeLength) {
 		this.lifeLength = lifeLength;
 	}
 
-	public float getScale() {
-		return scale;
-	}
-
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public TextureObject getTexture() {
+		return texture;
+	}
+
+	public float getLifeLength() {
+		return lifeLength;
+	}
+
+	public float getScale() {
+		return scale;
 	}
 }

@@ -22,6 +22,11 @@ public class FlounderEditor extends TimerTask {
 	private boolean startEntrance;
 	private boolean running;
 
+	public static void main(String[] args) {
+		Timer timer = new Timer();
+		timer.schedule(new FlounderEditor(), 0, 1000);
+	}
+
 	private FlounderEditor() {
 		frame = new JFrame("Flounder Editor");
 		frame.setSize(300, 420);
@@ -66,11 +71,6 @@ public class FlounderEditor extends TimerTask {
 		int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
 		frame.setLocation(x, y);
 		frame.setVisible(true);
-	}
-
-	public static void main(String[] args) {
-		Timer timer = new Timer();
-		timer.schedule(new FlounderEditor(), 0, 1000);
 	}
 
 	@Override

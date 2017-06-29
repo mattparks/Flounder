@@ -15,11 +15,6 @@ public class FlounderKeyboard extends Module {
 		super(FlounderPlatform.class, FlounderLogger.class, FlounderDisplay.class);
 	}
 
-	@Module.Instance
-	public static FlounderKeyboard get() {
-		return (FlounderKeyboard) Framework.get().getInstance(FlounderKeyboard.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -53,5 +48,10 @@ public class FlounderKeyboard extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+	}
+
+	@Module.Instance
+	public static FlounderKeyboard get() {
+		return (FlounderKeyboard) Framework.get().getInstance(FlounderKeyboard.class);
 	}
 }

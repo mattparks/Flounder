@@ -21,11 +21,6 @@ public class FlounderAnimation extends Module {
 		super(FlounderProcessors.class, FlounderLoader.class, FlounderCollada.class);
 	}
 
-	@Module.Instance
-	public static FlounderAnimation get() {
-		return (FlounderAnimation) Framework.get().getInstance(FlounderAnimation.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -73,5 +68,10 @@ public class FlounderAnimation extends Module {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 
+	}
+
+	@Module.Instance
+	public static FlounderAnimation get() {
+		return (FlounderAnimation) Framework.get().getInstance(FlounderAnimation.class);
 	}
 }

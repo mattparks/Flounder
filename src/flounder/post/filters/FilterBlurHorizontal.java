@@ -24,11 +24,6 @@ public class FilterBlurHorizontal extends PostFilter {
 		init((int) (FlounderDisplay.get().getWidth() * sizeScalar));
 	}
 
-	private void init(int widthValue) {
-		this.widthValue = widthValue;
-		this.scaleValue = 2.0f;
-	}
-
 	public FilterBlurHorizontal(int widthValue, int heightValue) {
 		super(ShaderFactory.newBuilder().setName("filterBlurHorizontal").addType(
 				new ShaderType(GL_VERTEX_SHADER, VERTEX_LOCATION)).addType(
@@ -37,6 +32,11 @@ public class FilterBlurHorizontal extends PostFilter {
 		this.fitToDisplay = false;
 		this.sizeScalar = 1.0f;
 		init(widthValue);
+	}
+
+	private void init(int widthValue) {
+		this.widthValue = widthValue;
+		this.scaleValue = 2.0f;
 	}
 
 	public void setScale(float scale) {

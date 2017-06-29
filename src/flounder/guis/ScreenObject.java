@@ -240,6 +240,10 @@ public abstract class ScreenObject {
 		this.scaleDriver = scaleDriver;
 	}
 
+	public float getScale() {
+		return scale;
+	}
+
 	/**
 	 * Gets the positions relative in screen space.
 	 *
@@ -256,10 +260,6 @@ public abstract class ScreenObject {
 	 */
 	public Vector2f getScreenDimensions() {
 		return screenDimensions.set(dimensions.x, dimensions.y).scale(getScale());
-	}
-
-	public float getScale() {
-		return scale;
 	}
 
 	/**

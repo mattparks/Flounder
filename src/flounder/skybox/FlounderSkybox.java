@@ -33,11 +33,6 @@ public class FlounderSkybox extends Module {
 		super(FlounderBounding.class, FlounderLoader.class, FlounderTextures.class, FlounderShaders.class);
 	}
 
-	@Module.Instance
-	public static FlounderSkybox get() {
-		return (FlounderSkybox) Framework.get().getInstance(FlounderSkybox.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.model = ModelFactory.newBuilder().setFile(MODEL_FILE).create();
@@ -103,5 +98,10 @@ public class FlounderSkybox extends Module {
 		if (cubemap != null) {
 			this.cubemap.delete();
 		}
+	}
+
+	@Module.Instance
+	public static FlounderSkybox get() {
+		return (FlounderSkybox) Framework.get().getInstance(FlounderSkybox.class);
 	}
 }

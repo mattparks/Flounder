@@ -41,23 +41,54 @@ import java.util.zip.*;
  * @author Matthias Mann
  */
 public class TextureDecoder {
+	public enum Format {
+		ALPHA(1, true),
+		LUMINANCE(1, false),
+		LUMINANCE_ALPHA(2, true),
+		RGB(3, false),
+		RGBA(4, true),
+		BGRA(4, true),
+		ABGR(4, true);
+
+		final int numComponents;
+		final boolean hasAlpha;
+
+		Format(int numComponents, boolean hasAlpha) {
+			this.numComponents = numComponents;
+			this.hasAlpha = hasAlpha;
+		}
+
+		public int getNumComponents() {
+			return numComponents;
+		}
+
+		public boolean isHasAlpha() {
+			return hasAlpha;
+		}
+	}
+
 	private static final byte[] SIGNATURE = {(byte) 137, 80, 78, 71, 13, 10, 26, 10};
+
 	private static final int IHDR = 0x49484452;
 	private static final int PLTE = 0x504C5445;
 	private static final int tRNS = 0x74524E53;
 	private static final int IDAT = 0x49444154;
 	private static final int IEND = 0x49454E44;
+
 	private static final byte COLOUR_GREYSCALE = 0;
 	private static final byte COLOUR_TRUECOLOUR = 2;
 	private static final byte COLOUR_INDEXED = 3;
 	private static final byte COLOUR_GREYALPHA = 4;
 	private static final byte COLOUR_TRUEALPHA = 6;
+
 	private final InputStream input;
 	private final CRC32 crc;
 	private final byte[] buffer;
+
 	private int chunkLength;
 	private int chunkType;
 	private int chunkRemaining;
+
 	private int width;
 	private int height;
 	private int bitdepth;
@@ -66,6 +97,7 @@ public class TextureDecoder {
 	private byte[] palette;
 	private byte[] paletteA;
 	private byte[] transPixel;
+
 	public TextureDecoder(InputStream input) throws IOException {
 		this.input = input;
 		this.crc = new CRC32();
@@ -103,22 +135,23 @@ public class TextureDecoder {
 		}
 	}
 
-	private static boolean checkSignature(byte[] buffer) {
-		for (int i = 0; i < SIGNATURE.length; i++) {
-			if (buffer[i] != SIGNATURE[i]) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 	public int getHeight() {
 		return height;
 	}
 
 	public int getWidth() {
 		return width;
+	}
+
+	/**
+	 * Checks if the image has a real alpha channel. This method does not check for the presence of a tRNS chunk.
+	 *
+	 * @return True if the image has an alpha channel
+	 *
+	 * @see #hasAlpha()
+	 */
+	public boolean hasAlphaChannel() {
+		return colourType == COLOUR_TRUEALPHA || colourType == COLOUR_GREYALPHA;
 	}
 
 	/**
@@ -131,17 +164,6 @@ public class TextureDecoder {
 	 */
 	public boolean hasAlpha() {
 		return hasAlphaChannel() || paletteA != null || transPixel != null;
-	}
-
-	/**
-	 * Checks if the image has a real alpha channel. This method does not check for the presence of a tRNS chunk.
-	 *
-	 * @return True if the image has an alpha channel
-	 *
-	 * @see #hasAlpha()
-	 */
-	public boolean hasAlphaChannel() {
-		return colourType == COLOUR_TRUEALPHA || colourType == COLOUR_GREYALPHA;
 	}
 
 	public boolean isRGB() {
@@ -232,29 +254,6 @@ public class TextureDecoder {
 			default:
 				throw new UnsupportedOperationException("Not yet implemented");
 		}
-	}
-
-	/**
-	 * Decodes the image into the specified buffer. The last line is placed at the current position. After decode the buffer position is at the end of the first line.
-	 *
-	 * @param buffer Ihe buffer.
-	 * @param stride The stride in bytes from start of a line to start of the next line, must be positive.
-	 * @param fmt The target format into which the image should be decoded.
-	 *
-	 * @throws IOException If a read or data error occurred.
-	 * @throws IllegalArgumentException If the start position of a line falls outside the buffer.
-	 * @throws UnsupportedOperationException If the image can't be decoded into the desired format.
-	 */
-	public void decodeFlipped(ByteBuffer buffer, int stride, Format fmt) throws IOException {
-		if (stride <= 0) {
-			throw new IllegalArgumentException("stride");
-		}
-
-		int pos = buffer.position();
-		int posDelta = (height - 1) * stride;
-		buffer.position(pos + posDelta);
-		decode(buffer, -stride, fmt);
-		buffer.position(buffer.position() + posDelta);
 	}
 
 	/**
@@ -383,6 +382,29 @@ public class TextureDecoder {
 		} finally {
 			inflater.end();
 		}
+	}
+
+	/**
+	 * Decodes the image into the specified buffer. The last line is placed at the current position. After decode the buffer position is at the end of the first line.
+	 *
+	 * @param buffer Ihe buffer.
+	 * @param stride The stride in bytes from start of a line to start of the next line, must be positive.
+	 * @param fmt The target format into which the image should be decoded.
+	 *
+	 * @throws IOException If a read or data error occurred.
+	 * @throws IllegalArgumentException If the start position of a line falls outside the buffer.
+	 * @throws UnsupportedOperationException If the image can't be decoded into the desired format.
+	 */
+	public void decodeFlipped(ByteBuffer buffer, int stride, Format fmt) throws IOException {
+		if (stride <= 0) {
+			throw new IllegalArgumentException("stride");
+		}
+
+		int pos = buffer.position();
+		int posDelta = (height - 1) * stride;
+		buffer.position(pos + posDelta);
+		decode(buffer, -stride, fmt);
+		buffer.position(buffer.position() + posDelta);
 	}
 
 	private void copy(ByteBuffer buffer, byte[] curLine) {
@@ -687,119 +709,6 @@ public class TextureDecoder {
 		}
 	}
 
-	private void readChunkUnzip(Inflater inflater, byte[] buffer, int offset, int length) throws IOException {
-		assert (buffer != this.buffer);
-
-		try {
-			do {
-				int read = inflater.inflate(buffer, offset, length);
-
-				if (read <= 0) {
-					if (inflater.finished()) {
-						throw new EOFException();
-					}
-
-					if (inflater.needsInput()) {
-						refillInflater(inflater);
-					} else {
-						throw new IOException("Can't inflate " + length + " bytes.");
-					}
-				} else {
-					offset += read;
-					length -= read;
-				}
-			} while (length > 0);
-		} catch (DataFormatException ex) {
-			throw new IOException("Inflate error", ex);
-		}
-	}
-
-	private void refillInflater(Inflater inflater) throws IOException {
-		while (chunkRemaining == 0) {
-			closeChunk();
-			openChunk(IDAT);
-		}
-
-		int read = readChunk(buffer, 0, buffer.length);
-		inflater.setInput(buffer, 0, read);
-	}
-
-	private void closeChunk() throws IOException {
-		if (chunkRemaining > 0) {
-			// Just skip the rest and the CRC.
-			skip(chunkRemaining + 4);
-		} else {
-			readFully(buffer, 0, 4);
-			int expectedCrc = readInt(buffer, 0);
-			int computedCrc = (int) crc.getValue();
-
-			if (computedCrc != expectedCrc) {
-				throw new IOException("Invalid CRC");
-			}
-		}
-
-		chunkRemaining = 0;
-		chunkLength = 0;
-		chunkType = 0;
-	}
-
-	private void readFully(byte[] buffer, int offset, int length) throws IOException {
-		do {
-			int read = input.read(buffer, offset, length);
-
-			if (read < 0) {
-				throw new EOFException();
-			}
-
-			offset += read;
-			length -= read;
-		} while (length > 0);
-	}
-
-	private int readInt(byte[] buffer, int offset) {
-		return ((buffer[offset]) << 24) | ((buffer[offset + 1] & 255) << 16) | ((buffer[offset + 2] & 255) << 8) | ((buffer[offset + 3] & 255));
-	}
-
-	private void skip(long amount) throws IOException {
-		while (amount > 0) {
-			long skipped = input.skip(amount);
-
-			if (skipped < 0) {
-				throw new EOFException();
-			}
-
-			amount -= skipped;
-		}
-	}
-
-	private void openChunk(int expected) throws IOException {
-		openChunk();
-
-		if (chunkType != expected) {
-			throw new IOException("Expected chunk: " + Integer.toHexString(expected));
-		}
-	}
-
-	private void openChunk() throws IOException {
-		readFully(buffer, 0, 8);
-		chunkLength = readInt(buffer, 0);
-		chunkType = readInt(buffer, 4);
-		chunkRemaining = chunkLength;
-		crc.reset();
-		crc.update(buffer, 4, 4); // Only chunkType.
-	}
-
-	private int readChunk(byte[] buffer, int offset, int length) throws IOException {
-		if (length > chunkRemaining) {
-			length = chunkRemaining;
-		}
-
-		readFully(buffer, offset, length);
-		crc.update(buffer, offset, length);
-		chunkRemaining -= length;
-		return length;
-	}
-
 	private void readIHDR() throws IOException {
 		checkChunkLength(13);
 		readChunk(buffer, 0, 13);
@@ -904,35 +813,132 @@ public class TextureDecoder {
 		}
 	}
 
+	private void closeChunk() throws IOException {
+		if (chunkRemaining > 0) {
+			// Just skip the rest and the CRC.
+			skip(chunkRemaining + 4);
+		} else {
+			readFully(buffer, 0, 4);
+			int expectedCrc = readInt(buffer, 0);
+			int computedCrc = (int) crc.getValue();
+
+			if (computedCrc != expectedCrc) {
+				throw new IOException("Invalid CRC");
+			}
+		}
+
+		chunkRemaining = 0;
+		chunkLength = 0;
+		chunkType = 0;
+	}
+
+	private void openChunk() throws IOException {
+		readFully(buffer, 0, 8);
+		chunkLength = readInt(buffer, 0);
+		chunkType = readInt(buffer, 4);
+		chunkRemaining = chunkLength;
+		crc.reset();
+		crc.update(buffer, 4, 4); // Only chunkType.
+	}
+
+	private void openChunk(int expected) throws IOException {
+		openChunk();
+
+		if (chunkType != expected) {
+			throw new IOException("Expected chunk: " + Integer.toHexString(expected));
+		}
+	}
+
 	private void checkChunkLength(int expected) throws IOException {
 		if (chunkLength != expected) {
 			throw new IOException("Chunk has wrong size!");
 		}
 	}
 
-	public enum Format {
-		ALPHA(1, true),
-		LUMINANCE(1, false),
-		LUMINANCE_ALPHA(2, true),
-		RGB(3, false),
-		RGBA(4, true),
-		BGRA(4, true),
-		ABGR(4, true);
-
-		final int numComponents;
-		final boolean hasAlpha;
-
-		Format(int numComponents, boolean hasAlpha) {
-			this.numComponents = numComponents;
-			this.hasAlpha = hasAlpha;
+	private int readChunk(byte[] buffer, int offset, int length) throws IOException {
+		if (length > chunkRemaining) {
+			length = chunkRemaining;
 		}
 
-		public int getNumComponents() {
-			return numComponents;
+		readFully(buffer, offset, length);
+		crc.update(buffer, offset, length);
+		chunkRemaining -= length;
+		return length;
+	}
+
+	private void refillInflater(Inflater inflater) throws IOException {
+		while (chunkRemaining == 0) {
+			closeChunk();
+			openChunk(IDAT);
 		}
 
-		public boolean isHasAlpha() {
-			return hasAlpha;
+		int read = readChunk(buffer, 0, buffer.length);
+		inflater.setInput(buffer, 0, read);
+	}
+
+	private void readChunkUnzip(Inflater inflater, byte[] buffer, int offset, int length) throws IOException {
+		assert (buffer != this.buffer);
+
+		try {
+			do {
+				int read = inflater.inflate(buffer, offset, length);
+
+				if (read <= 0) {
+					if (inflater.finished()) {
+						throw new EOFException();
+					}
+
+					if (inflater.needsInput()) {
+						refillInflater(inflater);
+					} else {
+						throw new IOException("Can't inflate " + length + " bytes.");
+					}
+				} else {
+					offset += read;
+					length -= read;
+				}
+			} while (length > 0);
+		} catch (DataFormatException ex) {
+			throw new IOException("Inflate error", ex);
 		}
+	}
+
+	private void readFully(byte[] buffer, int offset, int length) throws IOException {
+		do {
+			int read = input.read(buffer, offset, length);
+
+			if (read < 0) {
+				throw new EOFException();
+			}
+
+			offset += read;
+			length -= read;
+		} while (length > 0);
+	}
+
+	private int readInt(byte[] buffer, int offset) {
+		return ((buffer[offset]) << 24) | ((buffer[offset + 1] & 255) << 16) | ((buffer[offset + 2] & 255) << 8) | ((buffer[offset + 3] & 255));
+	}
+
+	private void skip(long amount) throws IOException {
+		while (amount > 0) {
+			long skipped = input.skip(amount);
+
+			if (skipped < 0) {
+				throw new EOFException();
+			}
+
+			amount -= skipped;
+		}
+	}
+
+	private static boolean checkSignature(byte[] buffer) {
+		for (int i = 0; i < SIGNATURE.length; i++) {
+			if (buffer[i] != SIGNATURE[i]) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

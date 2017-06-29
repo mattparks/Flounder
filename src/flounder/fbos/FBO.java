@@ -92,102 +92,6 @@ public class FBO {
 		return new FBOBuilder(FlounderDisplay.get().getWidth(), FlounderDisplay.get().getHeight()).fitToScreen(sizeScalar);
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	/**
-	 * Gets the number of attachments in this FBO.
-	 *
-	 * @return The number of attachments in this FBO.
-	 */
-	public int getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(int attachments) {
-		this.attachments = attachments;
-	}
-
-	/**
-	 * Gets the number of antialiasing samples.
-	 *
-	 * @return The number of antialiasing samples.
-	 */
-	public int getSamples() {
-		return samples;
-	}
-
-	/**
-	 * Sets the number antialiasing samples, and recreates the FBO.
-	 *
-	 * @param samples The number of antialiasing samples.
-	 */
-	public void setSamples(int samples) {
-		if (this.samples != samples) {
-			delete();
-			FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
-			FlounderFBOs.get().initializeFBO(this);
-		}
-
-		this.samples = samples;
-	}
-
-	public boolean isFitToScreen() {
-		return fitToScreen;
-	}
-
-	public void setFitToScreen(boolean fitToScreen) {
-		this.fitToScreen = fitToScreen;
-	}
-
-	public void setSize(int width, int height) {
-		this.width = width;
-		this.height = height;
-		fitToScreen = false;
-		delete();
-		FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
-		FlounderFBOs.get().initializeFBO(this);
-	}
-
-	public void bindFrameBuffer() {
-		FlounderFBOs.get().bindFrameBuffer(this);
-	}
-
-	public void unbindFrameBuffer() {
-		FlounderFBOs.get().unbindFrameBuffer();
-	}
-
-	public void blitToScreen() {
-		FlounderFBOs.get().blitToScreen(this);
-	}
-
-	public float getSizeScalar() {
-		return sizeScalar;
-	}
-
-	public void setSizeScalar(float sizeScalar) {
-		if (this.fitToScreen && this.sizeScalar == sizeScalar) {
-			return;
-		}
-
-		this.sizeScalar = sizeScalar;
-		this.fitToScreen = true;
-		updateSize();
-	}
-
 	/**
 	 * Updates the FBO size if {@code fitToScreen}.
 	 */
@@ -218,11 +122,84 @@ public class FBO {
 		}
 	}
 
+	public void setSizeScalar(float sizeScalar) {
+		if (this.fitToScreen && this.sizeScalar == sizeScalar) {
+			return;
+		}
+
+		this.sizeScalar = sizeScalar;
+		this.fitToScreen = true;
+		updateSize();
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
 	/**
-	 * Deletes the FBO and its attachments.
+	 * Gets the number of attachments in this FBO.
+	 *
+	 * @return The number of attachments in this FBO.
 	 */
-	public void delete() {
-		FlounderFBOs.get().delete(this);
+	public int getAttachments() {
+		return attachments;
+	}
+
+	/**
+	 * Gets the number of antialiasing samples.
+	 *
+	 * @return The number of antialiasing samples.
+	 */
+	public int getSamples() {
+		return samples;
+	}
+
+	/**
+	 * Sets the number antialiasing samples, and recreates the FBO.
+	 *
+	 * @param samples The number of antialiasing samples.
+	 */
+	public void setSamples(int samples) {
+		if (this.samples != samples) {
+			delete();
+			FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+			FlounderFBOs.get().initializeFBO(this);
+		}
+
+		this.samples = samples;
+	}
+
+	public boolean isFitToScreen() {
+		return fitToScreen;
+	}
+
+	public void setSize(int width, int height) {
+		this.width = width;
+		this.height = height;
+		fitToScreen = false;
+		delete();
+		FlounderLogger.get().log("Recreating FBO: width: " + width + ", and height: " + height + ".");
+		FlounderFBOs.get().initializeFBO(this);
+	}
+
+	public void bindFrameBuffer() {
+		FlounderFBOs.get().bindFrameBuffer(this);
+	}
+
+	public void unbindFrameBuffer() {
+		FlounderFBOs.get().unbindFrameBuffer();
+	}
+
+	public void blitToScreen() {
+		FlounderFBOs.get().blitToScreen(this);
+	}
+
+	public float getSizeScalar() {
+		return sizeScalar;
 	}
 
 	/**
@@ -257,32 +234,16 @@ public class FBO {
 		return frameBuffer;
 	}
 
-	public void setFrameBuffer(int frameBuffer) {
-		this.frameBuffer = frameBuffer;
-	}
-
 	public int[] getColourTexture() {
 		return colourTexture;
-	}
-
-	public void setColourTexture(int[] colourTexture) {
-		this.colourTexture = colourTexture;
 	}
 
 	public int getDepthBuffer() {
 		return depthBuffer;
 	}
 
-	public void setDepthBuffer(int depthBuffer) {
-		this.depthBuffer = depthBuffer;
-	}
-
 	public int[] getColourBuffer() {
 		return colourBuffer;
-	}
-
-	public void setColourBuffer(int[] colourBuffer) {
-		this.colourBuffer = colourBuffer;
 	}
 
 	public boolean isUseColourBuffer() {
@@ -309,11 +270,50 @@ public class FBO {
 		return antialiased;
 	}
 
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setAttachments(int attachments) {
+		this.attachments = attachments;
+	}
+
+	public void setFitToScreen(boolean fitToScreen) {
+		this.fitToScreen = fitToScreen;
+	}
+
+	public void setFrameBuffer(int frameBuffer) {
+		this.frameBuffer = frameBuffer;
+	}
+
+	public void setColourTexture(int[] colourTexture) {
+		this.colourTexture = colourTexture;
+	}
+
+	public void setDepthBuffer(int depthBuffer) {
+		this.depthBuffer = depthBuffer;
+	}
+
+	public void setColourBuffer(int[] colourBuffer) {
+		this.colourBuffer = colourBuffer;
+	}
+
 	public boolean isHasGivenResolveError() {
 		return hasGivenResolveError;
 	}
 
 	public void setHasGivenResolveError(boolean hasGivenResolveError) {
 		this.hasGivenResolveError = hasGivenResolveError;
+	}
+
+	/**
+	 * Deletes the FBO and its attachments.
+	 */
+	public void delete() {
+		FlounderFBOs.get().delete(this);
 	}
 }

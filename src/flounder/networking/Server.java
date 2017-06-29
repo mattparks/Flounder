@@ -137,20 +137,6 @@ public class Server extends Thread {
 	}
 
 	/**
-	 * Sends bytes of data back to all clients except the one with the username.
-	 *
-	 * @param data The data to send.
-	 * @param excludedUsername The username to exclude.
-	 */
-	public void sentDataToOtherClient(byte[] data, String excludedUsername) {
-		for (ClientInfo p : connected) {
-			if (!p.getUsername().equals(excludedUsername)) {
-				sendData(data, p.getIpAddress(), p.getPort());
-			}
-		}
-	}
-
-	/**
 	 * Sends byes of data to a ip address on a port.
 	 *
 	 * @param data The data to send.
@@ -164,6 +150,20 @@ public class Server extends Thread {
 			socket.send(packet);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Sends bytes of data back to all clients except the one with the username.
+	 *
+	 * @param data The data to send.
+	 * @param excludedUsername The username to exclude.
+	 */
+	public void sentDataToOtherClient(byte[] data, String excludedUsername) {
+		for (ClientInfo p : connected) {
+			if (!p.getUsername().equals(excludedUsername)) {
+				sendData(data, p.getIpAddress(), p.getPort());
+			}
 		}
 	}
 

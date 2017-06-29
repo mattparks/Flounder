@@ -33,10 +33,6 @@ public class ComponentRemoveFade extends IComponentEntity implements IComponentA
 	}
 
 	@Override
-	public void dispose() {
-	}
-
-	@Override
 	public float getAlpha() {
 		return alpha;
 	}
@@ -74,5 +70,9 @@ public class ComponentRemoveFade extends IComponentEntity implements IComponentA
 		//		new String[]{} // Class constructor
 		//);
 		return null;
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

@@ -104,24 +104,6 @@ public class TextObject extends ScreenObject {
 	}
 
 	/**
-	 * Gets if the text has been loaded to OpenGL.
-	 *
-	 * @return If the text has been loaded to OpenGL.
-	 */
-	public boolean isLoaded() {
-		return !textString.isEmpty() && textMeshVao != -1 && vertexCount != -1;
-	}
-
-	@Override
-	public void deleteObject() {
-		if (isLoaded()) {
-			FlounderLoader.get().deleteVAOFromCache(textMeshVao);
-			textMeshVao = -1;
-			vertexCount = -1;
-		}
-	}
-
-	/**
 	 * Gets the string of text represented.
 	 *
 	 * @return The string of text.
@@ -301,16 +283,6 @@ public class TextObject extends ScreenObject {
 	}
 
 	/**
-	 * Gets the distance field edge before antialias.
-	 *
-	 * @return The distance field edge.
-	 */
-	protected float calculateEdgeStart() {
-		float size = super.getScale();
-		return 1.0f / 300.0f * size + 137.0f / 300.0f;
-	}
-
-	/**
 	 * Gets the size of the glow.
 	 *
 	 * @return The glow size.
@@ -326,6 +298,16 @@ public class TextObject extends ScreenObject {
 	}
 
 	/**
+	 * Gets the distance field edge before antialias.
+	 *
+	 * @return The distance field edge.
+	 */
+	protected float calculateEdgeStart() {
+		float size = super.getScale();
+		return 1.0f / 300.0f * size + 137.0f / 300.0f;
+	}
+
+	/**
 	 * Gets the distance field antialias distance.
 	 *
 	 * @return The distance field antialias distance.
@@ -334,5 +316,23 @@ public class TextObject extends ScreenObject {
 		float size = super.getScale();
 		size = (size - 1.0f) / (1.0f + size / 4.0f) + 1.0f;
 		return 0.1f / size;
+	}
+
+	/**
+	 * Gets if the text has been loaded to OpenGL.
+	 *
+	 * @return If the text has been loaded to OpenGL.
+	 */
+	public boolean isLoaded() {
+		return !textString.isEmpty() && textMeshVao != -1 && vertexCount != -1;
+	}
+
+	@Override
+	public void deleteObject() {
+		if (isLoaded()) {
+			FlounderLoader.get().deleteVAOFromCache(textMeshVao);
+			textMeshVao = -1;
+			vertexCount = -1;
+		}
 	}
 }

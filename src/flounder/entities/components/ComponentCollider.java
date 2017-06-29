@@ -51,10 +51,6 @@ public class ComponentCollider extends IComponentEntity implements IComponentEdi
 		}
 	}
 
-	@Override
-	public void dispose() {
-	}
-
 	public QuickHull getQuickHull() {
 		return quickHull;
 	}
@@ -73,5 +69,9 @@ public class ComponentCollider extends IComponentEntity implements IComponentEdi
 				new String[]{}, // Static variables
 				new String[]{} // Class constructor
 		);
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

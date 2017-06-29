@@ -31,11 +31,6 @@ public class FlounderCollada extends Module {
 		super(FlounderProcessors.class, FlounderLoader.class);
 	}
 
-	@Module.Instance
-	public static FlounderCollada get() {
-		return (FlounderCollada) Framework.get().getInstance(FlounderCollada.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		loaded = new HashMap<>();
@@ -95,9 +90,15 @@ public class FlounderCollada extends Module {
 		FlounderLoader.get().storeDataInVBO(model.getVaoID(), model.getMeshData().getVertexWeights(), 5, 3);
 	}
 
+
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		loaded.keySet().forEach(key -> loaded.get(key).get().delete());
 		loaded.clear();
+	}
+
+	@Module.Instance
+	public static FlounderCollada get() {
+		return (FlounderCollada) Framework.get().getInstance(FlounderCollada.class);
 	}
 }

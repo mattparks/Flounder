@@ -131,10 +131,6 @@ public class Particle implements ISpatialObject, Comparable<Particle> {
 		return offset;
 	}
 
-	protected boolean isAlive() {
-		return transparency < 1.0;
-	}
-
 	protected ParticleType getParticleType() {
 		return particleType;
 	}
@@ -145,6 +141,10 @@ public class Particle implements ISpatialObject, Comparable<Particle> {
 
 	protected float getTransparency() {
 		return transparency;
+	}
+
+	protected boolean isAlive() {
+		return transparency < 1.0;
 	}
 
 	protected Vector2f getTextureOffset1() {

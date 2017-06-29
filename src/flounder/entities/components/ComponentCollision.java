@@ -26,16 +26,6 @@ public class ComponentCollision extends IComponentEntity implements IComponentMo
 	public void update() {
 	}
 
-	@Override
-	public void dispose() {
-	}
-
-	@Override
-	public void verifyMove(Entity entity, Vector3f moveAmount, Vector3f rotateAmount) {
-		moveAmount.set(resolveCollisions(moveAmount));
-		// rotateAmount = rotateAmount; // TODO: Stop some rotations?
-	}
-
 	/**
 	 * Resolves collisions with any other collision components encountered.
 	 *
@@ -114,6 +104,12 @@ public class ComponentCollision extends IComponentEntity implements IComponentMo
 	}
 
 	@Override
+	public void verifyMove(Entity entity, Vector3f moveAmount, Vector3f rotateAmount) {
+		moveAmount.set(resolveCollisions(moveAmount));
+		// rotateAmount = rotateAmount; // TODO: Stop some rotations?
+	}
+
+	@Override
 	public void addToPanel(JPanel panel) {
 	}
 
@@ -127,5 +123,9 @@ public class ComponentCollision extends IComponentEntity implements IComponentMo
 				new String[]{}, // Static variables
 				new String[]{} // Class constructor
 		);
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

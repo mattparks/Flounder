@@ -66,13 +66,6 @@ public class Entity implements ISpatialObject {
 	}
 
 	/**
-	 * Tells the entity components that the entity has moved.
-	 */
-	public void setMoved() {
-		this.hasMoved = true;
-	}
-
-	/**
 	 * Removes a component to the entity.
 	 *
 	 * @param component The component to remove.
@@ -179,6 +172,13 @@ public class Entity implements ISpatialObject {
 					Maths.normalizeAngle(rotation.z + rotateAmount.z)
 			);
 		}
+	}
+
+	/**
+	 * Tells the entity components that the entity has moved.
+	 */
+	public void setMoved() {
+		this.hasMoved = true;
 	}
 
 	/**

@@ -34,11 +34,6 @@ public class LwjglFBOs extends FlounderFBOs {
 	}
 
 	@Override
-	public int getMaxFBOSize() {
-		return glGetInteger(GL_MAX_RENDERBUFFER_SIZE_EXT);
-	}
-
-	@Override
 	public void initializeFBO(FBO fbo) {
 		createFBO(fbo);
 		limitFBOSize(fbo);
@@ -199,6 +194,11 @@ public class LwjglFBOs extends FlounderFBOs {
 		glDeleteTextures(fbo.getDepthTexture());
 		glDeleteRenderbuffers(fbo.getDepthBuffer());
 		glDeleteRenderbuffers(fbo.getColourBuffer());
+	}
+
+	@Override
+	public int getMaxFBOSize() {
+		return glGetInteger(GL_MAX_RENDERBUFFER_SIZE_EXT);
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)

@@ -20,20 +20,7 @@ public abstract class BaseButton implements IButton {
 		wasDown = false;
 	}
 
-	/**
-	 * Decides whether a certain code is down or not.
-	 */
-	@FunctionalInterface
-	public interface Command {
-		/**
-		 * Decides whether a certain code is down or not.
-		 *
-		 * @param code The button code
-		 *
-		 * @return True if the button specified by the code is down in the input system, false otherwise.
-		 */
-		boolean isDown(int code);
-	}	@Override
+	@Override
 	public boolean isDown() {
 		if (codes == null) {
 			return false;
@@ -55,5 +42,18 @@ public abstract class BaseButton implements IButton {
 		return wasDown == !stillDown;
 	}
 
-
+	/**
+	 * Decides whether a certain code is down or not.
+	 */
+	@FunctionalInterface
+	public interface Command {
+		/**
+		 * Decides whether a certain code is down or not.
+		 *
+		 * @param code The button code
+		 *
+		 * @return True if the button specified by the code is down in the input system, false otherwise.
+		 */
+		boolean isDown(int code);
+	}
 }

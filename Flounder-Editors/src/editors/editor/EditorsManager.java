@@ -10,11 +10,6 @@ public class EditorsManager extends Module {
 		super(FlounderLogger.class);
 	}
 
-	@Module.Instance
-	public static EditorsManager get() {
-		return (EditorsManager) Framework.get().getInstance(EditorsManager.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		this.editorType = null;
@@ -63,5 +58,10 @@ public class EditorsManager extends Module {
 			editorType.dispose();
 			editorType.setInitialized(false);
 		}
+	}
+
+	@Module.Instance
+	public static EditorsManager get() {
+		return (EditorsManager) Framework.get().getInstance(EditorsManager.class);
 	}
 }

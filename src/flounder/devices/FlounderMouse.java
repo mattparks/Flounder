@@ -15,11 +15,6 @@ public class FlounderMouse extends Module {
 		super(FlounderPlatform.class, FlounderLogger.class, FlounderDisplay.class);
 	}
 
-	@Module.Instance
-	public static FlounderMouse get() {
-		return (FlounderMouse) Framework.get().getInstance(FlounderMouse.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 	}
@@ -126,5 +121,10 @@ public class FlounderMouse extends Module {
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
+	}
+
+	@Module.Instance
+	public static FlounderMouse get() {
+		return (FlounderMouse) Framework.get().getInstance(FlounderMouse.class);
 	}
 }

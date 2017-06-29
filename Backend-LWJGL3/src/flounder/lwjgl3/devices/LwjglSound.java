@@ -63,6 +63,20 @@ public class LwjglSound extends FlounderSound {
 	}
 
 	@Override
+	public SoundSource createPlatformSource() {
+		return new LwjglSoundSource();
+	}
+
+	@Override
+	public int getOpenAlFormat(int channels, int bitsPerSample) {
+		if (channels == 1) {
+			return bitsPerSample == 8 ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16;
+		} else {
+			return bitsPerSample == 8 ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16;
+		}
+	}
+
+	@Override
 	public void loadSoundDataIntoBuffer(int bufferID, ByteBuffer data, int format, int sampleRate) {
 		alBufferData(bufferID, format, data, sampleRate);
 		int error = alGetError();
@@ -77,20 +91,6 @@ public class LwjglSound extends FlounderSound {
 		int bufferID = alGenBuffers();
 		this.buffers.add(bufferID);
 		return bufferID;
-	}
-
-	@Override
-	public SoundSource createPlatformSource() {
-		return new LwjglSoundSource();
-	}
-
-	@Override
-	public int getOpenAlFormat(int channels, int bitsPerSample) {
-		if (channels == 1) {
-			return bitsPerSample == 8 ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16;
-		} else {
-			return bitsPerSample == 8 ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16;
-		}
 	}
 
 	@Override

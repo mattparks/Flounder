@@ -29,14 +29,14 @@ public class PipelineGaussian extends PostPipeline {
 		return filterBlurVertical.fbo;
 	}
 
+	public void setScale(float scale) {
+		filterBlurHorizontal.setScale(scale);
+		filterBlurVertical.setScale(scale);
+	}
+
 	@Override
 	public void dispose() {
 		filterBlurHorizontal.dispose();
 		filterBlurVertical.dispose();
-	}
-
-	public void setScale(float scale) {
-		filterBlurHorizontal.setScale(scale);
-		filterBlurVertical.setScale(scale);
 	}
 }

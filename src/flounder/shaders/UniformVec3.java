@@ -25,20 +25,6 @@ public class UniformVec3 extends Uniform {
 	}
 
 	/**
-	 * Loads a x, y and z value to the uniform if the value already on the GPU is not the same as the new value.
-	 *
-	 * @param x The new x value.
-	 * @param y The new y value.
-	 * @param z The new z value.
-	 */
-	public void loadVec3(float x, float y, float z) {
-		if (x != current.x || y != current.y || z != current.z) {
-			current.set(x, y, z);
-			FlounderShaders.get().storeVectorData(super.getLocation(), current);
-		}
-	}
-
-	/**
 	 * Loads a Colour to the uniform if the value already on the GPU is not the same as the new value.
 	 *
 	 * @param colour The new colour.
@@ -54,5 +40,19 @@ public class UniformVec3 extends Uniform {
 	 */
 	public void loadVec3(Attenuation attenuation) {
 		loadVec3(attenuation.constant, attenuation.linear, attenuation.exponent);
+	}
+
+	/**
+	 * Loads a x, y and z value to the uniform if the value already on the GPU is not the same as the new value.
+	 *
+	 * @param x The new x value.
+	 * @param y The new y value.
+	 * @param z The new z value.
+	 */
+	public void loadVec3(float x, float y, float z) {
+		if (x != current.x || y != current.y || z != current.z) {
+			current.set(x, y, z);
+			FlounderShaders.get().storeVectorData(super.getLocation(), current);
+		}
 	}
 }

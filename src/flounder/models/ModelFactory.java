@@ -48,31 +48,6 @@ public class ModelFactory extends Factory {
 		}
 	}
 
-	@Override
-	protected void create(FactoryObject object, FactoryBuilder builder) {
-		// Takes OpenGL compatible data and loads it to the GPU and factory object.
-		ModelBuilder b = (ModelBuilder) builder;
-		ModelObject o = (ModelObject) object;
-
-		if (o.getIndices() == null && o.getVertices() == null) {
-			return;
-		}
-
-		int vaoID = FlounderLoader.get().createVAO();
-		FlounderLoader.get().createIndicesVBO(vaoID, o.getIndices());
-		FlounderLoader.get().storeDataInVBO(vaoID, o.getVertices(), 0, 3);
-		FlounderLoader.get().storeDataInVBO(vaoID, o.getTextures(), 1, 2);
-		FlounderLoader.get().storeDataInVBO(vaoID, o.getNormals(), 2, 3);
-		FlounderLoader.get().storeDataInVBO(vaoID, o.getTangents(), 3, 3);
-		int vaoLength = o.getIndices() != null ? o.getIndices().length : (o.getVertices().length / 3);
-		((ModelObject) object).loadGL(vaoID, vaoLength);
-	}
-
-	@Override
-	public Map<String, SoftReference<FactoryObject>> getLoaded() {
-		return FlounderModels.get().getLoaded();
-	}
-
 	private void loadOBJ(ModelObject object, MyFile file, String name) {
 		BufferedReader reader;
 
@@ -319,5 +294,30 @@ public class ModelFactory extends Factory {
 		}
 
 		return new AABB(new Vector3f(minX, minY, minZ), new Vector3f(maxX, maxY, maxZ));
+	}
+
+	@Override
+	protected void create(FactoryObject object, FactoryBuilder builder) {
+		// Takes OpenGL compatible data and loads it to the GPU and factory object.
+		ModelBuilder b = (ModelBuilder) builder;
+		ModelObject o = (ModelObject) object;
+
+		if (o.getIndices() == null && o.getVertices() == null) {
+			return;
+		}
+
+		int vaoID = FlounderLoader.get().createVAO();
+		FlounderLoader.get().createIndicesVBO(vaoID, o.getIndices());
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getVertices(), 0, 3);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getTextures(), 1, 2);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getNormals(), 2, 3);
+		FlounderLoader.get().storeDataInVBO(vaoID, o.getTangents(), 3, 3);
+		int vaoLength = o.getIndices() != null ? o.getIndices().length : (o.getVertices().length / 3);
+		((ModelObject) object).loadGL(vaoID, vaoLength);
+	}
+
+	@Override
+	public Map<String, SoftReference<FactoryObject>> getLoaded() {
+		return FlounderModels.get().getLoaded();
 	}
 }

@@ -7,6 +7,13 @@ import flounder.maths.vectors.*;
  */
 @FunctionalInterface
 public interface IParticleSpawn {
+	/**
+	 * Gets the base spawn position.
+	 *
+	 * @return The base spawn position.
+	 */
+	Vector3f getBaseSpawnPosition();
+
 	static Vector3f createVector3f(String source) {
 		String reduced = source.replace("Vector3f(", "").replace(")", "").trim();
 		String[] split = reduced.split("\\|");
@@ -15,11 +22,4 @@ public interface IParticleSpawn {
 		float z = Float.parseFloat(split[2].substring(2, split[0].length()));
 		return new Vector3f(x, y, z);
 	}
-
-	/**
-	 * Gets the base spawn position.
-	 *
-	 * @return The base spawn position.
-	 */
-	Vector3f getBaseSpawnPosition();
 }

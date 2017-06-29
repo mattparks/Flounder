@@ -11,10 +11,10 @@ import java.util.*;
  * This algorithm calculates the convex hull for a given set of points. This is a Java port of the algorithm written in PHP by Jakob Westhoff.
  */
 public class QuickHull extends Collider {
-	private final boolean iterativeProceeding;
 	private List<Vector3f> inputPoints;
 	private List<Vector3f> hullPoints;
 	private Matrix4f modelMatrix;
+	private final boolean iterativeProceeding;
 
 	/**
 	 * Initializes the QuickHull algorithm with no values.
@@ -147,31 +147,6 @@ public class QuickHull extends Collider {
 	@Override
 	public boolean contains(Vector3f point) {
 		return false; // Done with AABB / Sphere.
-	}
-
-	@Override
-	public ModelObject getRenderModel() {
-		return null; // Not implemented.
-	}
-
-	@Override
-	public Vector3f getRenderCentre(Vector3f destination) {
-		return destination; // Not implemented.
-	}
-
-	@Override
-	public Vector3f getRenderRotation(Vector3f destination) {
-		return destination; // Not implemented.
-	}
-
-	@Override
-	public Vector3f getRenderScale(Vector3f destination) {
-		return destination; // Not implemented.
-	}
-
-	@Override
-	public Colour getRenderColour(Colour destination) {
-		return destination; // Not implemented.
 	}
 
 	public void loadData(List<Vector3f> points) {
@@ -423,6 +398,31 @@ public class QuickHull extends Collider {
 
 	public boolean isLoaded() {
 		return !inputPoints.isEmpty() || !hullPoints.isEmpty();
+	}
+
+	@Override
+	public ModelObject getRenderModel() {
+		return null; // Not implemented.
+	}
+
+	@Override
+	public Vector3f getRenderCentre(Vector3f destination) {
+		return destination; // Not implemented.
+	}
+
+	@Override
+	public Vector3f getRenderRotation(Vector3f destination) {
+		return destination; // Not implemented.
+	}
+
+	@Override
+	public Vector3f getRenderScale(Vector3f destination) {
+		return destination; // Not implemented.
+	}
+
+	@Override
+	public Colour getRenderColour(Colour destination) {
+		return destination; // Not implemented.
 	}
 
 	/**

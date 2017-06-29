@@ -7,11 +7,6 @@ public class FlounderSteam extends Module {
 		super();
 	}
 
-	@Module.Instance
-	public static FlounderSteam get() {
-		return (FlounderSteam) Framework.get().getInstance(FlounderSteam.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		/*try {
@@ -35,5 +30,10 @@ public class FlounderSteam extends Module {
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 		//	SteamAPI.shutdown();
+	}
+
+	@Module.Instance
+	public static FlounderSteam get() {
+		return (FlounderSteam) Framework.get().getInstance(FlounderSteam.class);
 	}
 }

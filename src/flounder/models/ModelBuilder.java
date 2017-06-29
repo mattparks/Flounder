@@ -17,15 +17,6 @@ public class ModelBuilder extends FactoryBuilder {
 	}
 
 	/**
-	 * Gets the source file.
-	 *
-	 * @return The source file.
-	 */
-	public MyFile getFile() {
-		return file;
-	}
-
-	/**
 	 * Sets the models source file.
 	 *
 	 * @param file The source file.
@@ -38,15 +29,6 @@ public class ModelBuilder extends FactoryBuilder {
 	}
 
 	/**
-	 * Gets the manual source data.
-	 *
-	 * @return The manual source data.
-	 */
-	public ModelLoadManual getManual() {
-		return manual;
-	}
-
-	/**
 	 * Sets the models manual source data.
 	 *
 	 * @param manual The manual source data.
@@ -56,6 +38,24 @@ public class ModelBuilder extends FactoryBuilder {
 	public ModelBuilder setManual(ModelLoadManual manual) {
 		this.manual = manual;
 		return this;
+	}
+
+	/**
+	 * Gets the source file.
+	 *
+	 * @return The source file.
+	 */
+	public MyFile getFile() {
+		return file;
+	}
+
+	/**
+	 * Gets the manual source data.
+	 *
+	 * @return The manual source data.
+	 */
+	public ModelLoadManual getManual() {
+		return manual;
 	}
 
 	@Override

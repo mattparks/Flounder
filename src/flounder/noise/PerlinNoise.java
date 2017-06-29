@@ -130,18 +130,6 @@ public class PerlinNoise {
 	}
 
 	/**
-	 * Create a 1D tileable noise function for the given width.
-	 *
-	 * @param x The X coordinate to generate the noise for.
-	 * @param w The width of the tiled block.
-	 *
-	 * @return The value of the noise at the given coordinate.
-	 */
-	public float tileableNoise(float x, float w) {
-		return (noise(x) * (w - x) + noise(x - w) * x) / w;
-	}
-
-	/**
 	 * Create noise in a 1D space using the original noise noise algorithm.
 	 *
 	 * @param x The X coordinate of the location to sample.
@@ -161,59 +149,6 @@ public class PerlinNoise {
 		float v = rx1 * g1[p[bx1]];
 
 		return lerp(sx, u, v);
-	}
-
-	/**
-	 * S-curve function for value distribution for Perlin-1 noise function.
-	 */
-	private float sCurve(float t) {
-		return t * t * (3.0f - 2.0f * t);
-	}
-
-	/**
-	 * Simple lerp function using floats.
-	 */
-	private float lerp(float t, float a, float b) {
-		return a + t * (b - a);
-	}
-
-	/**
-	 * Create a turbulence function in 1D using the original noise noise function.
-	 *
-	 * @param x The X coordinate of the location to sample.
-	 * @param freq The frequency of the turbulence to create.
-	 *
-	 * @return The value at the given coordinates.
-	 */
-	public float turbulence(float x, float freq) {
-		float t = 0;
-
-		do {
-			t += noise(freq * x) / freq;
-			freq *= 0.5f;
-		} while (freq >= 1);
-
-		return t;
-	}
-
-	/**
-	 * Create a turbulence function in 2D using the original noise noise function.
-	 *
-	 * @param x The X coordinate of the location to sample.
-	 * @param y The Y coordinate of the location to sample.
-	 * @param freq The frequency of the turbulence to create.
-	 *
-	 * @return The value at the given coordinates.
-	 */
-	public float turbulence(float x, float y, float freq) {
-		float t = 0.0f;
-
-		do {
-			t += noise(freq * x, freq * y) / freq;
-			freq *= 0.5f;
-		} while (freq >= 1);
-
-		return t;
 	}
 
 	/**
@@ -261,27 +196,6 @@ public class PerlinNoise {
 		float b = lerp(sx, u, v);
 
 		return lerp(sy, a, b);
-	}
-
-	/**
-	 * Create a turbulence function in 3D using the original noise noise function.
-	 *
-	 * @param x The X coordinate of the location to sample.
-	 * @param y The Y coordinate of the location to sample.
-	 * @param z The Z coordinate of the location to sample.
-	 * @param freq The frequency of the turbulence to create.
-	 *
-	 * @return The value at the given coordinates.
-	 */
-	public float turbulence(float x, float y, float z, float freq) {
-		float t = 0.0f;
-
-		do {
-			t += noise(freq * x, freq * y, freq * z) / freq;
-			freq *= 0.5f;
-		} while (freq >= 1);
-
-		return t;
 	}
 
 	/**
@@ -356,37 +270,6 @@ public class PerlinNoise {
 	}
 
 	/**
-	 * Create a turbulent noise output based on the core noise function. This uses the noise as a base function and is suitable for creating clouds, marble and explosion effects. For example, a typical marble effect would set the colour to be:
-	 * <pre>
-	 * sin(point + turbulence(point) * point.x);
-	 * </pre>
-	 *
-	 * @param x The X coordinate of the location to sample.
-	 * @param y The Y coordinate of the location to sample.
-	 * @param z The Z coordinate of the location to sample.
-	 * @param loF The lower location.
-	 * @param hiF The upper location.
-	 *
-	 * @return The value at the given coordinates.
-	 */
-	public float improvedTurbulence(float x, float y, float z, float loF, float hiF) {
-		float p_x = x + 123.456f;
-		float p_y = y;
-		float p_z = z;
-		float t = 0.0f;
-
-		for (float f = loF; f < hiF; f *= 2) {
-			t += Math.abs(improvedNoise(p_x, p_y, p_z)) / f;
-
-			p_x *= 2.0f;
-			p_y *= 2.0f;
-			p_z *= 2.0f;
-		}
-
-		return t - 0.3f;
-	}
-
-	/**
 	 * Computes noise function for three dimensions at the point (x,y,z).
 	 *
 	 * @param x x dimension parameter.
@@ -434,26 +317,136 @@ public class PerlinNoise {
 	}
 
 	/**
-	 * Fade curve calculation which is 6t^5 - 15t^4 + 10t^3. This is the new algorithm, where the old one used to be 3t^2 - 2t^3.
+	 * Create a 1D tileable noise function for the given width.
 	 *
-	 * @param t The t parameter to calculate the fade for.
+	 * @param x The X coordinate to generate the noise for.
+	 * @param w The width of the tiled block.
 	 *
-	 * @return the drop-off amount.
+	 * @return The value of the noise at the given coordinate.
 	 */
-	private float fade(float t) {
-		return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
+	public float tileableNoise(float x, float w) {
+		return (noise(x) * (w - x) + noise(x - w) * x) / w;
 	}
 
 	/**
-	 * Calculate the gradient function based on the hash code.
+	 * Create a 2D tileable noise function for the given width and height.
+	 *
+	 * @param x The X coordinate to generate the noise for.
+	 * @param y The Y coordinate to generate the noise for.
+	 * @param w The width of the tiled block.
+	 * @param h The height of the tiled block.
+	 *
+	 * @return The value of the noise at the given coordinate.
 	 */
-	private float grad(int hash, float x, float y, float z) {
-		// Convert low 4 bits of hash code into 12 gradient directions
-		int h = hash & 15;
-		float u = h < 8.0f || h == 12.0f || h == 13.0f ? x : y;
-		float v = h < 4.0f || h == 12.0f || h == 13.0f ? y : z;
+	public float tileableNoise(float x, float y, float w, float h) {
+		return (noise(x, y) * (w - x) * (h - y) + noise(x - w, y) * x * (h - y) + noise(x, y - h) * (w - x) * y + noise(x - w, y - h) * x * y) / (w * h);
+	}
 
-		return ((h & 1) == 0.0f ? u : -u) + ((h & 2) == 0.0f ? v : -v);
+	/**
+	 * Create a 3D tileable noise function for the given width, height and depth.
+	 *
+	 * @param x The X coordinate to generate the noise for.
+	 * @param y The Y coordinate to generate the noise for.
+	 * @param z The Z coordinate to generate the noise for.
+	 * @param w The width of the tiled block.
+	 * @param h The height of the tiled block.
+	 * @param d The depth of the tiled block.
+	 *
+	 * @return The value of the noise at the given coordinate.
+	 */
+	public float tileableNoise(float x, float y, float z, float w, float h, float d) {
+		return (noise(x, y, z) * (w - x) * (h - y) * (d - z) + noise(x - w, y, z) * x * (h - y) * (d - z) + noise(x, y - h, z) * (w - x) * y * (d - z) + noise(x - w, y - h, z) * x * y * (d - z) + noise(x, y, z - d) * (w - x) * (h - y) * z + noise(x - w, y, z - d) * x * (h - y) * z + noise(x, y - h, z - d) * (w - x) * y * z + noise(x - w, y - h, z - d) * x * y * z) / (w * h * d);
+	}
+
+	/**
+	 * Create a turbulence function in 1D using the original noise noise function.
+	 *
+	 * @param x The X coordinate of the location to sample.
+	 * @param freq The frequency of the turbulence to create.
+	 *
+	 * @return The value at the given coordinates.
+	 */
+	public float turbulence(float x, float freq) {
+		float t = 0;
+
+		do {
+			t += noise(freq * x) / freq;
+			freq *= 0.5f;
+		} while (freq >= 1);
+
+		return t;
+	}
+
+	/**
+	 * Create a turbulence function in 2D using the original noise noise function.
+	 *
+	 * @param x The X coordinate of the location to sample.
+	 * @param y The Y coordinate of the location to sample.
+	 * @param freq The frequency of the turbulence to create.
+	 *
+	 * @return The value at the given coordinates.
+	 */
+	public float turbulence(float x, float y, float freq) {
+		float t = 0.0f;
+
+		do {
+			t += noise(freq * x, freq * y) / freq;
+			freq *= 0.5f;
+		} while (freq >= 1);
+
+		return t;
+	}
+
+	/**
+	 * Create a turbulence function in 3D using the original noise noise function.
+	 *
+	 * @param x The X coordinate of the location to sample.
+	 * @param y The Y coordinate of the location to sample.
+	 * @param z The Z coordinate of the location to sample.
+	 * @param freq The frequency of the turbulence to create.
+	 *
+	 * @return The value at the given coordinates.
+	 */
+	public float turbulence(float x, float y, float z, float freq) {
+		float t = 0.0f;
+
+		do {
+			t += noise(freq * x, freq * y, freq * z) / freq;
+			freq *= 0.5f;
+		} while (freq >= 1);
+
+		return t;
+	}
+
+	/**
+	 * Create a turbulent noise output based on the core noise function. This uses the noise as a base function and is suitable for creating clouds, marble and explosion effects. For example, a typical marble effect would set the colour to be:
+	 * <pre>
+	 * sin(point + turbulence(point) * point.x);
+	 * </pre>
+	 *
+	 * @param x The X coordinate of the location to sample.
+	 * @param y The Y coordinate of the location to sample.
+	 * @param z The Z coordinate of the location to sample.
+	 * @param loF The lower location.
+	 * @param hiF The upper location.
+	 *
+	 * @return The value at the given coordinates.
+	 */
+	public float improvedTurbulence(float x, float y, float z, float loF, float hiF) {
+		float p_x = x + 123.456f;
+		float p_y = y;
+		float p_z = z;
+		float t = 0.0f;
+
+		for (float f = loF; f < hiF; f *= 2) {
+			t += Math.abs(improvedNoise(p_x, p_y, p_z)) / f;
+
+			p_x *= 2.0f;
+			p_y *= 2.0f;
+			p_z *= 2.0f;
+		}
+
+		return t - 0.3f;
 	}
 
 	/**
@@ -476,20 +469,6 @@ public class PerlinNoise {
 		} while (freq >= 1.0f);
 
 		return t;
-	}
-
-	/**
-	 * Create a 2D tileable noise function for the given width and height.
-	 *
-	 * @param x The X coordinate to generate the noise for.
-	 * @param y The Y coordinate to generate the noise for.
-	 * @param w The width of the tiled block.
-	 * @param h The height of the tiled block.
-	 *
-	 * @return The value of the noise at the given coordinate.
-	 */
-	public float tileableNoise(float x, float y, float w, float h) {
-		return (noise(x, y) * (w - x) * (h - y) + noise(x - w, y) * x * (h - y) + noise(x, y - h) * (w - x) * y + noise(x - w, y - h) * x * y) / (w * h);
 	}
 
 	/**
@@ -517,19 +496,40 @@ public class PerlinNoise {
 	}
 
 	/**
-	 * Create a 3D tileable noise function for the given width, height and depth.
+	 * Fade curve calculation which is 6t^5 - 15t^4 + 10t^3. This is the new algorithm, where the old one used to be 3t^2 - 2t^3.
 	 *
-	 * @param x The X coordinate to generate the noise for.
-	 * @param y The Y coordinate to generate the noise for.
-	 * @param z The Z coordinate to generate the noise for.
-	 * @param w The width of the tiled block.
-	 * @param h The height of the tiled block.
-	 * @param d The depth of the tiled block.
+	 * @param t The t parameter to calculate the fade for.
 	 *
-	 * @return The value of the noise at the given coordinate.
+	 * @return the drop-off amount.
 	 */
-	public float tileableNoise(float x, float y, float z, float w, float h, float d) {
-		return (noise(x, y, z) * (w - x) * (h - y) * (d - z) + noise(x - w, y, z) * x * (h - y) * (d - z) + noise(x, y - h, z) * (w - x) * y * (d - z) + noise(x - w, y - h, z) * x * y * (d - z) + noise(x, y, z - d) * (w - x) * (h - y) * z + noise(x - w, y, z - d) * x * (h - y) * z + noise(x, y - h, z - d) * (w - x) * y * z + noise(x - w, y - h, z - d) * x * y * z) / (w * h * d);
+	private float fade(float t) {
+		return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
+	}
+
+	/**
+	 * Calculate the gradient function based on the hash code.
+	 */
+	private float grad(int hash, float x, float y, float z) {
+		// Convert low 4 bits of hash code into 12 gradient directions
+		int h = hash & 15;
+		float u = h < 8.0f || h == 12.0f || h == 13.0f ? x : y;
+		float v = h < 4.0f || h == 12.0f || h == 13.0f ? y : z;
+
+		return ((h & 1) == 0.0f ? u : -u) + ((h & 2) == 0.0f ? v : -v);
+	}
+
+	/**
+	 * S-curve function for value distribution for Perlin-1 noise function.
+	 */
+	private float sCurve(float t) {
+		return t * t * (3.0f - 2.0f * t);
+	}
+
+	/**
+	 * Simple lerp function using floats.
+	 */
+	private float lerp(float t, float a, float b) {
+		return a + t * (b - a);
 	}
 
 	/**

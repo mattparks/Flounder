@@ -46,15 +46,15 @@ public class OverlayStartup extends ScreenObject {
 		this.logo.setVisible(true);
 	}
 
-	@Override
-	public void deleteObject() {
-	}
-
 	public boolean isStarting() {
 		return starting;
 	}
 
 	public void setStarting(boolean starting) {
 		this.starting = starting;
+	}
+
+	@Override
+	public void deleteObject() {
 	}
 }

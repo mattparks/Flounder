@@ -49,6 +49,10 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		this(entity, 1.0f, true, null, TextureFactory.newBuilder().setFile(new MyFile(MyFile.RES_FOLDER, "undefined.png")).create(), 0);
 	}
 
+	public ComponentModel(Entity entity, float scale, ModelObject model, TextureObject texture, int textureIndex) {
+		this(entity, scale, true, model, texture, textureIndex);
+	}
+
 	/**
 	 * Creates a new ComponentModel.
 	 *
@@ -76,10 +80,6 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		this.colourOffset = new Colour();
 
 		this.wasLoaded = false;
-	}
-
-	public ComponentModel(Entity entity, float scale, ModelObject model, TextureObject texture, int textureIndex) {
-		this(entity, scale, true, model, texture, textureIndex);
 	}
 
 	@Override
@@ -110,10 +110,6 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		}
 	}
 
-	@Override
-	public void dispose() {
-	}
-
 	public ModelObject getModel() {
 		return model;
 	}
@@ -142,6 +138,17 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 		if (this.texture != texture) {
 			this.texture = texture;
 		}
+	}
+
+	/**
+	 * Gets the textures coordinate offset that is used in rendering the model.
+	 *
+	 * @return The coordinate offset used in rendering.
+	 */
+	public Vector2f getTextureOffset() {
+		int column = textureIndex % texture.getNumberOfRows();
+		int row = textureIndex / texture.getNumberOfRows();
+		return new Vector2f((float) row / (float) texture.getNumberOfRows(), (float) column / (float) texture.getNumberOfRows());
 	}
 
 	public Colour getColourOffset() {
@@ -224,17 +231,6 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 			FlounderOpenGL.get().cullBackFaces(!texture.hasAlpha());
 			FlounderOpenGL.get().bindTexture(texture, 0);
 		}
-	}
-
-	/**
-	 * Gets the textures coordinate offset that is used in rendering the model.
-	 *
-	 * @return The coordinate offset used in rendering.
-	 */
-	public Vector2f getTextureOffset() {
-		int column = textureIndex % texture.getNumberOfRows();
-		int row = textureIndex / texture.getNumberOfRows();
-		return new Vector2f((float) row / (float) texture.getNumberOfRows(), (float) column / (float) texture.getNumberOfRows());
 	}
 
 	@Override
@@ -379,5 +375,9 @@ public class ComponentModel extends IComponentEntity implements IComponentCollid
 				new String[]{"private static final ModelObject MODEL = " + saveModel, "private static final TextureObject TEXTURE = " + saveTexture}, // Static variables
 				new String[]{saveScale, "MODEL", "TEXTURE", saveTextureIndex} // Class constructor
 		);
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

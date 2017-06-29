@@ -29,11 +29,6 @@ public class FlounderSound extends Module {
 		super(FlounderPlatform.class, FlounderProcessors.class);
 	}
 
-	@Module.Instance
-	public static FlounderSound get() {
-		return (FlounderSound) Framework.get().getInstance(FlounderSound.class);
-	}
-
 	@Handler.Function(Handler.FLAG_INIT)
 	public void init() {
 		update();
@@ -89,29 +84,6 @@ public class FlounderSound extends Module {
 			FlounderLogger.get().error("Couldn't load sound file " + sound.getSoundFile());
 			FlounderLogger.get().exception(e);
 		}
-	}
-
-	/**
-	 * Loads audio data of a certain format into an OpenAL buffer.
-	 *
-	 * @param bufferID The buffer to which the data should be loaded.
-	 * @param data The audio data.
-	 * @param format The OpenAL format of the data (mono, stereo, etc.)
-	 * @param sampleRate The sample rate of the audio.
-	 */
-	@Module.MethodReplace
-	public void loadSoundDataIntoBuffer(int bufferID, ByteBuffer data, int format, int sampleRate) {
-
-	}
-
-	/**
-	 * Generates an empty sound buffer.
-	 *
-	 * @return The ID of the buffer.
-	 */
-	@Module.MethodReplace
-	public int generateBuffer() {
-		return -1;
 	}
 
 	/**
@@ -190,6 +162,29 @@ public class FlounderSound extends Module {
 	}
 
 	/**
+	 * Loads audio data of a certain format into an OpenAL buffer.
+	 *
+	 * @param bufferID The buffer to which the data should be loaded.
+	 * @param data The audio data.
+	 * @param format The OpenAL format of the data (mono, stereo, etc.)
+	 * @param sampleRate The sample rate of the audio.
+	 */
+	@Module.MethodReplace
+	public void loadSoundDataIntoBuffer(int bufferID, ByteBuffer data, int format, int sampleRate) {
+
+	}
+
+	/**
+	 * Generates an empty sound buffer.
+	 *
+	 * @return The ID of the buffer.
+	 */
+	@Module.MethodReplace
+	public int generateBuffer() {
+		return -1;
+	}
+
+	/**
 	 * Removes a certain sound buffer from memory by removing from the list of buffers and deleting it.
 	 *
 	 * @param bufferID The ID of the buffer to be deleted.
@@ -204,5 +199,10 @@ public class FlounderSound extends Module {
 		streamManager.kill();
 		sourcePool.dispose();
 		musicPlayer.dispose();
+	}
+
+	@Module.Instance
+	public static FlounderSound get() {
+		return (FlounderSound) Framework.get().getInstance(FlounderSound.class);
 	}
 }

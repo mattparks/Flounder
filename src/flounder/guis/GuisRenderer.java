@@ -48,20 +48,6 @@ public class GuisRenderer extends Renderer {
 		shader.getUniformBool("polygonMode").loadBoolean(FlounderOpenGL.get().isInWireframe());
 	}
 
-	private void endRendering() {
-		shader.stop();
-	}
-
-	@Override
-	public void dispose() {
-		if (vaoID != -1) {
-			FlounderLoader.get().deleteVAOFromCache(vaoID);
-			vaoID = -1;
-		}
-
-		shader.delete();
-	}
-
 	private void renderGui(ScreenObject object) {
 		if (!(object instanceof GuiObject)) {
 			return;
@@ -98,5 +84,19 @@ public class GuisRenderer extends Renderer {
 		FlounderOpenGL.get().renderArrays(GL_TRIANGLE_STRIP, vaoLength);
 		FlounderOpenGL.get().unbindVAO(0);
 		FlounderOpenGL.get().disable(GL_SCISSOR_TEST);
+	}
+
+	private void endRendering() {
+		shader.stop();
+	}
+
+	@Override
+	public void dispose() {
+		if (vaoID != -1) {
+			FlounderLoader.get().deleteVAOFromCache(vaoID);
+			vaoID = -1;
+		}
+
+		shader.delete();
 	}
 }

@@ -33,6 +33,10 @@ public class StreamManager extends Thread {
 		super.start();
 	}
 
+	public boolean isHasStarted() {
+		return hasStarted;
+	}
+
 	@Override
 	public void run() {
 		while (alive) {
@@ -67,10 +71,6 @@ public class StreamManager extends Thread {
 			FlounderLogger.get().error("Thread could not sleep!");
 			FlounderLogger.get().exception(e);
 		}
-	}
-
-	public boolean isHasStarted() {
-		return hasStarted;
 	}
 
 	/**

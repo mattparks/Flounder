@@ -35,6 +35,19 @@ public class JointTransform {
 	}
 
 	/**
+	 * In this method the local-space transform matrix is constructed by translating an identity matrix using the position variable and then applying the rotation.
+	 * The rotation is applied by first converting the quaternion into a rotation matrix, which is then multiplied with the transform matrix.
+	 *
+	 * @return The local-space transform as a matrix.
+	 */
+	protected Matrix4f getLocalTransform() {
+		Matrix4f matrix = new Matrix4f();
+		Matrix4f.translate(matrix, position, matrix);
+		Matrix4f.multiply(matrix, rotation.toRotationMatrix(), matrix);
+		return matrix;
+	}
+
+	/**
 	 * Interpolates between two transforms based on the progression value.
 	 * The result is a new transform which is part way between the two original transforms.
 	 * The translation can simply be linearly interpolated, but the rotation interpolation is slightly more complex,
@@ -69,19 +82,6 @@ public class JointTransform {
 		float y = start.y + (end.y - start.y) * progression;
 		float z = start.z + (end.z - start.z) * progression;
 		return new Vector3f(x, y, z);
-	}
-
-	/**
-	 * In this method the local-space transform matrix is constructed by translating an identity matrix using the position variable and then applying the rotation.
-	 * The rotation is applied by first converting the quaternion into a rotation matrix, which is then multiplied with the transform matrix.
-	 *
-	 * @return The local-space transform as a matrix.
-	 */
-	protected Matrix4f getLocalTransform() {
-		Matrix4f matrix = new Matrix4f();
-		Matrix4f.translate(matrix, position, matrix);
-		Matrix4f.multiply(matrix, rotation.toRotationMatrix(), matrix);
-		return matrix;
 	}
 
 	public Vector3f getPosition() {
