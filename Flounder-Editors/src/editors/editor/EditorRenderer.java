@@ -90,7 +90,6 @@ public class EditorRenderer extends RendererMaster {
 	}
 
 	private void renderPost(boolean isPaused, float blurFactor) {
-		pipelineMRT.setShadowFactor(1.0f);
 		pipelineMRT.renderPipeline(
 				rendererFBO.getColourTexture(0), // Colours
 				rendererFBO.getColourTexture(1), // Normals

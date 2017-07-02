@@ -40,7 +40,7 @@ public class ShadowRenderer extends Renderer {
 
 	@Override
 	public void render(Vector4f clipPlane, Camera camera) {
-		if (!shader.isLoaded() || camera == null || FlounderShadows.get().getShadowDarkness() < 0.07f) {
+		if (!shader.isLoaded() || camera == null || FlounderShadows.get().getShadowDarkness() * FlounderShadows.get().getShadowFactor() < 0.07f) {
 			return;
 		}
 

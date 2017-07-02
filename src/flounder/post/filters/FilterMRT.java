@@ -11,20 +11,13 @@ import flounder.skybox.*;
 
 public class FilterMRT extends PostFilter {
 	private static final int LIGHTS = 64;
-	private float shadowFactor;
 
 	public FilterMRT() {
 		super("filterMRT", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"));
-		this.shadowFactor = 1.0f;
 	}
 
 	public FilterMRT(FBO fbo) {
 		super("filterMRT", new MyFile(PostFilter.POST_LOC, "mrtFragment.glsl"), fbo);
-		this.shadowFactor = 1.0f;
-	}
-
-	public void setShadowFactor(float shadowFactor) {
-		this.shadowFactor = shadowFactor;
 	}
 
 	@Override
@@ -63,7 +56,7 @@ public class FilterMRT extends PostFilter {
 		shader.getUniformInt("shadowMapSize").loadInt(FlounderShadows.get().getShadowSize());
 		shader.getUniformInt("shadowPCF").loadInt(FlounderShadows.get().getShadowPCF());
 		shader.getUniformFloat("shadowBias").loadFloat(FlounderShadows.get().getShadowBias());
-		shader.getUniformFloat("shadowDarkness").loadFloat(FlounderShadows.get().getShadowDarkness() * shadowFactor);
+		shader.getUniformFloat("shadowDarkness").loadFloat(FlounderShadows.get().getShadowDarkness() * FlounderShadows.get().getShadowFactor());
 
 		shader.getUniformFloat("brightnessBoost").loadFloat(FlounderShadows.get().getBrightnessBoost());
 

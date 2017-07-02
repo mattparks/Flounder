@@ -21,6 +21,8 @@ public class FlounderShadows extends Module {
 	private float shadowBoxOffset;
 	private float shadowBoxDistance;
 
+	private float shadowFactor;
+
 	private Matrix4f projectionMatrix;
 	private Matrix4f lightViewMatrix;
 	private Matrix4f projectionViewMatrix;
@@ -47,7 +49,9 @@ public class FlounderShadows extends Module {
 		this.shadowPCF = 0;
 		this.shadowBias = 0.001f;
 		this.shadowDarkness = 0.6f;
-		this.shadowTransition = 11.0f; // TODO: This is a strange setting, but works.
+		this.shadowTransition = 11.0f;
+
+		this.shadowFactor = 1.0f;
 
 		this.shadowBoxOffset = 25.0f;
 		this.shadowBoxDistance = 40.0f;
@@ -186,6 +190,14 @@ public class FlounderShadows extends Module {
 
 	public void setShadowTransition(float shadowTransition) {
 		this.shadowTransition = shadowTransition;
+	}
+
+	public float getShadowFactor() {
+		return shadowFactor;
+	}
+
+	public void setShadowFactor(float shadowFactor) {
+		this.shadowFactor = shadowFactor;
 	}
 
 	public float getShadowBoxOffset() {
