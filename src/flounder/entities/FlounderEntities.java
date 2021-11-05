@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * A class that manages game entities.
  */
-public class FlounderEntities extends Module {
+public class FlounderEntities extends flounder.framework.Module {
 	public static final MyFile ENTITIES_FOLDER = new MyFile(MyFile.RES_FOLDER, "entities");
 
 	private ISpatialStructure<Entity> entityStructure;
@@ -182,8 +182,8 @@ public class FlounderEntities extends Module {
 		}
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderEntities get() {
-		return (FlounderEntities) Framework.get().getInstance(FlounderEntities.class);
+		return (FlounderEntities) Framework.get().getModule(FlounderEntities.class);
 	}
 }

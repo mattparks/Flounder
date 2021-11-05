@@ -2,17 +2,17 @@ package flounder.physics.bounding;
 
 import flounder.devices.*;
 import flounder.framework.*;
-import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.models.*;
 import flounder.physics.*;
+import flounder.renderer.FlounderOpenGL;
 
 import java.util.*;
 
 /**
  * A manager for Boundings that want to be renderer.
  */
-public class FlounderBounding extends Module {
+public class FlounderBounding extends flounder.framework.Module {
 	private Map<ModelObject, List<Collider>> renderShapes;
 	private int boundingCount;
 
@@ -79,8 +79,8 @@ public class FlounderBounding extends Module {
 		clear();
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderBounding get() {
-		return (FlounderBounding) Framework.get().getInstance(FlounderBounding.class);
+		return (FlounderBounding) Framework.get().getModule(FlounderBounding.class);
 	}
 }

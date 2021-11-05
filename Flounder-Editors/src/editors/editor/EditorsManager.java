@@ -3,7 +3,7 @@ package editors.editor;
 import flounder.framework.*;
 import flounder.logger.*;
 
-public class EditorsManager extends Module {
+public class EditorsManager extends flounder.framework.Module {
 	private IEditorType editorType;
 
 	public EditorsManager() {
@@ -60,8 +60,8 @@ public class EditorsManager extends Module {
 		}
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static EditorsManager get() {
-		return (EditorsManager) Framework.get().getInstance(EditorsManager.class);
+		return (EditorsManager) Framework.get().getModule(EditorsManager.class);
 	}
 }

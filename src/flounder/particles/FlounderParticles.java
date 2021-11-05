@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * A manager that manages particles.
  */
-public class FlounderParticles extends Module {
+public class FlounderParticles extends flounder.framework.Module {
 	public static final MyFile PARTICLES_FOLDER = new MyFile(MyFile.RES_FOLDER, "particles");
 	public static final float MAX_ELAPSED_TIME = 5.0f;
 
@@ -162,8 +162,8 @@ public class FlounderParticles extends Module {
 		deadParticles.clear();
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderParticles get() {
-		return (FlounderParticles) Framework.get().getInstance(FlounderParticles.class);
+		return (FlounderParticles) Framework.get().getModule(FlounderParticles.class);
 	}
 }

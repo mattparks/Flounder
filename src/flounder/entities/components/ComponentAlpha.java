@@ -2,6 +2,7 @@ package flounder.entities.components;
 
 import flounder.entities.*;
 import flounder.helpers.*;
+import flounder.renderer.FlounderOpenGL;
 import flounder.shaders.*;
 
 import javax.swing.*;

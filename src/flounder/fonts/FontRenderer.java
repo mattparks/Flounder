@@ -3,7 +3,6 @@ package flounder.fonts;
 import flounder.camera.*;
 import flounder.devices.*;
 import flounder.guis.*;
-import flounder.helpers.*;
 import flounder.maths.vectors.*;
 import flounder.renderer.*;
 import flounder.resources.*;

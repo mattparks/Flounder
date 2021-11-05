@@ -3,6 +3,7 @@ package flounder.entities.components;
 import flounder.entities.*;
 import flounder.framework.*;
 import flounder.helpers.*;
+import flounder.renderer.FlounderOpenGL;
 import flounder.shaders.*;
 import flounder.visual.*;
 

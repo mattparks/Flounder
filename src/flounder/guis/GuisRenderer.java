@@ -2,7 +2,6 @@ package flounder.guis;
 
 import flounder.camera.*;
 import flounder.devices.*;
-import flounder.helpers.*;
 import flounder.loaders.*;
 import flounder.maths.vectors.*;
 import flounder.renderer.*;

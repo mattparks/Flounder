@@ -3,8 +3,8 @@ package editors.editor;
 import editors.entities.*;
 import flounder.framework.*;
 import flounder.framework.updater.*;
-import flounder.lwjgl3.*;
 import flounder.resources.*;
+import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,14 +81,14 @@ public class FlounderEditor extends TimerTask {
 
 			if (optionEntities.isSelected()) {
 				Framework entrance = new Framework(
-						"Flounder Editors", new UpdaterDefault(), -1, // GLFW::glfwGetTime
+						"Flounder Editors", new UpdaterDefault(GLFW::glfwGetTime), -1,
 						new Extension[]{new ExtensionEntities(), new FrameEntities(), new EditorRenderer(), new EditorCamera(), new EditorPlayer(), new EditorGuis()}
 				);
-				Framework.get().addOverrides(new PlatformLwjgl(
+				/*Framework.get().addOverrides(new PlatformLwjgl(
 						1080, 720, "Flounder Editor Entities",
 						new MyFile[]{new MyFile(MyFile.RES_FOLDER, "flounder.png")},
 						false, true, 0, false, true, false, 2.0f
-				));
+				));*/
 				frame.setVisible(false);
 				entrance.run();
 			} else {

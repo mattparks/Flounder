@@ -9,6 +9,7 @@ import flounder.maths.vectors.*;
 import flounder.models.*;
 import flounder.physics.*;
 import flounder.physics.bounding.*;
+import flounder.renderer.FlounderOpenGL;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;

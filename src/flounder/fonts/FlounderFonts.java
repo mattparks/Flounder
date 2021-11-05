@@ -9,7 +9,7 @@ import flounder.textures.*;
 /**
  * A module used for holding a list of available engine fonts and texts currently on the screen.
  */
-public class FlounderFonts extends Module {
+public class FlounderFonts extends flounder.framework.Module {
 	public static final MyFile FONTS_LOC = new MyFile(MyFile.RES_FOLDER, "fonts");
 
 	public static final FontType ARIAL = new FontType(new MyFile(MyFile.RES_FOLDER, "fonts", "arial.png"), new MyFile(MyFile.RES_FOLDER, "fonts", "arial.fnt"));
@@ -37,8 +37,8 @@ public class FlounderFonts extends Module {
 	public void dispose() {
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderFonts get() {
-		return (FlounderFonts) Framework.get().getInstance(FlounderFonts.class);
+		return (FlounderFonts) Framework.get().getModule(FlounderFonts.class);
 	}
 }

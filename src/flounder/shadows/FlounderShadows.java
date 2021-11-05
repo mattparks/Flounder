@@ -8,7 +8,7 @@ import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;
 
-public class FlounderShadows extends Module {
+public class FlounderShadows extends flounder.framework.Module {
 	private Vector3f lightPosition;
 	private float brightnessBoost;
 
@@ -269,8 +269,8 @@ public class FlounderShadows extends Module {
 	public void dispose() {
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderShadows get() {
-		return (FlounderShadows) Framework.get().getInstance(FlounderShadows.class);
+		return (FlounderShadows) Framework.get().getModule(FlounderShadows.class);
 	}
 }

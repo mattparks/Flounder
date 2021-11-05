@@ -6,7 +6,7 @@ import flounder.platform.*;
 /**
  * A module used for synchronizing to the display after rendering.
  */
-public class FlounderDisplaySync extends Module {
+public class FlounderDisplaySync extends flounder.framework.Module {
 	/**
 	 * Creates a new GLFW display synchronizer.
 	 */
@@ -27,8 +27,8 @@ public class FlounderDisplaySync extends Module {
 	public void dispose() {
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderDisplaySync get() {
-		return (FlounderDisplaySync) Framework.get().getInstance(FlounderDisplaySync.class);
+		return (FlounderDisplaySync) Framework.get().getModule(FlounderDisplaySync.class);
 	}
 }

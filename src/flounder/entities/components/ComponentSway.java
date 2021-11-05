@@ -4,6 +4,7 @@ import flounder.entities.*;
 import flounder.framework.*;
 import flounder.helpers.*;
 import flounder.logger.*;
+import flounder.renderer.FlounderOpenGL;
 import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;

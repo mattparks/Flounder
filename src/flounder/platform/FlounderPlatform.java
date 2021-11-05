@@ -4,13 +4,19 @@ import flounder.devices.*;
 import flounder.events.*;
 import flounder.framework.*;
 import flounder.framework.updater.*;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 
 import java.nio.*;
+
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.opengl.EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT;
+import static org.lwjgl.opengl.GL11.glGetFloat;
 
 /**
  * A module used for handling networking, servers, clients, and packets.
  */
-public class FlounderPlatform extends Module {
+public class FlounderPlatform extends flounder.framework.Module {
 	/**
 	 * Creates a new network manager.
 	 */
@@ -26,9 +32,30 @@ public class FlounderPlatform extends Module {
 	public void update() {
 	}
 
-	@Module.MethodReplace
 	public Platform getPlatform() {
-		return Platform.UNKNOWN;
+		final String OS = System.getProperty("os.name").toLowerCase();
+		final String ARCH = System.getProperty("os.arch").toLowerCase();
+
+		boolean isWindows = OS.contains("windows");
+		boolean isLinux = OS.contains("linux");
+		boolean isMac = OS.contains("mac");
+		boolean is64Bit = ARCH.equals("amd64") || ARCH.equals("x86_64");
+
+		Platform platform = Platform.UNKNOWN;
+
+		if (isWindows) {
+			platform = is64Bit ? Platform.WINDOWS_64 : Platform.WINDOWS_32;
+		}
+
+		if (isLinux) {
+			platform = is64Bit ? Platform.LINUX_64 : Platform.UNKNOWN;
+		}
+
+		if (isMac) {
+			platform = Platform.MACOS;
+		}
+
+		return platform;
 	}
 
 	/**
@@ -36,17 +63,15 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return The time manager.
 	 */
-	@Module.MethodReplace
 	public TimingReference getTiming() {
-		return null;
+		return GLFW::glfwGetTime;
 	}
 
 	/**
 	 * @return The current time time in seconds.
 	 */
-	@Module.MethodReplace
 	public float getTime() {
-		return 0.0f;
+		return (float) (glfwGetTime() * 1000.0f);
 	}
 
 	/**
@@ -56,9 +81,8 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return An ByteBuffer.
 	 */
-	@Module.MethodReplace
 	public ByteBuffer createByteBuffer(int capacity) {
-		return null;
+		return BufferUtils.createByteBuffer(capacity);
 	}
 
 	/**
@@ -68,9 +92,8 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return An ShortBuffer.
 	 */
-	@Module.MethodReplace
 	public ShortBuffer createShortBuffer(int capacity) {
-		return null;
+		return BufferUtils.createShortBuffer(capacity);
 	}
 
 	/**
@@ -80,9 +103,8 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return An CharBuffer.
 	 */
-	@Module.MethodReplace
 	public CharBuffer createCharBuffer(int capacity) {
-		return null;
+		return BufferUtils.createCharBuffer(capacity);
 	}
 
 	/**
@@ -92,9 +114,8 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return An IntBuffer.
 	 */
-	@Module.MethodReplace
 	public IntBuffer createIntBuffer(int capacity) {
-		return null;
+		return BufferUtils.createIntBuffer(capacity);
 	}
 
 	/**
@@ -104,9 +125,8 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return An LongBuffer.
 	 */
-	@Module.MethodReplace
 	public LongBuffer createLongBuffer(int capacity) {
-		return null;
+		return BufferUtils.createLongBuffer(capacity);
 	}
 
 	/**
@@ -116,9 +136,8 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return An FloatBuffer.
 	 */
-	@Module.MethodReplace
 	public FloatBuffer createFloatBuffer(int capacity) {
-		return null;
+		return BufferUtils.createFloatBuffer(capacity);
 	}
 
 	/**
@@ -128,9 +147,8 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return An DoubleBuffer.
 	 */
-	@Module.MethodReplace
 	public DoubleBuffer createDoubleBuffer(int capacity) {
-		return null;
+		return BufferUtils.createDoubleBuffer(capacity);
 	}
 
 	/**
@@ -138,17 +156,16 @@ public class FlounderPlatform extends Module {
 	 *
 	 * @return The max anisotropy level.
 	 */
-	@Module.MethodReplace
 	public float getMaxAnisotropy() {
-		return 0.0f;
+		return glGetFloat(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
 	}
 
 	@Handler.Function(Handler.FLAG_DISPOSE)
 	public void dispose() {
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderPlatform get() {
-		return (FlounderPlatform) Framework.get().getInstance(FlounderPlatform.class);
+		return (FlounderPlatform) Framework.get().getModule(FlounderPlatform.class);
 	}
 }

@@ -5,7 +5,6 @@ import flounder.devices.*;
 import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.fbos.*;
-import flounder.helpers.*;
 import flounder.maths.matrices.*;
 import flounder.maths.vectors.*;
 import flounder.physics.*;

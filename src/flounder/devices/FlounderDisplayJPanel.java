@@ -13,7 +13,7 @@ import java.nio.*;
 /**
  * A module used for rendering a invisible display into a JPanel.
  */
-public class FlounderDisplayJPanel extends Module {
+public class FlounderDisplayJPanel extends flounder.framework.Module {
 	private JPanel panel;
 	private BufferedImage image;
 	private ByteBuffer buffer;
@@ -79,8 +79,8 @@ public class FlounderDisplayJPanel extends Module {
 	public void dispose() {
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderDisplayJPanel get() {
-		return (FlounderDisplayJPanel) Framework.get().getInstance(FlounderDisplayJPanel.class);
+		return (FlounderDisplayJPanel) Framework.get().getModule(FlounderDisplayJPanel.class);
 	}
 }

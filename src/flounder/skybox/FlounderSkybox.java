@@ -13,7 +13,7 @@ import flounder.resources.*;
 import flounder.shaders.*;
 import flounder.textures.*;
 
-public class FlounderSkybox extends Module {
+public class FlounderSkybox extends flounder.framework.Module {
 	public static final MyFile SKYBOX_FOLDER = new MyFile(MyFile.RES_FOLDER, "skybox");
 
 	private static final MyFile MODEL_FILE = new MyFile(MyFile.RES_FOLDER, "models", "skybox_cube.obj"); // skybox_sphere
@@ -100,8 +100,8 @@ public class FlounderSkybox extends Module {
 		}
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderSkybox get() {
-		return (FlounderSkybox) Framework.get().getInstance(FlounderSkybox.class);
+		return (FlounderSkybox) Framework.get().getModule(FlounderSkybox.class);
 	}
 }

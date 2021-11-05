@@ -2,7 +2,6 @@ package flounder.skybox;
 
 import flounder.camera.*;
 import flounder.devices.*;
-import flounder.helpers.*;
 import flounder.maths.vectors.*;
 import flounder.renderer.*;
 import flounder.resources.*;

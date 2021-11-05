@@ -6,7 +6,7 @@ import flounder.logger.*;
 /**
  * A module used for handling networking, servers, clients, and packets.
  */
-public class FlounderNetwork extends Module {
+public class FlounderNetwork extends flounder.framework.Module {
 	public static final int DEFAULT_PORT = 2266;
 
 	private Server socketServer;
@@ -117,8 +117,8 @@ public class FlounderNetwork extends Module {
 		closeClient();
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderNetwork get() {
-		return (FlounderNetwork) Framework.get().getInstance(FlounderNetwork.class);
+		return (FlounderNetwork) Framework.get().getModule(FlounderNetwork.class);
 	}
 }

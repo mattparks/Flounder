@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * A module used for that manages GUI textures in a container.
  */
-public class FlounderGuis extends Module {
+public class FlounderGuis extends flounder.framework.Module {
 	public static final MyFile GUIS_LOC = new MyFile(MyFile.RES_FOLDER, "guis");
 
 	public static final float POSITION_MIN = 0.0f;
@@ -129,8 +129,8 @@ public class FlounderGuis extends Module {
 		container.delete();
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderGuis get() {
-		return (FlounderGuis) Framework.get().getInstance(FlounderGuis.class);
+		return (FlounderGuis) Framework.get().getModule(FlounderGuis.class);
 	}
 }

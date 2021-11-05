@@ -8,14 +8,14 @@ import flounder.shaders.*;
 /**
  * A module used for OpenGL rendering and management.
  */
-public class FlounderRenderer extends Module {
+public class FlounderRenderer extends flounder.framework.Module {
 	private RendererMaster renderer;
 
 	/**
 	 * Creates a new OpenGL renderer manager.
 	 */
 	public FlounderRenderer() {
-		super(FlounderDisplay.class, FlounderCamera.class, FlounderShaders.class);
+		super(FlounderDisplay.class, FlounderOpenGL.class, FlounderCamera.class, FlounderShaders.class);
 	}
 
 	@Handler.Function(Handler.FLAG_INIT)
@@ -69,8 +69,8 @@ public class FlounderRenderer extends Module {
 		}
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderRenderer get() {
-		return (FlounderRenderer) Framework.get().getInstance(FlounderRenderer.class);
+		return (FlounderRenderer) Framework.get().getModule(FlounderRenderer.class);
 	}
 }

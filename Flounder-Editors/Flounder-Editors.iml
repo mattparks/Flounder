@@ -8,7 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module" module-name="Flounder-Engine" exported="" />
-    <orderEntry type="module" module-name="Backend-LWJGL3" exported="" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

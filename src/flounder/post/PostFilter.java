@@ -1,8 +1,8 @@
 package flounder.post;
 
 import flounder.fbos.*;
-import flounder.helpers.*;
 import flounder.loaders.*;
+import flounder.renderer.FlounderOpenGL;
 import flounder.resources.*;
 import flounder.shaders.*;
 

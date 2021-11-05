@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * A module used for loading OBJ files into models.
  */
-public class FlounderModels extends Module {
+public class FlounderModels extends flounder.framework.Module {
 	private Map<String, SoftReference<FactoryObject>> loaded;
 
 	/**
@@ -52,8 +52,8 @@ public class FlounderModels extends Module {
 		loaded.clear();
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderModels get() {
-		return (FlounderModels) Framework.get().getInstance(FlounderModels.class);
+		return (FlounderModels) Framework.get().getModule(FlounderModels.class);
 	}
 }

@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * A module used for loading and managing collada models and animations.
  */
-public class FlounderCollada extends Module {
+public class FlounderCollada extends flounder.framework.Module {
 	public static final Matrix4f CORRECTION = Matrix4f.rotate(new Matrix4f(), new Vector3f(1.0f, 0.0f, 0.0f), (float) Math.toRadians(-90.0f), null);
 	public static final int MAX_WEIGHTS = 3;
 
@@ -97,8 +97,8 @@ public class FlounderCollada extends Module {
 		loaded.clear();
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderCollada get() {
-		return (FlounderCollada) Framework.get().getInstance(FlounderCollada.class);
+		return (FlounderCollada) Framework.get().getModule(FlounderCollada.class);
 	}
 }

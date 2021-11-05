@@ -5,11 +5,11 @@ import flounder.devices.*;
 import flounder.entities.*;
 import flounder.entities.components.*;
 import flounder.framework.*;
-import flounder.helpers.*;
 import flounder.maths.vectors.*;
 import flounder.particles.*;
 import flounder.physics.*;
 import flounder.physics.bounding.*;
+import flounder.renderer.FlounderOpenGL;
 import flounder.shadows.*;
 import flounder.skybox.*;
 

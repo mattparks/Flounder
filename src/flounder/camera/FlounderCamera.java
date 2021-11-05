@@ -7,7 +7,7 @@ import flounder.framework.*;
 /**
  * A module used for managing cameras in 2D and 3D worlds.
  */
-public class FlounderCamera extends Module {
+public class FlounderCamera extends flounder.framework.Module {
 	private Player player;
 	private Camera camera;
 
@@ -101,8 +101,8 @@ public class FlounderCamera extends Module {
 		}
 	}
 
-	@Module.Instance
+	@flounder.framework.Module.Instance
 	public static FlounderCamera get() {
-		return (FlounderCamera) Framework.get().getInstance(FlounderCamera.class);
+		return (FlounderCamera) Framework.get().getModule(FlounderCamera.class);
 	}
 }

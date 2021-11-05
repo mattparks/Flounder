@@ -6,7 +6,6 @@ import flounder.entities.*;
 import flounder.fbos.*;
 import flounder.fonts.*;
 import flounder.guis.*;
-import flounder.helpers.*;
 import flounder.maths.vectors.*;
 import flounder.particles.*;
 import flounder.physics.bounding.*;
