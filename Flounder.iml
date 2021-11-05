@@ -51,5 +51,45 @@
       </library>
     </orderEntry>
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-glfw-natives-linux.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-glfw-natives-macos.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-glfw-natives-windows.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-glfw.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-natives-linux.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-natives-macos.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-natives-windows.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-openal-natives-linux.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-openal-natives-macos.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-openal-natives-windows.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-openal.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-opengl-natives-linux.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-opengl-natives-macos.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-opengl-natives-windows.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-opengl.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-stb-natives-linux.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-stb-natives-macos.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-stb-natives-windows.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-stb.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-glfw-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-openal-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-opengl-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-stb-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-glfw-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-openal-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-opengl-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl-stb-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
