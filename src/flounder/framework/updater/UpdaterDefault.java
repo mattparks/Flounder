@@ -58,7 +58,7 @@ public class UpdaterDefault implements IUpdater {
 		Framework.get().runHandlers(Handler.FLAG_INIT);
 
 		// Logs initialize times.
-		FlounderLogger.get().init("Framework Initialize & Load Time: " + FlounderLogger.ANSI_RED + (getTimeSec() - startTime) + FlounderLogger.ANSI_RESET + " seconds!");
+		FlounderLogger.get().init("Flounder Initialize & Load Time: " + FlounderLogger.ANSI_RED + (getTimeSec() - startTime) + FlounderLogger.ANSI_RESET + " seconds!");
 
 		// Sets the framework as initialized.
 		Framework.get().setInitialized(true);
