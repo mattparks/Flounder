@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = "com.flounder"
+version = "19.02.01"
+
+sourceCompatibility = "11"
+project.ext.lwjglVersion = "3.3.1"
+
+dependencies {
+    implementation "org.lwjgl:lwjgl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-openal:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
+    runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-macos"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-macos"
+}
